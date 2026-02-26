@@ -3,8 +3,9 @@
 **AI-assisted content understanding and generation for creators**
 
 **Hackathon:** AI for Bharat 2026  
-**Deadline:** March 4, 2026  
-**Team:** Shubh/Soham, Nidhi, Srushti, Lakshmi
+**Deadline:** March 4, 2026 (6 DAYS)  
+**Team:** Shubh/Soham, Nidhi, Srushti, Lakshmi  
+**Budget:** $80 AWS Credits
 
 ---
 
@@ -12,28 +13,71 @@
 
 ### Mac / Linux
 ```bash
-./setup.sh shubh    # Replace with your name
-./start.sh          # Start both backend + frontend
+./scripts/setup.sh shubh    # Replace with your name
+./scripts/start.sh          # Start services
 ```
 
 ### Windows
 ```cmd
-setup.bat shubh     # Replace with your name
-start.bat           # Start both backend + frontend
+scripts\setup.bat shubh     # Replace with your name
+scripts\start.bat           # Start services
 ```
 
 ---
 
-## 📚 Documentation
+## 📁 Project Structure
 
-| Document | Purpose |
-|----------|---------|
-| **[HOW_TO_RUN.md](./HOW_TO_RUN.md)** | Complete setup and run guide |
-| **[HACKATHON_BATTLE_PLAN.md](./HACKATHON_BATTLE_PLAN.md)** | 6-day execution plan |
-| **[PERSONA_GUIDE.md](./PERSONA_GUIDE.md)** | Expert perspectives for questions |
-| **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** | Quick lookup cheat sheet |
-| **[requirements.md](./requirements.md)** | Full requirements specification |
-| **[design.md](./design.md)** | System architecture and design |
+```
+AI_for_Bharat-Kiro-submission/
+├── README.md                    ← You are here
+├── HOW_TO_RUN.md               ← Complete running guide
+├── AGENT_PROMPTS.md            ← AI agent prompts for team
+│
+├── src/                        ← Source code
+│   ├── services/               ← Core services
+│   ├── types/                  ← TypeScript types
+│   ├── config/                 ← Configuration
+│   └── __tests__/              ← Tests
+│
+├── frontend/                   ← React frontend
+│   ├── src/pages/              ← Page components
+│   ├── src/components/         ← Reusable components
+│   └── src/styles/             ← Styling
+│
+├── docs/                       ← Documentation
+│   ├── README.md               ← Documentation index
+│   ├── personas/               ← Expert AI perspectives
+│   ├── guides/                 ← Step-by-step guides
+│   ├── architecture/           ← System design docs
+│   ├── api/                    ← API documentation
+│   ├── deployment/             ← Deployment guides
+│   └── user-guides/            ← End-user docs
+│
+├── planning/                   ← Project planning
+│   ├── HACKATHON_BATTLE_PLAN.md  ← 6-day execution plan
+│   ├── PERSONA_GUIDE.md          ← All expert perspectives
+│   ├── QUICK_REFERENCE.md        ← Quick lookup
+│   ├── requirements.md           ← Full requirements
+│   ├── design.md                 ← System architecture
+│   └── tasks.md                  ← Task breakdown
+│
+└── scripts/                    ← Setup & utility scripts
+    ├── setup.sh / setup.bat    ← First-time setup
+    └── start.sh / start.bat    ← Quick start
+```
+
+---
+
+## 📚 Essential Documentation
+
+| Document | Purpose | Read When |
+|----------|---------|-----------|
+| **[HOW_TO_RUN.md](./HOW_TO_RUN.md)** | Setup and running guide | First time setup |
+| **[AGENT_PROMPTS.md](./AGENT_PROMPTS.md)** | AI agent prompts for team | Before starting work |
+| **[planning/HACKATHON_BATTLE_PLAN.md](./planning/HACKATHON_BATTLE_PLAN.md)** | 6-day execution plan | Daily reference |
+| **[planning/PERSONA_GUIDE.md](./planning/PERSONA_GUIDE.md)** | Expert perspectives | When you have questions |
+| **[planning/QUICK_REFERENCE.md](./planning/QUICK_REFERENCE.md)** | Quick lookup | Quick reference |
+| **[docs/README.md](./docs/README.md)** | Documentation index | Understanding docs structure |
 
 ---
 
@@ -44,24 +88,62 @@ start.bat           # Start both backend + frontend
 **Our Solution:** AI that understands context and generates platform-optimized content in 60 seconds.
 
 **Key Features:**
-- 🎥 Multi-format processing (video, text, image, data)
-- 🧠 Domain-specific intelligence (Education, Food, Travel, Reviews)
-- ⚡ Real-time content generation (8+ outputs in 60 seconds)
-- 🌍 Multi-language support with cultural adaptation
-- 🎨 Smart thumbnail generation
-- 🔍 SEO optimization
-- ✅ Human-in-the-loop approval
+- 🎥 **Multi-format processing** - Video, text, image, structured data
+- 🧠 **Domain intelligence** - Education, Food, Travel, Product Reviews
+- ⚡ **Real-time generation** - 8+ outputs in 60 seconds
+- 🌍 **Multi-language** - Translate with cultural adaptation
+- 🎨 **Smart thumbnails** - AI-powered visual recommendations
+- 🔍 **SEO optimization** - Keywords, meta descriptions, titles
+- ✅ **Human-in-the-loop** - Approve/edit/reject all AI outputs
+- 💡 **Explainable AI** - Show reasoning for every suggestion
 
 ---
 
 ## 👥 Team Structure
 
-| Name | Role | Focus |
-|------|------|-------|
-| **Shubh/Soham** | Backend Architect + AWS Lead | Infrastructure, AI services, APIs |
-| **Nidhi** | AI Intelligence Lead | Domain detection, generation, prompts |
-| **Srushti** | Frontend + UX Lead | UI, dashboards, user experience |
-| **Lakshmi** | Testing + DevOps + Demo Lead | CI/CD, testing, demo preparation |
+| Name | Role | Focus | Work Stream |
+|------|------|-------|-------------|
+| **Shubh/Soham** | Backend Architect + AWS Lead | Infrastructure, AI services, APIs | Stream A |
+| **Nidhi** | AI Intelligence Lead | Domain detection, generation, prompts | Stream B |
+| **Srushti** | Frontend + UX Lead | UI, dashboards, user experience | Stream C |
+| **Lakshmi** | Testing + DevOps + Demo Lead | CI/CD, testing, demo prep | Stream D |
+
+---
+
+## 📅 Sprint Timeline
+
+| Day | Date | Goal | Checkpoint |
+|-----|------|------|------------|
+| **Day 1** | Feb 26 | Foundation | Video → Transcript working |
+| **Day 2** | Feb 27 | Intelligence | Analysis + Generation working |
+| **Day 3** | Feb 28 | Advanced | Multi-language + Discovery |
+| **Day 4** | Mar 1 | Killer Features | Real-time + Thumbnails + SEO |
+| **Day 5** | Mar 2 | Polish | Zero bugs, beautiful UI |
+| **Day 6** | Mar 3 | Demo Prep | Perfect demo, ready to win |
+
+---
+
+## 💰 AWS Budget ($80 Total)
+
+### **Budget Allocation:**
+- Development & Testing: $20
+- Integration Testing: $20
+- Demo Preparation: $20
+- Demo Day Buffer: $20
+
+### **Cost-Saving Strategies:**
+- ✅ Use **Ollama** (free) for development/testing
+- ✅ **Cache** all AWS responses (24hr TTL)
+- ✅ Use **mocks** for unit tests
+- ✅ **Batch** processing where possible
+- ✅ **Monitor** costs daily
+
+### **Free Testing Alternatives:**
+- **Ollama + Llama 3.1 8B** - Primary testing model
+- **Ollama + Mistral 7B** - Faster iterations
+- **Ollama + Phi-3 Mini** - Lightweight testing
+- **AWS SDK Mocks** - Unit testing
+- **LocalStack** - Local AWS emulation
 
 ---
 
@@ -75,18 +157,12 @@ Frontend (React) → Backend (Node.js/TypeScript) → AWS AI Services
                                                    └─ S3 + DynamoDB
 ```
 
----
-
-## 📅 Sprint Timeline
-
-| Day | Goal | Checkpoint |
-|-----|------|------------|
-| **Day 1** (Feb 26) | Foundation | Video → Transcript working |
-| **Day 2** (Feb 27) | Intelligence | Analysis + Generation working |
-| **Day 3** (Feb 28) | Advanced | Multi-language + Discovery |
-| **Day 4** (Mar 1) | Killer Features | Real-time + Thumbnails + SEO |
-| **Day 5** (Mar 2) | Polish | Zero bugs, beautiful UI |
-| **Day 6** (Mar 3) | Demo Prep | Perfect demo, ready to win |
+**Tech Stack:**
+- Backend: TypeScript + Node.js
+- Frontend: React + Tailwind CSS
+- AI: AWS Bedrock Claude 3.5 (demo), Ollama (testing)
+- Storage: S3 + DynamoDB
+- Infrastructure: AWS CDK
 
 ---
 
@@ -110,39 +186,67 @@ Frontend (React) → Backend (Node.js/TypeScript) → AWS AI Services
 5. **SEO Optimization** - Keywords, meta descriptions, titles
 6. **Human-in-the-Loop** - Approve/edit/reject all AI outputs
 7. **Explainable AI** - Show reasoning for every suggestion
+8. **Live Streaming** - Watch AI "think" in real-time
 
 ---
 
-## 🔥 Getting Help
+## 🚀 Getting Started
 
-### Ask Specific Experts (via PERSONA_GUIDE.md)
+### **For Team Members:**
 
-- **"Hey Architect, should we use Lambda or ECS?"**
-- **"Hey Designer, how should the upload screen look?"**
-- **"Hey Strategist, how do we compete with Descript?"**
-- **"Hey QA, what edge cases should we test?"**
-- **"Hey DevOps, how do we monitor costs?"**
+1. **Read your agent prompt:**
+   - Open [AGENT_PROMPTS.md](./AGENT_PROMPTS.md)
+   - Find your role (Shubh/Nidhi/Srushti/Lakshmi)
+   - Copy the entire prompt
 
-### Daily Standups
+2. **Paste into your AI agent:**
+   - Cursor / Copilot / Claude / ChatGPT / Kiro
+   - Let it read all documentation
+   - Start asking questions and coding
 
-- **9:00 AM** - Morning sync (15 min)
-- **6:00 PM** - Evening sync (15 min)
+3. **Follow the battle plan:**
+   - Check [planning/HACKATHON_BATTLE_PLAN.md](./planning/HACKATHON_BATTLE_PLAN.md)
+   - Find your Day 1 tasks
+   - Work through them sequentially
+
+4. **Daily standups:**
+   - 9:00 AM - Morning sync
+   - 6:00 PM - Evening sync + cost report
+
+---
+
+## 🔥 Critical Success Factors
+
+### **Technical:**
+- [ ] Video processing <60 seconds (5-min video)
+- [ ] API response time <2 seconds
+- [ ] Domain detection accuracy >90%
+- [ ] Cost per video <$0.50
+- [ ] Stay within $80 AWS budget
+
+### **Demo:**
+- [ ] Live demo works flawlessly
+- [ ] 3-minute timing perfect
+- [ ] 3+ "wow" moments
+- [ ] All judge questions answered
+- [ ] Backup plans ready
 
 ---
 
 ## 🎯 Success Metrics
 
-### Technical
-- ✅ Video processing <60 seconds (5-min video)
-- ✅ API response time <2 seconds
-- ✅ Domain detection accuracy >90%
-- ✅ Cost per video <$0.50
+**Technical Metrics:**
+- ✅ Video processing: <60 seconds for 5-min video
+- ✅ API response: <2 seconds
+- ✅ Concurrent users: 50+
+- ✅ Domain detection: >90% accuracy
+- ✅ AWS cost: <$80 total
 
-### Demo
-- ✅ Live demo works flawlessly
-- ✅ 3-minute timing perfect
-- ✅ 3+ "wow" moments
-- ✅ All judge questions answered
+**Demo Metrics:**
+- ✅ Demo completion: <3 minutes
+- ✅ Wow moments: 3+
+- ✅ Judge questions: 100% answered
+- ✅ Backup plans: 3 ready
 
 ---
 
@@ -153,21 +257,48 @@ Frontend (React) → Backend (Node.js/TypeScript) → AWS AI Services
 3. **Execution** - Working demo, professional UI, comprehensive testing
 4. **Presentation** - Clear problem, compelling solution, impressive demo
 5. **Team** - 4 developers, clear roles, excellent coordination
+6. **Budget Management** - Efficient AWS usage, smart cost optimization
 
 ---
 
-## 📞 Contact
+## 📞 Getting Help
 
-**Team Lead:** Shubh/Soham  
-**Hackathon:** AI for Bharat 2026  
-**Deadline:** March 4, 2026
+### **For Technical Questions:**
+- Check [planning/PERSONA_GUIDE.md](./planning/PERSONA_GUIDE.md)
+- Ask in daily standup
+- Reference [docs/](./docs/) for detailed guides
+
+### **For Process Questions:**
+- Check [planning/HACKATHON_BATTLE_PLAN.md](./planning/HACKATHON_BATTLE_PLAN.md)
+- Ask team lead (Shubh/Soham)
+
+### **For Demo/Presentation:**
+- Check PRESENTER persona in [planning/PERSONA_GUIDE.md](./planning/PERSONA_GUIDE.md)
+- Practice with team
 
 ---
 
-## 🚀 Let's Win This!
+## 🚨 Important Reminders
+
+- **AWS Budget:** $80 total - track every penny
+- **Use Ollama:** Free local testing, save Bedrock for demo
+- **Cache Everything:** Never call AWS twice for same input
+- **Daily Standups:** 9 AM & 6 PM, 15 minutes
+- **Demo Practice:** Start Day 4, practice 10+ times
+- **Backup Plans:** Local demo, video recording, slides
+
+---
+
+## 🎊 Let's Win This!
 
 **Time Remaining:** 6 days  
 **Mission:** Build something INSANE  
 **Goal:** WIN AI for Bharat
 
 **LET'S F*CKING GO! 🔥💪🚀**
+
+---
+
+**Last Updated:** February 26, 2026  
+**Team:** Content Intelligence Platform  
+**Status:** READY TO DOMINATE
