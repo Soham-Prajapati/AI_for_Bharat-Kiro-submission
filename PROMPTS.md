@@ -101,8 +101,6 @@ HOW TO WORK:
 
 IMPORTANT: Mark [/] BEFORE starting to prevent duplicate work across terminals.
 
-MY TASKS: Day 1.4a (landing), Day 1.4b (upload), Day 1.4c (dashboard), Day 1.4d (mode selection)
-
 Start by reading docs/TODO.md. Find my first incomplete task, mark it [/], and start.
 ```
 
@@ -134,8 +132,6 @@ HOW TO WORK:
 6. Move to next task
 
 IMPORTANT: Mark [/] BEFORE starting to prevent duplicate work across terminals.
-
-MY TASKS: Day 1.5a (Jest setup), Day 1.5b (unit tests), Day 1.5c (integration tests), Day 1.5d (CI/CD)
 
 Start by reading docs/TODO.md. Find my first incomplete task, mark it [/], and start.
 ```
