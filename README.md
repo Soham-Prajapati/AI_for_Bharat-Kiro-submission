@@ -7,22 +7,23 @@
 ## ⚡ QUICK START
 
 **Each person:**
-1. Open your prompt file (SHUBH_PROMPT.md, NIDHI_PROMPT.md, etc.)
-2. Copy the prompt
-3. Open terminal: `kiro-cli chat`
-4. Paste the prompt
-5. AI reads TODO, marks task [/], starts working
+1. Open `PROMPTS.md`
+2. Find your section (Shubh, Nidhi, Srushti, or Lakshmi)
+3. Copy your prompt
+4. Open terminal: `kiro-cli chat`
+5. Paste the prompt
+6. AI reads TODO, marks task [/], starts working
 
 ---
 
 ## 👥 TEAM
 
-| Person | Role | Prompt File |
-|--------|------|-------------|
-| **Shubh** | Backend + AWS | `SHUBH_PROMPT.md` |
-| **Nidhi** | AI Intelligence | `NIDHI_PROMPT.md` |
-| **Srushti** | Frontend + UX | `SRUSHTI_PROMPT.md` |
-| **Lakshmi** | Testing + DevOps | `LAKSHMI_PROMPT.md` |
+| Person | Role | Prompt |
+|--------|------|--------|
+| **Shubh** | Backend + AWS | See `PROMPTS.md` |
+| **Nidhi** | AI Intelligence | See `PROMPTS.md` |
+| **Srushti** | Frontend + UX | See `PROMPTS.md` |
+| **Lakshmi** | Testing + DevOps | See `PROMPTS.md` |
 
 ---
 
@@ -40,14 +41,15 @@
 
 ## 🎯 WORKFLOW
 
-1. Open your prompt file
-2. Copy-paste into `kiro-cli chat`
-3. AI reads `docs/TODO.md`
-4. AI finds your first incomplete task
-5. AI marks it `[/]` (in progress)
-6. AI completes the task
-7. AI marks it `[x]` (done)
-8. Repeat
+1. Open `PROMPTS.md`
+2. Find your section, copy your prompt
+3. Paste into `kiro-cli chat`
+4. AI reads `docs/TODO.md`
+5. AI finds your first incomplete task
+6. AI marks it `[/]` (in progress)
+7. AI completes the task
+8. AI marks it `[x]` (done)
+9. Repeat
 
 ---
 
