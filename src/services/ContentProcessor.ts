@@ -18,13 +18,13 @@ export class ContentProcessor {
   detectContentType(mimeType: string): ContentType {
     if (mimeType.startsWith('video/')) return ContentType.VIDEO;
     if (mimeType.startsWith('image/')) return ContentType.IMAGE;
-    if (mimeType.startsWith('text/') || mimeType === 'application/pdf') {
-      return ContentType.TEXT;
-    }
     if (mimeType === 'text/csv' || 
         mimeType === 'application/vnd.ms-excel' ||
         mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       return ContentType.STRUCTURED_DATA;
+    }
+    if (mimeType.startsWith('text/') || mimeType === 'application/pdf') {
+      return ContentType.TEXT;
     }
     return ContentType.TEXT; // default fallback
   }
@@ -86,11 +86,51 @@ export class ContentProcessor {
   }
 
   private async processText(file: Buffer): Promise<ExtractedContent> {
-    // Placeholder - will be implemented in task 2.4
+    const rawText = file.toString('utf-8');
+    
+    // Clean and normalize text
+    const normalizedText = this.normalizeText(rawText);
+    
+    // Detect structure (paragraphs, sections)
+    const sections = this.detectTextStructure(normalizedText);
+    
     return {
-      rawText: file.toString('utf-8'),
+      rawText: normalizedText,
       extractedAt: new Date()
     };
+  }
+
+  private normalizeText(text: string): string {
+    // Remove excessive whitespace
+    let normalized = text.replace(/\r\n/g, '\n');
+    normalized = normalized.replace(/\n{3,}/g, '\n\n');
+    normalized = normalized.trim();
+    return normalized;
+  }
+
+  private detectTextStructure(text: string): Array<{ title: string; content: string }> {
+    const sections: Array<{ title: string; content: string }> = [];
+    const lines = text.split('\n');
+    
+    let currentSection = { title: 'Introduction', content: '' };
+    
+    for (const line of lines) {
+      // Detect headings (lines that are short and followed by content)
+      if (line.length > 0 && line.length < 100 && !line.endsWith('.')) {
+        if (currentSection.content.length > 0) {
+          sections.push(currentSection);
+        }
+        currentSection = { title: line.trim(), content: '' };
+      } else {
+        currentSection.content += line + '\n';
+      }
+    }
+    
+    if (currentSection.content.length > 0) {
+      sections.push(currentSection);
+    }
+    
+    return sections;
   }
 
   private async processImage(file: Buffer): Promise<ExtractedContent> {
