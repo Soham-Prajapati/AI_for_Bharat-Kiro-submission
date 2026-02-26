@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "description": "Create POST /api/upload endpoint with file validation",
+    "assignedTo": "Backend-API",
+    "priority": "critical",
+    "estimatedTime": "2h",
+    "dependencies": []
+  },
+  {
+    "id": 2,
+    "description": "Implement S3 upload service with signed URLs",
+    "assignedTo": "Backend-AWS",
+    "priority": "critical",
+    "estimatedTime": "2h",
+    "dependencies": []
+  },
+  {
+    "id": 3,
+    "description": "Create Transcribe service integration",
+    "assignedTo": "Backend-AWS",
+    "priority": "critical",
+    "estimatedTime": "3h",
+    "dependencies": [2]
+  },
+  {
+    "id": 4,
+    "description": "Implement domain detection logic",
+    "assignedTo": "AI-Domain",
+    "priority": "critical",
+    "estimatedTime": "4h",
+    "dependencies": [3]
+  },
+  {
+    "id": 5,
+    "description": "Create content generation prompts",
+    "assignedTo": "AI-Generation",
+    "priority": "critical",
+    "estimatedTime": "3h",
+    "dependencies": [4]
+  },
+  {
+    "id": 6,
+    "description": "Build upload UI component",
+    "assignedTo": "Frontend-UI",
+    "priority": "critical",
+    "estimatedTime": "3h",
+    "dependencies": []
+  },
+  {
+    "id": 7,
+    "description": "Implement state management for uploads",
+    "assignedTo": "Frontend-State",
+    "priority": "high",
+    "estimatedTime": "2h",
+    "dependencies": [6]
+  },
+  {
+    "id": 8,
+    "description": "Write unit tests for API endpoints",
+    "assignedTo": "Testing-Unit",
+    "priority": "high",
+    "estimatedTime": "2h",
+    "dependencies": [1]
+  },
+  {
+    "id": 9,
+    "description": "Create integration tests for AWS services",
+    "assignedTo": "Testing-Integration",
+    "priority": "high",
+    "estimatedTime": "3h",
+    "dependencies": [2, 3]
+  },
+  {
+    "id": 10,
+    "description": "Set up CI/CD pipeline with GitHub Actions",
+    "assignedTo": "DevOps-CI",
+    "priority": "high",
+    "estimatedTime": "2h",
+    "dependencies": []
+  },
+  {
+    "id": 11,
+    "description": "Create deployment scripts for AWS",
+    "assignedTo": "DevOps-Deploy",
+    "priority": "medium",
+    "estimatedTime": "2h",
+    "dependencies": [10]
+  },
+  {
+    "id": 12,
+    "description": "Implement DynamoDB caching layer",
+    "assignedTo": "Backend-AWS",
+    "priority": "critical",
+    "estimatedTime": "2h",
+    "dependencies": []
+  },
+  {
+    "id": 13,
+    "description": "Create error handling middleware",
+    "assignedTo": "Backend-API",
+    "priority": "high",
+    "estimatedTime": "1h",
+    "dependencies": []
+  },
+  {
+    "id": 14,
+    "description": "Set up CloudWatch logging",
+    "assignedTo": "DevOps-CI",
+    "priority": "high",
+    "estimatedTime": "1h",
+    "dependencies": []
+  },
+  {
+    "id": 15,
+    "description": "Build dashboard UI component",
+    "assignedTo": "Frontend-UI",
+    "priority": "critical",
+    "estimatedTime": "4h",
+    "dependencies": [6]
+  },
+  {
+    "id": 16,
+    "description": "Implement real-time streaming with SSE",
+    "assignedTo": "Backend-API",
+    "priority": "high",
+    "estimatedTime": "3h",
+    "dependencies": [1]
+  },
+  {
+    "id": 17,
+    "description": "Create Ollama integration for local testing",
+    "assignedTo": "AI-Generation",
+    "priority": "critical",
+    "estimatedTime": "2h",
+    "dependencies": []
+  },
+  {
+    "id": 18,
+    "description": "Implement cost tracking system",
+    "assignedTo": "Backend-AWS",
+    "priority": "critical",
+    "estimatedTime": "2h",
+    "dependencies": []
+  },
+  {
+    "id": 19,
+    "description": "Create API documentation with Swagger",
+    "assignedTo": "Backend-API",
+    "priority": "medium",
+    "estimatedTime": "2h",
+    "dependencies": [1]
+  },
+  {
+    "id": 20,
+    "description": "Build export functionality",
+    "assignedTo": "Frontend-UI",
+    "priority": "medium",
+    "estimatedTime": "2h",
+    "dependencies": [15]
+  }
+]
