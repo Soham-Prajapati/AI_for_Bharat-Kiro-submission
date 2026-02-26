@@ -6,11 +6,19 @@
 
 ## ⚡ QUICK START
 
-**👉 [START HERE - What To Do Now](team-launchers/WHAT_TO_DO_NOW.md)** ← Read this first!
+**🚀 RUN THE APP IN 2 MINUTES:**
 
-**Deadline:** March 4, 2026 (11:59 PM IST) - **6 DAYS LEFT**  
-**Budget:** **$80 AWS Credits** (use ONLY for final testing, NOT development)  
-**Team:** 4 developers + 40 AI agents
+**Mac/Linux:** `./start.sh`  
+**Windows:** `start.bat`
+
+**📖 [How to Run: docs/QUICKSTART.md](docs/QUICKSTART.md)**  
+**📋 [What to Do: docs/TODO.md](docs/TODO.md)**  
+**📊 [Progress: docs/PROGRESS.md](docs/PROGRESS.md)**  
+**🎯 [Project Plan: docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md)**
+
+**Deadline:** March 4, 2026 (11:59 PM IST) - **5 DAYS LEFT**  
+**Budget:** **$80 AWS Credits**  
+**Status:** **Foundation Complete! Ready for testing!** ✅
 
 ---
 
@@ -162,11 +170,11 @@ kiro-cli chat
 | Day | Date | Goal | Status |
 |-----|------|------|--------|
 | **Day 1** | Feb 26 | Foundation (Ollama only) | ✅ COMPLETE |
-| **Day 2** | Feb 27 | Integration (Ollama only) | 🔄 Next |
-| **Day 3** | Feb 28 | Advanced Features (Ollama) | ⏳ Pending |
-| **Day 4** | Mar 1 | Polish (Ollama) | ⏳ Pending |
-| **Day 5** | Mar 2 | Testing (AWS - $10-20) | ⏳ Pending |
-| **Day 6** | Mar 3 | Demo Prep (AWS - $10-20) | ⏳ Pending |
+| **Day 2** | Feb 27 | Integration (Ollama only) | ✅ COMPLETE |
+| **Day 3** | Feb 27 | Advanced Features (Ollama) | ✅ COMPLETE |
+| **Day 4** | Feb 28 | Polish (Ollama) | 🔄 Next |
+| **Day 5** | Mar 1 | Testing (AWS - $10-20) | ⏳ Pending |
+| **Day 6** | Mar 2-3 | Demo Prep (AWS - $10-20) | ⏳ Pending |
 
 ---
 
