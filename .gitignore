@@ -61,3 +61,7 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+# Conversation logs and critical analysis
+CONVERSATION_LOG.md
+CRITICAL_FIXES.md
