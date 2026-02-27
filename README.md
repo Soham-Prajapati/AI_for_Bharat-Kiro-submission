@@ -1,62 +1,141 @@
 # 🚀 Content Intelligence Platform
 
-**AI for Bharat 2026 Hackathon**
+> **AI for Bharat 2026 Hackathon** | **Prize:** ₹40,00,000 | **Deadline:** March 4, 2026
 
 ---
 
-## ⚡ QUICK START
+## ⚡ NEW HERE? READ THIS FIRST
 
-**Each person:**
-1. Open `PROMPTS.md`
-2. Find your section (Shubh, Nidhi, Srushti, or Lakshmi)
-3. Copy your prompt
-4. Open terminal: `kiro-cli chat`
-5. Paste the prompt
-6. AI reads TODO, marks task [/], starts working
+**👉 Open [`START_HERE.md`](START_HERE.md) for complete onboarding**
+
+That file has:
+- 30-second summary
+- What YOU need to do (personalized for each team member)
+- Architecture overview
+- File structure
+- Workflow
+- Success criteria
+
+**TL;DR:**
+1. Open `PROMPTS.md` → Find your section
+2. Copy your prompt
+3. Run `kiro-cli chat` → Paste prompt
+4. AI reads TODO and starts working
+5. While AI works, read `START_HERE.md`
 
 ---
 
 ## 👥 TEAM
 
-| Person | Role | Prompt |
-|--------|------|--------|
-| **Shubh** | Backend + AWS | See `PROMPTS.md` |
-| **Nidhi** | AI Intelligence | See `PROMPTS.md` |
-| **Srushti** | Frontend + UX | See `PROMPTS.md` |
-| **Lakshmi** | Testing + DevOps | See `PROMPTS.md` |
+| Person | Role | Files You Own |
+|--------|------|---------------|
+| **Shubh** | Backend + AWS | `src/routes/`, `src/services/`, `src/middleware/` |
+| **Nidhi** | AI Intelligence | `src/prompts/`, `src/services/*-generator.service.ts` |
+| **Srushti** | Frontend + UX | `frontend/app/`, `frontend/components/` |
+| **Lakshmi** | Testing + DevOps | `src/__tests__/`, `.github/workflows/`, `scripts/` |
 
 ---
 
-## 📋 DOCS
+## 📂 IMPORTANT FILES
 
-| File | Purpose |
-|------|---------|
-| `PROMPTS.md` | **START HERE** - Team prompts |
-| `DOCS_GUIDE.md` | Documentation navigation |
-| `docs/TODO.md` | Task tracker |
-| `docs/PROJECT_PLAN.md` | Full architecture |
-| `docs/personas/` | Expert advisors |
-| `docs/api/` | API documentation |
-| `docs/deployment/` | AWS deployment guides |
-
----
-
-## 🎯 WORKFLOW
-
-1. Open `PROMPTS.md`
-2. Find your section, copy your prompt
-3. Paste into `kiro-cli chat`
-4. AI reads `docs/TODO.md`
-5. AI finds your first incomplete task
-6. AI marks it `[/]` (in progress)
-7. AI completes the task
-8. AI marks it `[x]` (done)
-9. Repeat
+| File | Purpose | Who Reads It |
+|------|---------|--------------|
+| **`START_HERE.md`** | **Complete onboarding** | **Everyone (read first!)** |
+| **`docs/FEATURES_MASTER.md`** | **All 28 features explained** | **Everyone (primary reference)** |
+| `PROMPTS.md` | Team prompts (copy-paste to start) | Everyone |
+| `docs/TODO.md` | All tasks (AI reads this) | AI + Everyone |
+| `docs/PROJECT_PLAN.md` | Full architecture | Shubh + Nidhi |
+| `docs/CREATOR_MODES.md` | AI-First, Hybrid, Human-First | Nidhi |
+| `docs/PROMPT_ENGINEERING.md` | 8 platform prompts | Nidhi |
+| `docs/api/` | API documentation | Shubh + Srushti |
+| `docs/deployment/` | AWS setup guides | Shubh + Lakshmi |
+| **`docs/ERROR_HANDLING_GUIDE.md`** | **Error handling best practices** | **Shubh + Lakshmi** |
+| **`docs/SECURITY_AUDIT.md`** | **Security checklist & fixes** | **Shubh + Lakshmi** |
+| **`docs/DEPLOYMENT_CHECKLIST.md`** | **Production readiness** | **Shubh + Lakshmi** |
 
 ---
 
-**Deadline:** March 4, 2026  
-**Budget:** $80 AWS credits  
-**Prize:** ₹40,00,000 (40 lakhs)
+## 🎯 WHAT WE'RE BUILDING
 
-**LET'S WIN! 🚀**
+**Problem:** Creators spend 4-6 hours repurposing 1 video for different platforms
+
+**Solution:** AI-powered platform that generates content for 6 platforms in 60 seconds
+
+**Core Features:**
+1. Multi-format input (video/audio/text)
+2. Domain detection (Education/Food/Travel/Product)
+3. Platform-specific generation (YouTube, Instagram, LinkedIn, Twitter, Facebook, TikTok)
+4. Multi-language support (9 Indian languages)
+5. Human-in-the-Loop approval
+
+**Wow Features:**
+- Creator DNA (personality analysis)
+- Viral Score Predictor
+- ROI Calculator
+- Cultural Adapter
+- Ecosystem Analytics
+- +20 more features
+
+**Full list:** See `docs/FEATURES_MASTER.md` (28 features total)
+
+---
+
+## 🏗️ TECH STACK
+
+- **Frontend:** Next.js 14 + React 18 + TailwindCSS
+- **Backend:** Node.js + Express + TypeScript
+- **AI:** AWS Bedrock (Claude 3 Haiku)
+- **Storage:** AWS S3 + DynamoDB
+- **Deployment:** Docker + AWS EC2
+
+---
+
+## 🔄 WORKFLOW
+
+```bash
+# 1. Get latest code
+git pull origin main
+
+# 2. Start AI assistant
+kiro-cli chat
+# Paste your prompt from PROMPTS.md
+
+# 3. AI works on tasks
+# (marks [/] before starting, [x] when done)
+
+# 4. Push your changes
+git add .
+git commit -m "feat: your task"
+git push origin main
+```
+
+**IMPORTANT:** If task is `[/]`, SKIP it (someone else working on it)
+
+---
+
+## 📊 PROGRESS
+
+**Phase 1 (Infrastructure):** 60% complete ✅  
+**Phase 2 (MVP Features):** 20% complete 🔄  
+**Phase 3-6 (Wow Features):** 0% started ⏳
+
+**Budget:** $0 spent / $80 total
+
+---
+
+## 🚨 QUICK LINKS
+
+- **Start Working:** [`PROMPTS.md`](PROMPTS.md)
+- **Complete Guide:** [`START_HERE.md`](START_HERE.md)
+- **All Tasks:** [`docs/TODO.md`](docs/TODO.md)
+- **Architecture:** [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md)
+- **API Docs:** [`docs/api/`](docs/api/)
+- **Deployment:** [`docs/deployment/`](docs/deployment/)
+
+---
+
+## 🎉 LET'S WIN THIS!
+
+**5 days left. ₹40,00,000 prize. We got this! 🚀**
+
+**👉 START HERE: [`START_HERE.md`](START_HERE.md)**

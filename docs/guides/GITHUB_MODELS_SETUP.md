@@ -11,7 +11,7 @@
 - ✅ **Claude 3.5 Sonnet** - Best for coding and analysis
 - ✅ **o1-mini** - Best for reasoning tasks
 
-**vs Ollama:**
+**vs GitHub Copilot:**
 - Better quality outputs
 - Faster responses
 - No local setup needed
@@ -123,7 +123,7 @@ const response = await github.generateWithContext(messages);
 | Service | Cost | Quality | Setup |
 |---------|------|---------|-------|
 | **GitHub Models** | $0 | ⭐⭐⭐⭐⭐ | Easy |
-| **Ollama** | $0 | ⭐⭐⭐ | Complex |
+| **GitHub Copilot** | $0 | ⭐⭐⭐ | Complex |
 | **AWS Bedrock** | $0.15/req | ⭐⭐⭐⭐⭐ | Medium |
 
 **Winner:** GitHub Models! 🏆

@@ -132,11 +132,11 @@ npm run test:e2e
 
 ## Testing with FREE Tools
 
-### Ollama Testing (FREE)
+### GitHub Copilot Testing (FREE)
 
 ```javascript
-// Mock Ollama in tests
-jest.mock('../src/services/ollama', () => ({
+// Mock GitHub Copilot in tests
+jest.mock('../src/services/mockAI', () => ({
   analyze: jest.fn().mockResolvedValue({
     summary: 'Test summary',
     keywords: ['test', 'mock']

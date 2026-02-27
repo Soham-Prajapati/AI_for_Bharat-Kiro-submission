@@ -17,12 +17,12 @@ This guide will get you from zero to productive in 30 minutes.
 ### Required Accounts
 - **AWS Account:** With $80 credits
 - **GitHub Account:** For version control
-- **Ollama:** For local AI testing (free)
+- **GitHub Copilot:** For local AI testing (free)
 
 ### System Requirements
 - **OS:** macOS, Linux, or Windows
-- **RAM:** 8GB minimum (16GB recommended for Ollama)
-- **Disk:** 10GB free space (for Ollama models)
+- **RAM:** 8GB minimum (16GB recommended for GitHub Copilot)
+- **Disk:** 10GB free space (for GitHub Copilot models)
 - **Internet:** Stable connection for AWS services
 
 ---
@@ -119,50 +119,50 @@ REACT_APP_ENABLE_SEO=true
 
 ---
 
-## Step 4: Install Ollama (Free Local AI)
+## Step 4: Use GitHub Copilot (Free Local AI)
 
-Ollama allows you to test AI features locally without using AWS credits.
+GitHub Copilot allows you to test AI features locally without using AWS credits.
 
 ### Mac / Linux
 
 ```bash
-# Install Ollama
-curl -fsSL https://ollama.com/install.sh | sh
+# Use GitHub Copilot
+
 
 # Pull primary testing model (4.7GB)
-ollama pull llama3.1:8b
+# Mock AI - no models needed llama3.1:8b
 
 # Pull faster model (4.1GB)
-ollama pull mistral:7b
+# Mock AI - no models needed mistral:7b
 
 # Pull lightweight model (2.3GB)
-ollama pull phi3:mini
+# Mock AI - no models needed phi3:mini
 
 # Verify installation
-ollama list
+mockAI list
 ```
 
 ### Windows
 
-1. Download from: https://ollama.com/download
+1. Download from: https://mockAI.com/download
 2. Run installer
 3. Open PowerShell and run:
 
 ```powershell
-ollama pull llama3.1:8b
-ollama pull mistral:7b
-ollama pull phi3:mini
-ollama list
+# Mock AI - no models needed llama3.1:8b
+# Mock AI - no models needed mistral:7b
+# Mock AI - no models needed phi3:mini
+mockAI list
 ```
 
-### Test Ollama
+### Test GitHub Copilot
 
 ```bash
-# Start Ollama server (runs automatically on install)
-ollama serve
+# Use GitHub Copilot server (runs automatically on install)
+# Mock AI - no setup needed
 
 # Test in another terminal
-curl http://localhost:11434/api/generate -d '{
+curl http://mock-ai-endpoint/api/generate -d '{
   "model": "llama3.1:8b",
   "prompt": "Hello, world!",
   "stream": false
@@ -298,11 +298,11 @@ curl http://localhost:3001/health
 2. You should see the landing page
 3. Try uploading a test video
 
-### Test Ollama Integration
+### Test GitHub Copilot Integration
 
 ```bash
 # Test local AI endpoint
-curl http://localhost:3001/api/test/ollama
+curl http://localhost:3001/api/test/mockAI
 
 # Expected response:
 # {"status":"ok","model":"llama3.1:8b","response":"..."}
@@ -336,7 +336,7 @@ Open `planning/HACKATHON_BATTLE_PLAN.md` and find your Day 1 tasks.
 ### Nidhi (AI)
 - [ ] Domain detection engine
 - [ ] Prompt templates
-- [ ] Ollama integration
+- [ ] Mock data for testing
 - [ ] Test with sample videos
 
 ### Srushti (Frontend)
@@ -369,15 +369,15 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-### Issue: "Ollama not found"
+### Issue: "GitHub Copilot not found"
 
 **Solution:**
 ```bash
-# Check if Ollama is running
-ps aux | grep ollama
+# Check if GitHub Copilot is running
+ps aux | grep mockAI
 
-# Start Ollama manually
-ollama serve
+# Use GitHub Copilot manually
+# Mock AI - no setup needed
 
 # Check port 11434 is open
 lsof -i :11434
@@ -540,20 +540,20 @@ aws ce get-cost-and-usage \
   --metrics BlendedCost
 ```
 
-### Ollama
+### GitHub Copilot
 
 ```bash
 # List models
-ollama list
+mockAI list
 
 # Run model interactively
-ollama run llama3.1:8b
+mockAI run llama3.1:8b
 
 # Delete model
-ollama rm mistral:7b
+mockAI rm mistral:7b
 
-# Check Ollama status
-ollama ps
+# Check GitHub Copilot status
+mockAI ps
 ```
 
 ---
@@ -585,7 +585,7 @@ ollama ps
 
 ### External Resources
 - **AWS Bedrock Docs:** https://docs.aws.amazon.com/bedrock/
-- **Ollama Docs:** https://ollama.com/docs
+- **GitHub Copilot Docs:** https://mockAI.com/docs
 - **React Docs:** https://react.dev/
 - **TypeScript Docs:** https://www.typescriptlang.org/docs/
 
