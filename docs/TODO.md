@@ -9,17 +9,20 @@
 
 ## 📚 REQUIRED READING BEFORE STARTING
 
-**Everyone must read these files to understand the system:**
+**🚨 CRITICAL: Read these files in order to understand the complete system:**
 
-1. **`docs/PROJECT_PLAN.md`** — Full architecture, tech stack, features (25 total)
-2. **`docs/CREATOR_MODES.md`** — 3 creator modes (AI-First, Hybrid, Human-First)
-3. **`docs/PROMPT_ENGINEERING.md`** — 8 polished prompts for platforms
-4. **`docs/QUICKSTART.md`** — How to run the project
+1. **`docs/FEATURES_MASTER.md`** ⭐ **START HERE** — Complete feature specifications (28 features)
+2. **`docs/PROJECT_PLAN.md`** — Architecture, tech stack, deployment
+3. **`docs/CREATOR_MODES.md`** — 3 creator modes (AI-First, Hybrid, Human-First)
+4. **`docs/PROMPT_ENGINEERING.md`** — 8 polished prompts for platforms
+5. **`docs/QUICKSTART.md`** — How to run the project
 
 **Before starting ANY task:**
-- Read the relevant section in PROJECT_PLAN.md
-- Understand the feature's purpose and user flow
-- Check integration contracts below
+- Read the feature specification in `FEATURES_MASTER.md` first
+- Understand the feature's purpose, user flow, and integration points
+- Check implementation status to avoid duplicate work
+- Review integration contracts below
+- Don't assume how features work — follow the spec exactly
 
 ---
 
@@ -45,7 +48,6 @@
 - `src/services/platform-content-generator.service.ts` — Platform-specific generation
 - `src/services/seo-translation.service.ts` — SEO + translation
 - `src/services/quality-validator.service.ts` — Validate output quality
-- `src/services/ollama.service.ts` — Local Ollama integration
 
 ### SRUSHTI — Frontend + UX Lead
 **Owns:**

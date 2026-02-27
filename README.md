@@ -41,6 +41,7 @@ That file has:
 | File | Purpose | Who Reads It |
 |------|---------|--------------|
 | **`START_HERE.md`** | **Complete onboarding** | **Everyone (read first!)** |
+| **`docs/FEATURES_MASTER.md`** | **All 28 features explained** | **Everyone (primary reference)** |
 | `PROMPTS.md` | Team prompts (copy-paste to start) | Everyone |
 | `docs/TODO.md` | All tasks (AI reads this) | AI + Everyone |
 | `docs/PROJECT_PLAN.md` | Full architecture | Shubh + Nidhi |
@@ -51,7 +52,6 @@ That file has:
 | **`docs/ERROR_HANDLING_GUIDE.md`** | **Error handling best practices** | **Shubh + Lakshmi** |
 | **`docs/SECURITY_AUDIT.md`** | **Security checklist & fixes** | **Shubh + Lakshmi** |
 | **`docs/DEPLOYMENT_CHECKLIST.md`** | **Production readiness** | **Shubh + Lakshmi** |
-| **`docs/BACKEND_SUMMARY.md`** | **Backend status & next steps** | **Everyone** |
 
 ---
 
@@ -76,7 +76,7 @@ That file has:
 - Ecosystem Analytics
 - +20 more features
 
-**Full list:** See `docs/TODO.md`
+**Full list:** See `docs/FEATURES_MASTER.md` (28 features total)
 
 ---
 
