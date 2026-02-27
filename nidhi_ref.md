@@ -281,3 +281,135 @@ Each service follows a consistent pattern:
 - Hybrid mode uses DomainDetectionService for content analysis
 - All services use prompts from Task 1.1a
 - Services are independent and can be used standalone or combined
+
+---
+
+### ✅ Task 1.1c: Create Mode Detection Service (COMPLETED)
+
+Created the intelligent routing service in `src/services/mode-detection.service.ts` that automatically detects which creator mode to use and routes requests to the appropriate service.
+
+**Core Functionality:**
+
+1. **Automatic Mode Detection** - `detectMode(input)`
+   - Analyzes user input signals (video file, transcript, topic, manual content)
+   - Checks user preferences from onboarding or profile
+   - Returns detected mode with confidence score (0.0-1.0) and reasoning
+   - Suggests alternative modes when applicable
+   - Priority: User preference > Input signals > Default (Hybrid)
+
+2. **Input Signal Analysis** - `analyzeInputSignals(input)`
+   - Detects: hasUserVideo, hasUserAudio, hasManualContent, topicOnly
+   - Identifies user intent: wantsAIGeneration, wantsFullAutomation
+   - Used for intelligent mode selection
+
+3. **Content Processing Router** - `processContent(input)`
+   - Main entry point that routes to appropriate service
+   - Calls detectMode() first, then routes to correct service
+   - Handles AI-First, Hybrid, or Human-First processing
+   - Returns unified response format
+
+4. **Streaming Support** - `streamProcess(input)`
+   - Detects mode and streams progress updates
+   - Yields mode detection result first
+   - Then streams generation progress from appropriate service
+   - Enables real-time UI updates
+
+5. **Input Validation** - `validateInput(input)`
+   - Validates required fields for detected mode
+   - Returns validation errors with specific messages
+   - Prevents invalid requests from reaching services
+
+6. **Personalized Recommendations** - `recommendMode(userProfile)`
+   - Suggests modes based on user profile (upload frequency, equipment, skill level)
+   - Provides reasoning for each recommendation
+   - Helps onboarding flow guide users to best mode
+
+**Detection Logic:**
+
+```
+Priority 1: User's explicit preference (confidence: 1.0)
+  → Use preferredMode from user profile/settings
+
+Priority 2: Input signal analysis (confidence: 0.9-0.95)
+  → Has video/audio file? → Hybrid mode
+  → Has manual content + no AI generation? → Human-First mode
+  → Has topic only OR wants full automation? → AI-First mode
+
+Priority 3: Default fallback (confidence: 0.7)
+  → Hybrid mode (most common use case - 80% of users)
+```
+
+**Mode Detection Examples:**
+
+1. **User uploads video file**
+   - Detected: Hybrid mode (confidence: 0.95)
+   - Reasoning: "User uploaded video/audio file - will process their content"
+   - Routes to: HumanContentProcessorService
+
+2. **User provides topic: "How to make Butter Chicken"**
+   - Detected: AI-First mode (confidence: 0.9)
+   - Reasoning: "User provided topic only - will generate complete content"
+   - Routes to: AIContentGeneratorService
+
+3. **User writes title + description manually**
+   - Detected: Human-First mode (confidence: 0.9)
+   - Reasoning: "User provided manually written content - will only assist with translation"
+   - Routes to: PlatformContentGeneratorService
+
+4. **User has preference set to "hybrid" in profile**
+   - Detected: Hybrid mode (confidence: 1.0)
+   - Reasoning: "User explicitly selected this mode in preferences"
+   - Routes to: HumanContentProcessorService
+
+**Integration with Services:**
+
+The mode detection service acts as the orchestrator:
+- Receives all content requests
+- Analyzes input to determine intent
+- Routes to appropriate service (AI-First, Hybrid, or Human-First)
+- Returns unified response format
+- Handles streaming for real-time updates
+
+**API Integration Flow:**
+
+```
+POST /api/content/process
+  ↓
+ModeDetectionService.processContent()
+  ↓
+detectMode() → Analyze input signals
+  ↓
+Route to appropriate service:
+  - AI-First → AIContentGeneratorService
+  - Hybrid → HumanContentProcessorService
+  - Human-First → PlatformContentGeneratorService
+  ↓
+Return results to API
+  ↓
+Frontend displays content
+```
+
+**How This Will Be Used:**
+
+1. **Single API Endpoint** - Backend can have one endpoint `/api/content/process` that handles all modes automatically
+
+2. **Onboarding Flow** - Frontend shows mode recommendations based on user profile using `recommendMode()`
+
+3. **Smart Defaults** - Users don't need to understand modes - system detects intent automatically
+
+4. **Validation** - Frontend validates input before submission using `validateInput()`
+
+5. **Real-time Feedback** - Streaming support shows "Detected: Hybrid mode" before processing starts
+
+6. **Flexibility** - Users can override detection by setting `preferredMode` in their profile
+
+**Key Benefits:**
+
+- **Simplifies API** - One endpoint instead of three separate endpoints
+- **Better UX** - Users don't need to understand technical mode differences
+- **Intelligent** - Automatically routes based on what user provides
+- **Flexible** - Respects user preferences when set
+- **Validated** - Catches errors before processing
+- **Transparent** - Shows reasoning for mode selection
+
+This service completes the creator mode infrastructure - we now have prompts (1.1a), services (1.1b), and intelligent routing (1.1c) fully implemented.
