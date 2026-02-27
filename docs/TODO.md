@@ -671,7 +671,7 @@ export const api = {
   - **Components:** Feed, ProfileCard, GroupList
   - **Test:** Mock 100 users, verify feed performance
 
-- [/] **4.3c: Add community API routes (Shubh)**
+- [x] **4.3c: Add community API routes (Shubh)** ✅ COMPLETE (mock)
   - **What:** `POST /api/community/post`, `GET /api/community/feed`
   - **Where:** `src/routes/community.route.ts`
   - **Test:** Create post, fetch feed, verify
