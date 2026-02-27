@@ -27,7 +27,7 @@
 
 ## Cost-Saving Strategies
 
-### 1. **Use Ollama for Development** 🦙
+### 1. **Use GitHub Copilot for Development** 🦙
 
 **Problem:** Every Bedrock test costs $0.15
 
@@ -36,11 +36,11 @@
 ```typescript
 // config/ai.config.ts
 export const AI_CONFIG = {
-  // Use Ollama in development
+  // Use GitHub Copilot in development
   development: {
-    provider: 'ollama',
+    provider: 'mockAI',
     model: 'llama3.1:8b',
-    endpoint: 'http://localhost:11434',
+    endpoint: 'http://mock-ai-endpoint',
     cost: 0 // FREE!
   },
   
@@ -56,8 +56,8 @@ export const AI_CONFIG = {
 async function generate(prompt: string) {
   const config = AI_CONFIG[process.env.NODE_ENV];
   
-  if (config.provider === 'ollama') {
-    return await ollama.generate(prompt); // FREE
+  if (config.provider === 'mockAI') {
+    return await mockAI.generate(prompt); // FREE
   } else {
     return await bedrock.generate(prompt); // PAID
   }
@@ -413,7 +413,7 @@ console.log(costTracker.getReport());
 ### If You're Running Out of Budget
 
 **At $50 (62.5% spent):**
-- ✅ Switch to Ollama only (no more Bedrock)
+- ✅ Switch to GitHub Copilot only (no more Bedrock)
 - ✅ Stop processing new videos
 - ✅ Use cached results only
 - ✅ Investigate what's costing money
@@ -425,7 +425,7 @@ console.log(costTracker.getReport());
 - ✅ Prepare backup presentation
 
 **At $80 (100% spent):**
-- ✅ Full local mode (Ollama + mocks)
+- ✅ Full local mode (GitHub Copilot + mocks)
 - ✅ Use pre-recorded demo video
 - ✅ Show cached results only
 
@@ -437,7 +437,7 @@ console.log(costTracker.getReport());
 
 - [ ] Check cache first
 - [ ] Is this necessary for demo?
-- [ ] Can I use Ollama instead?
+- [ ] Can I use GitHub Copilot instead?
 - [ ] Can I batch this with other calls?
 - [ ] Track the cost
 
@@ -462,7 +462,7 @@ console.log(costTracker.getReport());
 ### With Optimization (Our Approach)
 
 ```
-Development (Day 1-5): $5 (mostly Ollama)
+Development (Day 1-5): $5 (mostly GitHub Copilot)
 Integration (Day 6): $5 (test with Bedrock)
 Demo Prep: $5 (pre-cache demos)
 Demo Day: $2 (cached results)
@@ -490,7 +490,7 @@ Over budget: -$15
 ## Summary
 
 **Cost-Saving Strategies:**
-1. ✅ Use Ollama for development (save $50)
+1. ✅ Use GitHub Copilot for development (save $50)
 2. ✅ Aggressive caching (save 70%)
 3. ✅ Optimize prompts (save 80%)
 4. ✅ Batch processing (save 90%)
@@ -506,7 +506,7 @@ Over budget: -$15
 - ✅ Cost tracking in code
 
 **Emergency Plan:**
-- ✅ Switch to Ollama at $50
+- ✅ Switch to GitHub Copilot at $50
 - ✅ Stop processing at $70
 - ✅ Local mode at $80
 

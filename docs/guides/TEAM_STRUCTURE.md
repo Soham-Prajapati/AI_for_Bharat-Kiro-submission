@@ -127,11 +127,11 @@ src/
 **Prompt Engineering:**
 - Create effective prompts for each domain
 - Optimize for token usage (cost)
-- Test with Ollama before Bedrock
+- Test with GitHub Copilot before Bedrock
 - Iterate based on output quality
 
 **Local AI Testing:**
-- Ollama integration
+- Mock data for testing
 - Test all features locally
 - Validate before AWS deployment
 - Document prompt performance
@@ -145,7 +145,7 @@ src/
 │   ├── content-generation.service.ts ← Nidhi
 │   ├── translation.service.ts       ← Nidhi
 │   ├── seo.service.ts               ← Nidhi
-│   └── ollama.service.ts            ← Nidhi
+│   └── mock-ai.service.ts            ← Nidhi
 ├── prompts/
 │   ├── education.prompts.ts         ← Nidhi
 │   ├── food.prompts.ts              ← Nidhi
@@ -162,7 +162,7 @@ src/
 
 ### **Daily Tasks**
 
-**Day 1:** Domain detection engine + Ollama setup
+**Day 1:** Domain detection engine + Mock data setup
 **Day 2:** Prompt templates + Generation logic
 **Day 3:** Multi-language + SEO optimization
 **Day 4:** Quality validation + Confidence scoring
@@ -171,7 +171,7 @@ src/
 
 ### **Integration Points**
 
-- **With Shubh/Soham:** Use Bedrock/Ollama services, provide generation logic
+- **With Shubh/Soham:** Use Bedrock/GitHub Copilot services, provide generation logic
 - **With Srushti:** Define output format, provide sample data
 - **With Lakshmi:** Provide test cases, validate outputs
 
@@ -320,7 +320,7 @@ src/
 │       └── end-to-end.test.ts       ← Lakshmi
 ├── mocks/
 │   ├── aws-sdk.mock.ts              ← Lakshmi
-│   └── ollama.mock.ts               ← Lakshmi
+│   └── mockAI.mock.ts               ← Lakshmi
 .github/
 └── workflows/
     ├── ci.yml                       ← Lakshmi

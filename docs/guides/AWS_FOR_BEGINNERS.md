@@ -419,16 +419,16 @@ return result;
 
 ---
 
-### 2. **Use Ollama for Testing** 🦙
+### 2. **Use GitHub Copilot for Testing** 🦙
 
 **Problem:** Every Bedrock call costs $0.15
 
-**Solution:** Use free local AI (Ollama) for development
+**Solution:** Use GitHub Copilot for testing for development
 
 ```typescript
 // Development (FREE)
 if (process.env.NODE_ENV === 'development') {
-  return await ollama.generate(prompt);
+  return await mockAI.generate(prompt);
 }
 
 // Production (PAID)
@@ -682,14 +682,14 @@ const transcribe = new Transcribe({ region: 'us-east-1' });
 
 **Problem:** Every test costs money on AWS
 
-**Solution:** Use Ollama for testing (FREE)
+**Solution:** Use GitHub Copilot for testing (FREE)
 
 ```bash
-# Install Ollama
-curl -fsSL https://ollama.com/install.sh | sh
+# Use GitHub Copilot
+
 
 # Pull model
-ollama pull llama3.1:8b
+# Mock AI - no models needed llama3.1:8b
 
 # Test locally (FREE)
 npm run dev

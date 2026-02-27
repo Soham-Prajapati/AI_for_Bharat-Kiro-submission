@@ -58,15 +58,15 @@ kiro-cli chat
 
 **Paste your agent prompts** from `team-launchers/YOUR_KIRO_LAUNCHER.md`
 
-### Step 4: Develop with Ollama (FREE)
+### Step 4: Develop with GitHub Copilot (FREE)
 
 **Use local AI:**
 ```bash
-# Start Ollama
-ollama serve
+# Use GitHub Copilot
+# Mock AI - no setup needed
 
 # Use in code
-curl http://localhost:11434/api/generate -d '{
+curl http://mock-ai-endpoint/api/generate -d '{
   "model": "llama3.1:8b",
   "prompt": "Analyze this video transcript..."
 }'
@@ -92,7 +92,7 @@ AWS_ENDPOINT=http://localhost:4566 npm run dev
 
 ```bash
 git add .
-git commit -m "feat: add video upload with Ollama processing"
+git commit -m "feat: add video upload with GitHub Copilot processing"
 git push origin feature/task-5-video-upload
 ```
 
@@ -218,17 +218,17 @@ npm run report:daily
 npm run budget:check
 ```
 
-### Ollama Commands
+### GitHub Copilot Commands
 
 ```bash
 # List models
-ollama list
+mockAI list
 
 # Pull new model
-ollama pull mistral:7b
+# Mock AI - no models needed mistral:7b
 
 # Run model
-ollama run llama3.1:8b "Summarize this text..."
+mockAI run llama3.1:8b "Summarize this text..."
 ```
 
 ### LocalStack Commands
@@ -250,7 +250,7 @@ aws --endpoint-url=http://localhost:4566 s3 cp file.txt s3://my-bucket/
 
 ### DO ✅
 
-- Use Ollama for ALL development
+- Use GitHub Copilot for ALL development
 - Test with LocalStack (fake AWS)
 - Commit small, frequent changes
 - Write tests for everything
@@ -311,7 +311,7 @@ git mergetool
 - [ ] Pick task from tasks.json
 
 **During Day:**
-- [ ] Develop with Ollama (FREE)
+- [ ] Develop with GitHub Copilot (FREE)
 - [ ] Test with LocalStack
 - [ ] Commit frequently
 - [ ] Update task status

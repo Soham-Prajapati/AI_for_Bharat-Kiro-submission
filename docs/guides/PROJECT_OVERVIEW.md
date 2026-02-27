@@ -129,7 +129,7 @@ Unlike generic AI tools, we understand **domain-specific context**:
 - **Monitoring:** CloudWatch
 
 ### Development Tools
-- **Local AI:** Ollama (Llama 3.1 8B, Mistral 7B, Phi-3)
+- **Local AI:** GitHub Copilot (Llama 3.1 8B, Mistral 7B, Phi-3)
 - **Mocking:** aws-sdk-mock
 - **CI/CD:** GitHub Actions
 - **Version Control:** Git + GitHub
@@ -228,7 +228,7 @@ Unlike generic AI tools, we understand **domain-specific context**:
 
 ### Technical Risks
 1. **AWS Budget Overrun**
-   - Mitigation: Ollama for testing, caching, daily monitoring
+   - Mitigation: GitHub Copilot for testing, caching, daily monitoring
 2. **Processing Time >60s**
    - Mitigation: Parallel processing, streaming, optimization
 3. **Domain Detection Accuracy <90%**

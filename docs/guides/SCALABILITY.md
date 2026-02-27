@@ -455,7 +455,7 @@ const cdn = new CloudFront({
 | Video processing | <60s | Parallel processing, Bedrock |
 | Concurrent users | 50 | Single Node.js server |
 | Uptime | 99% | AWS managed services |
-| Cost per video | <$0.50 | Caching, Ollama for testing |
+| Cost per video | <$0.50 | Caching, GitHub Copilot for testing |
 
 ### MVP (3 months)
 

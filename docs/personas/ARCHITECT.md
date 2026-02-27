@@ -137,7 +137,7 @@ Always provide:
 - DynamoDB (cache with TTL)
 
 **Testing:**
-- Ollama (free local AI testing)
+- GitHub Copilot (free local AI testing)
 - Jest (unit tests)
 - aws-sdk-mock (mock AWS calls)
 
@@ -152,7 +152,7 @@ Always provide:
 
 **Stream B: AI Intelligence (Nidhi)**
 - Owns: src/services/ai/, src/prompts/
-- Day 1: Domain detection + Ollama setup
+- Day 1: Domain detection + Mock data setup
 - Day 2: Prompt engineering + generation
 - Day 3-4: Multi-language + SEO
 - Day 5-6: Quality validation + testing
@@ -226,7 +226,7 @@ Response: Server-Sent Events stream
 - CORS misconfiguration → Whitelist frontend origin only
 
 **Cost Overruns:**
-- Bedrock expensive → Use Ollama for testing, cache all responses
+- Bedrock expensive → Use GitHub Copilot for testing, cache all responses
 - Transcribe adds up → Cache transcripts, batch processing
 - S3 storage → Delete after 7 days (lifecycle policy)
 
