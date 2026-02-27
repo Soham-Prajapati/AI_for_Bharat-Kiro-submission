@@ -410,9 +410,602 @@ export const api = {
 
 ---
 
-## 📋 PHASE 3-6: Breakthrough, Platform, Empowerment, India-First Features
+## 📋 PHASE 3: Breakthrough Features (Day 3) — 6 FEATURES
 
-**[Similar detailed format for remaining 20 features...]**
+### Day 3.1: Workspace (Feature #6) 🏢
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Collaborative"
+
+- [ ] **3.1a: Create collaborative workspace service (Nidhi)**
+  - **What:** Real-time collaborative editing for content
+  - **Where:** `src/services/workspace.service.ts`
+  - **How:**
+    - WebSocket for real-time sync
+    - Operational Transform for conflict resolution
+    - User presence tracking (who's editing what)
+  - **Output:** `{ workspaceId: string, users: User[], changes: Change[], version: number }`
+  - **Test:** 3 users edit same content, verify no conflicts
+
+- [ ] **3.1b: Build workspace UI (Srushti)**
+  - **What:** Google Docs-style collaborative editor
+  - **Where:** `frontend/app/workspace/page.tsx`
+  - **Components:** Editor, UserPresence, CommentThread, VersionHistory
+  - **Design:** Real-time cursors, inline comments, change tracking
+  - **Test:** Multiple users, verify smooth collaboration
+
+- [ ] **3.1c: Add workspace API routes (Shubh)**
+  - **What:** `POST /api/workspace/create`, `GET /api/workspace/:id`
+  - **Where:** `src/routes/workspace.route.ts`
+  - **WebSocket:** `/ws/workspace/:id` for real-time sync
+  - **Test:** Create workspace, join, edit, verify sync
+
+- [ ] **3.1d: Test collaboration (Lakshmi)**
+  - **What:** Test concurrent editing, conflict resolution
+  - **Where:** `src/__tests__/workspace.test.ts`
+  - **Test:** 10 concurrent users, verify data integrity
+
+### Day 3.2: Trend Predictor (Feature #7) 📈
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Trends"
+
+- [ ] **3.2a: Create trend analysis service (Nidhi)**
+  - **What:** Predict upcoming trends based on social data
+  - **Where:** `src/services/trend-predictor.service.ts`
+  - **How:**
+    - Scrape trending topics from Twitter, YouTube, Instagram
+    - Analyze growth rate, engagement velocity
+    - ML model to predict trend lifespan
+  - **Output:** `{ trends: Trend[], predictions: Prediction[], confidence: number }`
+  - **Test:** Historical data, verify >60% accuracy
+
+- [ ] **3.2b: Build trend dashboard (Srushti)**
+  - **What:** Visual trend timeline + predictions
+  - **Where:** `frontend/components/TrendDashboard.tsx`
+  - **Design:** Line charts, heatmaps, trend cards
+  - **Test:** Mock 20 trends, verify visualization
+
+- [ ] **3.2c: Add trend API routes (Shubh)**
+  - **What:** `GET /api/trends/current`, `GET /api/trends/predict`
+  - **Where:** `src/routes/trends.route.ts`
+  - **Caching:** Cache for 6 hours
+  - **Test:** Call API, verify fresh data
+
+- [ ] **3.2d: Test prediction accuracy (Lakshmi)**
+  - **What:** Validate against real trend data
+  - **Where:** `src/__tests__/trends.test.ts`
+  - **Dataset:** Last 3 months of trends
+  - **Metric:** >60% accuracy on trend lifespan
+
+### Day 3.3: Voice Clone (Feature #8) 🎤
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Voice"
+
+- [ ] **3.3a: Integrate voice cloning service (Nidhi)**
+  - **What:** Clone creator's voice for AI narration
+  - **Where:** `src/services/voice-clone.service.ts`
+  - **How:**
+    - Use ElevenLabs or AWS Polly custom voice
+    - Train on 5-10 minutes of creator audio
+    - Generate narration in cloned voice
+  - **Output:** Audio file with cloned voice
+  - **Test:** Clone voice, verify similarity >80%
+
+- [ ] **3.3b: Build voice training UI (Srushti)**
+  - **What:** Record voice samples, train model
+  - **Where:** `frontend/components/VoiceTrainer.tsx`
+  - **Design:** Record button, waveform, progress bar
+  - **Test:** Record 5 samples, verify training starts
+
+- [ ] **3.3c: Add voice API routes (Shubh)**
+  - **What:** `POST /api/voice/train`, `POST /api/voice/generate`
+  - **Where:** `src/routes/voice.route.ts`
+  - **Storage:** S3 for voice models
+  - **Test:** Train model, generate audio
+
+- [ ] **3.3d: Test voice quality (Lakshmi)**
+  - **What:** Verify voice similarity, naturalness
+  - **Where:** `src/__tests__/voice.test.ts`
+  - **Metric:** MOS (Mean Opinion Score) >4.0/5.0
+
+### Day 3.4: Dopamine Optimizer (Feature #9) 🧠
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Engagement"
+
+- [ ] **3.4a: Create engagement optimizer (Nidhi)**
+  - **What:** Optimize content for dopamine triggers
+  - **Where:** `src/services/dopamine-optimizer.service.ts`
+  - **How:**
+    - Analyze hook strength (first 3 seconds)
+    - Identify emotional peaks, cliffhangers
+    - Suggest pacing improvements
+  - **Output:** `{ score: number, hooks: Hook[], improvements: string[] }`
+  - **Test:** Feed 10 viral videos, verify high scores
+
+- [ ] **3.4b: Build optimizer UI (Srushti)**
+  - **What:** Visual timeline with engagement peaks
+  - **Where:** `frontend/components/DopamineOptimizer.tsx`
+  - **Design:** Timeline, peak markers, suggestions
+  - **Test:** Mock video, verify peak visualization
+
+- [ ] **3.4c: Add optimizer API route (Shubh)**
+  - **What:** `POST /api/dopamine/optimize`
+  - **Where:** `src/routes/dopamine.route.ts`
+  - **Test:** Send video, verify optimization suggestions
+
+- [ ] **3.4d: Test optimization impact (Lakshmi)**
+  - **What:** A/B test optimized vs non-optimized
+  - **Where:** `src/__tests__/dopamine.test.ts`
+  - **Metric:** >20% engagement improvement
+
+### Day 3.5: Watermark (Feature #10) 🔒
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Brand Protection"
+
+- [ ] **3.5a: Create watermark service (Nidhi)**
+  - **What:** Add invisible/visible watermarks to content
+  - **Where:** `src/services/watermark.service.ts`
+  - **How:**
+    - Visible: Logo overlay on video/image
+    - Invisible: Steganography for tracking
+  - **Output:** Watermarked media file
+  - **Test:** Add watermark, verify detectability
+
+- [ ] **3.5b: Build watermark UI (Srushti)**
+  - **What:** Watermark editor (position, opacity, size)
+  - **Where:** `frontend/components/WatermarkEditor.tsx`
+  - **Design:** Drag-drop logo, preview
+  - **Test:** Add watermark, verify preview
+
+- [ ] **3.5c: Add watermark API route (Shubh)**
+  - **What:** `POST /api/watermark/add`
+  - **Where:** `src/routes/watermark.route.ts`
+  - **Test:** Upload media, add watermark, download
+
+- [ ] **3.5d: Test watermark durability (Lakshmi)**
+  - **What:** Test against compression, cropping
+  - **Where:** `src/__tests__/watermark.test.ts`
+  - **Test:** Apply transformations, verify watermark survives
+
+### Day 3.6: Content Multiplier (Feature #11) 🔄
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Repurpose"
+
+- [ ] **3.6a: Create content multiplier service (Nidhi)**
+  - **What:** Repurpose 1 video → 50 pieces of content
+  - **Where:** `src/services/content-multiplier.service.ts`
+  - **How:**
+    - Extract key moments (clips)
+    - Generate quotes, infographics, audiograms
+    - Create platform-specific variations
+  - **Output:** `{ clips: Video[], quotes: Image[], audiograms: Audio[] }`
+  - **Test:** 1 video → verify 50+ outputs
+
+- [ ] **3.6b: Build multiplier UI (Srushti)**
+  - **What:** Visual content tree showing all outputs
+  - **Where:** `frontend/components/ContentMultiplier.tsx`
+  - **Design:** Tree view, preview cards, bulk export
+  - **Test:** Mock 50 outputs, verify smooth rendering
+
+- [ ] **3.6c: Add multiplier API route (Shubh)**
+  - **What:** `POST /api/multiply/generate`
+  - **Where:** `src/routes/multiply.route.ts`
+  - **Test:** Send video, verify 50+ outputs
+
+- [ ] **3.6d: Test output quality (Lakshmi)**
+  - **What:** Verify all outputs are usable
+  - **Where:** `src/__tests__/multiply.test.ts`
+  - **Metric:** >90% outputs pass quality check
+
+---
+
+## 📋 PHASE 4: Platform Features (Day 4) — 7 FEATURES
+
+### Day 4.1: Marketplace (Feature #12) 🛒
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Marketplace"
+
+- [ ] **4.1a: Create marketplace service (Nidhi)**
+  - **What:** Buy/sell content templates, scripts, thumbnails
+  - **Where:** `src/services/marketplace.service.ts`
+  - **How:**
+    - Listing creation, pricing, licensing
+    - Payment processing (Stripe/Razorpay)
+    - Revenue sharing (70% creator, 30% platform)
+  - **Output:** `{ listings: Listing[], transactions: Transaction[] }`
+  - **Test:** Create listing, purchase, verify payment
+
+- [ ] **4.1b: Build marketplace UI (Srushti)**
+  - **What:** Browse, search, purchase interface
+  - **Where:** `frontend/app/marketplace/page.tsx`
+  - **Components:** ListingCard, SearchBar, CheckoutFlow
+  - **Test:** Browse 100 listings, purchase, verify
+
+- [ ] **4.1c: Add marketplace API routes (Shubh)**
+  - **What:** `POST /api/marketplace/list`, `POST /api/marketplace/purchase`
+  - **Where:** `src/routes/marketplace.route.ts`
+  - **Test:** List item, purchase, verify transaction
+
+- [ ] **4.1d: Test payment flow (Lakshmi)**
+  - **What:** End-to-end payment testing
+  - **Where:** `src/__tests__/marketplace.test.ts`
+  - **Test:** Sandbox payments, refunds, disputes
+
+### Day 4.2: Knowledge Graph (Feature #13) 🕸️
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Knowledge"
+
+- [ ] **4.2a: Create knowledge graph service (Nidhi)**
+  - **What:** Map relationships between content, topics, creators
+  - **Where:** `src/services/knowledge-graph.service.ts`
+  - **How:**
+    - Extract entities (people, places, topics)
+    - Build graph database (Neo4j or DynamoDB)
+    - Find related content, suggest connections
+  - **Output:** `{ nodes: Node[], edges: Edge[], recommendations: Content[] }`
+  - **Test:** 100 videos, verify accurate relationships
+
+- [ ] **4.2b: Build graph visualization (Srushti)**
+  - **What:** Interactive network graph
+  - **Where:** `frontend/components/KnowledgeGraph.tsx`
+  - **Library:** D3.js or Cytoscape.js
+  - **Test:** Render 1000 nodes, verify performance
+
+- [ ] **4.2c: Add graph API routes (Shubh)**
+  - **What:** `GET /api/graph/explore`, `GET /api/graph/related`
+  - **Where:** `src/routes/graph.route.ts`
+  - **Test:** Query graph, verify relationships
+
+- [ ] **4.2d: Test graph accuracy (Lakshmi)**
+  - **What:** Verify relationship accuracy
+  - **Where:** `src/__tests__/graph.test.ts`
+  - **Metric:** >85% accurate relationships
+
+### Day 4.3: Community (Feature #14) 👥
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Community"
+
+- [ ] **4.3a: Create community service (Nidhi)**
+  - **What:** Creator network, forums, groups
+  - **Where:** `src/services/community.service.ts`
+  - **How:**
+    - User profiles, follow/unfollow
+    - Discussion threads, comments
+    - Moderation tools
+  - **Output:** `{ users: User[], posts: Post[], groups: Group[] }`
+  - **Test:** Create group, post, comment, verify
+
+- [ ] **4.3b: Build community UI (Srushti)**
+  - **What:** Social feed, profiles, groups
+  - **Where:** `frontend/app/community/page.tsx`
+  - **Components:** Feed, ProfileCard, GroupList
+  - **Test:** Mock 100 users, verify feed performance
+
+- [ ] **4.3c: Add community API routes (Shubh)**
+  - **What:** `POST /api/community/post`, `GET /api/community/feed`
+  - **Where:** `src/routes/community.route.ts`
+  - **Test:** Create post, fetch feed, verify
+
+- [ ] **4.3d: Test moderation (Lakshmi)**
+  - **What:** Test spam detection, content moderation
+  - **Where:** `src/__tests__/community.test.ts`
+  - **Test:** Post spam, verify auto-moderation
+
+### Day 4.4: Membership (Feature #15) 💳
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Monetization"
+
+- [ ] **4.4a: Create membership service (Nidhi)**
+  - **What:** Subscription tiers, exclusive content
+  - **Where:** `src/services/membership.service.ts`
+  - **How:**
+    - Stripe subscriptions
+    - Tiered access (Free, Pro, Enterprise)
+    - Exclusive content gating
+  - **Output:** `{ tiers: Tier[], subscriptions: Subscription[] }`
+  - **Test:** Subscribe, verify access control
+
+- [ ] **4.4b: Build membership UI (Srushti)**
+  - **What:** Pricing page, subscription management
+  - **Where:** `frontend/app/membership/page.tsx`
+  - **Components:** PricingTable, SubscriptionCard
+  - **Test:** Subscribe, upgrade, cancel, verify
+
+- [ ] **4.4c: Add membership API routes (Shubh)**
+  - **What:** `POST /api/membership/subscribe`, `POST /api/membership/cancel`
+  - **Where:** `src/routes/membership.route.ts`
+  - **Test:** Full subscription lifecycle
+
+- [ ] **4.4d: Test billing (Lakshmi)**
+  - **What:** Test recurring billing, failed payments
+  - **Where:** `src/__tests__/membership.test.ts`
+  - **Test:** Sandbox billing scenarios
+
+### Day 4.5: Automation (Feature #16) ⚙️
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Automation"
+
+- [ ] **4.5a: Create automation service (Nidhi)**
+  - **What:** Scheduled posting, auto-repurposing
+  - **Where:** `src/services/automation.service.ts`
+  - **How:**
+    - Cron jobs for scheduled tasks
+    - Auto-generate content on triggers
+    - Platform API integrations for posting
+  - **Output:** `{ schedules: Schedule[], automations: Automation[] }`
+  - **Test:** Schedule post, verify auto-publish
+
+- [ ] **4.5b: Build automation UI (Srushti)**
+  - **What:** Automation builder (if-this-then-that)
+  - **Where:** `frontend/components/AutomationBuilder.tsx`
+  - **Design:** Visual workflow builder
+  - **Test:** Create automation, verify execution
+
+- [ ] **4.5c: Add automation API routes (Shubh)**
+  - **What:** `POST /api/automation/create`, `GET /api/automation/list`
+  - **Where:** `src/routes/automation.route.ts`
+  - **Test:** Create automation, verify triggers
+
+- [ ] **4.5d: Test automation reliability (Lakshmi)**
+  - **What:** Test scheduled tasks, error handling
+  - **Where:** `src/__tests__/automation.test.ts`
+  - **Metric:** >99% execution success rate
+
+### Day 4.6: Analytics Dashboard (Feature #17) 📊
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Analytics"
+
+- [ ] **4.6a: Create analytics service (Nidhi)**
+  - **What:** Deep insights, performance metrics
+  - **Where:** `src/services/analytics-dashboard.service.ts`
+  - **How:**
+    - Aggregate data from all platforms
+    - Calculate engagement, reach, ROI
+    - Trend analysis, forecasting
+  - **Output:** `{ metrics: Metric[], insights: Insight[], forecasts: Forecast[] }`
+  - **Test:** Mock data, verify calculations
+
+- [ ] **4.6b: Build analytics dashboard (Srushti)**
+  - **What:** Comprehensive analytics UI
+  - **Where:** `frontend/app/analytics-dashboard/page.tsx`
+  - **Components:** MetricCard, TrendChart, InsightPanel
+  - **Test:** Mock 1000 data points, verify performance
+
+- [ ] **4.6c: Add analytics API routes (Shubh)**
+  - **What:** `GET /api/analytics-dashboard/metrics`
+  - **Where:** `src/routes/analytics-dashboard.route.ts`
+  - **Test:** Fetch metrics, verify accuracy
+
+- [ ] **4.6d: Test data accuracy (Lakshmi)**
+  - **What:** Verify metric calculations
+  - **Where:** `src/__tests__/analytics-dashboard.test.ts`
+  - **Test:** Known data, verify formulas
+
+### Day 4.7: Platform Integration Hub (Feature #18) 🔌
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Integration"
+
+- [ ] **4.7a: Create integration service (Nidhi)**
+  - **What:** Connect to YouTube, Instagram, LinkedIn APIs
+  - **Where:** `src/services/platform-integration.service.ts`
+  - **How:**
+    - OAuth for each platform
+    - Auto-post generated content
+    - Fetch analytics from platforms
+  - **Output:** `{ connections: Connection[], posts: Post[] }`
+  - **Test:** Connect platform, post, verify
+
+- [ ] **4.7b: Build integration UI (Srushti)**
+  - **What:** Connect accounts, manage integrations
+  - **Where:** `frontend/components/PlatformIntegrations.tsx`
+  - **Design:** Platform cards, OAuth flow
+  - **Test:** Connect 6 platforms, verify
+
+- [ ] **4.7c: Add integration API routes (Shubh)**
+  - **What:** `POST /api/integrations/connect`, `POST /api/integrations/post`
+  - **Where:** `src/routes/integrations.route.ts`
+  - **Test:** OAuth flow, posting
+
+- [ ] **4.7d: Test platform APIs (Lakshmi)**
+  - **What:** Test all platform integrations
+  - **Where:** `src/__tests__/integrations.test.ts`
+  - **Test:** Post to all 6 platforms, verify
+
+---
+
+## 📋 PHASE 5: Empowerment Features (Day 5) — 5 FEATURES
+
+### Day 5.1: ADHD Navigator (Feature #19) 🧠
+**Read:** `docs/PROJECT_PLAN.md` → Search for "ADHD"
+
+- [ ] **5.1a: Create ADHD-friendly service (Nidhi)**
+  - **What:** Focus mode, distraction-free interface
+  - **Where:** `src/services/adhd-navigator.service.ts`
+  - **How:**
+    - Pomodoro timer (25/5 min intervals)
+    - Task chunking (break big tasks into small)
+    - Progress gamification
+  - **Output:** `{ session: Session, progress: Progress, rewards: Reward[] }`
+  - **Test:** Start session, verify timer, rewards
+
+- [ ] **5.1b: Build ADHD UI (Srushti)**
+  - **What:** Minimal, distraction-free interface
+  - **Where:** `frontend/components/ADHDNavigator.tsx`
+  - **Design:** Large buttons, clear progress, no clutter
+  - **Test:** User testing with ADHD creators
+
+- [ ] **5.1c: Add ADHD API routes (Shubh)**
+  - **What:** `POST /api/adhd/session/start`
+  - **Where:** `src/routes/adhd.route.ts`
+  - **Test:** Start session, track progress
+
+- [ ] **5.1d: Test usability (Lakshmi)**
+  - **What:** Usability testing with ADHD users
+  - **Where:** `src/__tests__/adhd.test.ts`
+  - **Metric:** >80% user satisfaction
+
+### Day 5.2: Creative Director (Feature #20) 🎨
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Feedback"
+
+- [ ] **5.2a: Create feedback service (Nidhi)**
+  - **What:** AI feedback on content quality
+  - **Where:** `src/services/creative-director.service.ts`
+  - **How:**
+    - Analyze structure, pacing, engagement
+    - Score on 10 dimensions
+    - Suggest improvements
+  - **Output:** `{ score: Score, feedback: Feedback[], improvements: string[] }`
+  - **Test:** Feed 10 videos, verify feedback quality
+
+- [ ] **5.2b: Build feedback UI (Srushti)**
+  - **What:** Feedback panel with scores, suggestions
+  - **Where:** `frontend/components/CreativeDirector.tsx`
+  - **Design:** Score cards, improvement list
+  - **Test:** Mock feedback, verify UI
+
+- [ ] **5.2c: Add feedback API route (Shubh)**
+  - **What:** `POST /api/creative-director/analyze`
+  - **Where:** `src/routes/creative-director.route.ts`
+  - **Test:** Send content, verify feedback
+
+- [ ] **5.2d: Test feedback accuracy (Lakshmi)**
+  - **What:** Validate feedback against expert reviews
+  - **Where:** `src/__tests__/creative-director.test.ts`
+  - **Metric:** >70% agreement with experts
+
+### Day 5.3: Viral Analyzer (Feature #21) 🔍
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Reverse Engineer"
+
+- [ ] **5.3a: Create viral analysis service (Nidhi)**
+  - **What:** Reverse engineer viral content
+  - **Where:** `src/services/viral-analyzer.service.ts`
+  - **How:**
+    - Analyze viral videos (structure, hooks, pacing)
+    - Extract success patterns
+    - Generate replication guide
+  - **Output:** `{ patterns: Pattern[], hooks: Hook[], guide: string }`
+  - **Test:** Analyze 10 viral videos, verify patterns
+
+- [ ] **5.3b: Build analyzer UI (Srushti)**
+  - **What:** Visual breakdown of viral elements
+  - **Where:** `frontend/components/ViralAnalyzer.tsx`
+  - **Design:** Timeline with annotations, pattern cards
+  - **Test:** Mock viral video, verify visualization
+
+- [ ] **5.3c: Add analyzer API route (Shubh)**
+  - **What:** `POST /api/viral-analyzer/analyze`
+  - **Where:** `src/routes/viral-analyzer.route.ts`
+  - **Test:** Send viral video URL, verify analysis
+
+- [ ] **5.3d: Test pattern accuracy (Lakshmi)**
+  - **What:** Verify extracted patterns are valid
+  - **Where:** `src/__tests__/viral-analyzer.test.ts`
+  - **Metric:** >75% pattern accuracy
+
+### Day 5.4: Content Multiplier V2 (Feature #22) 🔄
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Multiplier"
+
+- [ ] **5.4a: Enhance multiplier service (Nidhi)**
+  - **What:** Advanced repurposing (1→100 pieces)
+  - **Where:** `src/services/content-multiplier-v2.service.ts`
+  - **How:**
+    - AI-generated variations
+    - Platform-specific optimizations
+    - Auto-scheduling
+  - **Output:** 100+ content pieces
+  - **Test:** 1 video → verify 100+ outputs
+
+- [ ] **5.4b: Build multiplier V2 UI (Srushti)**
+  - **What:** Advanced content tree, bulk actions
+  - **Where:** `frontend/components/ContentMultiplierV2.tsx`
+  - **Test:** Mock 100 outputs, verify performance
+
+- [ ] **5.4c: Add multiplier V2 API route (Shubh)**
+  - **What:** `POST /api/multiply-v2/generate`
+  - **Where:** `src/routes/multiply-v2.route.ts`
+  - **Test:** Generate 100 pieces, verify quality
+
+- [ ] **5.4d: Test output diversity (Lakshmi)**
+  - **What:** Verify outputs are diverse, not repetitive
+  - **Where:** `src/__tests__/multiply-v2.test.ts`
+  - **Metric:** >80% unique content
+
+### Day 5.5: Safety & Moderation (Feature #23) 🛡️
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Safety"
+
+- [ ] **5.5a: Create safety service (Nidhi)**
+  - **What:** Content moderation, compliance checking
+  - **Where:** `src/services/safety.service.ts`
+  - **How:**
+    - AWS Rekognition for image moderation
+    - Bedrock for text moderation
+    - Platform guidelines compliance
+  - **Output:** `{ safe: boolean, violations: Violation[], suggestions: string[] }`
+  - **Test:** Feed unsafe content, verify detection
+
+- [ ] **5.5b: Build safety UI (Srushti)**
+  - **What:** Safety dashboard, violation alerts
+  - **Where:** `frontend/components/SafetyDashboard.tsx`
+  - **Design:** Traffic light system (green/yellow/red)
+  - **Test:** Mock violations, verify alerts
+
+- [ ] **5.5c: Add safety API route (Shubh)**
+  - **What:** `POST /api/safety/check`
+  - **Where:** `src/routes/safety.route.ts`
+  - **Test:** Check content, verify moderation
+
+- [ ] **5.5d: Test detection accuracy (Lakshmi)**
+  - **What:** Validate against known unsafe content
+  - **Where:** `src/__tests__/safety.test.ts`
+  - **Metric:** >95% detection accuracy
+
+---
+
+## 📋 PHASE 6: India-First Features (Day 5) — 2 FEATURES
+
+### Day 5.6: Vernacular Support (Feature #24) 🌏
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Languages"
+
+- [ ] **5.6a: Enhance language service (Nidhi)**
+  - **What:** Deep support for 9 Indian languages
+  - **Where:** `src/services/vernacular.service.ts`
+  - **How:**
+    - Native script rendering
+    - Cultural context adaptation
+    - Regional idioms, festivals
+  - **Output:** Culturally adapted content in target language
+  - **Test:** Translate to all 9 languages, verify quality
+
+- [ ] **5.6b: Build language selector UI (Srushti)**
+  - **What:** Language picker, preview
+  - **Where:** `frontend/components/LanguageSelector.tsx`
+  - **Design:** Flag icons, native script preview
+  - **Test:** Switch languages, verify rendering
+
+- [ ] **5.6c: Add language API routes (Shubh)**
+  - **What:** `POST /api/vernacular/translate`
+  - **Where:** `src/routes/vernacular.route.ts`
+  - **Test:** Translate to all languages, verify
+
+- [ ] **5.6d: Test translation quality (Lakshmi)**
+  - **What:** Native speaker validation
+  - **Where:** `src/__tests__/vernacular.test.ts`
+  - **Metric:** >85% native speaker approval
+
+### Day 5.7: Regional Network (Feature #25) 🇮🇳
+**Read:** `docs/PROJECT_PLAN.md` → Search for "Regional"
+
+- [ ] **5.7a: Create regional network service (Nidhi)**
+  - **What:** Connect creators by region, language
+  - **Where:** `src/services/regional-network.service.ts`
+  - **How:**
+    - Regional hubs (North, South, East, West)
+    - Language-based groups
+    - Local collaboration matching
+  - **Output:** `{ regions: Region[], creators: Creator[], collaborations: Collab[] }`
+  - **Test:** Create regional hub, match creators
+
+- [ ] **5.7b: Build regional network UI (Srushti)**
+  - **What:** Regional map, creator directory
+  - **Where:** `frontend/app/regional-network/page.tsx`
+  - **Components:** RegionMap, CreatorCard, CollabRequest
+  - **Test:** Browse regions, send collab request
+
+- [ ] **5.7c: Add regional API routes (Shubh)**
+  - **What:** `GET /api/regional/creators`, `POST /api/regional/collab`
+  - **Where:** `src/routes/regional.route.ts`
+  - **Test:** Fetch creators, create collaboration
+
+- [ ] **5.7d: Test matching algorithm (Lakshmi)**
+  - **What:** Verify creator matching accuracy
+  - **Where:** `src/__tests__/regional.test.ts`
+  - **Metric:** >80% successful collaborations
 
 ---
 
