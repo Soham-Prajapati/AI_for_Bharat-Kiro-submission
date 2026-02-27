@@ -3,47 +3,62 @@
  */
 
 import * as dotenv from 'dotenv';
-import { createAWSServiceManager } from './config/aws';
-import { ContentProcessor } from './services/ContentProcessor';
-import { DomainAdapter } from './services/DomainAdapter';
-import { AIServiceManager } from './services/AIServiceManager';
-import { AnalysisEngine } from './services/AnalysisEngine';
-import { GenerationEngine } from './services/GenerationEngine';
-import { HumanLoopController } from './services/HumanLoopController';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import { logger } from './middleware/logger.middleware';
+import { errorHandler, notFoundHandler } from './middleware/error.middleware';
+import { apiLimiter } from './middleware/ratelimit.middleware';
+import uploadRoute from './routes/upload.route';
+import processRoute from './routes/process.route';
+import generateRoute from './routes/generate.route';
+import authRoute from './routes/auth.route';
+import dnaRoute from './routes/dna.route';
+import analyticsRoute from './routes/analytics.route';
+import viralRoute from './routes/viral.route';
+import roiRoute from './routes/roi.route';
+import culturalRoute from './routes/cultural.route';
 
-// Load environment variables
 dotenv.config();
 
-/**
- * Initialize all services
- */
-export function initializeServices() {
-  const awsManager = createAWSServiceManager();
-  const aiServiceManager = new AIServiceManager(awsManager);
-  
-  return {
-    contentProcessor: new ContentProcessor(),
-    domainAdapter: new DomainAdapter(),
-    aiServiceManager,
-    analysisEngine: new AnalysisEngine(),
-    generationEngine: new GenerationEngine(),
-    humanLoopController: new HumanLoopController()
-  };
-}
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Export all types and services
-export * from './types/core';
-export * from './config/aws';
-export * from './services/ContentProcessor';
-export * from './services/DomainAdapter';
-export * from './services/AIServiceManager';
-export * from './services/AnalysisEngine';
-export * from './services/GenerationEngine';
-export * from './services/HumanLoopController';
+// Security middleware
+app.use(helmet());
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  credentials: true
+}));
+app.use(express.json({ limit: '10mb' }));
+app.use(logger);
 
-// Main execution
+// Rate limiting
+app.use('/api', apiLimiter);
+
+// Routes
+app.use('/api/upload', uploadRoute);
+app.use('/api/process', processRoute);
+app.use('/api/generate', generateRoute);
+app.use('/api/auth', authRoute);
+app.use('/api/dna', dnaRoute);
+app.use('/api/analytics', analyticsRoute);
+app.use('/api/viral', viralRoute);
+app.use('/api/roi', roiRoute);
+app.use('/api/cultural', culturalRoute);
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.use(notFoundHandler);
+app.use(errorHandler);
+
 if (require.main === module) {
-  console.log('Content Intelligence Platform initialized');
-  const services = initializeServices();
-  console.log('Services ready:', Object.keys(services));
+  app.listen(PORT, () => {
+    console.log(`🚀 Content Intelligence Platform running on port ${PORT}`);
+  });
 }
+
+export default app;

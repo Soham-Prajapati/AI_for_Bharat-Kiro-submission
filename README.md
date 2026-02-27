@@ -31,11 +31,13 @@
 
 | File | Purpose |
 |------|---------|
-| `docs/TODO.md` | Task tracker (Day 1.1, 1.2, etc.) |
-| `docs/CREATOR_MODES.md` | 3 creator modes explained |
-| `docs/PROMPT_ENGINEERING.md` | 8 polished prompts |
+| `PROMPTS.md` | **START HERE** - Team prompts |
+| `DOCS_GUIDE.md` | Documentation navigation |
+| `docs/TODO.md` | Task tracker |
 | `docs/PROJECT_PLAN.md` | Full architecture |
-| `docs/PROGRESS.md` | Progress summary |
+| `docs/personas/` | Expert advisors |
+| `docs/api/` | API documentation |
+| `docs/deployment/` | AWS deployment guides |
 
 ---
 
