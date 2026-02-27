@@ -432,7 +432,7 @@ export const api = {
   - **Design:** Real-time cursors, inline comments, change tracking
   - **Test:** Multiple users, verify smooth collaboration
 
-- [ ] **3.1c: Add workspace API routes (Shubh)**
+- [x] **3.1c: Add workspace API routes (Shubh)** ✅
   - **What:** `POST /api/workspace/create`, `GET /api/workspace/:id`
   - **Where:** `src/routes/workspace.route.ts`
   - **WebSocket:** `/ws/workspace/:id` for real-time sync
@@ -462,7 +462,7 @@ export const api = {
   - **Design:** Line charts, heatmaps, trend cards
   - **Test:** Mock 20 trends, verify visualization
 
-- [ ] **3.2c: Add trend API routes (Shubh)**
+- [x] **3.2c: Add trend API routes (Shubh)** ✅ COMPLETE (mock data)
   - **What:** `GET /api/trends/current`, `GET /api/trends/predict`
   - **Where:** `src/routes/trends.route.ts`
   - **Caching:** Cache for 6 hours
@@ -493,7 +493,7 @@ export const api = {
   - **Design:** Record button, waveform, progress bar
   - **Test:** Record 5 samples, verify training starts
 
-- [ ] **3.3c: Add voice API routes (Shubh)**
+- [x] **3.3c: Add voice API routes (Shubh)** ✅ COMPLETE (mock)
   - **What:** `POST /api/voice/train`, `POST /api/voice/generate`
   - **Where:** `src/routes/voice.route.ts`
   - **Storage:** S3 for voice models
@@ -523,7 +523,7 @@ export const api = {
   - **Design:** Timeline, peak markers, suggestions
   - **Test:** Mock video, verify peak visualization
 
-- [ ] **3.4c: Add optimizer API route (Shubh)**
+- [x] **3.4c: Add optimizer API route (Shubh)** ✅ COMPLETE (mock)
   - **What:** `POST /api/dopamine/optimize`
   - **Where:** `src/routes/dopamine.route.ts`
   - **Test:** Send video, verify optimization suggestions
@@ -551,7 +551,7 @@ export const api = {
   - **Design:** Drag-drop logo, preview
   - **Test:** Add watermark, verify preview
 
-- [ ] **3.5c: Add watermark API route (Shubh)**
+- [x] **3.5c: Add watermark API route (Shubh)** ✅ COMPLETE (mock)
   - **What:** `POST /api/watermark/add`
   - **Where:** `src/routes/watermark.route.ts`
   - **Test:** Upload media, add watermark, download
@@ -580,7 +580,7 @@ export const api = {
   - **Design:** Tree view, preview cards, bulk export
   - **Test:** Mock 50 outputs, verify smooth rendering
 
-- [ ] **3.6c: Add multiplier API route (Shubh)**
+- [x] **3.6c: Add multiplier API route (Shubh)** ✅ COMPLETE (mock)
   - **What:** `POST /api/multiply/generate`
   - **Where:** `src/routes/multiply.route.ts`
   - **Test:** Send video, verify 50+ outputs
@@ -613,7 +613,7 @@ export const api = {
   - **Components:** ListingCard, SearchBar, CheckoutFlow
   - **Test:** Browse 100 listings, purchase, verify
 
-- [ ] **4.1c: Add marketplace API routes (Shubh)**
+- [x] **4.1c: Add marketplace API routes (Shubh)** ✅ COMPLETE (mock)
   - **What:** `POST /api/marketplace/list`, `POST /api/marketplace/purchase`
   - **Where:** `src/routes/marketplace.route.ts`
   - **Test:** List item, purchase, verify transaction
@@ -642,7 +642,7 @@ export const api = {
   - **Library:** D3.js or Cytoscape.js
   - **Test:** Render 1000 nodes, verify performance
 
-- [ ] **4.2c: Add graph API routes (Shubh)**
+- [x] **4.2c: Add graph API routes (Shubh)** ✅ COMPLETE
   - **What:** `GET /api/graph/explore`, `GET /api/graph/related`
   - **Where:** `src/routes/graph.route.ts`
   - **Test:** Query graph, verify relationships
@@ -671,7 +671,7 @@ export const api = {
   - **Components:** Feed, ProfileCard, GroupList
   - **Test:** Mock 100 users, verify feed performance
 
-- [ ] **4.3c: Add community API routes (Shubh)**
+- [/] **4.3c: Add community API routes (Shubh)**
   - **What:** `POST /api/community/post`, `GET /api/community/feed`
   - **Where:** `src/routes/community.route.ts`
   - **Test:** Create post, fetch feed, verify
@@ -700,7 +700,7 @@ export const api = {
   - **Components:** PricingTable, SubscriptionCard
   - **Test:** Subscribe, upgrade, cancel, verify
 
-- [ ] **4.4c: Add membership API routes (Shubh)**
+- [/] **4.4c: Add membership API routes (Shubh)** — WORKING NOW
   - **What:** `POST /api/membership/subscribe`, `POST /api/membership/cancel`
   - **Where:** `src/routes/membership.route.ts`
   - **Test:** Full subscription lifecycle
@@ -1013,7 +1013,7 @@ export const api = {
 
 ### Day 6.1: Backend Integration
 - [x] 6.1a: Wire routes to services (Shubh)
-- [/] 6.1b: Add error handling (Shubh)
+- [x] 6.1b: Add error handling (Shubh) ✅ COMPLETE
 - [x] 6.1c: Add logging (Shubh)
 
 ### Day 6.2: Frontend Integration
