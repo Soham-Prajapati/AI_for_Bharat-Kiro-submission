@@ -729,7 +729,7 @@ export const api = {
   - **Design:** Visual workflow builder
   - **Test:** Create automation, verify execution
 
-- [ ] **4.5c: Add automation API routes (Shubh)**
+- [/] **4.5c: Add automation API routes (Shubh)** — WORKING NOW
   - **What:** `POST /api/automation/create`, `GET /api/automation/list`
   - **Where:** `src/routes/automation.route.ts`
   - **Test:** Create automation, verify triggers
