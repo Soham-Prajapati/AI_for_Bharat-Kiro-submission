@@ -198,14 +198,14 @@ export const api = {
   - **Components:** FileUploader, ProgressBar, FilePreview
   - **Test:** Upload 100MB video, verify progress updates
 
-- [/] **1.4c: Create dashboard (Srushti)**
+- [x] **1.4c: Create dashboard (Srushti)** ✅
   - **What:** Show all generated content, analytics
   - **Where:** `frontend/app/dashboard/page.tsx`
   - **How:** Fetch from `/api/generate/:id`, display in cards
   - **Components:** ContentCard, AnalyticsChart, ExportButton
   - **Test:** Mock data with 10 items, verify smooth scrolling
 
-- [ ] **1.4d: Create mode selection UI (Srushti)**
+- [x] **1.4d: Create mode selection UI (Srushti)** ✅
   - **What:** Let user choose AI-First/Hybrid/Human-First
   - **Where:** `frontend/components/ModeSelector.tsx`
   - **How:** 3 cards with icons, descriptions, "Select" button
