@@ -227,7 +227,7 @@ export class ModeDetectionService {
       outline: input.content.outline,
       targetPlatforms: input.targetPlatforms,
       preferences: {
-        tone: 'professional',
+        tone: 'entertaining',
         length: 'medium',
         includeScript: true,
         includeVoiceover: input.preferences?.useAIVoice,
