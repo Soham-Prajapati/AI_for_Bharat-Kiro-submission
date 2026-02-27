@@ -182,7 +182,7 @@ export const api = {
 - [x] All AWS services integrated
 
 ### Day 1.4: Frontend Pages
-- [ ] **1.4a: Create landing page (Srushti)**
+- [x] **1.4a: Create landing page (Srushti)** ✅
   - **What:** Hero section + features + pricing
   - **Where:** `frontend/app/page.tsx`
   - **How:** Read `docs/PROJECT_PLAN.md` → "Problem Summary" section
@@ -190,7 +190,7 @@ export const api = {
   - **Components:** Hero, FeatureGrid, PricingCards, Footer
   - **Test:** Responsive on mobile, tablet, desktop
 
-- [ ] **1.4b: Create upload page (Srushti)**
+- [/] **1.4b: Create upload page (Srushti)**
   - **What:** Drag-drop file upload + progress bar
   - **Where:** `frontend/app/upload/page.tsx`
   - **How:** Use `react-dropzone` for file upload
