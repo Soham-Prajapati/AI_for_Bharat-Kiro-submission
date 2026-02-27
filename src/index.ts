@@ -31,6 +31,7 @@ import membershipRoute from './routes/membership.route';
 import automationRoute from './routes/automation.route';
 import workspaceRoute from './routes/workspace.route';
 import graphRoute from './routes/graph.route';
+import membershipRoute from './routes/membership.route';
 import { workspaceWSServer } from './services/workspace-ws.service';
 import { createServer } from 'http';
 
@@ -77,6 +78,7 @@ app.use('/api/membership', membershipRoute);
 app.use('/api/automation', automationRoute);
 app.use('/api/workspace', workspaceRoute);
 app.use('/api/graph', graphRoute);
+app.use('/api/membership', membershipRoute);
 
 // Health check
 app.get('/health', (req, res) => {
