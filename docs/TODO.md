@@ -190,7 +190,7 @@ export const api = {
   - **Components:** Hero, FeatureGrid, PricingCards, Footer
   - **Test:** Responsive on mobile, tablet, desktop
 
-- [/] **1.4b: Create upload page (Srushti)**
+- [x] **1.4b: Create upload page (Srushti)** ✅
   - **What:** Drag-drop file upload + progress bar
   - **Where:** `frontend/app/upload/page.tsx`
   - **How:** Use `react-dropzone` for file upload
@@ -198,7 +198,7 @@ export const api = {
   - **Components:** FileUploader, ProgressBar, FilePreview
   - **Test:** Upload 100MB video, verify progress updates
 
-- [ ] **1.4c: Create dashboard (Srushti)**
+- [/] **1.4c: Create dashboard (Srushti)**
   - **What:** Show all generated content, analytics
   - **Where:** `frontend/app/dashboard/page.tsx`
   - **How:** Fetch from `/api/generate/:id`, display in cards
