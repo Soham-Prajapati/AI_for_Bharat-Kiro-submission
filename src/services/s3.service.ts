@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { AWSError, ValidationError } from '../types/errors';
 
 export interface S3UploadResult {
   key: string;
@@ -22,68 +23,88 @@ export class S3Service {
   private validateKey(key: string): void {
     const ext = key.substring(key.lastIndexOf('.'));
     if (!ALLOWED_EXTENSIONS.includes(ext.toLowerCase())) {
-      throw new Error('Invalid file extension');
+      throw new ValidationError('Invalid file extension');
     }
     if (key.includes('..') || key.includes('//')) {
-      throw new Error('Invalid file path');
+      throw new ValidationError('Invalid file path');
     }
   }
 
   async upload(file: Buffer, key: string, mimeType: string): Promise<S3UploadResult> {
-    this.validateKey(key);
+    try {
+      this.validateKey(key);
 
-    const command = new PutObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
-      Body: file,
-      ContentType: mimeType,
-      ServerSideEncryption: 'AES256',
-    });
+      const command = new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: file,
+        ContentType: mimeType,
+        ServerSideEncryption: 'AES256',
+      });
 
-    await this.client.send(command);
+      await this.client.send(command);
 
-    return {
-      key,
-      bucket: this.bucket,
-      url: `https://${this.bucket}.s3.amazonaws.com/${key}`,
-      size: file.length,
-    };
+      return {
+        key,
+        bucket: this.bucket,
+        url: `https://${this.bucket}.s3.amazonaws.com/${key}`,
+        size: file.length,
+      };
+    } catch (error: any) {
+      if (error instanceof ValidationError) throw error;
+      throw new AWSError(error.message || 'Upload failed', 'S3', error.code);
+    }
   }
 
   async getPresignedUrl(key: string, expiresIn: number = 3600): Promise<string> {
-    this.validateKey(key);
+    try {
+      this.validateKey(key);
 
-    const command = new GetObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
-    });
+      const command = new GetObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      });
 
-    return getSignedUrl(this.client, command, { expiresIn });
+      return await getSignedUrl(this.client, command, { expiresIn });
+    } catch (error: any) {
+      if (error instanceof ValidationError) throw error;
+      throw new AWSError(error.message || 'Failed to generate presigned URL', 'S3', error.code);
+    }
   }
 
   async delete(key: string): Promise<void> {
-    this.validateKey(key);
+    try {
+      this.validateKey(key);
 
-    const command = new DeleteObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
-    });
+      const command = new DeleteObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      });
 
-    await this.client.send(command);
+      await this.client.send(command);
+    } catch (error: any) {
+      if (error instanceof ValidationError) throw error;
+      throw new AWSError(error.message || 'Delete failed', 'S3', error.code);
+    }
   }
 
   async listByPrefix(prefix: string): Promise<string[]> {
-    if (prefix.includes('..')) {
-      throw new Error('Invalid prefix');
+    try {
+      if (prefix.includes('..')) {
+        throw new ValidationError('Invalid prefix');
+      }
+
+      const command = new ListObjectsV2Command({
+        Bucket: this.bucket,
+        Prefix: prefix,
+        MaxKeys: 1000,
+      });
+
+      const response = await this.client.send(command);
+      return response.Contents?.map(obj => obj.Key!).filter(Boolean) || [];
+    } catch (error: any) {
+      if (error instanceof ValidationError) throw error;
+      throw new AWSError(error.message || 'List failed', 'S3', error.code);
     }
-
-    const command = new ListObjectsV2Command({
-      Bucket: this.bucket,
-      Prefix: prefix,
-      MaxKeys: 1000,
-    });
-
-    const response = await this.client.send(command);
-    return response.Contents?.map(obj => obj.Key!).filter(Boolean) || [];
   }
 }

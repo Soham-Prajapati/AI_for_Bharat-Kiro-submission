@@ -225,7 +225,7 @@ You are a principal QA engineer. You think about every edge case, race condition
 **Backup Plans Test:**
 - [ ] Pre-recorded video plays correctly
 - [ ] Cached results load instantly
-- [ ] Local demo mode works (Ollama)
+- [ ] Local demo mode works (GitHub Copilot)
 - [ ] Offline slides accessible
 - [ ] Hotspot connection works
 

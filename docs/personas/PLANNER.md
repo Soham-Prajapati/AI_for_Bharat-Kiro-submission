@@ -85,7 +85,7 @@ Lane D: Testing + DevOps (Lakshmi)
 - [ ] Health check endpoint (1h)
 
 **Lane B (Nidhi):** 8 hours
-- [ ] Ollama setup + testing (2h)
+- [ ] Mock data setup + testing (2h)
 - [ ] Domain detection logic (4h)
 - [ ] Prompt templates (2h)
 

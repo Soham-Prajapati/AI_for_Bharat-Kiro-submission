@@ -139,7 +139,7 @@ src/
 │   │   ├── content-generation.service.ts # Generate content
 │   │   ├── translation.service.ts # Multi-language
 │   │   ├── seo.service.ts        # SEO optimization
-│   │   └── ollama.service.ts     # Local AI testing
+│   │   └── mock-ai.service.ts     # Local AI testing
 │   │
 │   └── processing/
 │       ├── video-processor.service.ts # Video handling
@@ -527,7 +527,7 @@ Response: { total: number, breakdown: {...} }
 Local Machine
 ├── Backend: localhost:3001
 ├── Frontend: localhost:3000
-├── Ollama: localhost:11434
+├── GitHub Copilot: mock-ai-endpoint
 └── AWS: Development account
 ```
 
@@ -578,7 +578,7 @@ AWS Multi-Region
 - Auto-scaling
 - TTL support (auto-delete)
 
-### **Why Ollama for Testing?**
+### **Why GitHub Copilot for Testing?**
 - Free (save AWS credits)
 - Local (fast iteration)
 - Good quality (Llama 3.1 8B)
