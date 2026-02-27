@@ -671,10 +671,11 @@ export const api = {
   - **Components:** Feed, ProfileCard, GroupList
   - **Test:** Mock 100 users, verify feed performance
 
-- [x] **4.3c: Add community API routes (Shubh)** ✅ COMPLETE (mock)
+- [x] **4.3c: Add community API routes (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/community/post`, `GET /api/community/feed`
   - **Where:** `src/routes/community.route.ts`
   - **Test:** Create post, fetch feed, verify
+  - **Implemented:** Full service + 15 API endpoints + tests
 
 - [ ] **4.3d: Test moderation (Lakshmi)**
   - **What:** Test spam detection, content moderation
@@ -729,7 +730,7 @@ export const api = {
   - **Design:** Visual workflow builder
   - **Test:** Create automation, verify execution
 
-- [/] **4.5c: Add automation API routes (Shubh)** — WORKING NOW
+- [x] **4.5c: Add automation API routes (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/automation/create`, `GET /api/automation/list`
   - **Where:** `src/routes/automation.route.ts`
   - **Test:** Create automation, verify triggers
@@ -758,7 +759,7 @@ export const api = {
   - **Components:** MetricCard, TrendChart, InsightPanel
   - **Test:** Mock 1000 data points, verify performance
 
-- [ ] **4.6c: Add analytics API routes (Shubh)**
+- [x] **4.6c: Add analytics API routes (Shubh)** ✅ COMPLETE
   - **What:** `GET /api/analytics-dashboard/metrics`
   - **Where:** `src/routes/analytics-dashboard.route.ts`
   - **Test:** Fetch metrics, verify accuracy
@@ -787,7 +788,7 @@ export const api = {
   - **Design:** Platform cards, OAuth flow
   - **Test:** Connect 6 platforms, verify
 
-- [ ] **4.7c: Add integration API routes (Shubh)**
+- [x] **4.7c: Add integration API routes (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/integrations/connect`, `POST /api/integrations/post`
   - **Where:** `src/routes/integrations.route.ts`
   - **Test:** OAuth flow, posting
@@ -820,10 +821,11 @@ export const api = {
   - **Design:** Large buttons, clear progress, no clutter
   - **Test:** User testing with ADHD creators
 
-- [ ] **5.1c: Add ADHD API routes (Shubh)**
+- [x] **5.1c: Add ADHD API routes (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/adhd/session/start`
   - **Where:** `src/routes/adhd.route.ts`
   - **Test:** Start session, track progress
+  - **Implemented:** Full service + 8 endpoints + Pomodoro + gamification + tests
 
 - [ ] **5.1d: Test usability (Lakshmi)**
   - **What:** Usability testing with ADHD users
@@ -849,7 +851,7 @@ export const api = {
   - **Design:** Score cards, improvement list
   - **Test:** Mock feedback, verify UI
 
-- [ ] **5.2c: Add feedback API route (Shubh)**
+- [x] **5.2c: Add feedback API route (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/creative-director/analyze`
   - **Where:** `src/routes/creative-director.route.ts`
   - **Test:** Send content, verify feedback
@@ -878,7 +880,7 @@ export const api = {
   - **Design:** Timeline with annotations, pattern cards
   - **Test:** Mock viral video, verify visualization
 
-- [ ] **5.3c: Add analyzer API route (Shubh)**
+- [x] **5.3c: Add analyzer API route (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/viral-analyzer/analyze`
   - **Where:** `src/routes/viral-analyzer.route.ts`
   - **Test:** Send viral video URL, verify analysis
@@ -906,7 +908,7 @@ export const api = {
   - **Where:** `frontend/components/ContentMultiplierV2.tsx`
   - **Test:** Mock 100 outputs, verify performance
 
-- [ ] **5.4c: Add multiplier V2 API route (Shubh)**
+- [x] **5.4c: Add multiplier V2 API route (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/multiply-v2/generate`
   - **Where:** `src/routes/multiply-v2.route.ts`
   - **Test:** Generate 100 pieces, verify quality
@@ -935,7 +937,7 @@ export const api = {
   - **Design:** Traffic light system (green/yellow/red)
   - **Test:** Mock violations, verify alerts
 
-- [ ] **5.5c: Add safety API route (Shubh)**
+- [x] **5.5c: Add safety API route (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/safety/check`
   - **Where:** `src/routes/safety.route.ts`
   - **Test:** Check content, verify moderation
@@ -968,7 +970,7 @@ export const api = {
   - **Design:** Flag icons, native script preview
   - **Test:** Switch languages, verify rendering
 
-- [ ] **5.6c: Add language API routes (Shubh)**
+- [x] **5.6c: Add language API routes (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/vernacular/translate`
   - **Where:** `src/routes/vernacular.route.ts`
   - **Test:** Translate to all languages, verify
@@ -997,7 +999,7 @@ export const api = {
   - **Components:** RegionMap, CreatorCard, CollabRequest
   - **Test:** Browse regions, send collab request
 
-- [ ] **5.7c: Add regional API routes (Shubh)**
+- [x] **5.7c: Add regional API routes (Shubh)** ✅ COMPLETE
   - **What:** `GET /api/regional/creators`, `POST /api/regional/collab`
   - **Where:** `src/routes/regional.route.ts`
   - **Test:** Fetch creators, create collaboration
