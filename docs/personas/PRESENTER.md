@@ -228,7 +228,7 @@ Always provide:
 3. **Slides with screenshots:** Walk through with static images
 
 **If internet fails:**
-4. **Local demo mode:** Use Ollama + mocks (no AWS)
+4. **Local demo mode:** Use GitHub Copilot + mocks (no AWS)
 5. **Offline slides:** Full presentation without demo
 
 **If time runs over:**
@@ -291,7 +291,7 @@ Use these phrases to stick in judges' minds:
 **A:** "Domain intelligence. Generic AI tools don't understand that a food video needs a recipe card, or an education video needs study notes. We're the first platform with domain-specific content intelligence."
 
 **Q7: "How long did this take to build?"**
-**A:** "6 days for the hackathon. We used Ollama for free local testing and only used AWS for final validation and demo. Smart caching kept us under $80 budget."
+**A:** "6 days for the hackathon. We used GitHub Copilot for free local testing and only used AWS for final validation and demo. Smart caching kept us under $80 budget."
 
 **Q8: "What's your business model?"**
 **A:** "Freemium. Free tier: 10 videos/month. Pro tier: $19/month unlimited. Agency tier: $99/month with team features. Target: YouTubers with 10K-1M subscribers."

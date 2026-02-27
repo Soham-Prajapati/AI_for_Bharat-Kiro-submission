@@ -72,7 +72,7 @@ Identify big picture:
 4. Clear differentiation vs competitors
 
 **Quick wins to validate:**
-1. Build MVP in 1 week (Ollama + simple UI)
+1. Build MVP in 1 week (GitHub Copilot + simple UI)
 2. Get 10 creators to test for free
 3. Measure: Do they come back? Do they pay?
 

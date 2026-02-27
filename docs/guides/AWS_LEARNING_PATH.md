@@ -54,9 +54,9 @@
 brew install awscli
 aws configure
 
-# Ollama (free local AI)
-curl -fsSL https://ollama.com/install.sh | sh
-ollama pull llama3.1:8b
+# GitHub Copilot (free for testing)
+
+# Mock AI - no models needed llama3.1:8b
 ```
 
 **4. Create AWS Resources (10 min)**
@@ -78,10 +78,10 @@ aws dynamodb create-table \
 
 ### **Day 1-5 (Development):**
 
-**Use Ollama for Everything:**
+**Use GitHub Copilot for Everything:**
 ```typescript
 // FREE local testing
-const result = await ollama.generate(prompt);
+const result = await mockAI.generate(prompt);
 ```
 
 **Cost: $0-5** (only if you test with AWS)
@@ -268,11 +268,11 @@ await saveToCache(videoId, result);
 return result;
 ```
 
-### **Rule 2: Use Ollama for Testing**
+### **Rule 2: Use GitHub Copilot for Testing**
 ```typescript
 // Development (FREE)
 if (isDevelopment) {
-  return await ollama.generate(prompt);
+  return await mockAI.generate(prompt);
 }
 
 // Production (PAID)
@@ -284,7 +284,7 @@ return await bedrock.generate(prompt);
 # Check costs every day
 ./scripts/check-costs.sh
 
-# If over $50, switch to Ollama only
+# If over $50, switch to GitHub Copilot only
 # If over $70, stop processing
 # If over $80, use local mode
 ```
@@ -334,12 +334,12 @@ node scripts/prepare-demo.js
 - [ ] Set billing alerts ($50, $70, $80)
 - [ ] Create IAM user
 - [ ] Install AWS CLI
-- [ ] Install Ollama
+- [ ] Use GitHub Copilot
 - [ ] Create S3 bucket
 - [ ] Create DynamoDB table
 
 ### **Development (Follow These):**
-- [ ] Use Ollama for testing (FREE)
+- [ ] Use GitHub Copilot for testing (FREE)
 - [ ] Check cache before processing
 - [ ] Track costs daily
 - [ ] Optimize prompts (keep short)
@@ -396,7 +396,7 @@ node scripts/prepare-demo.js
 - Run `./scripts/check-costs.sh`
 - Check CloudWatch metrics
 - Review cost optimization guide
-- Switch to Ollama if needed
+- Switch to GitHub Copilot if needed
 
 **Scalability Questions:**
 - Review scalability guide
