@@ -24,15 +24,22 @@ KEY FILES I OWN:
 
 HOW TO WORK:
 1. Read docs/TODO.md FIRST
-2. Find FIRST incomplete task for Shubh: [ ] = todo, [x] = done, [/] = in progress
+2. Find FIRST task for Shubh where status is [ ] (NOT [/] or [x])
+   - [ ] = todo (START THIS)
+   - [/] = in progress by another terminal (SKIP THIS)
+   - [x] = done (SKIP THIS)
 3. IMMEDIATELY mark it [/] in docs/TODO.md before starting
-4. Complete the task
-5. Mark it [x] when done
-6. Move to next task
+4. ALWAYS use subagents to speed up work:
+   - Simple tasks: 1-2 subagents (Architect OR Researcher)
+   - Complex tasks: 3-4 subagents (Architect + Researcher + Security + Tester)
+   - Subagents work in parallel = MUCH FASTER
+5. Complete the task
+6. Mark it [x] when done
+7. Move to next [ ] task
 
-IMPORTANT: Mark [/] BEFORE starting to prevent duplicate work across terminals.
+CRITICAL: If you see [/], SKIP it. Find next [ ] task.
 
-Start by reading docs/TODO.md. Find my first incomplete task, mark it [/], and start.
+Start by reading docs/TODO.md. Find my first [ ] task (skip [/] and [x]), mark it [/], and start.
 ```
 
 ---
@@ -60,15 +67,22 @@ KEY FILES I OWN:
 
 HOW TO WORK:
 1. Read docs/TODO.md FIRST
-2. Find FIRST incomplete task for Nidhi: [ ] = todo, [x] = done, [/] = in progress
+2. Find FIRST task for Nidhi where status is [ ] (NOT [/] or [x])
+   - [ ] = todo (START THIS)
+   - [/] = in progress by another terminal (SKIP THIS)
+   - [x] = done (SKIP THIS)
 3. IMMEDIATELY mark it [/] in docs/TODO.md before starting
-4. Complete the task
-5. Mark it [x] when done
-6. Move to next task
+4. ALWAYS use subagents to speed up work:
+   - Simple tasks: 1-2 subagents (Strategist OR Designer)
+   - Complex tasks: 3-4 subagents (Strategist + Designer + Researcher + Teacher)
+   - Subagents work in parallel = MUCH FASTER
+5. Complete the task
+6. Mark it [x] when done
+7. Move to next [ ] task
 
-IMPORTANT: Mark [/] BEFORE starting to prevent duplicate work across terminals.
+CRITICAL: If you see [/], SKIP it. Find next [ ] task.
 
-Start by reading docs/TODO.md. Find my first incomplete task, mark it [/], and start.
+Start by reading docs/TODO.md. Find my first [ ] task (skip [/] and [x]), mark it [/], and start.
 ```
 
 ---
@@ -93,15 +107,22 @@ KEY FILES I OWN:
 
 HOW TO WORK:
 1. Read docs/TODO.md FIRST
-2. Find FIRST incomplete task for Srushti: [ ] = todo, [x] = done, [/] = in progress
+2. Find FIRST task for Srushti where status is [ ] (NOT [/] or [x])
+   - [ ] = todo (START THIS)
+   - [/] = in progress by another terminal (SKIP THIS)
+   - [x] = done (SKIP THIS)
 3. IMMEDIATELY mark it [/] in docs/TODO.md before starting
-4. Complete the task
-5. Mark it [x] when done
-6. Move to next task
+4. ALWAYS use subagents to speed up work:
+   - Simple tasks: 1-2 subagents (Designer OR Architect)
+   - Complex tasks: 3-4 subagents (Designer + Architect + Researcher + Strategist)
+   - Subagents work in parallel = MUCH FASTER
+5. Complete the task
+6. Mark it [x] when done
+7. Move to next [ ] task
 
-IMPORTANT: Mark [/] BEFORE starting to prevent duplicate work across terminals.
+CRITICAL: If you see [/], SKIP it. Find next [ ] task.
 
-Start by reading docs/TODO.md. Find my first incomplete task, mark it [/], and start.
+Start by reading docs/TODO.md. Find my first [ ] task (skip [/] and [x]), mark it [/], and start.
 ```
 
 ---
@@ -125,15 +146,22 @@ KEY FILES I OWN:
 
 HOW TO WORK:
 1. Read docs/TODO.md FIRST
-2. Find FIRST incomplete task for Lakshmi: [ ] = todo, [x] = done, [/] = in progress
+2. Find FIRST task for Lakshmi where status is [ ] (NOT [/] or [x])
+   - [ ] = todo (START THIS)
+   - [/] = in progress by another terminal (SKIP THIS)
+   - [x] = done (SKIP THIS)
 3. IMMEDIATELY mark it [/] in docs/TODO.md before starting
-4. Complete the task
-5. Mark it [x] when done
-6. Move to next task
+4. ALWAYS use subagents to speed up work:
+   - Simple tasks: 1-2 subagents (Tester OR DevOps)
+   - Complex tasks: 3-4 subagents (Tester + DevOps + Security + Architect)
+   - Subagents work in parallel = MUCH FASTER
+5. Complete the task
+6. Mark it [x] when done
+7. Move to next [ ] task
 
-IMPORTANT: Mark [/] BEFORE starting to prevent duplicate work across terminals.
+CRITICAL: If you see [/], SKIP it. Find next [ ] task.
 
-Start by reading docs/TODO.md. Find my first incomplete task, mark it [/], and start.
+Start by reading docs/TODO.md. Find my first [ ] task (skip [/] and [x]), mark it [/], and start.
 ```
 
 ---
