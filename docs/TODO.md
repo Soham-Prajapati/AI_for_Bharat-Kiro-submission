@@ -1021,14 +1021,14 @@ export const api = {
 - [x] 6.1c: Add logging (Shubh)
 
 ### Day 6.2: Frontend Integration
-- [ ] **6.2a: Connect all API clients (Srushti)**
+- [/] **6.2a: Connect all API clients (Srushti)**
   - **What:** Wire all components to backend APIs
   - **Where:** `frontend/services/api.ts`
   - **How:** Replace mock data with real API calls
   - **Error Handling:** Show toast notifications on errors
   - **Test:** Disconnect backend, verify graceful fallback
 
-- [ ] **6.2b: Add state management (Srushti)**
+- [x] **6.2b: Add state management (Srushti)** ✅
   - **What:** Global state for user, content, settings
   - **Where:** `frontend/context/AppContext.tsx`
   - **How:** Use React Context + useReducer
