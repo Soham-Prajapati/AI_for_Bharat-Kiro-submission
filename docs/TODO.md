@@ -264,7 +264,7 @@ export const api = {
   - **Output:** `{ archetype: 'educator', confidence: 0.92, traits: ['clear', 'structured', 'patient'] }`
   - **Test:** 10 different creators, verify distinct archetypes
 
-- [ ] **2.1c: Create DNA visualization component (Srushti)**
+- [x] **2.1c: Create DNA visualization component (Srushti)** ✅
   - **What:** Radar chart showing personality dimensions
   - **Where:** `frontend/components/DNAChart.tsx`
   - **How:** Use `recharts` or `chart.js`
