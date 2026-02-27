@@ -154,21 +154,21 @@ export const api = {
 ## 📋 PHASE 1: Core Infrastructure (Day 1) — COMPLETED ✅
 
 ### Day 1.1: Prompts & Creator Modes
-- [ ] **1.1a: Create 8 polished prompts (Nidhi)**
+- [x] **1.1a: Create 8 polished prompts (Nidhi)** ✅
   - **What:** Create TypeScript files for each platform prompt
   - **Where:** `src/prompts/youtube.prompt.ts`, `instagram.prompt.ts`, etc.
   - **How:** Read `docs/PROMPT_ENGINEERING.md` for format
   - **Output:** Each file exports a function that takes transcript + metadata, returns platform-specific content
   - **Test:** Run with sample transcript, verify output quality
 
-- [ ] **1.1b: Create 3 creator mode services (Nidhi)**
+- [x] **1.1b: Create 3 creator mode services (Nidhi)** ✅
   - **What:** Implement AI-First, Hybrid, Human-First modes
   - **Where:** `src/services/mode-detection.service.ts`
   - **How:** Read `docs/CREATOR_MODES.md` for logic
   - **Output:** Service that detects mode from video metadata (has human face? has voiceover?)
   - **Test:** Feed 3 sample videos, verify correct mode detection
 
-- [ ] **1.1c: Create mode detection service (Nidhi)**
+- [x] **1.1c: Create mode detection service (Nidhi)** ✅
   - **What:** Auto-detect which mode to use
   - **Where:** `src/services/mode-detection.service.ts`
   - **How:** Analyze video: check for human presence (AWS Rekognition), voiceover, editing style
