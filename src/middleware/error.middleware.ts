@@ -1,9 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../types/errors';
+import { logger, logSecurityEvent } from '../utils/logger';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 export const notFoundHandler = (req: Request, res: Response) => {
+  logger.warn('Route not found', {
+    path: req.path,
+    method: req.method,
+    ip: req.ip,
+    requestId: req.headers['x-request-id']
+  });
+
   res.status(404).json({ 
     error: 'Route not found',
     path: req.path,
@@ -16,14 +24,48 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
   const requestId = req.headers['x-request-id'] || 'unknown';
   
   // Log error with context
-  console.error(`[${requestId}] Error:`, {
+  logger.error('Request error', {
     message: err.message,
+    name: err.name,
     stack: isDevelopment ? err.stack : undefined,
     path: req.path,
     method: req.method,
     userId: req.body?.userId,
+    ip: req.ip,
+    requestId,
     timestamp: new Date().toISOString()
   });
+
+  // Log security events
+  if (err.name === 'AuthenticationError' || err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+    logSecurityEvent({
+      type: 'AUTH_FAILURE',
+      userId: req.body?.userId,
+      ip: req.ip || 'unknown',
+      path: req.path,
+      details: { error: err.message }
+    });
+  }
+
+  if (err.name === 'AuthorizationError' || err.name === 'AccessDenied') {
+    logSecurityEvent({
+      type: 'ACCESS_DENIED',
+      userId: req.body?.userId,
+      ip: req.ip || 'unknown',
+      path: req.path,
+      details: { error: err.message }
+    });
+  }
+
+  if (err.name === 'ValidationError') {
+    logSecurityEvent({
+      type: 'INVALID_INPUT',
+      userId: req.body?.userId,
+      ip: req.ip || 'unknown',
+      path: req.path,
+      details: { error: err.message }
+    });
+  }
 
   // Handle custom AppError
   if (err instanceof AppError) {

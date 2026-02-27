@@ -7,8 +7,8 @@ setlocal enabledelayedexpansion
 REM Banner
 echo.
 echo ╔═══════════════════════════════════════════════════════════╗
-echo ║   🚀 CONTENT INTELLIGENCE PLATFORM - SETUP               ║
-echo ║   AI for Bharat Hackathon 2026                           ║
+echo ║    CONTENT INTELLIGENCE PLATFORM - SETUP                  ║
+echo ║    AI for Bharat Hackathon 2026                           ║
 echo ╚═══════════════════════════════════════════════════════════╝
 echo.
 
