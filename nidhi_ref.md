@@ -40,6 +40,24 @@
 - `docs/TODO.md` - Detailed task breakdown by person and phase
 - `PROMPTS.md` - Copy-paste prompts for each team member to start working with AI context
 
+---
+
+## Team Progress Tracker
+
+### Nidhi (AI Intelligence)
+- ✅ 1.1a: 8 polished prompts (YouTube, Instagram, TikTok, Twitter, LinkedIn, Blog, Translation, Analysis)
+- ✅ 1.1b: 3 creator mode services (AI-First, Hybrid, Human-First)
+- ✅ 1.1c: Mode detection service
+
+### Shubh (Backend + AWS)
+- ⏳ No tasks completed yet
+
+### Srushti (Frontend + UX)
+- ⏳ No tasks completed yet
+
+### Lakshmi (Testing + DevOps)
+- ⏳ No tasks completed yet
+
 ### ❌ NOT DONE (Day 1 & 2 Tasks)
 
 **Nidhi's Tasks (from TODO.md)**
