@@ -191,35 +191,82 @@ AI_for_Bharat-Kiro-submission/
 
 ## 🔄 WORKFLOW (How We Work)
 
-### Step 1: Get Your Prompt
-1. Open `PROMPTS.md`
-2. Find your section (Shubh/Nidhi/Srushti/Lakshmi)
-3. Copy the ENTIRE prompt
+### 🚀 PARALLEL WORK = FASTER COMPLETION
 
-### Step 2: Start AI Assistant
+**The secret:** Run multiple AI agents in parallel using multiple terminals!
+
+### Step 1: Terminal 1 — Start First Agent
 ```bash
+# Terminal 1
 kiro-cli chat
 ```
-Paste your prompt → AI reads TODO.md → AI starts working
+1. Open `PROMPTS.md` → Copy your prompt
+2. Paste in Terminal 1
+3. AI reads TODO.md → Marks a task as `[/]` → Starts working
 
-### Step 3: AI Marks Tasks
-- `[ ]` = Not started
-- `[/]` = In progress (AI marks this before starting)
-- `[x]` = Done (AI marks this when complete)
-
-**IMPORTANT:** If you see `[/]`, SKIP that task (someone else is working on it)
-
-### Step 4: Sync Your Work
+### Step 2: Terminal 2 — Start Second Agent (While Terminal 1 Works)
 ```bash
-git pull origin main          # Get latest changes
-# ... work on your task ...
-git add .
-git commit -m "feat: your task"
-git push origin main
+# Terminal 2 (open a NEW terminal)
+kiro-cli chat
+```
+1. Paste the SAME prompt again
+2. AI finds a DIFFERENT `[ ]` task (skips the `[/]` one)
+3. Marks it as `[/]` → Starts working
+
+### Step 3: Terminal 3, 4, 5... — Keep Going!
+```bash
+# Terminal 3
+kiro-cli chat
+# Paste prompt again
+
+# Terminal 4
+kiro-cli chat
+# Paste prompt again
+
+# ... as many as your device can handle!
 ```
 
-### Step 5: Repeat
-AI finds next `[ ]` task → Marks `[/]` → Completes → Marks `[x]` → Repeat
+**How many terminals?**
+- **Laptop (8GB RAM):** 2-3 terminals
+- **Laptop (16GB RAM):** 4-6 terminals
+- **Desktop (32GB+ RAM):** 8-10 terminals
+
+**Why this works:**
+- Each terminal = 1 AI agent working on 1 task
+- Tasks are marked `[/]` so agents don't collide
+- More terminals = More tasks done in parallel = Faster completion
+
+### Step 4: Monitor Progress
+Watch all terminals:
+- Terminal 1: Working on "Setup AWS Bedrock"
+- Terminal 2: Working on "Create domain detection service"
+- Terminal 3: Working on "Build upload API"
+- Terminal 4: Working on "Write tests for auth"
+
+### Step 5: When a Task Completes
+- AI marks task as `[x]` in TODO.md
+- AI commits and pushes changes
+- AI finds next `[ ]` task automatically
+- Repeat!
+
+### Step 6: Sync Regularly
+```bash
+# In each terminal, AI will auto-sync
+# But you can manually check:
+git pull origin main
+git log --oneline -10  # See recent commits
+```
+
+### 🎯 Pro Tips
+- **Start with 2 terminals** → Add more as you get comfortable
+- **Each person can run multiple terminals** → 4 people × 3 terminals = 12 parallel tasks!
+- **Monitor TODO.md** → Watch tasks change from `[ ]` → `[/]` → `[x]`
+- **Don't worry about conflicts** → AI agents coordinate via `[/]` markers
+
+### Task Status Legend
+- `[ ]` = Available (AI can pick this)
+- `[/]` = In Progress (AI is working on this, SKIP IT)
+- `[x]` = Done (Completed, move on)
 
 ---
 
