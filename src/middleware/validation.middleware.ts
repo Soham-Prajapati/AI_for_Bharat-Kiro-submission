@@ -1,32 +1,54 @@
+import { z } from 'zod';
 import { Request, Response, NextFunction } from 'express';
+import { ValidationError } from '../types/errors';
 
-const ALLOWED_MIME_TYPES = [
-  'video/mp4', 'video/quicktime', 'video/x-msvideo',
-  'audio/mpeg', 'audio/wav', 'audio/mp3',
-  'text/plain', 'application/json'
-];
-
-const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
-
-export const validateFileUpload = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file provided' });
-  }
-
-  if (!ALLOWED_MIME_TYPES.includes(req.file.mimetype)) {
-    return res.status(400).json({ error: 'Invalid file type' });
-  }
-
-  if (req.file.size > MAX_FILE_SIZE) {
-    return res.status(400).json({ error: 'File too large' });
-  }
-
-  next();
+export const validate = (schema: z.ZodSchema) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      schema.parse({
+        body: req.body,
+        query: req.query,
+        params: req.params,
+      });
+      next();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const messages = error.issues.map((e: any) => `${e.path.join('.')}: ${e.message}`).join(', ');
+        throw new ValidationError(messages);
+      }
+      next(error);
+    }
+  };
 };
 
-export const sanitizeInput = (req: Request, res: Response, next: NextFunction) => {
-  if (req.body.userId) {
-    req.body.userId = req.body.userId.replace(/[^a-zA-Z0-9-_]/g, '');
-  }
-  next();
+// Common validation schemas
+export const schemas = {
+  auth: {
+    login: z.object({
+      body: z.object({
+        email: z.string().email(),
+        password: z.string().min(8),
+      }),
+    }),
+    register: z.object({
+      body: z.object({
+        email: z.string().email(),
+        password: z.string().min(8),
+        name: z.string().min(2).max(100),
+      }),
+    }),
+  },
+  upload: z.object({
+    body: z.object({
+      userId: z.string().optional(),
+    }),
+  }),
+  generate: z.object({
+    body: z.object({
+      jobId: z.string(),
+      platforms: z.array(z.enum(['youtube', 'instagram', 'linkedin', 'twitter', 'facebook', 'tiktok'])),
+      language: z.enum(['en', 'hi', 'bn', 'ta', 'te', 'mr', 'gu', 'kn', 'ml']).optional(),
+      creatorMode: z.enum(['ai-first', 'hybrid', 'human-first']).optional(),
+    }),
+  }),
 };
