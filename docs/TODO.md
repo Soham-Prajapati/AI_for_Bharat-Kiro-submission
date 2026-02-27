@@ -292,7 +292,7 @@ export const api = {
   - **Output:** `{ platforms: { youtube: { followers: 10000, engagement: 0.05 }, ... }, recommendations: [...] }`
   - **Test:** Mock API responses, verify aggregation logic
 
-- [ ] **2.2b: Build analytics dashboard (Srushti)**
+- [x] **2.2b: Build analytics dashboard (Srushti)** ✅
   - **What:** Multi-platform comparison dashboard
   - **Where:** `frontend/app/analytics/page.tsx`
   - **Components:** PlatformCard, EngagementChart, RecommendationList
