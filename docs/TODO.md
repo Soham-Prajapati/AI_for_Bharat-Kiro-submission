@@ -1035,7 +1035,7 @@ export const api = {
   - **State:** `{ user, content, settings, loading, error }`
   - **Test:** Update state, verify all components re-render
 
-- [ ] **6.2c: Add real-time streaming (Srushti)**
+- [x] **6.2c: Add real-time streaming (Srushti)** ✅
   - **What:** Show generation progress in real-time
   - **Where:** `frontend/components/GenerationProgress.tsx`
   - **How:** WebSocket connection to backend
