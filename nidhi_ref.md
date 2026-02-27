@@ -194,3 +194,90 @@ These prompts are the intelligence layer that powers the entire content generati
 User uploads video → Transcription → Content Analysis prompt (understand content) → Platform-specific prompts (generate content) → Translation prompts (if multi-language) → User review → Publish
 
 These prompts are the "brain" that makes the platform intelligent - they encode best practices from viral content creators, SEO experts, and platform algorithms into reusable, consistent AI instructions.
+
+---
+
+### ✅ Task 1.1b: Create 3 Creator Mode Services (COMPLETED)
+
+Created 3 service classes that implement the different creator workflows in `src/services/`:
+
+1. **ai-content-generator.service.ts** - AI-First Mode (Full Automation)
+   - Generates complete content from just a topic/outline (no user video needed)
+   - Creates base script with hook, main points, conclusion, and full narrative
+   - Generates platform-specific content for all target platforms simultaneously
+   - Extracts voiceover text and visual suggestions for video production
+   - Supports streaming generation for real-time UI updates
+   - Use case: Agencies, high-volume publishers, creators who want speed and scale
+
+2. **human-content-processor.service.ts** - Hybrid Mode (AI-Assisted)
+   - Processes user's uploaded video transcript (from AWS Transcribe)
+   - Analyzes content: domain detection, keyword extraction, sentiment, virality score
+   - Generates platform-optimized content from user's actual video
+   - Creates thumbnail suggestions extracted from user's video frames
+   - Identifies optimal clip timestamps for short-form content (30s/60s cuts)
+   - Supports multi-language translation while preserving user's voice
+   - Streaming support for real-time progress updates
+   - Use case: YouTubers, vloggers, educators - most creators (80% of users)
+
+3. **platform-content-generator.service.ts** - Human-First Mode (Minimal AI)
+   - Processes user's manually written content (title, description, tags)
+   - SEO optimization: suggests improvements without changing user's voice
+   - Translation only: converts to 9 languages with cultural adaptation
+   - Content analytics: readability score, keyword density, engagement potential
+   - Platform validation: checks character limits and requirements
+   - Keyword suggestions: recommends SEO keywords based on content
+   - Use case: Premium creators, brand partnerships, artistic content (5% of users)
+
+**Technical Implementation:**
+
+Each service follows a consistent pattern:
+- Constructor initializes GitHubModelsService and domain detection
+- Main processing method returns structured results
+- Private helper methods for specific tasks (analysis, generation, translation)
+- Streaming support via async generators for real-time UI
+- Error handling with graceful fallbacks
+
+**Key Differences Between Modes:**
+
+| Feature | AI-First | Hybrid | Human-First |
+|---------|----------|--------|-------------|
+| Input | Topic/outline | User's video | User's written content |
+| Video Required | No | Yes | Yes |
+| AI Script Generation | ✅ Full | ❌ Uses transcript | ❌ User writes |
+| Platform Content | ✅ All platforms | ✅ All platforms | ❌ Translation only |
+| Thumbnail Generation | ✅ AI-generated | ✅ From video frames | ❌ User creates |
+| Voiceover | ✅ AI voice | ❌ User's voice | ❌ User's voice |
+| Translation | ✅ | ✅ | ✅ |
+| SEO Optimization | ✅ | ✅ | ✅ Suggestions only |
+
+**How These Services Will Be Used:**
+
+1. **Mode Detection Service** (next task) will determine which service to use based on user input and preferences
+
+2. **API Routes** will call the appropriate service:
+   - POST /api/generate/ai-first → AIContentGeneratorService
+   - POST /api/process/hybrid → HumanContentProcessorService  
+   - POST /api/optimize/human-first → PlatformContentGeneratorService
+
+3. **Frontend** will show different UI flows:
+   - AI-First: Topic input → Platform selection → Generate
+   - Hybrid: Video upload → Transcribe → Platform selection → Generate
+   - Human-First: Manual input → Translation/SEO → Review
+
+4. **Workflow Integration:**
+   - User selects mode in onboarding
+   - Mode preference saved to user profile
+   - Appropriate service called based on mode
+   - Results formatted and returned to frontend
+   - User reviews and approves before publishing
+
+5. **Real-time Streaming:**
+   - All services support streaming via async generators
+   - Frontend displays progress: "Analyzing...", "Generating YouTube...", "Generating Instagram..."
+   - Improves UX for long-running operations
+
+**Service Dependencies:**
+- All services use GitHubModelsService for AI generation
+- Hybrid mode uses DomainDetectionService for content analysis
+- All services use prompts from Task 1.1a
+- Services are independent and can be used standalone or combined
