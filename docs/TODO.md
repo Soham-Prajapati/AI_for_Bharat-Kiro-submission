@@ -700,7 +700,7 @@ export const api = {
   - **Components:** PricingTable, SubscriptionCard
   - **Test:** Subscribe, upgrade, cancel, verify
 
-- [/] **4.4c: Add membership API routes (Shubh)** — WORKING NOW
+- [x] **4.4c: Add membership API routes (Shubh)** ✅ COMPLETE
   - **What:** `POST /api/membership/subscribe`, `POST /api/membership/cancel`
   - **Where:** `src/routes/membership.route.ts`
   - **Test:** Full subscription lifecycle
