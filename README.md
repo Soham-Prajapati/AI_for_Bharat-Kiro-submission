@@ -41,17 +41,16 @@ That file has:
 | File | Purpose | Who Reads It |
 |------|---------|--------------|
 | **`START_HERE.md`** | **Complete onboarding** | **Everyone (read first!)** |
+| **`docs/BACKEND_COMPLETE.md`** | **🔥 Backend guide (APIs, security, troubleshooting)** | **Shubh + Lakshmi** |
 | **`docs/FEATURES_MASTER.md`** | **All 28 features explained** | **Everyone (primary reference)** |
 | `PROMPTS.md` | Team prompts (copy-paste to start) | Everyone |
 | `docs/TODO.md` | All tasks (AI reads this) | AI + Everyone |
 | `docs/PROJECT_PLAN.md` | Full architecture | Shubh + Nidhi |
 | `docs/CREATOR_MODES.md` | AI-First, Hybrid, Human-First | Nidhi |
 | `docs/PROMPT_ENGINEERING.md` | 8 platform prompts | Nidhi |
-| `docs/api/` | API documentation | Shubh + Srushti |
-| `docs/deployment/` | AWS setup guides | Shubh + Lakshmi |
-| **`docs/ERROR_HANDLING_GUIDE.md`** | **Error handling best practices** | **Shubh + Lakshmi** |
-| **`docs/SECURITY_AUDIT.md`** | **Security checklist & fixes** | **Shubh + Lakshmi** |
-| **`docs/DEPLOYMENT_CHECKLIST.md`** | **Production readiness** | **Shubh + Lakshmi** |
+| `docs/ERROR_HANDLING_GUIDE.md` | Error handling patterns (detailed) | Shubh + Lakshmi |
+| `docs/SECURITY_AUDIT.md` | Security checklist (detailed) | Shubh + Lakshmi |
+| `docs/DEPLOYMENT_CHECKLIST.md` | Production readiness (detailed) | Shubh + Lakshmi |
 
 ---
 
