@@ -32,6 +32,16 @@ import automationRoute from './routes/automation.route';
 import workspaceRoute from './routes/workspace.route';
 import graphRoute from './routes/graph.route';
 import membershipRoute from './routes/membership.route';
+import automationRoute from './routes/automation.route';
+import analyticsDashboardRoute from './routes/analytics-dashboard.route';
+import integrationsRoute from './routes/integrations.route';
+import adhdRoute from './routes/adhd.route';
+import creativeDirectorRoute from './routes/creative-director.route';
+import viralAnalyzerRoute from './routes/viral-analyzer.route';
+import multiplyV2Route from './routes/multiply-v2.route';
+import safetyRoute from './routes/safety.route';
+import vernacularRoute from './routes/vernacular.route';
+import regionalRoute from './routes/regional.route';
 import { workspaceWSServer } from './services/workspace-ws.service';
 import { createServer } from 'http';
 
@@ -79,6 +89,16 @@ app.use('/api/automation', automationRoute);
 app.use('/api/workspace', workspaceRoute);
 app.use('/api/graph', graphRoute);
 app.use('/api/membership', membershipRoute);
+app.use('/api/automation', automationRoute);
+app.use('/api/analytics-dashboard', analyticsDashboardRoute);
+app.use('/api/integrations', integrationsRoute);
+app.use('/api/adhd', adhdRoute);
+app.use('/api/creative-director', creativeDirectorRoute);
+app.use('/api/viral-analyzer', viralAnalyzerRoute);
+app.use('/api/multiply-v2', multiplyV2Route);
+app.use('/api/safety', safetyRoute);
+app.use('/api/vernacular', vernacularRoute);
+app.use('/api/regional', regionalRoute);
 
 // Health check
 app.get('/health', (req, res) => {
