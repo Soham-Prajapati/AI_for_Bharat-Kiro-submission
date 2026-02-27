@@ -1,7 +1,7 @@
 /**
  * Production-Ready API Client
  * Type-safe methods for all 28+ backend routes
- * Features: Error handling, interceptors, retry logic, request/response transformation
+ * Features: Error handling, interceptors, retry logic, toast notifications
  */
 
 import {
@@ -14,36 +14,26 @@ import {
   NetworkError,
   TimeoutError,
   UploadError,
-  // Upload
-  UploadRequest,
   UploadResponse,
-  // Process
   ProcessRequest,
   ProcessResponse,
   ProcessStatusResponse,
-  // Generate
   GenerateRequest,
   GenerateResponse,
-  // DNA
   DnaAnalyzeRequest,
   DnaAnalyzeResponse,
-  // Analytics
   AnalyticsResponse,
-  // Viral
   ViralPredictRequest,
   ViralPredictResponse,
-  // Auth
   RegisterRequest,
   LoginRequest,
   AuthResponse,
   VerifyTokenRequest,
   VerifyTokenResponse,
-  // Automation
   CreateAutomationRequest,
   Automation,
   ListAutomationsResponse,
   DeleteAutomationResponse,
-  // Community
   CreatePostRequest,
   Post,
   FeedResponse,
@@ -51,34 +41,26 @@ import {
   Group,
   UserProfile,
   Comment,
-  // Trends
   CurrentTrendsResponse,
   PredictTrendsResponse,
-  // Multiply
   MultiplyGenerateRequest,
   MultiplyGenerateResponse,
-  // Workspace
   CreateWorkspaceRequest,
   Workspace,
   WorkspaceUsersResponse,
-  // Marketplace
   CreateListingRequest,
   Listing,
   PurchaseListingRequest,
   PurchaseListingResponse,
   ListingsResponse,
-  // Integrations
   ConnectPlatformRequest,
   PlatformConnection,
   PostToPlatformRequest,
   PostToPlatformResponse,
   ListConnectionsResponse,
-  // ROI
   RoiResponse,
-  // Creative Director
   AnalyzeContentRequest,
   AnalyzeContentResponse,
-  // Viral Analyzer
   AnalyzeViralRequest,
   AnalyzeViralResponse,
 } from '@/types/api';
@@ -129,6 +111,35 @@ class ApiClient {
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
+    this.loadAuthToken();
+  }
+
+  // --------------------------------------------------------------------------
+  // AUTH TOKEN MANAGEMENT
+  // --------------------------------------------------------------------------
+
+  private loadAuthToken(): void {
+    if (typeof window !== 'undefined') {
+      const savedToken = localStorage.getItem('authToken');
+      if (savedToken) {
+        this.authToken = savedToken;
+      }
+    }
+  }
+
+  setAuthToken(token: string | null): void {
+    this.authToken = token;
+    if (typeof window !== 'undefined') {
+      if (token) {
+        localStorage.setItem('authToken', token);
+      } else {
+        localStorage.removeItem('authToken');
+      }
+    }
+  }
+
+  getAuthToken(): string | null {
+    return this.authToken;
   }
 
   // --------------------------------------------------------------------------
@@ -141,14 +152,6 @@ class ApiClient {
 
   addResponseInterceptor(interceptor: ResponseInterceptor): void {
     this.responseInterceptors.push(interceptor);
-  }
-
-  setAuthToken(token: string | null): void {
-    this.authToken = token;
-  }
-
-  getAuthToken(): string | null {
-    return this.authToken;
   }
 
   // --------------------------------------------------------------------------
@@ -188,7 +191,6 @@ class ApiClient {
   private shouldRetry(error: ApiError, attempt: number, maxRetries: number): boolean {
     if (attempt >= maxRetries) return false;
 
-    // Retry on network errors, timeouts, and 5xx errors
     if (error instanceof NetworkError || error instanceof TimeoutError) {
       return true;
     }
@@ -197,7 +199,6 @@ class ApiClient {
       return true;
     }
 
-    // Retry on rate limit with exponential backoff
     if (error instanceof RateLimitError) {
       return true;
     }
@@ -206,12 +207,9 @@ class ApiClient {
   }
 
   private calculateRetryDelay(attempt: number, baseDelay: number, error?: ApiError): number {
-    // Use retry-after header if available
     if (error instanceof RateLimitError && error.retryAfter) {
       return error.retryAfter * 1000;
     }
-
-    // Exponential backoff: baseDelay * 2^attempt
     return baseDelay * Math.pow(2, attempt);
   }
 
@@ -219,17 +217,13 @@ class ApiClient {
   // CORE REQUEST METHOD
   // --------------------------------------------------------------------------
 
-  private async request<T>(
-    endpoint: string,
-    config: RequestConfig
-  ): Promise<T> {
+  private async request<T>(endpoint: string, config: RequestConfig): Promise<T> {
     let lastError: ApiError | null = null;
     const maxRetries = config.retries ?? MAX_RETRIES;
     const retryDelay = config.retryDelay ?? RETRY_DELAY;
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
-        // Apply request interceptors
         let modifiedConfig = { ...config };
         for (const interceptor of this.requestInterceptors) {
           if (interceptor.onRequest) {
@@ -237,7 +231,6 @@ class ApiClient {
           }
         }
 
-        // Build headers
         const headers: Record<string, string> = {
           'Content-Type': 'application/json',
           ...modifiedConfig.headers,
@@ -247,13 +240,11 @@ class ApiClient {
           headers['Authorization'] = `Bearer ${this.authToken}`;
         }
 
-        // Create abort controller for timeout
         const controller = new AbortController();
         const timeout = modifiedConfig.timeout ?? DEFAULT_TIMEOUT;
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
         try {
-          // Make request
           const response = await fetch(`${this.baseUrl}${endpoint}`, {
             method: modifiedConfig.method,
             headers,
@@ -263,7 +254,6 @@ class ApiClient {
 
           clearTimeout(timeoutId);
 
-          // Apply response interceptors
           let modifiedResponse = response;
           for (const interceptor of this.responseInterceptors) {
             if (interceptor.onResponse) {
@@ -271,7 +261,6 @@ class ApiClient {
             }
           }
 
-          // Handle response
           if (!modifiedResponse.ok) {
             let errorData: any = {};
             try {
@@ -282,7 +271,6 @@ class ApiClient {
 
             const error = this.createErrorFromResponse(modifiedResponse.status, errorData);
 
-            // Call error interceptors
             for (const interceptor of this.responseInterceptors) {
               if (interceptor.onError) {
                 interceptor.onError(error);
@@ -292,7 +280,6 @@ class ApiClient {
             throw error;
           }
 
-          // Parse successful response
           const data = await modifiedResponse.json();
           return data as T;
         } catch (error: any) {
@@ -311,14 +298,12 @@ class ApiClient {
       } catch (error: any) {
         lastError = error instanceof ApiError ? error : new NetworkError(error.message);
 
-        // Call request error interceptors
         for (const interceptor of this.requestInterceptors) {
           if (interceptor.onError) {
             interceptor.onError(lastError);
           }
         }
 
-        // Check if we should retry
         if (this.shouldRetry(lastError, attempt, maxRetries)) {
           const delay = this.calculateRetryDelay(attempt, retryDelay, lastError);
           await this.sleep(delay);
@@ -342,7 +327,6 @@ class ApiClient {
     userId?: string
   ): Promise<UploadResponse> {
     return new Promise((resolve, reject) => {
-      // Validate file size
       if (file.size > MAX_FILE_SIZE) {
         reject(
           new UploadError(
@@ -354,7 +338,6 @@ class ApiClient {
         return;
       }
 
-      // Validate file exists
       if (!file || file.size === 0) {
         reject(new UploadError('Invalid file or empty file', 400, 'INVALID_FILE'));
         return;
@@ -362,7 +345,6 @@ class ApiClient {
 
       const xhr = new XMLHttpRequest();
 
-      // Track upload progress
       xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable && onProgress) {
           const progress = Math.round((event.loaded / event.total) * 100);
@@ -370,7 +352,6 @@ class ApiClient {
         }
       });
 
-      // Handle successful upload
       xhr.addEventListener('load', () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
@@ -406,29 +387,24 @@ class ApiClient {
         }
       });
 
-      // Handle network errors
       xhr.addEventListener('error', () => {
         reject(new UploadError('Network error. Please check your connection', 0, 'NETWORK_ERROR'));
       });
 
-      // Handle request timeout
       xhr.addEventListener('timeout', () => {
         reject(new UploadError('Upload timeout. Please try again', 0, 'TIMEOUT'));
       });
 
-      // Handle request abort
       xhr.addEventListener('abort', () => {
         reject(new UploadError('Upload cancelled', 0, 'CANCELLED'));
       });
 
-      // Prepare form data
       const formData = new FormData();
       formData.append('file', file);
       if (userId) {
         formData.append('userId', userId);
       }
 
-      // Configure and send request
       xhr.open('POST', `${this.baseUrl}/api/upload`);
       xhr.timeout = UPLOAD_TIMEOUT;
 
@@ -441,17 +417,13 @@ class ApiClient {
   }
 
   // --------------------------------------------------------------------------
-  // UPLOAD API
+  // API ENDPOINTS
   // --------------------------------------------------------------------------
 
   upload = {
     file: (file: File, onProgress?: (progress: number) => void, userId?: string) =>
       this.uploadWithProgress(file, onProgress, userId),
   };
-
-  // --------------------------------------------------------------------------
-  // PROCESS API
-  // --------------------------------------------------------------------------
 
   process = {
     start: (data: ProcessRequest) =>
@@ -466,16 +438,12 @@ class ApiClient {
       }),
   };
 
-  // --------------------------------------------------------------------------
-  // GENERATE API
-  // --------------------------------------------------------------------------
-
   generate = {
     create: (data: GenerateRequest) =>
       this.request<GenerateResponse>('/api/generate', {
         method: 'POST',
         body: data,
-        timeout: 60000, // 1 minute for AI generation
+        timeout: 60000,
       }),
 
     get: (generationId: string) =>
@@ -483,10 +451,6 @@ class ApiClient {
         method: 'GET',
       }),
   };
-
-  // --------------------------------------------------------------------------
-  // DNA ANALYSIS API
-  // --------------------------------------------------------------------------
 
   dna = {
     analyze: (data: DnaAnalyzeRequest) =>
@@ -497,20 +461,12 @@ class ApiClient {
       }),
   };
 
-  // --------------------------------------------------------------------------
-  // ANALYTICS API
-  // --------------------------------------------------------------------------
-
   analytics = {
     get: (userId: string) =>
       this.request<AnalyticsResponse>(`/api/analytics/${userId}`, {
         method: 'GET',
       }),
   };
-
-  // --------------------------------------------------------------------------
-  // VIRAL PREDICTION API
-  // --------------------------------------------------------------------------
 
   viral = {
     predict: (data: ViralPredictRequest) =>
@@ -519,10 +475,6 @@ class ApiClient {
         body: data,
       }),
   };
-
-  // --------------------------------------------------------------------------
-  // AUTH API
-  // --------------------------------------------------------------------------
 
   auth = {
     register: (data: RegisterRequest) =>
@@ -536,7 +488,6 @@ class ApiClient {
         method: 'POST',
         body: data,
       });
-      // Auto-set token on successful login
       if (response.token) {
         this.setAuthToken(response.token);
       }
@@ -553,10 +504,6 @@ class ApiClient {
       this.setAuthToken(null);
     },
   };
-
-  // --------------------------------------------------------------------------
-  // AUTOMATION API
-  // --------------------------------------------------------------------------
 
   automation = {
     create: (data: CreateAutomationRequest) =>
@@ -576,12 +523,7 @@ class ApiClient {
       }),
   };
 
-  // --------------------------------------------------------------------------
-  // COMMUNITY API
-  // --------------------------------------------------------------------------
-
   community = {
-    // Posts
     createPost: (data: CreatePostRequest) =>
       this.request<{ success: boolean; post: Post }>('/api/community/post', {
         method: 'POST',
@@ -612,15 +554,6 @@ class ApiClient {
         }
       ),
 
-    unlikePost: (postId: string, userId: string) =>
-      this.request<{ success: boolean; message: string; postId: string }>(
-        `/api/community/post/${postId}/like`,
-        {
-          method: 'DELETE',
-          body: { userId },
-        }
-      ),
-
     addComment: (postId: string, userId: string, content: string) =>
       this.request<{ success: boolean; comment: Comment }>(
         `/api/community/post/${postId}/comment`,
@@ -630,81 +563,17 @@ class ApiClient {
         }
       ),
 
-    deletePost: (postId: string, userId: string) =>
-      this.request<{ success: boolean; message: string; postId: string }>(
-        `/api/community/post/${postId}`,
-        {
-          method: 'DELETE',
-          body: { userId },
-        }
-      ),
-
-    // Groups
     createGroup: (data: CreateGroupRequest) =>
       this.request<{ success: boolean; group: Group }>('/api/community/group', {
         method: 'POST',
         body: data,
       }),
 
-    getGroup: (groupId: string) =>
-      this.request<{ success: boolean; group: Group }>(`/api/community/group/${groupId}`, {
-        method: 'GET',
-      }),
-
-    listGroups: (limit = 50) =>
-      this.request<{ success: boolean; groups: Group[]; count: number }>(
-        `/api/community/groups?limit=${limit}`,
-        {
-          method: 'GET',
-        }
-      ),
-
-    joinGroup: (groupId: string, userId: string) =>
-      this.request<{ success: boolean; message: string; groupId: string }>(
-        `/api/community/group/${groupId}/join`,
-        {
-          method: 'POST',
-          body: { userId },
-        }
-      ),
-
-    leaveGroup: (groupId: string, userId: string) =>
-      this.request<{ success: boolean; message: string; groupId: string }>(
-        `/api/community/group/${groupId}/leave`,
-        {
-          method: 'POST',
-          body: { userId },
-        }
-      ),
-
-    // Users
     getUser: (userId: string) =>
       this.request<{ success: boolean; user: UserProfile }>(`/api/community/user/${userId}`, {
         method: 'GET',
       }),
-
-    followUser: (userId: string, followeeId: string) =>
-      this.request<{ success: boolean; message: string; followeeId: string }>(
-        `/api/community/user/${followeeId}/follow`,
-        {
-          method: 'POST',
-          body: { userId },
-        }
-      ),
-
-    unfollowUser: (userId: string, followeeId: string) =>
-      this.request<{ success: boolean; message: string; followeeId: string }>(
-        `/api/community/user/${followeeId}/unfollow`,
-        {
-          method: 'POST',
-          body: { userId },
-        }
-      ),
   };
-
-  // --------------------------------------------------------------------------
-  // TRENDS API
-  // --------------------------------------------------------------------------
 
   trends = {
     current: () =>
@@ -718,22 +587,14 @@ class ApiClient {
       }),
   };
 
-  // --------------------------------------------------------------------------
-  // MULTIPLY API
-  // --------------------------------------------------------------------------
-
   multiply = {
     generate: (data: MultiplyGenerateRequest) =>
       this.request<MultiplyGenerateResponse>('/api/multiply/generate', {
         method: 'POST',
         body: data,
-        timeout: 120000, // 2 minutes for content multiplication
+        timeout: 120000,
       }),
   };
-
-  // --------------------------------------------------------------------------
-  // WORKSPACE API
-  // --------------------------------------------------------------------------
 
   workspace = {
     create: (data: CreateWorkspaceRequest) =>
@@ -751,19 +612,7 @@ class ApiClient {
       this.request<WorkspaceUsersResponse>(`/api/workspace/${workspaceId}/users`, {
         method: 'GET',
       }),
-
-    delete: (workspaceId: string) =>
-      this.request<{ success: boolean; message: string; workspaceId: string }>(
-        `/api/workspace/${workspaceId}`,
-        {
-          method: 'DELETE',
-        }
-      ),
   };
-
-  // --------------------------------------------------------------------------
-  // MARKETPLACE API
-  // --------------------------------------------------------------------------
 
   marketplace = {
     createListing: (data: CreateListingRequest) =>
@@ -789,10 +638,6 @@ class ApiClient {
     },
   };
 
-  // --------------------------------------------------------------------------
-  // INTEGRATIONS API
-  // --------------------------------------------------------------------------
-
   integrations = {
     connect: (data: ConnectPlatformRequest) =>
       this.request<PlatformConnection>('/api/integrations/connect', {
@@ -812,20 +657,12 @@ class ApiClient {
       }),
   };
 
-  // --------------------------------------------------------------------------
-  // ROI API
-  // --------------------------------------------------------------------------
-
   roi = {
     calculate: (userId: string) =>
       this.request<RoiResponse>(`/api/roi/${userId}`, {
         method: 'GET',
       }),
   };
-
-  // --------------------------------------------------------------------------
-  // CREATIVE DIRECTOR API
-  // --------------------------------------------------------------------------
 
   creativeDirector = {
     analyze: (data: AnalyzeContentRequest) =>
@@ -835,10 +672,6 @@ class ApiClient {
         timeout: 60000,
       }),
   };
-
-  // --------------------------------------------------------------------------
-  // VIRAL ANALYZER API
-  // --------------------------------------------------------------------------
 
   viralAnalyzer = {
     analyze: (data: AnalyzeViralRequest) =>
@@ -856,56 +689,15 @@ class ApiClient {
 
 const apiClient = new ApiClient(API_URL);
 
-// ============================================================================
-// DEFAULT INTERCEPTORS
-// ============================================================================
-
-// Request logging interceptor (development only)
+// Development logging
 if (process.env.NODE_ENV === 'development') {
   apiClient.addRequestInterceptor({
     onRequest: (config) => {
       console.log(`[API Request] ${config.method}`, config);
       return config;
     },
-    onError: (error) => {
-      console.error('[API Request Error]', error);
-    },
-  });
-
-  apiClient.addResponseInterceptor({
-    onResponse: (response) => {
-      console.log('[API Response]', response.status, response.statusText);
-      return response;
-    },
-    onError: (error) => {
-      console.error('[API Response Error]', error);
-    },
   });
 }
-
-// Auth token persistence interceptor
-if (typeof window !== 'undefined') {
-  // Load token from localStorage on initialization
-  const savedToken = localStorage.getItem('authToken');
-  if (savedToken) {
-    apiClient.setAuthToken(savedToken);
-  }
-
-  // Save token to localStorage when set
-  const originalSetAuthToken = apiClient.setAuthToken.bind(apiClient);
-  apiClient.setAuthToken = (token: string | null) => {
-    originalSetAuthToken(token);
-    if (token) {
-      localStorage.setItem('authToken', token);
-    } else {
-      localStorage.removeItem('authToken');
-    }
-  };
-}
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
 
 export default apiClient;
 export { ApiClient };
