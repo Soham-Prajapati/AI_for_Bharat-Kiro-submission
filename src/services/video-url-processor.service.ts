@@ -99,7 +99,7 @@ export class VideoURLProcessor extends EventEmitter {
       this.emitProgress(videoId, {
         stage: 'complete',
         progress: 0,
-        message: `Error: ${error.message}`,
+        message: `Error: ${(error as Error).message}`,
         timestamp: new Date()
       });
       throw error;

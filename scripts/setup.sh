@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 # Banner
 echo -e "${BLUE}"
 echo "╔═══════════════════════════════════════════════════════════╗"
-echo "║      CONTENT INTELLIGENCE PLATFORM - SETUP                ║"
+echo "║   CONTENT INTELLIGENCE PLATFORM - SETUP                   ║"
 echo "║   AI for Bharat Hackathon 2026                            ║"
 echo "╚═══════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
