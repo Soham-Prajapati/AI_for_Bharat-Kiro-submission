@@ -1,85 +1,205 @@
-# Error Handling Implementation
+# Error Handling Guide
 
 ## Overview
-Comprehensive error handling system for Content Intelligence Platform backend.
 
-## Components Created
+The Content Intelligence Platform uses a comprehensive error handling system with custom error classes, centralized middleware, and proper logging.
 
-### 1. Custom Error Classes (`src/types/errors.ts`)
-- `AppError` - Base error class with statusCode and operational flag
-- `ValidationError` (400) - For invalid input
-- `AuthenticationError` (401) - For auth failures
-- `AuthorizationError` (403) - For access denied
-- `NotFoundError` (404) - For missing resources
-- `AWSError` (502) - For AWS service failures
-- `RateLimitError` (429) - For rate limiting
+## Error Classes
 
-### 2. Async Handler (`src/middleware/asyncHandler.middleware.ts`)
-- Wraps async route handlers
-- Automatically catches errors and passes to error middleware
-- Eliminates try-catch boilerplate in routes
+All custom errors extend `AppError` base class:
 
-### 3. Global Error Middleware (`src/middleware/error.middleware.ts`)
-- Centralized error handling
-- Distinguishes operational vs unexpected errors
-- Secure error responses (no stack traces in production)
-- Structured logging
-- 404 handler for unknown routes
+### Base Error
+```typescript
+class AppError extends Error {
+  statusCode: number;
+  message: string;
+  isOperational: boolean;
+}
+```
 
-### 4. Updated Routes
-All routes now use:
-- `asyncHandler` wrapper for automatic error catching
-- Custom error classes for specific error types
-- No manual try-catch blocks
-- Consistent error responses
+### Available Error Types
 
-## Usage Example
+| Error Class | Status Code | Use Case |
+|------------|-------------|----------|
+| `ValidationError` | 400 | Invalid input data |
+| `AuthenticationError` | 401 | Authentication failed |
+| `AuthorizationError` | 403 | Access denied |
+| `NotFoundError` | 404 | Resource not found |
+| `ConflictError` | 409 | Resource already exists |
+| `RateLimitError` | 429 | Too many requests |
+| `AWSError` | 502 | AWS service error |
+| `TimeoutError` | 504 | Operation timeout |
+| `ServiceUnavailableError` | 503 | Service unavailable |
+| `BadRequestError` | 400 | Bad request |
+
+## Usage in Routes
 
 ```typescript
-// Before
-router.post('/', async (req, res) => {
-  try {
-    if (!req.body.id) {
-      return res.status(400).json({ error: 'id required' });
-    }
-    const result = await service.process(req.body.id);
-    res.json(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed' });
-  }
-});
+import { asyncHandler } from '../middleware/asyncHandler.middleware';
+import { ValidationError, NotFoundError } from '../types/errors';
 
-// After
-router.post('/', asyncHandler(async (req, res) => {
-  if (!req.body.id) {
-    throw new ValidationError('id required');
+router.get('/:id', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  
+  if (!id) {
+    throw new ValidationError('ID is required');
   }
-  const result = await service.process(req.body.id);
-  res.json(result);
+  
+  const resource = await findById(id);
+  
+  if (!resource) {
+    throw new NotFoundError('Resource');
+  }
+  
+  res.json(resource);
 }));
 ```
 
-## Error Response Format
+## Usage in Services
 
-```json
-{
-  "success": false,
-  "error": {
-    "message": "Descriptive error message",
-    "statusCode": 400,
-    "timestamp": "2026-02-27T03:40:00.000Z"
+```typescript
+import { AWSError, ValidationError } from '../types/errors';
+
+class MyService {
+  async doSomething(input: string) {
+    try {
+      if (!input) {
+        throw new ValidationError('Input is required');
+      }
+      
+      // AWS operation
+      const result = await awsClient.send(command);
+      return result;
+      
+    } catch (error: any) {
+      if (error instanceof ValidationError) throw error;
+      throw new AWSError(error.message, 'ServiceName', error.code);
+    }
   }
 }
 ```
 
-## Security Features
-- No stack traces exposed to clients
-- Operational errors logged as warnings
-- Unexpected errors logged with full details
-- Sensitive information never leaked in error messages
+## Error Response Format
 
-## Next Steps
-- Add rate limiting middleware (task 2.1c)
-- Add structured logging service (task 2.1c)
-- Add request validation middleware
+### Development Mode
+```json
+{
+  "error": "Detailed error message",
+  "requestId": "uuid-v4",
+  "type": "ValidationError",
+  "stack": "Error stack trace..."
+}
+```
+
+### Production Mode
+```json
+{
+  "error": "User-friendly error message",
+  "requestId": "uuid-v4",
+  "type": "ValidationError"
+}
+```
+
+## Request ID Tracking
+
+Every request gets a unique ID for tracking:
+
+```typescript
+// Automatically added by middleware
+req.headers['x-request-id'] // UUID v4
+
+// Included in all error responses
+res.json({ error: '...', requestId: 'uuid' })
+```
+
+## AWS Error Handling
+
+### S3 Errors
+- `NoSuchKey` → 404 Not Found
+- `AccessDenied` → 403 Forbidden
+- Generic errors → 502 Bad Gateway
+
+### Bedrock Errors
+- `ThrottlingException` → 429 Rate Limit
+- `TimeoutError` → 504 Gateway Timeout
+- Generic errors → 502 Bad Gateway
+
+### Transcribe Errors
+- `ConflictException` → 409 Conflict
+- `LimitExceededException` → 429 Rate Limit
+- `BadRequestException` → 404 Not Found
+- Generic errors → 502 Bad Gateway
+
+## Validation Utilities
+
+Use validation utilities for consistent error messages:
+
+```typescript
+import { validateRequired, validateString, validateEnum } from '../utils/validation';
+
+// Validate required field
+validateRequired(userId, 'userId');
+
+// Validate string with length
+validateString(name, 'name', 1, 100);
+
+// Validate enum
+validateEnum(platform, 'platform', ['youtube', 'instagram', 'linkedin']);
+```
+
+## Best Practices
+
+1. **Always use asyncHandler** for async routes
+2. **Throw specific error types** instead of generic Error
+3. **Include field name** in ValidationError for better UX
+4. **Catch and re-throw** in services to add context
+5. **Never expose sensitive data** in error messages
+6. **Log errors with request ID** for debugging
+7. **Use validation utilities** for consistent validation
+
+## Testing Errors
+
+```typescript
+import request from 'supertest';
+import app from '../index';
+
+describe('Error Handling', () => {
+  it('should return 400 for validation error', async () => {
+    const res = await request(app)
+      .post('/api/upload')
+      .send({});
+    
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBeDefined();
+    expect(res.body.requestId).toBeDefined();
+  });
+  
+  it('should return 404 for not found', async () => {
+    const res = await request(app)
+      .get('/api/nonexistent');
+    
+    expect(res.status).toBe(404);
+    expect(res.body.error).toBe('Route not found');
+  });
+});
+```
+
+## Security Considerations
+
+1. **No stack traces in production** - Only in development
+2. **No AWS credentials in errors** - Sanitized automatically
+3. **No internal paths** - Generic messages only
+4. **Rate limiting** - Prevent error-based enumeration
+5. **Request ID tracking** - For audit trails
+
+## Monitoring
+
+All errors are logged with:
+- Request ID
+- Error message
+- Stack trace (development only)
+- Request path and method
+- User ID (if available)
+- Timestamp
+
+Use CloudWatch or similar to monitor error rates and patterns.

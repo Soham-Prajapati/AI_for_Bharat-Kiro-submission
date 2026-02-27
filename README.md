@@ -48,6 +48,10 @@ That file has:
 | `docs/PROMPT_ENGINEERING.md` | 8 platform prompts | Nidhi |
 | `docs/api/` | API documentation | Shubh + Srushti |
 | `docs/deployment/` | AWS setup guides | Shubh + Lakshmi |
+| **`docs/ERROR_HANDLING_GUIDE.md`** | **Error handling best practices** | **Shubh + Lakshmi** |
+| **`docs/SECURITY_AUDIT.md`** | **Security checklist & fixes** | **Shubh + Lakshmi** |
+| **`docs/DEPLOYMENT_CHECKLIST.md`** | **Production readiness** | **Shubh + Lakshmi** |
+| **`docs/BACKEND_SUMMARY.md`** | **Backend status & next steps** | **Everyone** |
 
 ---
 
