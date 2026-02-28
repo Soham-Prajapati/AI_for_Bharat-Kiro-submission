@@ -489,7 +489,7 @@ export const api = {
   - **Output:** Audio file with cloned voice
   - **Test:** Clone voice, verify similarity >80%
 
-- [ ] **3.3b: Build voice training UI (Srushti)**
+- [x] **3.3b: Build voice training UI (Srushti)** ✅
   - **What:** Record voice samples, train model
   - **Where:** `frontend/components/VoiceTrainer.tsx`
   - **Design:** Record button, waveform, progress bar
@@ -519,7 +519,7 @@ export const api = {
   - **Output:** `{ score: number, hooks: Hook[], improvements: string[] }`
   - **Test:** Feed 10 viral videos, verify high scores
 
-- [ ] **3.4b: Build optimizer UI (Srushti)**
+- [x] **3.4b: Build optimizer UI (Srushti)** ✅
   - **What:** Visual timeline with engagement peaks
   - **Where:** `frontend/components/DopamineOptimizer.tsx`
   - **Design:** Timeline, peak markers, suggestions
@@ -547,7 +547,7 @@ export const api = {
   - **Output:** Watermarked media file
   - **Test:** Add watermark, verify detectability
 
-- [ ] **3.5b: Build watermark UI (Srushti)**
+- [x] **3.5b: Build watermark UI (Srushti)** ✅
   - **What:** Watermark editor (position, opacity, size)
   - **Where:** `frontend/components/WatermarkEditor.tsx`
   - **Design:** Drag-drop logo, preview
@@ -576,7 +576,7 @@ export const api = {
   - **Output:** `{ clips: Video[], quotes: Image[], audiograms: Audio[] }`
   - **Test:** 1 video → verify 50+ outputs
 
-- [ ] **3.6b: Build multiplier UI (Srushti)**
+- [x] **3.6b: Build multiplier UI (Srushti)** ✅
   - **What:** Visual content tree showing all outputs
   - **Where:** `frontend/components/ContentMultiplier.tsx`
   - **Design:** Tree view, preview cards, bulk export
@@ -609,7 +609,7 @@ export const api = {
   - **Output:** `{ listings: Listing[], transactions: Transaction[] }`
   - **Test:** Create listing, purchase, verify payment
 
-- [ ] **4.1b: Build marketplace UI (Srushti)**
+- [/] **4.1b: Build marketplace UI (Srushti)**
   - **What:** Browse, search, purchase interface
   - **Where:** `frontend/app/marketplace/page.tsx`
   - **Components:** ListingCard, SearchBar, CheckoutFlow
@@ -638,7 +638,7 @@ export const api = {
   - **Output:** `{ nodes: Node[], edges: Edge[], recommendations: Content[] }`
   - **Test:** 100 videos, verify accurate relationships
 
-- [ ] **4.2b: Build graph visualization (Srushti)**
+- [/] **4.2b: Build graph visualization (Srushti)**
   - **What:** Interactive network graph
   - **Where:** `frontend/components/KnowledgeGraph.tsx`
   - **Library:** D3.js or Cytoscape.js

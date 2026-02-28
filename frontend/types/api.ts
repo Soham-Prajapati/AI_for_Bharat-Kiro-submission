@@ -658,6 +658,37 @@ export interface AnalyzeViralResponse {
 }
 
 // ============================================================================
+// VOICE CLONING TYPES
+// ============================================================================
+
+export interface VoiceTrainRequest {
+  userId: string;
+  samples: File[];
+}
+
+export interface VoiceTrainResponse {
+  success: boolean;
+  modelId: string;
+  samplesUploaded: number;
+  status: 'training' | 'ready' | 'failed';
+  estimatedTime: string;
+  message: string;
+}
+
+export interface VoiceGenerateRequest {
+  modelId: string;
+  text: string;
+}
+
+export interface VoiceGenerateResponse {
+  success: boolean;
+  audioUrl: string;
+  duration: number;
+  status: 'completed' | 'processing' | 'failed';
+  message: string;
+}
+
+// ============================================================================
 // CULTURAL ADAPTATION TYPES
 // ============================================================================
 
@@ -689,4 +720,86 @@ export interface CulturalAdaptResponse {
 export interface SupportedRegionsResponse {
   success: boolean;
   regions: string[];
+}
+
+// ============================================================================
+// VOICE CLONING TYPES
+// ============================================================================
+
+export interface VoiceTrainRequest {
+  userId: string;
+  samples: Blob[];
+}
+
+export interface VoiceTrainResponse {
+  success: boolean;
+  jobId: string;
+  message: string;
+  estimatedTime?: number;
+}
+
+export interface VoiceTrainStatusResponse {
+  jobId: string;
+  status: 'processing' | 'completed' | 'error';
+  progress: number;
+  modelId?: string;
+  error?: string;
+  completedAt?: string;
+}
+
+export interface VoiceGenerateRequest {
+  modelId: string;
+  text: string;
+  userId: string;
+  speed?: number;
+  pitch?: number;
+}
+
+export interface VoiceGenerateResponse {
+  success: boolean;
+  audioUrl: string;
+  duration: number;
+  generatedAt: string;
+}
+
+// ============================================================================
+// KNOWLEDGE GRAPH TYPES
+// ============================================================================
+
+export type NodeType = 'content' | 'topic' | 'creator';
+
+export interface GraphNode {
+  id: string;
+  label: string;
+  type: NodeType;
+  weight: number;
+  metadata?: Record<string, any>;
+}
+
+export interface GraphEdge {
+  source: string;
+  target: string;
+  weight: number;
+  type: string;
+}
+
+export interface GraphData {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+  timestamp?: string;
+  source?: string;
+}
+
+export interface RelatedContent {
+  id: string;
+  title: string;
+  similarity: number;
+  type: string;
+}
+
+export interface RelatedContentResponse {
+  contentId: string;
+  recommendations: RelatedContent[];
+  timestamp: string;
+  source?: string;
 }
