@@ -656,3 +656,289 @@ export interface AnalyzeViralResponse {
   guide: string;
   viralScore: number;
 }
+
+// ============================================================================
+// VOICE CLONING TYPES
+// ============================================================================
+
+export interface VoiceTrainRequest {
+  userId: string;
+  samples: File[];
+}
+
+export interface VoiceTrainResponse {
+  success: boolean;
+  modelId: string;
+  samplesUploaded: number;
+  status: 'training' | 'ready' | 'failed';
+  estimatedTime: string;
+  message: string;
+}
+
+export interface VoiceGenerateRequest {
+  modelId: string;
+  text: string;
+}
+
+export interface VoiceGenerateResponse {
+  success: boolean;
+  audioUrl: string;
+  duration: number;
+  status: 'completed' | 'processing' | 'failed';
+  message: string;
+}
+
+// ============================================================================
+// CULTURAL ADAPTATION TYPES
+// ============================================================================
+
+export interface CulturalAdaptRequest {
+  content: string;
+  targetRegion: string;
+}
+
+export interface CulturalChange {
+  original: string;
+  adapted: string;
+  type: 'idiom' | 'festival' | 'currency' | 'measurement' | 'reference';
+}
+
+export interface CulturalAdaptation {
+  originalContent: string;
+  adaptedContent: string;
+  targetRegion: string;
+  changes: CulturalChange[];
+  confidence: number;
+}
+
+export interface CulturalAdaptResponse {
+  success: boolean;
+  adaptation: CulturalAdaptation;
+  adaptedAt: string;
+}
+
+export interface SupportedRegionsResponse {
+  success: boolean;
+  regions: string[];
+}
+
+// ============================================================================
+// VOICE CLONING TYPES
+// ============================================================================
+
+export interface VoiceTrainRequest {
+  userId: string;
+  samples: Blob[];
+}
+
+export interface VoiceTrainResponse {
+  success: boolean;
+  jobId: string;
+  message: string;
+  estimatedTime?: number;
+}
+
+export interface VoiceTrainStatusResponse {
+  jobId: string;
+  status: 'processing' | 'completed' | 'error';
+  progress: number;
+  modelId?: string;
+  error?: string;
+  completedAt?: string;
+}
+
+export interface VoiceGenerateRequest {
+  modelId: string;
+  text: string;
+  userId: string;
+  speed?: number;
+  pitch?: number;
+}
+
+export interface VoiceGenerateResponse {
+  success: boolean;
+  audioUrl: string;
+  duration: number;
+  generatedAt: string;
+}
+
+// ============================================================================
+// MEMBERSHIP TYPES
+// ============================================================================
+
+export type SubscriptionTier = 'free' | 'basic' | 'pro' | 'enterprise';
+export type SubscriptionStatus = 'active' | 'cancelled' | 'expired' | 'pending';
+
+export interface SubscriptionPlan {
+  tierId: SubscriptionTier;
+  name: string;
+  price: number;
+  features: string[];
+  limits: {
+    uploads?: number;
+    generations?: number;
+    storage?: number;
+  };
+}
+
+export interface Subscription {
+  subscriptionId: string;
+  userId: string;
+  tierId: SubscriptionTier;
+  status: SubscriptionStatus;
+  startDate: string;
+  endDate?: string;
+  autoRenew: boolean;
+  cancelledAt?: string;
+}
+
+export interface SubscribeRequest {
+  tierId: SubscriptionTier;
+  paymentMethod?: string;
+}
+
+export interface SubscribeResponse {
+  success: boolean;
+  subscription: Subscription;
+  message: string;
+}
+
+export interface CancelSubscriptionResponse {
+  success: boolean;
+  subscription: Subscription;
+  message: string;
+}
+
+export interface UpgradeSubscriptionRequest {
+  newTierId: SubscriptionTier;
+}
+
+export interface UpgradeSubscriptionResponse {
+  success: boolean;
+  subscription: Subscription;
+  message: string;
+}
+
+export interface SubscriptionStatusResponse {
+  success: boolean;
+  subscription: Subscription | null;
+  plans: SubscriptionPlan[];
+}
+
+// ============================================================================
+// KNOWLEDGE GRAPH TYPES
+// ============================================================================
+
+export type NodeType = 'content' | 'topic' | 'creator';
+
+export interface GraphNode {
+  id: string;
+  label: string;
+  type: NodeType;
+  weight: number;
+  metadata?: Record<string, any>;
+}
+
+export interface GraphEdge {
+  source: string;
+  target: string;
+  weight: number;
+  type: string;
+}
+
+export interface GraphData {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+  timestamp?: string;
+  source?: string;
+}
+
+export interface RelatedContent {
+  id: string;
+  title: string;
+  similarity: number;
+  type: string;
+}
+
+export interface RelatedContentResponse {
+  contentId: string;
+  recommendations: RelatedContent[];
+  timestamp: string;
+  source?: string;
+}
+
+// ============================================================================
+// ANALYTICS DASHBOARD TYPES
+// ============================================================================
+
+export interface DateRange {
+  startDate: string;
+  endDate: string;
+}
+
+export interface Metric {
+  name: string;
+  value: number;
+  change: number;
+  trend: 'up' | 'down' | 'stable';
+}
+
+export interface Insight {
+  type: 'success' | 'warning' | 'info' | 'error';
+  message: string;
+  priority: 'high' | 'medium' | 'low';
+  action?: string;
+}
+
+export interface PlatformPerformance {
+  platform: Platform;
+  metrics: {
+    views: number;
+    engagement: number;
+    followers: number;
+    posts: number;
+  };
+  trend: 'up' | 'down' | 'stable';
+  changePercent: number;
+}
+
+export interface AnalyticsDashboard {
+  userId: string;
+  dateRange: DateRange;
+  metrics: Metric[];
+  insights: Insight[];
+  platformPerformance: PlatformPerformance[];
+  lastUpdated: string;
+}
+
+export interface AnalyticsDashboardResponse {
+  success: boolean;
+  dashboard: AnalyticsDashboard;
+  cached: boolean;
+}
+
+export interface MetricsResponse {
+  success: boolean;
+  metrics: Metric[];
+  timestamp: string;
+}
+
+export interface InsightsResponse {
+  success: boolean;
+  insights: Insight[];
+  timestamp: string;
+}
+
+export interface PlatformPerformanceResponse {
+  success: boolean;
+  platforms: PlatformPerformance[];
+  timestamp: string;
+}
+
+export interface ExportAnalyticsResponse {
+  success: boolean;
+  downloadUrl: string;
+  format: 'csv' | 'pdf';
+  expiresAt: string;
+}
+
