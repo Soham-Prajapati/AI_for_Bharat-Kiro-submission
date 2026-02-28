@@ -6,8 +6,8 @@ This app has **separate services** that work together:
 
 ```
 ┌──────────────────────┐        HTTP        ┌──────────────────────┐
-│   FRONTEND (React)    │  ───────────────►  │   BACKEND (Node.js)  │
-│   localhost:3000      │  ◄───────────────  │   localhost:8000     │
+│   FRONTEND (Next.js)  │  ───────────────►  │   BACKEND (Node.js)  │
+│   localhost:3000      │  ◄───────────────  │   localhost:3001     │
 │                       │    JSON/REST       │                      │
 │  • Upload Interface   │                    │  • Content Processor │
 │  • Analysis Dashboard │                    │  • Domain Adapter    │
@@ -35,8 +35,8 @@ This app has **separate services** that work together:
 # 1. Clone & setup
 git clone <your-repo-url>
 cd AI_for_Bharat-Kiro-submission
-chmod +x setup.sh
-./setup.sh shubh    # Replace with: shubh/nidhi/srushti/lakshmi
+chmod +x scripts/setup.sh
+./scripts/setup.sh shubh    # Replace with: shubh/nidhi/srushti/lakshmi
 ```
 
 ### Windows
@@ -44,12 +44,12 @@ chmod +x setup.sh
 ```cmd
 git clone <your-repo-url>
 cd AI_for_Bharat-Kiro-submission
-setup.bat shubh     # Replace with: shubh/nidhi/srushti/lakshmi
+scripts\setup.bat shubh     # Replace with: shubh/nidhi/srushti/lakshmi
 ```
 
 > ⚠️ **Requirements:**
-> - Python 3.11+ (for backend utilities)
 > - Node.js 18+ (for TypeScript/React)
+> - npm or yarn
 > - AWS CLI configured with credentials
 
 ---
@@ -60,13 +60,13 @@ setup.bat shubh     # Replace with: shubh/nidhi/srushti/lakshmi
 
 **Mac/Linux:**
 ```bash
-chmod +x start.sh
-./start.sh
+chmod +x scripts/start.sh
+./scripts/start.sh
 ```
 
 **Windows:**
 ```cmd
-start.bat
+scripts\start.bat
 ```
 
 This starts both backend and frontend automatically.
@@ -77,36 +77,21 @@ This starts both backend and frontend automatically.
 
 #### Terminal 1 — Backend API
 
-**Mac/Linux:**
 ```bash
-source .venv/bin/activate
-cd src
+# From project root
+npm install
 npm run dev
-# API runs at http://localhost:8000
-```
-
-**Windows:**
-```cmd
-.venv\Scripts\activate.bat
-cd src
-npm run dev
+# API runs at http://localhost:3001
 ```
 
 #### Terminal 2 — Frontend
 
-**Mac/Linux:**
 ```bash
-source .venv/bin/activate
+# From project root
 cd frontend
+npm install
 npm run dev
 # Frontend at http://localhost:3000
-```
-
-**Windows:**
-```cmd
-.venv\Scripts\activate.bat
-cd frontend
-npm run dev
 ```
 
 ---
@@ -115,25 +100,24 @@ npm run dev
 
 | Person | Primary Focus | What to Run | Terminal Commands |
 |--------|--------------|-------------|-------------------|
-| **Shubh/Soham** | Backend + AWS | Backend API | `cd src && npm run dev` |
-| **Nidhi** | AI Services | Backend API | `cd src && npm run dev` |
+| **Shubh** | Backend + AWS | Backend API | `npm run dev` (from root) |
+| **Nidhi** | AI Services | Backend API | `npm run dev` (from root) |
 | **Srushti** | Frontend | Frontend | `cd frontend && npm run dev` |
-| **Lakshmi** | Testing + Demo | Both (for testing) | `./start.sh` |
+| **Lakshmi** | Testing + Demo | Both (for testing) | `./scripts/start.sh` |
 
 ---
 
 ## 🔧 Development Workflow
 
-### Backend Development (Shubh/Soham, Nidhi)
+### Backend Development (Shubh, Nidhi)
 
 ```bash
-# Activate environment
-source .venv/bin/activate  # Mac/Linux
-# .venv\Scripts\activate.bat  # Windows
+# From project root
+npm install
 
 # Run backend with hot reload
-cd src
 npm run dev
+# Backend runs at http://localhost:3001
 
 # Run tests
 npm test
@@ -154,13 +138,13 @@ npm run build
 ### Frontend Development (Srushti)
 
 ```bash
-# Activate environment
-source .venv/bin/activate  # Mac/Linux
-# .venv\Scripts\activate.bat  # Windows
+# From project root
+cd frontend
+npm install
 
 # Run frontend with hot reload
-cd frontend
 npm run dev
+# Frontend runs at http://localhost:3000
 
 # Run tests
 npm test
@@ -170,17 +154,18 @@ npm run build
 ```
 
 **Key Files:**
-- `frontend/src/pages/Upload.tsx` - Upload interface
-- `frontend/src/pages/Analysis.tsx` - Analysis dashboard
-- `frontend/src/pages/Generation.tsx` - Generation studio
-- `frontend/src/components/` - Reusable components
+- `frontend/app/` - Next.js pages
+- `frontend/components/` - Reusable components
+- `frontend/services/` - API client
+- `frontend/hooks/` - Custom React hooks
+- `frontend/context/` - State management
 
 ---
 
 ### Testing (Lakshmi)
 
 ```bash
-# Run all tests
+# From project root
 npm test
 
 # Run specific test suite
@@ -189,8 +174,9 @@ npm test -- ContentProcessor
 # Run with coverage
 npm test -- --coverage
 
-# Run property tests
-npm run test:property
+# Run frontend tests
+cd frontend
+npm test
 ```
 
 ---
@@ -216,10 +202,14 @@ export AWS_REGION=us-east-1
 
 **Option C: .env File**
 ```bash
-# Already created by setup script
+# Copy example file
+cp .env.example .env
+
 # Edit .env and add your credentials
 AWS_ACCESS_KEY_ID=your_key_here
-AWS_SECRET_ACCESS_KEY=your_secret_here
+AWS_SECRET_ACCESS_KEY=your_secret_key_here
+AWS_REGION=us-east-1
+BEDROCK_MODEL_ID=anthropic.claude-3-5-sonnet-20241022-v2:0
 ```
 
 ### 2. Enable AWS Services
@@ -245,15 +235,16 @@ If you haven't used Bedrock before:
 
 | Problem | Solution |
 |---------|----------|
-| `python3` not found (Mac) | `brew install python@3.11` |
-| `python` not found (Windows) | Install from python.org, check "Add to PATH" |
 | `node` not found | Install from nodejs.org (v18+) |
-| Port 3000 already in use | `npm run dev -- --port 3001` |
-| Port 8000 already in use | Change `API_PORT` in .env |
+| Port 3000 already in use | `cd frontend && npm run dev -- --port 3001` |
+| Port 3001 already in use | Change `PORT` in .env to 3002 |
 | AWS credentials error | Run `aws configure` or check .env |
 | Bedrock access denied | Request model access in AWS Console |
-| `setup.sh` permission denied | `chmod +x setup.sh` |
-| Dependencies fail to install | Delete `node_modules` and `.venv`, run setup again |
+| `scripts/setup.sh` permission denied | `chmod +x scripts/setup.sh` |
+| `scripts/start.sh` permission denied | `chmod +x scripts/start.sh` |
+| Dependencies fail to install | Delete `node_modules`, run `npm install` again |
+| Backend won't start | Check if .env exists, run `npm install` |
+| Frontend won't start | `cd frontend && npm install` |
 
 ---
 
@@ -262,7 +253,7 @@ If you haven't used Bedrock before:
 ### View Backend Logs
 ```bash
 # Terminal running backend will show logs
-# Or check CloudWatch in AWS Console
+# Backend runs with ts-node and shows console output
 ```
 
 ### View Frontend Logs
@@ -275,7 +266,10 @@ If you haven't used Bedrock before:
 ```bash
 # AWS Console → Billing Dashboard
 # Or use AWS CLI
-aws ce get-cost-and-usage --time-period Start=2026-02-26,End=2026-03-04 --granularity DAILY --metrics BlendedCost
+aws ce get-cost-and-usage \
+  --time-period Start=2026-02-26,End=2026-03-04 \
+  --granularity DAILY \
+  --metrics BlendedCost
 ```
 
 ---
@@ -285,7 +279,7 @@ aws ce get-cost-and-usage --time-period Start=2026-02-26,End=2026-03-04 --granul
 For hackathon demo, use pre-loaded content:
 
 ```bash
-# Start in demo mode
+# Start backend in demo mode
 DEMO_MODE=true npm run dev
 
 # This will:
@@ -298,11 +292,12 @@ DEMO_MODE=true npm run dev
 
 ## 📚 Additional Resources
 
-- **HACKATHON_BATTLE_PLAN.md** - Complete 6-day execution plan
-- **PERSONA_GUIDE.md** - Expert perspectives for questions
-- **QUICK_REFERENCE.md** - Quick lookup guide
-- **requirements.md** - Full requirements
-- **design.md** - System architecture
+- **START_HERE.md** - Complete onboarding guide
+- **docs/TODO.md** - All tasks and progress
+- **docs/PROJECT_PLAN.md** - Full architecture
+- **docs/FEATURES_MASTER.md** - All 28 features explained
+- **docs/BACKEND_COMPLETE.md** - Backend API guide
+- **frontend/README.md** - Frontend setup guide
 
 ---
 
@@ -318,40 +313,55 @@ DEMO_MODE=true npm run dev
 
 ---
 
-## 🎯 Current Sprint (Day 1)
+## 🎯 Current Sprint
 
-### Shubh/Soham
+### Shubh
 - [ ] AWS infrastructure setup
 - [ ] AI Service Manager implementation
 - [ ] Content Processor core
+- [ ] API endpoints
 
 ### Nidhi
 - [ ] Domain detection engine
 - [ ] Domain adapters (4 domains)
 - [ ] Domain-specific patterns
+- [ ] Generation prompts
 
 ### Srushti
 - [ ] Landing page
 - [ ] Upload interface with drag-drop
-- [ ] Results dashboard wireframe
+- [ ] Results dashboard
+- [ ] Generation studio UI
 
 ### Lakshmi
 - [ ] CI/CD pipeline (GitHub Actions)
 - [ ] Testing framework setup
 - [ ] CloudWatch monitoring
+- [ ] Demo preparation
 
 ---
 
-## ✅ End of Day 1 Checkpoint
+## ✅ Quick Verification
 
-By end of today, we should have:
-- ✅ Can upload video → get transcript
-- ✅ Domain detection works
-- ✅ Basic UI deployed
-- ✅ AWS infrastructure live
+After setup, verify everything works:
+
+```bash
+# 1. Check backend
+npm run dev
+# Should see: "Server running on http://localhost:3001"
+
+# 2. Check frontend (new terminal)
+cd frontend
+npm run dev
+# Should see: "Ready on http://localhost:3000"
+
+# 3. Check AWS connection
+curl http://localhost:3001/health
+# Should return: {"status":"ok"}
+```
 
 ---
 
-**Questions? Check PERSONA_GUIDE.md and ask specific experts!**
+**Questions? Check START_HERE.md for complete onboarding!**
 
 **LET'S BUILD SOMETHING INSANE! 🚀🔥**
