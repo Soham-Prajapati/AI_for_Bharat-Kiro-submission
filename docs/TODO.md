@@ -905,7 +905,7 @@ export const api = {
   - **Output:** 100+ content pieces
   - **Test:** 1 video → verify 100+ outputs
 
-- [/] **5.4b: Build multiplier V2 UI (Srushti)**
+- [x] **5.4b: Build multiplier V2 UI (Srushti)** ✅
   - **What:** Advanced content tree, bulk actions
   - **Where:** `frontend/components/ContentMultiplierV2.tsx`
   - **Test:** Mock 100 outputs, verify performance
@@ -933,7 +933,7 @@ export const api = {
   - **Output:** `{ safe: boolean, violations: Violation[], suggestions: string[] }`
   - **Test:** Feed unsafe content, verify detection
 
-- [ ] **5.5b: Build safety UI (Srushti)**
+- [/] **5.5b: Build safety UI (Srushti)**
   - **What:** Safety dashboard, violation alerts
   - **Where:** `frontend/components/SafetyDashboard.tsx`
   - **Design:** Traffic light system (green/yellow/red)
@@ -966,7 +966,7 @@ export const api = {
   - **Output:** Culturally adapted content in target language
   - **Test:** Translate to all 9 languages, verify quality
 
-- [ ] **5.6b: Build language selector UI (Srushti)**
+- [x] **5.6b: Build language selector UI (Srushti)** ✅
   - **What:** Language picker, preview
   - **Where:** `frontend/components/LanguageSelector.tsx`
   - **Design:** Flag icons, native script preview

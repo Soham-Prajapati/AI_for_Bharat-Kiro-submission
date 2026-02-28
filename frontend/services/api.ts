@@ -94,6 +94,13 @@ import {
   PlatformPerformanceResponse,
   ExportAnalyticsResponse,
   DateRange,
+  SafetyCheckRequest,
+  SafetyCheckResponse,
+  SafetyHistoryResponse,
+  ApproveContentRequest,
+  ApproveContentResponse,
+  RejectContentRequest,
+  RejectContentResponse,
 } from '@/types/api';
 
 // ============================================================================
@@ -889,6 +896,52 @@ class ApiClient {
           method: 'GET',
         }
       ),
+  };
+
+  safety = {
+    /**
+     * Check content for safety violations
+     * @param data - Safety check request with content details
+     * @returns Promise with safety check result including violations and suggestions
+     */
+    check: (data: SafetyCheckRequest) =>
+      this.request<SafetyCheckResponse>('/api/safety/check', {
+        method: 'POST',
+        body: data,
+        timeout: 60000, // 60 seconds for AI moderation
+      }),
+
+    /**
+     * Get violation history for specific content
+     * @param contentId - The unique content identifier
+     * @returns Promise with all safety checks performed on this content
+     */
+    getHistory: (contentId: string) =>
+      this.request<SafetyHistoryResponse>(`/api/safety/history/${contentId}`, {
+        method: 'GET',
+      }),
+
+    /**
+     * Approve flagged content after manual review
+     * @param data - Approval request with check ID and approver details
+     * @returns Promise with approval confirmation
+     */
+    approve: (data: ApproveContentRequest) =>
+      this.request<ApproveContentResponse>('/api/safety/approve', {
+        method: 'POST',
+        body: data,
+      }),
+
+    /**
+     * Reject unsafe content after manual review
+     * @param data - Rejection request with check ID, reason, and reviewer details
+     * @returns Promise with rejection confirmation
+     */
+    reject: (data: RejectContentRequest) =>
+      this.request<RejectContentResponse>('/api/safety/reject', {
+        method: 'POST',
+        body: data,
+      }),
   };
 }
 
