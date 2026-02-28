@@ -656,3 +656,37 @@ export interface AnalyzeViralResponse {
   guide: string;
   viralScore: number;
 }
+
+// ============================================================================
+// CULTURAL ADAPTATION TYPES
+// ============================================================================
+
+export interface CulturalAdaptRequest {
+  content: string;
+  targetRegion: string;
+}
+
+export interface CulturalChange {
+  original: string;
+  adapted: string;
+  type: 'idiom' | 'festival' | 'currency' | 'measurement' | 'reference';
+}
+
+export interface CulturalAdaptation {
+  originalContent: string;
+  adaptedContent: string;
+  targetRegion: string;
+  changes: CulturalChange[];
+  confidence: number;
+}
+
+export interface CulturalAdaptResponse {
+  success: boolean;
+  adaptation: CulturalAdaptation;
+  adaptedAt: string;
+}
+
+export interface SupportedRegionsResponse {
+  success: boolean;
+  regions: string[];
+}

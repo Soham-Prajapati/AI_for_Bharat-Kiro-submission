@@ -391,7 +391,7 @@ export const api = {
   - **Output:** Culturally adapted content
   - **Test:** English content → Hindi, verify cultural references changed
 
-- [/] **2.5b: Build cultural settings UI (Srushti)**
+- [x] **2.5b: Build cultural settings UI (Srushti)** ✅
   - **What:** Let user select target regions
   - **Where:** `frontend/components/CulturalSettings.tsx`
   - **Design:** Checkbox list of regions, preview changes
@@ -458,7 +458,7 @@ export const api = {
   - **Output:** `{ trends: Trend[], predictions: Prediction[], confidence: number }`
   - **Test:** Historical data, verify >60% accuracy
 
-- [ ] **3.2b: Build trend dashboard (Srushti)**
+- [/] **3.2b: Build trend dashboard (Srushti)**
   - **What:** Visual trend timeline + predictions
   - **Where:** `frontend/components/TrendDashboard.tsx`
   - **Design:** Line charts, heatmaps, trend cards

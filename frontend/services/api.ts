@@ -63,6 +63,9 @@ import {
   AnalyzeContentResponse,
   AnalyzeViralRequest,
   AnalyzeViralResponse,
+  CulturalAdaptRequest,
+  CulturalAdaptResponse,
+  SupportedRegionsResponse,
 } from '@/types/api';
 
 // ============================================================================
@@ -679,6 +682,19 @@ class ApiClient {
         method: 'POST',
         body: data,
         timeout: 60000,
+      }),
+  };
+
+  cultural = {
+    adapt: (data: CulturalAdaptRequest) =>
+      this.request<CulturalAdaptResponse>('/api/cultural/adapt', {
+        method: 'POST',
+        body: data,
+      }),
+
+    getRegions: () =>
+      this.request<SupportedRegionsResponse>('/api/cultural/regions', {
+        method: 'GET',
       }),
   };
 }
