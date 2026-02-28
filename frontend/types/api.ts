@@ -866,3 +866,79 @@ export interface RelatedContentResponse {
   timestamp: string;
   source?: string;
 }
+
+// ============================================================================
+// ANALYTICS DASHBOARD TYPES
+// ============================================================================
+
+export interface DateRange {
+  startDate: string;
+  endDate: string;
+}
+
+export interface Metric {
+  name: string;
+  value: number;
+  change: number;
+  trend: 'up' | 'down' | 'stable';
+}
+
+export interface Insight {
+  type: 'success' | 'warning' | 'info' | 'error';
+  message: string;
+  priority: 'high' | 'medium' | 'low';
+  action?: string;
+}
+
+export interface PlatformPerformance {
+  platform: Platform;
+  metrics: {
+    views: number;
+    engagement: number;
+    followers: number;
+    posts: number;
+  };
+  trend: 'up' | 'down' | 'stable';
+  changePercent: number;
+}
+
+export interface AnalyticsDashboard {
+  userId: string;
+  dateRange: DateRange;
+  metrics: Metric[];
+  insights: Insight[];
+  platformPerformance: PlatformPerformance[];
+  lastUpdated: string;
+}
+
+export interface AnalyticsDashboardResponse {
+  success: boolean;
+  dashboard: AnalyticsDashboard;
+  cached: boolean;
+}
+
+export interface MetricsResponse {
+  success: boolean;
+  metrics: Metric[];
+  timestamp: string;
+}
+
+export interface InsightsResponse {
+  success: boolean;
+  insights: Insight[];
+  timestamp: string;
+}
+
+export interface PlatformPerformanceResponse {
+  success: boolean;
+  platforms: PlatformPerformance[];
+  timestamp: string;
+}
+
+export interface ExportAnalyticsResponse {
+  success: boolean;
+  downloadUrl: string;
+  format: 'csv' | 'pdf';
+  expiresAt: string;
+}
+

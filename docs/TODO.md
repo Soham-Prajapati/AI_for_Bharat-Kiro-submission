@@ -726,7 +726,7 @@ export const api = {
   - **Output:** `{ schedules: Schedule[], automations: Automation[] }`
   - **Test:** Schedule post, verify auto-publish
 
-- [ ] **4.5b: Build automation UI (Srushti)**
+- [x] **4.5b: Build automation UI (Srushti)** ✅
   - **What:** Automation builder (if-this-then-that)
   - **Where:** `frontend/components/AutomationBuilder.tsx`
   - **Design:** Visual workflow builder
@@ -755,7 +755,7 @@ export const api = {
   - **Output:** `{ metrics: Metric[], insights: Insight[], forecasts: Forecast[] }`
   - **Test:** Mock data, verify calculations
 
-- [ ] **4.6b: Build analytics dashboard (Srushti)**
+- [/] **4.6b: Build analytics dashboard (Srushti)**
   - **What:** Comprehensive analytics UI
   - **Where:** `frontend/app/analytics-dashboard/page.tsx`
   - **Components:** MetricCard, TrendChart, InsightPanel
