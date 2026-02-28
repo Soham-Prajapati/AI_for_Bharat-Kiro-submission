@@ -46,7 +46,7 @@ export interface Group {
   createdAt: Date;
 }
 
-class CommunityService {
+export class CommunityService {
   private users: Map<string, User> = new Map();
   private posts: Map<string, Post> = new Map();
   private groups: Map<string, Group> = new Map();

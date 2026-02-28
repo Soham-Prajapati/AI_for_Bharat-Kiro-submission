@@ -62,7 +62,7 @@ try {
 Set the API URL in `.env.local`:
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:3000
+NEXT_PUBLIC_API_URL=http://localhost:3001
 ```
 
 For production, update to your production API URL.
