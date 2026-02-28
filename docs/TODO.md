@@ -325,7 +325,7 @@ export const api = {
   - **Algorithm:** Weighted scoring + ML model (optional)
   - **Test:** Feed 10 viral videos, verify high scores
 
-- [ ] **2.3b: Build score visualization (Srushti)**
+- [x] **2.3b: Build score visualization (Srushti)** ✅
   - **What:** Gauge chart + breakdown
   - **Where:** `frontend/components/ViralScoreGauge.tsx`
   - **Design:** Circular gauge (0-100), color gradient (red→yellow→green)
@@ -359,7 +359,7 @@ export const api = {
   - **Output:** `{ timeSaved: '5.5 hours', moneySaved: '$275', roi: '2750%' }`
   - **Test:** Various video lengths, verify calculations
 
-- [ ] **2.4b: Build ROI dashboard (Srushti)**
+- [/] **2.4b: Build ROI dashboard (Srushti)**
   - **What:** Show savings over time
   - **Where:** `frontend/components/ROIDashboard.tsx`
   - **Components:** SavingsCounter, ROIChart, ProjectionGraph
