@@ -427,7 +427,7 @@ export const api = {
   - **Output:** `{ workspaceId: string, users: User[], changes: Change[], version: number }`
   - **Test:** 3 users edit same content, verify no conflicts
 
-- [ ] **3.1b: Build workspace UI (Srushti)**
+- [x] **3.1b: Build workspace UI (Srushti)** ✅
   - **What:** Google Docs-style collaborative editor
   - **Where:** `frontend/app/workspace/page.tsx`
   - **Components:** Editor, UserPresence, CommentThread, VersionHistory
