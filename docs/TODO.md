@@ -847,7 +847,7 @@ export const api = {
   - **Output:** `{ score: Score, feedback: Feedback[], improvements: string[] }`
   - **Test:** Feed 10 videos, verify feedback quality
 
-- [/] **5.2b: Build feedback UI (Srushti)**
+- [x] **5.2b: Build feedback UI (Srushti)** ✅
   - **What:** Feedback panel with scores, suggestions
   - **Where:** `frontend/components/CreativeDirector.tsx`
   - **Design:** Score cards, improvement list
@@ -1066,7 +1066,7 @@ export const api = {
 
 ### Day 6.4: Deployment
 - [x] 6.4a: Deploy backend (Shubh + Lakshmi)
-- [ ] **6.4b: Deploy frontend (Srushti + Lakshmi)**
+- [/] **6.4b: Deploy frontend (Srushti + Lakshmi)** — IN PROGRESS
   - **What:** Deploy Next.js to Vercel
   - **Where:** Vercel dashboard
   - **Config:** Environment variables, custom domain
