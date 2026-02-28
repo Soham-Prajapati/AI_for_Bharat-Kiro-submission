@@ -847,7 +847,7 @@ export const api = {
   - **Output:** `{ score: Score, feedback: Feedback[], improvements: string[] }`
   - **Test:** Feed 10 videos, verify feedback quality
 
-- [ ] **5.2b: Build feedback UI (Srushti)**
+- [/] **5.2b: Build feedback UI (Srushti)**
   - **What:** Feedback panel with scores, suggestions
   - **Where:** `frontend/components/CreativeDirector.tsx`
   - **Design:** Score cards, improvement list
@@ -876,7 +876,7 @@ export const api = {
   - **Output:** `{ patterns: Pattern[], hooks: Hook[], guide: string }`
   - **Test:** Analyze 10 viral videos, verify patterns
 
-- [ ] **5.3b: Build analyzer UI (Srushti)**
+- [x] **5.3b: Build analyzer UI (Srushti)** ✅
   - **What:** Visual breakdown of viral elements
   - **Where:** `frontend/components/ViralAnalyzer.tsx`
   - **Design:** Timeline with annotations, pattern cards
