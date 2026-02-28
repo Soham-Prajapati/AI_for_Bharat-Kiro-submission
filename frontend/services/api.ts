@@ -75,6 +75,15 @@ import {
   GraphNode,
   GraphEdge,
   RelatedContentResponse,
+  SubscriptionTier,
+  SubscriptionStatus,
+  Subscription,
+  SubscribeRequest,
+  SubscribeResponse,
+  CancelSubscriptionResponse,
+  UpgradeSubscriptionRequest,
+  UpgradeSubscriptionResponse,
+  SubscriptionStatusResponse,
 } from '@/types/api';
 
 // ============================================================================
@@ -769,6 +778,30 @@ class ApiClient {
         method: 'GET',
       });
     },
+  };
+
+  membership = {
+    subscribe: (data: SubscribeRequest) =>
+      this.request<SubscribeResponse>('/api/membership/subscribe', {
+        method: 'POST',
+        body: data,
+      }),
+
+    cancelSubscription: () =>
+      this.request<CancelSubscriptionResponse>('/api/membership/cancel', {
+        method: 'POST',
+      }),
+
+    upgradeSubscription: (data: UpgradeSubscriptionRequest) =>
+      this.request<UpgradeSubscriptionResponse>('/api/membership/subscribe', {
+        method: 'POST',
+        body: data,
+      }),
+
+    getSubscriptionStatus: () =>
+      this.request<SubscriptionStatusResponse>('/api/membership/status', {
+        method: 'GET',
+      }),
   };
 }
 
