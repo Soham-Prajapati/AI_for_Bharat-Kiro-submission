@@ -667,7 +667,7 @@ export const api = {
   - **Output:** `{ users: User[], posts: Post[], groups: Group[] }`
   - **Test:** Create group, post, comment, verify
 
-- [/] **4.3b: Build community UI (Srushti)**
+- [x] **4.3b: Build community UI (Srushti)** ✅
   - **What:** Social feed, profiles, groups
   - **Where:** `frontend/app/community/page.tsx`
   - **Components:** Feed, ProfileCard, GroupList
