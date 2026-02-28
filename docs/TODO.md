@@ -458,7 +458,7 @@ export const api = {
   - **Output:** `{ trends: Trend[], predictions: Prediction[], confidence: number }`
   - **Test:** Historical data, verify >60% accuracy
 
-- [/] **3.2b: Build trend dashboard (Srushti)**
+- [x] **3.2b: Build trend dashboard (Srushti)** ✅
   - **What:** Visual trend timeline + predictions
   - **Where:** `frontend/components/TrendDashboard.tsx`
   - **Design:** Line charts, heatmaps, trend cards
