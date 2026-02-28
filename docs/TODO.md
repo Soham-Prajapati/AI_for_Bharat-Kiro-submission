@@ -227,14 +227,14 @@ export const api = {
   - **Coverage:** All 8 prompts, >80% code coverage
   - **Test:** `npm test -- prompts`
 
-- [x] **1.5c: Create integration tests (Lakshmi)** ✅
+- [/] **1.5c: Create integration tests (Lakshmi)**
   - **What:** Test full upload → process → generate flow
   - **Where:** `src/__tests__/integration/e2e.test.ts`
   - **How:** Use `supertest` to call API endpoints
   - **Test:** Upload file → verify S3 → verify Transcribe → verify Bedrock
   - **Duration:** Should complete in <30 seconds
 
-- [x] **1.5d: Setup CI/CD pipeline (Lakshmi)** ✅
+- [ ] **1.5d: Setup CI/CD pipeline (Lakshmi)**
   - **What:** GitHub Actions for auto-deploy
   - **Where:** `.github/workflows/deploy.yml`
   - **How:** On push to `main`, run tests → build → deploy to AWS
