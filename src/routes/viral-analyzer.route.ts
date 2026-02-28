@@ -1,35 +1,34 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
+import { viralIntelligenceService } from '../services/viral-intelligence.service';
 
 const router = Router();
 
 // POST /api/viral-analyzer/analyze - Analyze viral content
 router.post('/analyze', asyncHandler(async (req: Request, res: Response) => {
-  const { videoUrl } = req.body;
+  const { videoUrl, transcript, content, title, platform, metrics } = req.body;
 
-  if (!videoUrl) {
-    throw new ValidationError('videoUrl required');
+  if (!videoUrl && !transcript && !content) {
+    throw new ValidationError('videoUrl, transcript, or content required');
   }
 
-  // TODO: Replace with real viral-analyzer.service.ts
-  const mockAnalysis = {
-    videoUrl,
-    patterns: [
-      { type: 'hook', strength: 0.92, description: 'Immediate visual impact in first 3 seconds' },
-      { type: 'pacing', strength: 0.85, description: 'Fast cuts maintain attention' },
-      { type: 'emotion', strength: 0.88, description: 'Strong emotional peaks at 0:15 and 0:45' }
-    ],
-    hooks: [
-      { timestamp: '0:00', type: 'visual', impact: 'high' },
-      { timestamp: '0:15', type: 'emotional', impact: 'high' }
-    ],
-    guide: 'Replicate the fast-paced editing and emotional storytelling structure',
-    viralScore: 87,
-    source: 'mock'
-  };
+  const analysis = await viralIntelligenceService.analyzeContent({
+    url: videoUrl,
+    title: title || 'Untitled',
+    transcript: transcript || content || '',
+    platform: platform || 'youtube',
+    metrics: metrics || {
+      views: 0,
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      duration: 0,
+      publishedDate: new Date().toISOString()
+    }
+  });
 
-  res.json(mockAnalysis);
+  res.json(analysis);
 }));
 
 export default router;
