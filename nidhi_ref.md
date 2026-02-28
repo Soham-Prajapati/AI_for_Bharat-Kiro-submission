@@ -61,6 +61,8 @@
 - ✅ 3.5a: Watermark service (visible/invisible watermarks for brand protection)
 - ✅ 3.6a: Content multiplier service (repurpose 1 video into 50+ pieces)
 - ✅ 4.1a: Marketplace service (buy/sell content templates with revenue sharing)
+- ✅ 4.2a: Knowledge graph service (map relationships between content, topics, creators)
+- ✅ 4.3a: Community service (creator network, forums, groups with moderation)
 
 ### Shubh (Backend + AWS)
 - ✅ 1.2-1.3: All API routes + AWS services
@@ -2876,4 +2878,573 @@ Created comprehensive marketplace service in `src/services/marketplace.service.t
 - Add content moderation
 - Setup analytics dashboard
 - Add promotional features (featured listings, discounts)
+
+
+
+---
+
+### ✅ Task 4.2a: Create Knowledge Graph Service (COMPLETED)
+
+Created comprehensive knowledge graph service in `src/services/knowledge-graph.service.ts` that maps relationships between content, topics, creators, and entities to enable content discovery, recommendations, and collaboration opportunities.
+
+**Core Functionality:**
+
+1. **addContent(contentId, title, transcript, creatorId, metadata)** - Add content to graph
+   - Extracts entities from transcript using AI (GPT-4o)
+   - Creates content node with metadata
+   - Creates/updates creator node
+   - Creates entity nodes for extracted entities
+   - Establishes edges: creator→content, content→entities
+   - Returns all created nodes and edges
+
+2. **extractEntities(text)** - AI-powered entity extraction
+   - Uses GPT-4o to identify named entities
+   - Extracts 6 entity types: person, place, organization, concept, product, event
+   - Returns entity name, type, mention count, confidence score
+   - Fallback to basic extraction (capitalized words) if AI fails
+
+3. **findRelatedContent(contentId, limit)** - Content recommendations
+   - Finds content sharing entities with target content
+   - Calculates relevance score based on shared entities
+   - Returns top N recommendations with reasoning
+   - Shows shared entities and topics
+   - Useful for "Related Videos" feature
+
+4. **exploreGraph(startNodeId, depth)** - Graph traversal
+   - Explores graph starting from any node
+   - Configurable depth (default: 2 hops)
+   - Returns all nodes and edges within depth
+   - Useful for visualization and discovery
+
+5. **findClusters()** - Community detection
+   - Identifies content clusters based on shared entities
+   - Groups content around central topics
+   - Calculates cluster size and density
+   - Returns sorted by cluster size
+   - Useful for discovering content communities
+
+6. **getStatistics()** - Graph analytics
+   - Total nodes and edges count
+   - Nodes by type breakdown (content, creator, entity)
+   - Average degree (connectivity)
+   - Useful for monitoring graph growth
+
+7. **searchGraph(keyword)** - Keyword search
+   - Searches node labels and properties
+   - Case-insensitive matching
+   - Returns matching nodes
+   - Useful for finding specific content/entities
+
+**Data Structures:**
+
+**GraphNode:**
+```typescript
+{
+  nodeId: string,
+  type: 'content' | 'topic' | 'creator' | 'entity',
+  label: string,
+  properties: Record<string, any>,
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+**GraphEdge:**
+```typescript
+{
+  edgeId: string,
+  sourceId: string,
+  targetId: string,
+  relationship: string, // 'created', 'mentions', 'collaborates'
+  weight: number, // 0-1 confidence/strength
+  properties: Record<string, any>,
+  createdAt: string
+}
+```
+
+**Entity:**
+```typescript
+{
+  name: string,
+  type: 'person' | 'place' | 'organization' | 'concept' | 'product' | 'event',
+  mentions: number,
+  confidence: number
+}
+```
+
+**ContentRecommendation:**
+```typescript
+{
+  contentId: string,
+  title: string,
+  reason: string,
+  relevanceScore: number,
+  sharedTopics: string[],
+  sharedEntities: string[]
+}
+```
+
+**GraphCluster:**
+```typescript
+{
+  clusterId: string,
+  name: string,
+  nodes: GraphNode[],
+  centralTopic: string,
+  size: number,
+  density: number
+}
+```
+
+**Graph Relationships:**
+- creator → created → content (1.0 weight)
+- content → mentions → entity (0-1 confidence weight)
+- content → related_to → content (calculated by shared entities)
+
+**Entity Types (6):**
+- Person: Individuals mentioned (e.g., "Gordon Ramsay")
+- Place: Locations (e.g., "Delhi", "New York")
+- Organization: Companies, institutions (e.g., "Google", "Harvard")
+- Concept: Abstract ideas (e.g., "AI", "Cooking", "Marketing")
+- Product: Specific products (e.g., "iPhone", "Photoshop")
+- Event: Events, occasions (e.g., "Diwali", "Olympics")
+
+**AI Entity Extraction:**
+- Uses GPT-4o with structured prompt
+- Analyzes first 2000 characters of transcript
+- Returns JSON array of entities
+- Includes confidence scores for each entity
+- Fallback to basic extraction if AI fails
+
+**Basic Entity Extraction (Fallback):**
+- Detects capitalized words (proper nouns)
+- Counts mentions per word
+- Assigns 0.6 confidence (lower than AI)
+- Ensures service always works
+
+**Clustering Algorithm:**
+- Groups content by shared entities
+- Minimum 2 content pieces per cluster
+- Calculates cluster density: edges / max_possible_edges
+- Names cluster after central entity
+- Sorts by cluster size
+
+**Graph Statistics:**
+- Node count by type (content: X, creator: Y, entity: Z)
+- Total edges (relationships)
+- Average degree (avg connections per node)
+- Useful for monitoring graph health
+
+**Mock Data (for testing):**
+- 3 content nodes: "Butter Chicken", "Indian Cooking", "Delhi Restaurants"
+- 2 creator nodes: "FoodVlogger", "TravelExplorer"
+- 3 entity nodes: "Indian Food", "Delhi", "Cooking"
+- 9 edges connecting them
+- Demonstrates content relationships
+
+**Example Usage:**
+
+```typescript
+const graph = new KnowledgeGraphService();
+
+// Add content
+await graph.addContent(
+  'video_001',
+  'How to Make Butter Chicken',
+  'Today we are making authentic butter chicken...',
+  'creator_001'
+);
+
+// Find related content
+const related = await graph.findRelatedContent('video_001', 5);
+// Returns: [
+//   { contentId: 'video_002', title: 'Indian Cooking Basics',
+//     reason: 'Shares 2 entities: Indian Food, Cooking',
+//     relevanceScore: 2, sharedEntities: ['Indian Food', 'Cooking'] }
+// ]
+
+// Explore graph
+const subgraph = await graph.exploreGraph('video_001', 2);
+// Returns all nodes within 2 hops
+
+// Find clusters
+const clusters = await graph.findClusters();
+// Returns: [
+//   { clusterId: 'cluster_1', name: 'Indian Food Community',
+//     size: 3, centralTopic: 'Indian Food' }
+// ]
+```
+
+**Integration:**
+- API routes exist: `GET /api/graph/explore`, `GET /api/graph/related` (Shubh completed)
+- Frontend visualization (Srushti's task 4.2b) - D3.js/Cytoscape
+- In-memory graph for MVP (DynamoDB integration ready)
+- Used for content discovery and recommendations
+
+**Key Features:**
+- AI-powered entity extraction (6 types)
+- Graph-based content relationships
+- Related content recommendations
+- Community/cluster detection
+- Graph traversal and exploration
+- Keyword search
+- Graph statistics and analytics
+- In-memory storage (fast for MVP)
+- DynamoDB-ready for production
+- Mock data for testing
+- Fallback entity extraction
+
+**Use Cases:**
+- "Related Videos" recommendations
+- Content discovery by topic
+- Creator collaboration matching (shared interests)
+- Topic trend analysis (popular entities)
+- Content gap identification (underserved topics)
+- Audience interest mapping
+- Cross-promotion opportunities
+
+**Business Impact:**
+- Increases content discoverability (related content)
+- Improves user engagement (keeps users on platform)
+- Enables creator collaboration (shared topics)
+- Provides content insights (popular topics)
+- Differentiator from competitors (graph-based recommendations)
+- Enables network effects (more content = better recommendations)
+
+**Scalability:**
+- In-memory for MVP (<1000 nodes)
+- DynamoDB for production (millions of nodes)
+- Efficient graph traversal algorithms
+- Caching for frequently accessed subgraphs
+- Batch entity extraction for performance
+
+**Example Recommendations:**
+- "How to Make Butter Chicken" → "Indian Cooking Basics" (shares: Indian Food, Cooking)
+- "Best Restaurants in Delhi" → "How to Make Butter Chicken" (shares: Indian Food, Delhi)
+- Relevance scores based on number of shared entities
+
+**Cluster Example:**
+- "Indian Food Community" cluster
+  - Content: Butter Chicken, Indian Cooking, Delhi Restaurants
+  - Central topic: Indian Food
+  - Size: 3 pieces of content
+  - Density: 0.67 (well-connected)
+
+**Next Steps for Production:**
+- Integrate DynamoDB for persistent storage
+- Add more relationship types (collaborates, references, inspired_by)
+- Implement PageRank for node importance
+- Add temporal analysis (trending topics over time)
+- Implement graph embeddings for ML recommendations
+- Add creator similarity scoring
+- Implement topic taxonomy (hierarchical topics)
+- Add content versioning (track changes over time)
+
+
+
+---
+
+### ✅ Task 4.3a: Create Community Service (COMPLETED)
+
+Created comprehensive community service in `src/services/community.service.ts` that enables creator networking, forums, groups, and social interactions with moderation tools.
+
+**Core Functionality:**
+
+1. **User Profile Management**
+   - `createProfile()` - Create/update user profile with bio, avatar, social links
+   - `getProfile()` - Get user profile by ID
+   - `updateProfile()` - Update profile fields
+   - `searchUsers()` - Search by username or display name
+
+2. **Follow/Unfollow System**
+   - `followUser()` - Follow another user
+   - `unfollowUser()` - Unfollow a user
+   - `getFollowers()` - Get user's followers list
+   - `getFollowing()` - Get users that user is following
+   - `isFollowing()` - Check if user A follows user B
+   - Automatic follower/following count updates
+
+3. **Posts & Feed**
+   - `createPost()` - Create post with content, media, tags
+   - `getPost()` - Get post by ID
+   - `updatePost()` - Edit post content
+   - `deletePost()` - Delete post
+   - `likePost()` - Like a post
+   - `getUserPosts()` - Get all posts by user
+   - `getFeed()` - Activity feed (posts from followed users)
+   - Spam detection on post creation
+
+4. **Comments**
+   - `addComment()` - Add comment to post
+   - `getComments()` - Get all comments for post
+   - `deleteComment()` - Delete comment
+   - Support for nested replies (structure ready)
+
+5. **Groups & Communities**
+   - `createGroup()` - Create group with name, description, rules
+   - `getGroup()` - Get group by ID
+   - `joinGroup()` - Join a group
+   - `leaveGroup()` - Leave a group
+   - `getUserGroups()` - Get all groups user is member of
+   - `searchGroups()` - Search groups by name, description, tags
+   - Public/private group support
+
+6. **Moderation Tools**
+   - `isSpam()` - Spam detection (keywords, caps, excessive links)
+   - `moderateContent()` - Moderation actions (warn, mute, ban, delete)
+   - Automatic spam filtering on post creation
+
+7. **Statistics & Analytics**
+   - `getStatistics()` - Total users, posts, comments, groups
+   - `getMockData()` - Mock data for testing
+
+**Data Structures:**
+
+**UserProfile:**
+```typescript
+{
+  userId: string,
+  username: string,
+  displayName: string,
+  bio: string,
+  avatar?: string,
+  coverImage?: string,
+  followers: number,
+  following: number,
+  postsCount: number,
+  joinedAt: string,
+  verified: boolean,
+  badges: string[],
+  socialLinks?: {
+    youtube?: string,
+    instagram?: string,
+    twitter?: string,
+    linkedin?: string
+  }
+}
+```
+
+**Post:**
+```typescript
+{
+  postId: string,
+  userId: string,
+  username: string,
+  content: string,
+  mediaUrls?: string[],
+  likes: number,
+  comments: number,
+  shares: number,
+  createdAt: string,
+  updatedAt: string,
+  tags: string[],
+  isPinned: boolean,
+  isEdited: boolean
+}
+```
+
+**Comment:**
+```typescript
+{
+  commentId: string,
+  postId: string,
+  userId: string,
+  username: string,
+  content: string,
+  likes: number,
+  replies: Comment[], // Nested replies
+  createdAt: string,
+  isEdited: boolean
+}
+```
+
+**Group:**
+```typescript
+{
+  groupId: string,
+  name: string,
+  description: string,
+  coverImage?: string,
+  creatorId: string,
+  members: number,
+  postsCount: number,
+  isPrivate: boolean,
+  tags: string[],
+  createdAt: string,
+  rules?: string[]
+}
+```
+
+**ModerationAction:**
+```typescript
+{
+  actionId: string,
+  type: 'warn' | 'mute' | 'ban' | 'delete_post' | 'delete_comment',
+  targetUserId: string,
+  targetContentId?: string,
+  reason: string,
+  moderatorId: string,
+  timestamp: string,
+  duration?: number // in hours
+}
+```
+
+**Follow System:**
+- Bidirectional tracking (followers and following)
+- Automatic count updates
+- Prevents self-following
+- Efficient lookup with Map data structures
+
+**Activity Feed Algorithm:**
+- Shows posts from followed users + own posts
+- Sorted by creation time (newest first)
+- Configurable limit (default 50)
+- Real-time updates ready
+
+**Spam Detection:**
+- Keyword-based: "buy now", "click here", "free money", "limited offer"
+- Excessive caps: >50% uppercase in posts >20 chars
+- Excessive links: >3 links in single post
+- Blocks spam posts before creation
+
+**Group Features:**
+- Public/private groups
+- Group rules and guidelines
+- Member management
+- Group search by name/description/tags
+- Creator automatically becomes first member
+
+**Moderation Actions:**
+- Warn: Send warning to user
+- Mute: Temporarily restrict posting (duration in hours)
+- Ban: Permanently ban user
+- Delete Post: Remove post
+- Delete Comment: Remove comment
+- All actions logged with moderator ID and reason
+
+**Mock Data (for testing):**
+- 3 users: foodvlogger (verified), techexplorer, travelguru (verified)
+- 3 posts: Butter Chicken recipe, AI tools, Rajasthan travel
+- 3 groups: Food Creators (342 members), AI Content (567 members), Travel Vloggers (891 members)
+- Realistic engagement metrics (likes, comments, shares)
+
+**Example Usage:**
+
+```typescript
+const community = new CommunityService();
+
+// Create profile
+await community.createProfile({
+  userId: 'user_001',
+  username: 'foodvlogger',
+  displayName: 'Food Vlogger',
+  bio: 'Sharing delicious recipes 🍕',
+  verified: true,
+  badges: ['Top Contributor']
+});
+
+// Follow user
+await community.followUser('user_001', 'user_002');
+
+// Create post
+const post = await community.createPost('user_001', 'New recipe video!', {
+  tags: ['food', 'recipe'],
+  mediaUrls: ['https://example.com/video.mp4']
+});
+
+// Add comment
+await community.addComment(post.postId, 'user_002', 'Looks delicious!');
+
+// Create group
+const group = await community.createGroup(
+  'user_001',
+  'Food Creators Network',
+  'Community for food content creators',
+  { tags: ['food', 'cooking'], isPrivate: false }
+);
+
+// Join group
+await community.joinGroup(group.groupId, 'user_002');
+
+// Get feed
+const feed = await community.getFeed('user_001', 20);
+```
+
+**Integration:**
+- API routes exist: `POST /api/community/post`, `GET /api/community/feed` (Shubh completed - 15 endpoints)
+- Frontend UI (Srushti's task 4.3b)
+- In-memory storage for MVP (DynamoDB ready for production)
+- WebSocket support for real-time updates (structure ready)
+
+**Key Features:**
+- User profiles with social links
+- Follow/unfollow system
+- Posts with media, tags, likes, comments
+- Activity feed from followed users
+- Nested comments (replies)
+- Groups and communities
+- Public/private groups
+- Group search and discovery
+- Spam detection and filtering
+- Moderation tools (warn, mute, ban, delete)
+- User search
+- Group search
+- Statistics and analytics
+- Mock data for testing
+- Verified badges
+- User badges system
+- Pinned posts
+
+**Use Cases:**
+- Creator networking and collaboration
+- Knowledge sharing and discussions
+- Community building around topics
+- Group collaboration on projects
+- Content feedback and reviews
+- Creator support and mentorship
+- Trend discussions
+- Best practices sharing
+
+**Business Impact:**
+- Increases user engagement (social features)
+- Builds creator community (network effects)
+- Reduces churn (social connections keep users)
+- Enables collaboration (groups)
+- User-generated content (posts, comments)
+- Viral growth (follow/share mechanics)
+- Moderation reduces spam and toxicity
+- Differentiator from solo creator tools
+
+**Scalability:**
+- In-memory for MVP (<10k users)
+- DynamoDB for production (millions of users)
+- Efficient Map-based lookups
+- Pagination support on all list methods
+- Ready for caching layer (Redis)
+- WebSocket ready for real-time updates
+
+**Moderation Features:**
+- Automatic spam detection
+- Manual moderation actions
+- Action logging for audit trail
+- Temporary mutes (duration-based)
+- Permanent bans
+- Content deletion
+- Moderator accountability (all actions logged)
+
+**Next Steps for Production:**
+- Integrate DynamoDB for persistent storage
+- Add WebSocket for real-time updates
+- Implement notification system
+- Add content reporting by users
+- Implement AI-powered content moderation
+- Add user reputation system
+- Implement rate limiting (prevent spam)
+- Add media upload to S3
+- Implement hashtag trending
+- Add user mentions (@username)
+- Implement post bookmarking
+- Add direct messaging
+- Implement group roles (admin, moderator, member)
+- Add group post approval for private groups
 

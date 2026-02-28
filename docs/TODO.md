@@ -628,7 +628,7 @@ export const api = {
 ### Day 4.2: Knowledge Graph (Feature #13) 🕸️
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Knowledge"
 
-- [ ] **4.2a: Create knowledge graph service (Nidhi)**
+- [x] **4.2a: Create knowledge graph service (Nidhi)** ✅
   - **What:** Map relationships between content, topics, creators
   - **Where:** `src/services/knowledge-graph.service.ts`
   - **How:**
@@ -657,7 +657,7 @@ export const api = {
 ### Day 4.3: Community (Feature #14) 👥
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Community"
 
-- [ ] **4.3a: Create community service (Nidhi)**
+- [x] **4.3a: Create community service (Nidhi)** ✅
   - **What:** Creator network, forums, groups
   - **Where:** `src/services/community.service.ts`
   - **How:**
