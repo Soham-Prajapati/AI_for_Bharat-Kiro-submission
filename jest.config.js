@@ -3,6 +3,7 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',
@@ -15,6 +16,17 @@ module.exports = {
       functions: 70,
       lines: 70,
       statements: 70
+    }
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  },
+  transformIgnorePatterns: [
+    'node_modules/(?!(uuid)/)'
+  ],
+  globals: {
+    'ts-jest': {
+      isolatedModules: true
     }
   }
 };
