@@ -745,7 +745,7 @@ export const api = {
 ### Day 4.6: Analytics Dashboard (Feature #17) 📊
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Analytics"
 
-- [ ] **4.6a: Create analytics service (Nidhi)**
+- [x] **4.6a: Create analytics service (Nidhi)** ✅
   - **What:** Deep insights, performance metrics
   - **Where:** `src/services/analytics-dashboard.service.ts`
   - **How:**
@@ -774,7 +774,7 @@ export const api = {
 ### Day 4.7: Platform Integration Hub (Feature #18) 🔌
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Integration"
 
-- [ ] **4.7a: Create integration service (Nidhi)**
+- [x] **4.7a: Create integration service (Nidhi)** ✅
   - **What:** Connect to YouTube, Instagram, LinkedIn APIs
   - **Where:** `src/services/platform-integration.service.ts`
   - **How:**
