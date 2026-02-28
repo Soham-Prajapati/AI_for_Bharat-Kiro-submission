@@ -755,7 +755,7 @@ export const api = {
   - **Output:** `{ metrics: Metric[], insights: Insight[], forecasts: Forecast[] }`
   - **Test:** Mock data, verify calculations
 
-- [/] **4.6b: Build analytics dashboard (Srushti)**
+- [x] **4.6b: Build analytics dashboard (Srushti)** ✅
   - **What:** Comprehensive analytics UI
   - **Where:** `frontend/app/analytics-dashboard/page.tsx`
   - **Components:** MetricCard, TrendChart, InsightPanel
@@ -784,7 +784,7 @@ export const api = {
   - **Output:** `{ connections: Connection[], posts: Post[] }`
   - **Test:** Connect platform, post, verify
 
-- [ ] **4.7b: Build integration UI (Srushti)**
+- [x] **4.7b: Build integration UI (Srushti)** ✅
   - **What:** Connect accounts, manage integrations
   - **Where:** `frontend/components/PlatformIntegrations.tsx`
   - **Design:** Platform cards, OAuth flow
