@@ -6,10 +6,12 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
-import { ecosystemAnalyticsService } from '../services/ecosystem-analytics.service';
-import { cacheService } from '../services/cache.service';
+import { EcosystemAnalyticsService } from '../services/ecosystem-analytics.service';
+import { CacheService } from '../services/cache.service';
 
 const router = Router();
+const ecosystemAnalyticsService = new EcosystemAnalyticsService();
+const cacheService = new CacheService();
 
 const CACHE_TTL = 3600; // 1 hour
 
@@ -39,7 +41,7 @@ router.get('/:userId', asyncHandler(async (req: Request, res: Response) => {
   }
 
   // Fetch fresh data
-  const analytics = await ecosystemAnalyticsService.getAnalytics(userId);
+  const analytics = await ecosystemAnalyticsService.getEcosystemAnalytics(userId);
   
   // Cache for 1 hour
   cacheService.set(cacheKey, analytics, CACHE_TTL);

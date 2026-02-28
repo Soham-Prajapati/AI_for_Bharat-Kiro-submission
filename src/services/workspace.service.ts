@@ -33,7 +33,7 @@ export interface Workspace {
   updatedAt: Date;
 }
 
-class WorkspaceService {
+export class WorkspaceService {
   private workspaces: Map<string, Workspace> = new Map();
 
   /**

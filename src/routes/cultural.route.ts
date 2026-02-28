@@ -6,45 +6,30 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
-import { culturalAdapterService } from '../services/cultural-adapter.service';
+import { CulturalAdapterService } from '../services/cultural-adapter.service';
 
 const router = Router();
+const culturalAdapterService = new CulturalAdapterService();
 
 /**
  * POST /api/cultural/adapt
  * Adapt content for target region
  */
 router.post('/adapt', asyncHandler(async (req: Request, res: Response) => {
-  const { content, targetRegion } = req.body;
+  const { content, targetRegion, sourceRegion, contentType } = req.body;
 
-  if (!content || typeof content !== 'string' || content.trim().length === 0) {
-    throw new ValidationError('content (non-empty string) required');
+  if (!content || !targetRegion) {
+    throw new ValidationError('content and targetRegion required');
   }
 
-  if (!targetRegion || typeof targetRegion !== 'string') {
-    throw new ValidationError('targetRegion (string) required');
-  }
-
-  const adaptation = await culturalAdapterService.adapt(content, targetRegion);
-
-  res.json({
-    success: true,
-    adaptation,
-    adaptedAt: new Date().toISOString()
+  const adapted = await culturalAdapterService.adaptContent({
+    content,
+    targetRegion,
+    sourceRegion: sourceRegion || 'en-US',
+    contentType: contentType || 'general'
   });
-}));
 
-/**
- * GET /api/cultural/regions
- * Get list of supported regions
- */
-router.get('/regions', asyncHandler(async (req: Request, res: Response) => {
-  const regions = culturalAdapterService.getSupportedRegions();
-
-  res.json({
-    success: true,
-    regions
-  });
+  res.json(adapted);
 }));
 
 export default router;

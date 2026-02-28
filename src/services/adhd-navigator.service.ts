@@ -35,7 +35,7 @@ export interface Reward {
   unlockedAt: Date;
 }
 
-class ADHDNavigatorService {
+export class ADHDNavigatorService {
   private sessions: Map<string, Session> = new Map();
   private progress: Map<string, Progress> = new Map();
   private activeTimers: Map<string, NodeJS.Timeout> = new Map();

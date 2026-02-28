@@ -60,7 +60,7 @@ frontend/
 
 #### Configuration
 ```typescript
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 const DEFAULT_TIMEOUT = 30000; // 30 seconds
 const UPLOAD_TIMEOUT = 300000; // 5 minutes
