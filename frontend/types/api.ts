@@ -458,6 +458,81 @@ export interface MultiplyGenerateResponse {
 }
 
 // ============================================================================
+// MULTIPLY V2 TYPES
+// ============================================================================
+
+export interface MultiplyV2GenerateRequest {
+  videoId: string;
+  transcript: string;
+  duration: number;
+  platforms: ('youtube' | 'instagram' | 'tiktok' | 'twitter' | 'linkedin' | 'facebook' | 'pinterest' | 'reddit')[];
+  contentTypes: ('short' | 'reel' | 'story' | 'post' | 'thread' | 'carousel' | 'infographic' | 'quote' | 'audiogram' | 'blog')[];
+  variations: number;
+  includeScheduling?: boolean;
+  targetAudience?: string;
+  brandVoice?: 'professional' | 'casual' | 'humorous' | 'inspirational' | 'educational';
+}
+
+export interface ContentPiece {
+  pieceId: string;
+  type: string;
+  platform: string;
+  title?: string;
+  content: string;
+  hashtags?: string[];
+  media?: {
+    type: 'image' | 'video' | 'audio';
+    url: string;
+    thumbnail?: string;
+    duration?: number;
+  };
+  scheduledTime?: string;
+  estimatedEngagement: number;
+  priority: 'high' | 'medium' | 'low';
+  variation: number;
+}
+
+export interface ContentCalendarEntry {
+  date: string;
+  dayOfWeek: string;
+  pieces: ContentPiece[];
+  theme?: string;
+  notes?: string;
+}
+
+export interface MultiplyV2Analytics {
+  piecesByPlatform: Record<string, number>;
+  piecesByType: Record<string, number>;
+  estimatedReach: number;
+  estimatedEngagement: number;
+  contentDiversity: number;
+}
+
+export interface MultiplyV2GenerateResponse {
+  multiplyId: string;
+  videoId: string;
+  totalPieces: number;
+  pieces: ContentPiece[];
+  contentCalendar: ContentCalendarEntry[];
+  analytics: MultiplyV2Analytics;
+  recommendations: string[];
+  generatedAt: string;
+}
+
+export interface MultiplyV2StatusResponse {
+  jobId: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  progress?: number;
+  result?: MultiplyV2GenerateResponse;
+  error?: string;
+}
+
+export interface MultiplyV2ResultsResponse {
+  success: boolean;
+  result: MultiplyV2GenerateResponse;
+}
+
+// ============================================================================
 // WORKSPACE TYPES
 // ============================================================================
 

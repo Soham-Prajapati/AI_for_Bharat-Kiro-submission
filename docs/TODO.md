@@ -905,7 +905,7 @@ export const api = {
   - **Output:** 100+ content pieces
   - **Test:** 1 video → verify 100+ outputs
 
-- [ ] **5.4b: Build multiplier V2 UI (Srushti)**
+- [/] **5.4b: Build multiplier V2 UI (Srushti)**
   - **What:** Advanced content tree, bulk actions
   - **Where:** `frontend/components/ContentMultiplierV2.tsx`
   - **Test:** Mock 100 outputs, verify performance
