@@ -817,7 +817,7 @@ export const api = {
   - **Output:** `{ session: Session, progress: Progress, rewards: Reward[] }`
   - **Test:** Start session, verify timer, rewards
 
-- [ ] **5.1b: Build ADHD UI (Srushti)**
+- [x] **5.1b: Build ADHD UI (Srushti)** ✅
   - **What:** Minimal, distraction-free interface
   - **Where:** `frontend/components/ADHDNavigator.tsx`
   - **Design:** Large buttons, clear progress, no clutter
