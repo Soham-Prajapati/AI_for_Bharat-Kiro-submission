@@ -956,7 +956,7 @@ export const api = {
 ### Day 5.6: Vernacular Support (Feature #24) 🌏
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Languages"
 
-- [ ] **5.6a: Enhance language service (Nidhi)**
+- [x] **5.6a: Enhance language service (Nidhi)** ✅
   - **What:** Deep support for 9 Indian languages
   - **Where:** `src/services/vernacular.service.ts`
   - **How:**
@@ -985,7 +985,7 @@ export const api = {
 ### Day 5.7: Regional Network (Feature #25) 🇮🇳
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Regional"
 
-- [ ] **5.7a: Create regional network service (Nidhi)**
+- [x] **5.7a: Create regional network service (Nidhi)** ✅
   - **What:** Connect creators by region, language
   - **Where:** `src/services/regional-network.service.ts`
   - **How:**
