@@ -66,6 +66,15 @@ import {
   CulturalAdaptRequest,
   CulturalAdaptResponse,
   SupportedRegionsResponse,
+  VoiceTrainRequest,
+  VoiceTrainResponse,
+  VoiceTrainStatusResponse,
+  VoiceGenerateRequest,
+  VoiceGenerateResponse,
+  GraphData,
+  GraphNode,
+  GraphEdge,
+  RelatedContentResponse,
 } from '@/types/api';
 
 // ============================================================================
@@ -696,6 +705,70 @@ class ApiClient {
       this.request<SupportedRegionsResponse>('/api/cultural/regions', {
         method: 'GET',
       }),
+  };
+
+  voice = {
+    train: async (userId: string, samples: File[]): Promise<VoiceTrainResponse> => {
+      const formData = new FormData();
+      formData.append('userId', userId);
+      samples.forEach((sample) => {
+        formData.append('samples', sample);
+      });
+
+      const headers: Record<string, string> = {};
+      if (this.authToken) {
+        headers['Authorization'] = `Bearer ${this.authToken}`;
+      }
+
+      const response = await fetch(`${this.baseUrl}/api/voice/train`, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+
+      if (!response.ok) {
+        let errorData: any = {};
+        try {
+          errorData = await response.json();
+        } catch {
+          // Response is not JSON
+        }
+        throw this.createErrorFromResponse(response.status, errorData);
+      }
+
+      return response.json();
+    },
+
+    getTrainStatus: (jobId: string) =>
+      this.request<VoiceTrainStatusResponse>(`/api/voice/train/${jobId}`, {
+        method: 'GET',
+      }),
+
+    generate: (data: VoiceGenerateRequest) =>
+      this.request<VoiceGenerateResponse>('/api/voice/generate', {
+        method: 'POST',
+        body: data,
+      }),
+  };
+
+  graph = {
+    explore: (topic?: string, depth: number = 2) => {
+      const params = new URLSearchParams();
+      if (topic) params.append('topic', topic);
+      params.append('depth', depth.toString());
+      return this.request<GraphData>(`/api/graph/explore?${params}`, {
+        method: 'GET',
+      });
+    },
+
+    getRelated: (contentId: string, limit: number = 10) => {
+      const params = new URLSearchParams();
+      params.append('contentId', contentId);
+      params.append('limit', limit.toString());
+      return this.request<RelatedContentResponse>(`/api/graph/related?${params}`, {
+        method: 'GET',
+      });
+    },
   };
 }
 
