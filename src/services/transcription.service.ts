@@ -21,7 +21,7 @@ export class TranscribeService {
 
       const command = new StartTranscriptionJobCommand({
         TranscriptionJobName: jobName,
-        LanguageCode: languageCode,
+        LanguageCode: languageCode as any, // AWS SDK type issue
         Media: { MediaFileUri: fileUri },
         MediaFormat: 'mp4',
         OutputBucketName: process.env.AWS_S3_BUCKET

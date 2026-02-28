@@ -9,7 +9,7 @@ REM Check if .env exists
 if not exist ".env" (
     echo Error: .env file not found!
     echo Run: copy .env.example .env
-    echo Then add your GITHUB_TOKEN
+    echo Then add your AWS credentials
     pause
     exit /b 1
 )
@@ -20,7 +20,7 @@ if not exist "node_modules" (
     call npm install
 )
 
-REM Check if frontend/node_modules exists
+REM Check if frontend\node_modules exists
 if not exist "frontend\node_modules" (
     echo Installing frontend dependencies...
     cd frontend
@@ -32,7 +32,7 @@ echo.
 echo Starting backend on http://localhost:3001
 echo Starting frontend on http://localhost:3000
 echo.
-echo Press Ctrl+C to stop both servers
+echo Press Ctrl+C in each window to stop servers
 echo.
 
 REM Start backend in new window

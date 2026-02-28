@@ -8,6 +8,15 @@ const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 100 * 1024 * 1024 } });
 const s3Service = new S3Service();
 
+// Sanitize filename to prevent path traversal and special characters
+const sanitizeFilename = (filename: string): string => {
+  return filename
+    .replace(/[^a-zA-Z0-9._-]/g, '_') // Replace special chars with underscore
+    .replace(/\.{2,}/g, '.') // Replace multiple dots with single dot
+    .replace(/^\.+/, '') // Remove leading dots
+    .substring(0, 255); // Limit length
+};
+
 router.post('/', upload.single('file'), asyncHandler(async (req: Request, res: Response) => {
   if (!req.file) {
     throw new ValidationError('No file uploaded');
@@ -15,7 +24,8 @@ router.post('/', upload.single('file'), asyncHandler(async (req: Request, res: R
 
   const { originalname, mimetype, buffer, size } = req.file;
   const userId = req.body.userId || 'anonymous';
-  const key = `${userId}/${Date.now()}-${originalname}`;
+  const sanitizedFilename = sanitizeFilename(originalname);
+  const key = `${userId}/${Date.now()}-${sanitizedFilename}`;
 
   try {
     const result = await s3Service.upload(buffer, key, mimetype);
@@ -23,7 +33,7 @@ router.post('/', upload.single('file'), asyncHandler(async (req: Request, res: R
     res.json({
       success: true,
       fileId: result.key,
-      fileName: originalname,
+      fileName: sanitizedFilename,
       mimeType: mimetype,
       size,
       userId,
