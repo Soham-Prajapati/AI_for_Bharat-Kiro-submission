@@ -7712,4 +7712,122 @@ While running build validation, 3 pre-existing bugs were found and fixed:
 
 ---
 
+## Deep Dive: The 3 Services Inside Unified Analytics
+
+All three deal with "analytics" but they answer **completely different questions**:
+
+| Service | One-Line Purpose | Question It Answers |
+|---------|-----------------|---------------------|
+| **Ecosystem Analytics** | Cross-platform stats aggregator | *"What's happening across my platforms RIGHT NOW?"* |
+| **Analytics Dashboard** | Performance reporting over time | *"How am I performing over TIME, and what should I do next?"* |
+| **ROI Calculator** | Cost/time savings math engine | *"How much time and money am I SAVING by using AI?"* |
+
+---
+
+### 1. Ecosystem Analytics (`ecosystem-analytics.service.ts`)
+
+**What it does:** Fetches and aggregates real-time stats from **6 social platforms** — YouTube, Instagram, LinkedIn, Twitter, TikTok, Facebook. It gives a bird's-eye view of your presence across all platforms.
+
+**What it returns:**
+- Per-platform stats: followers, engagement rate, top posts, growth rate, views
+- `bestPerforming` — which platform is doing best
+- `contentGaps` — where you're NOT posting but should be (AI-generated)
+- `recommendations` — AI-generated suggestions based on cross-platform data
+- `overallScore` — a 0-100 composite score
+
+**Key public methods:**
+
+| Method | What It Does |
+|--------|-------------|
+| `getEcosystemAnalytics(userId, platformHandles?)` | Fetches all 6 platform stats, identifies best platform, finds content gaps, generates AI recommendations, returns an overall score |
+| `calculateEngagementRate(likes, comments, shares, views)` | Utility: computes engagement rate from raw numbers |
+| `calculateGrowthRate(current, previous)` | Utility: computes percentage growth between two values |
+| `compareTimePeriods(userId, period1, period2)` | Compares analytics between two time periods to show improvement/decline |
+
+**When to use:** When you need to show the creator a dashboard of "here's how all your platforms are doing right now."
+
+---
+
+### 2. Analytics Dashboard (`analytics-dashboard.service.ts`)
+
+**What it does:** Generates deep **performance reports** over time periods (day/week/month/quarter/year). This is about trends, forecasts, audience behavior, and actionable insights — not just raw numbers.
+
+**What it returns:**
+- `summary` — total views, engagement, revenue, subscribers for the period
+- `metrics` — detailed metric objects with values, changes, trends (up/down/stable)
+- `topPerformers` — best performing content in the period
+- `insights` — AI-generated observations (e.g., "Shorts under 30s get 2x engagement")
+- `forecasts` — predicted future values with confidence levels
+- `audienceInsights` — demographics, peak hours, device breakdown, top locations, interests
+
+**Key public methods:**
+
+| Method | What It Does |
+|--------|-------------|
+| `getAnalytics(userId, period)` | Full performance report: metrics + summary + top performers + insights + forecasts |
+| `getAudienceInsights(userId)` | Who's watching: age/gender distribution, peak hours, devices, locations, interests |
+| `comparePerformance(userId, contentIds, metrics)` | Side-by-side comparison of specific content pieces on chosen metrics |
+| `exportAnalytics(userId, period, format)` | Export report as JSON or CSV |
+
+**When to use:** When you need to show trends over time, generate a monthly performance report, understand audience demographics, or forecast future metrics.
+
+---
+
+### 3. ROI Calculator (`roi-calculator.service.ts`)
+
+**What it does:** Pure math — no AI calls, no APIs. Calculates how much **time and money** a creator saves by using AI-powered content creation vs. doing everything manually.
+
+**Constants it uses:**
+- Manual: 5 hours per video at $50/hour = $250 per video
+- AI: 60 seconds per video at $0.10 per video
+
+**What it returns:**
+- `manualTime` vs `aiTime` — hours vs seconds
+- `manualCost` vs `aiCost` — dollars
+- `timeSaved`, `moneySaved`, `roiPercentage`
+
+**Key public methods:**
+
+| Method | What It Does |
+|--------|-------------|
+| `calculateSingleVideo(metrics)` | ROI for one video: takes `{duration, platforms, languages}`, returns time/money saved |
+| `calculateBatch(videos)` | ROI for multiple videos: totals time saved, money saved, average ROI |
+| `calculateUserROI(userId, videosProcessed)` | Aggregate ROI for a user based on how many videos they've processed |
+| `compareScenarios()` | Compares freelancer vs. agency vs. in-house vs. AI costs side by side |
+| `getCostBreakdown()` | Returns detailed per-component cost breakdown (transcription, translation, editing, etc.) |
+
+**When to use:** When you need to show the creator "you saved X hours and $Y by using our tool" — the value proposition screen.
+
+---
+
+### Method-to-Task Mapping: Which Unified Method to Call
+
+When calling through `unifiedAnalyticsService`, here's exactly which method to use for each task:
+
+| Task / What You Want | Unified Method to Call | Delegates To |
+|----------------------|----------------------|--------------|
+| **Everything at once** (full dashboard) | `getFullAnalytics(userId)` | All 3 services in parallel |
+| **Cross-platform overview** (all platform stats) | `getAnalytics(userId)` | `ecosystemService.getEcosystemAnalytics()` |
+| **Cross-platform overview** (full response with metadata) | `getEcosystemAnalytics(userId, platformHandles?)` | `ecosystemService.getEcosystemAnalytics()` |
+| **Performance report** (trends, insights, forecasts) | `getDashboardMetrics(userId, timeRange)` | `dashboardService.getAnalytics()` |
+| **Performance report** (same, explicit period) | `getPerformanceReport(userId, period)` | `dashboardService.getAnalytics()` |
+| **Audience demographics** (who's watching) | `getInsights(userId)` | `dashboardService.getAudienceInsights()` |
+| **User's overall ROI** (time/money saved) | `calculateROI(userId)` | `roiService.calculateUserROI()` |
+| **Single video ROI** | `calculateVideoROI({duration, platforms, languages})` | `roiService.calculateSingleVideo()` |
+| **Batch video ROI** | `calculateBatchROI(videos[])` | `roiService.calculateBatch()` |
+
+**TimeRange values for `getDashboardMetrics`:** `'1d'`, `'7d'`, `'30d'`, `'90d'`, `'365d'` (or `'day'`, `'week'`, `'month'`, `'quarter'`, `'year'`)
+
+---
+
+### TL;DR
+
+- **Ecosystem Analytics** = "What's happening NOW across all my platforms?"
+- **Analytics Dashboard** = "How am I performing over TIME, and what's predicted next?"
+- **ROI Calculator** = "How much money and time am I SAVING with AI?"
+
+They serve three distinct user needs. The `unifiedAnalyticsService` wraps all three so you only import one thing and call the right method.
+
+---
+
 
