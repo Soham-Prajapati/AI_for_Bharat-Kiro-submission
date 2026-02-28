@@ -84,6 +84,12 @@ import {
   UpgradeSubscriptionRequest,
   UpgradeSubscriptionResponse,
   SubscriptionStatusResponse,
+  AnalyticsDashboardResponse,
+  MetricsResponse,
+  InsightsResponse,
+  PlatformPerformanceResponse,
+  ExportAnalyticsResponse,
+  DateRange,
 } from '@/types/api';
 
 // ============================================================================
@@ -802,6 +808,49 @@ class ApiClient {
       this.request<SubscriptionStatusResponse>('/api/membership/status', {
         method: 'GET',
       }),
+  };
+
+  analyticsDashboard = {
+    getDashboard: (userId: string, dateRange?: DateRange) => {
+      const params = new URLSearchParams();
+      params.append('userId', userId);
+      if (dateRange) {
+        params.append('startDate', dateRange.startDate);
+        params.append('endDate', dateRange.endDate);
+      }
+      return this.request<AnalyticsDashboardResponse>(
+        `/api/analytics-dashboard/metrics?${params}`,
+        {
+          method: 'GET',
+        }
+      );
+    },
+
+    getMetrics: (userId: string) =>
+      this.request<MetricsResponse>(`/api/analytics-dashboard/metrics?userId=${userId}`, {
+        method: 'GET',
+      }),
+
+    getInsights: (userId: string) =>
+      this.request<InsightsResponse>(`/api/analytics-dashboard/insights?userId=${userId}`, {
+        method: 'GET',
+      }),
+
+    getPlatformPerformance: (userId: string) =>
+      this.request<PlatformPerformanceResponse>(
+        `/api/analytics-dashboard/platforms?userId=${userId}`,
+        {
+          method: 'GET',
+        }
+      ),
+
+    exportAnalytics: (userId: string, format: 'csv' | 'pdf') =>
+      this.request<ExportAnalyticsResponse>(
+        `/api/analytics-dashboard/export?userId=${userId}&format=${format}`,
+        {
+          method: 'GET',
+        }
+      ),
   };
 }
 
