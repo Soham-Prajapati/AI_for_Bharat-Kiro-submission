@@ -12,7 +12,7 @@ router.get('/current', asyncHandler(async (req: Request, res: Response) => {
   const cached = await cache.get(cacheKey);
   
   if (cached) {
-    return res.json(JSON.parse(cached));
+    return res.json(JSON.parse(cached as string));
   }
 
   // TODO: Replace with real trend-predictor.service.ts when available
@@ -36,7 +36,7 @@ router.get('/predict', asyncHandler(async (req: Request, res: Response) => {
   const cached = await cache.get(cacheKey);
   
   if (cached) {
-    return res.json(JSON.parse(cached));
+    return res.json(JSON.parse(cached as string));
   }
 
   // TODO: Replace with real trend-predictor.service.ts when available

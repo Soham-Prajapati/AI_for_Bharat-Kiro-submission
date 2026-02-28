@@ -10,11 +10,11 @@ echo ""
 if [ ! -f ".env" ]; then
     echo "❌ Error: .env file not found!"
     echo "Run: cp .env.example .env"
-    echo "Then add your GITHUB_TOKEN"
+    echo "Then add your AWS credentials"
     exit 1
 fi
 
-# Check if node_modules exists
+# Check if node_modules exists in root
 if [ ! -d "node_modules" ]; then
     echo "📦 Installing backend dependencies..."
     npm install
@@ -43,6 +43,18 @@ sleep 3
 # Start frontend in background
 cd frontend && npm run dev &
 FRONTEND_PID=$!
+
+# Function to cleanup on exit
+cleanup() {
+    echo ""
+    echo "🛑 Stopping servers..."
+    kill $BACKEND_PID 2>/dev/null
+    kill $FRONTEND_PID 2>/dev/null
+    exit 0
+}
+
+# Trap Ctrl+C
+trap cleanup INT
 
 # Wait for both processes
 wait $BACKEND_PID $FRONTEND_PID
