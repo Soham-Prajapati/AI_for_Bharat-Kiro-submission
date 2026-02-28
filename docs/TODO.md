@@ -609,7 +609,7 @@ export const api = {
   - **Output:** `{ listings: Listing[], transactions: Transaction[] }`
   - **Test:** Create listing, purchase, verify payment
 
-- [/] **4.1b: Build marketplace UI (Srushti)**
+- [x] **4.1b: Build marketplace UI (Srushti)** ✅
   - **What:** Browse, search, purchase interface
   - **Where:** `frontend/app/marketplace/page.tsx`
   - **Components:** ListingCard, SearchBar, CheckoutFlow
@@ -638,7 +638,7 @@ export const api = {
   - **Output:** `{ nodes: Node[], edges: Edge[], recommendations: Content[] }`
   - **Test:** 100 videos, verify accurate relationships
 
-- [/] **4.2b: Build graph visualization (Srushti)**
+- [x] **4.2b: Build graph visualization (Srushti)** ✅
   - **What:** Interactive network graph
   - **Where:** `frontend/components/KnowledgeGraph.tsx`
   - **Library:** D3.js or Cytoscape.js
@@ -667,7 +667,7 @@ export const api = {
   - **Output:** `{ users: User[], posts: Post[], groups: Group[] }`
   - **Test:** Create group, post, comment, verify
 
-- [ ] **4.3b: Build community UI (Srushti)**
+- [/] **4.3b: Build community UI (Srushti)**
   - **What:** Social feed, profiles, groups
   - **Where:** `frontend/app/community/page.tsx`
   - **Components:** Feed, ProfileCard, GroupList
@@ -697,7 +697,7 @@ export const api = {
   - **Output:** `{ tiers: Tier[], subscriptions: Subscription[] }`
   - **Test:** Subscribe, verify access control
 
-- [ ] **4.4b: Build membership UI (Srushti)**
+- [x] **4.4b: Build membership UI (Srushti)** ✅
   - **What:** Pricing page, subscription management
   - **Where:** `frontend/app/membership/page.tsx`
   - **Components:** PricingTable, SubscriptionCard

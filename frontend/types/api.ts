@@ -763,6 +763,69 @@ export interface VoiceGenerateResponse {
 }
 
 // ============================================================================
+// MEMBERSHIP TYPES
+// ============================================================================
+
+export type SubscriptionTier = 'free' | 'basic' | 'pro' | 'enterprise';
+export type SubscriptionStatus = 'active' | 'cancelled' | 'expired' | 'pending';
+
+export interface SubscriptionPlan {
+  tierId: SubscriptionTier;
+  name: string;
+  price: number;
+  features: string[];
+  limits: {
+    uploads?: number;
+    generations?: number;
+    storage?: number;
+  };
+}
+
+export interface Subscription {
+  subscriptionId: string;
+  userId: string;
+  tierId: SubscriptionTier;
+  status: SubscriptionStatus;
+  startDate: string;
+  endDate?: string;
+  autoRenew: boolean;
+  cancelledAt?: string;
+}
+
+export interface SubscribeRequest {
+  tierId: SubscriptionTier;
+  paymentMethod?: string;
+}
+
+export interface SubscribeResponse {
+  success: boolean;
+  subscription: Subscription;
+  message: string;
+}
+
+export interface CancelSubscriptionResponse {
+  success: boolean;
+  subscription: Subscription;
+  message: string;
+}
+
+export interface UpgradeSubscriptionRequest {
+  newTierId: SubscriptionTier;
+}
+
+export interface UpgradeSubscriptionResponse {
+  success: boolean;
+  subscription: Subscription;
+  message: string;
+}
+
+export interface SubscriptionStatusResponse {
+  success: boolean;
+  subscription: Subscription | null;
+  plans: SubscriptionPlan[];
+}
+
+// ============================================================================
 // KNOWLEDGE GRAPH TYPES
 // ============================================================================
 
