@@ -687,7 +687,7 @@ export const api = {
 ### Day 4.4: Membership (Feature #15) 💳
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Monetization"
 
-- [ ] **4.4a: Create membership service (Nidhi)**
+- [x] **4.4a: Create membership service (Nidhi)** ✅
   - **What:** Subscription tiers, exclusive content
   - **Where:** `src/services/membership.service.ts`
   - **How:**
@@ -716,7 +716,7 @@ export const api = {
 ### Day 4.5: Automation (Feature #16) ⚙️
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Automation"
 
-- [ ] **4.5a: Create automation service (Nidhi)**
+- [x] **4.5a: Create automation service (Nidhi)** ✅
   - **What:** Scheduled posting, auto-repurposing
   - **Where:** `src/services/automation.service.ts`
   - **How:**

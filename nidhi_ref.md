@@ -63,6 +63,8 @@
 - ✅ 4.1a: Marketplace service (buy/sell content templates with revenue sharing)
 - ✅ 4.2a: Knowledge graph service (map relationships between content, topics, creators)
 - ✅ 4.3a: Community service (creator network, forums, groups with moderation)
+- ✅ 4.4a: Membership service (subscription tiers with Stripe integration)
+- ✅ 4.5a: Automation service (scheduled posting, auto-repurposing with cron jobs)
 
 ### Shubh (Backend + AWS)
 - ✅ 1.2-1.3: All API routes + AWS services
@@ -3447,4 +3449,647 @@ const feed = await community.getFeed('user_001', 20);
 - Add direct messaging
 - Implement group roles (admin, moderator, member)
 - Add group post approval for private groups
+
+
+
+---
+
+### ✅ Task 4.4a: Create Membership Service (COMPLETED)
+
+Created comprehensive membership service in `src/services/membership.service.ts` that manages subscription tiers, billing, access control, and usage tracking with Stripe integration.
+
+**Core Functionality:**
+
+1. **Tier Management**
+   - `getTiers()` - Get all membership tiers
+   - `getTier(tierId)` - Get specific tier details
+   - `compareTiers()` - Compare two tiers (upgrade/downgrade analysis)
+   - 3 tiers: Free, Pro ($29/mo), Enterprise ($99/mo)
+
+2. **Subscription Management**
+   - `subscribe()` - Create new subscription with trial period
+   - `getUserSubscription()` - Get user's current subscription
+   - `updateSubscription()` - Upgrade/downgrade tier
+   - `cancelSubscription()` - Cancel (immediate or at period end)
+   - `reactivateSubscription()` - Reactivate canceled subscription
+
+3. **Access Control**
+   - `hasAccess()` - Check if user has access to specific feature
+   - `canPerformAction()` - Check if user can perform action based on limits
+   - `getContentAccess()` - Get user's content access level
+   - Feature-based and limit-based access control
+
+4. **Usage Tracking**
+   - `getUsage()` - Get current usage stats
+   - `trackVideoProcessing()` - Track video processing count
+   - `trackAIGeneration()` - Track AI generation count
+   - `trackStorageUsage()` - Track storage usage
+   - Automatic percent used calculations
+
+5. **Stripe Integration (Ready)**
+   - `createStripeSubscription()` - Create Stripe subscription
+   - `updateStripeSubscription()` - Update subscription
+   - `cancelStripeSubscription()` - Cancel subscription
+   - `reactivateStripeSubscription()` - Reactivate subscription
+   - Mock implementation with real API integration ready
+
+**Membership Tiers:**
+
+**Free Tier:**
+- Price: $0/month
+- 5 videos per month
+- 2 platforms per video
+- 1 language
+- 1 GB storage
+- 50 AI generations per month
+- 0 collaborators
+- Community access
+
+**Pro Tier ($29/month):**
+- 100 videos per month
+- All 6 platforms
+- All 9 languages
+- 50 GB storage
+- Unlimited AI generations
+- Voice cloning
+- Trend predictions
+- Viral score analysis
+- Priority support
+- 3 collaborators
+- 14-day free trial
+
+**Enterprise Tier ($99/month):**
+- Unlimited videos
+- All platforms and languages
+- 500 GB storage
+- Unlimited AI generations
+- Voice cloning
+- Custom branding
+- White-label options
+- API access
+- Dedicated account manager
+- Custom integrations
+- Unlimited collaborators
+- Advanced analytics
+- 30-day free trial
+
+**Data Structures:**
+
+**MembershipTier:**
+```typescript
+{
+  tierId: string,
+  name: string,
+  displayName: string,
+  description: string,
+  price: number,
+  currency: 'USD' | 'INR',
+  billingPeriod: 'monthly' | 'yearly',
+  features: string[],
+  limits: {
+    videosPerMonth: number, // -1 = unlimited
+    platformsPerVideo: number,
+    languagesPerVideo: number,
+    storageGB: number,
+    aiGenerationsPerMonth: number,
+    collaborators: number
+  },
+  stripePriceId?: string,
+  isPopular: boolean,
+  trialDays: number
+}
+```
+
+**Subscription:**
+```typescript
+{
+  subscriptionId: string,
+  userId: string,
+  tierId: string,
+  tierName: string,
+  status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'paused',
+  currentPeriodStart: string,
+  currentPeriodEnd: string,
+  cancelAtPeriodEnd: boolean,
+  trialEnd?: string,
+  stripeSubscriptionId?: string,
+  stripeCustomerId?: string,
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+**UsageStats:**
+```typescript
+{
+  userId: string,
+  tierId: string,
+  period: string, // YYYY-MM
+  videosProcessed: number,
+  aiGenerations: number,
+  storageUsedGB: number,
+  limits: MembershipTier['limits'],
+  percentUsed: {
+    videos: number,
+    aiGenerations: number,
+    storage: number
+  }
+}
+```
+
+**Access Control Logic:**
+
+**Feature-based:**
+- Check if tier includes specific feature
+- Example: "Voice cloning" only in Pro and Enterprise
+
+**Limit-based:**
+- Check current usage against tier limits
+- Block action if limit reached
+- Return reason for denial
+
+**Content Access Levels:**
+- Free: Basic content only
+- Pro: Premium content access
+- Enterprise: All content + enterprise features
+
+**Usage Tracking:**
+- Monthly period tracking (YYYY-MM)
+- Automatic usage initialization on subscription
+- Real-time percent used calculations
+- Resets monthly
+
+**Subscription Lifecycle:**
+
+1. **Subscribe:**
+   - Create subscription with trial period
+   - Initialize usage tracking
+   - Create Stripe subscription
+   - Status: 'trialing' or 'active'
+
+2. **Active:**
+   - User has full access to tier features
+   - Usage tracked monthly
+   - Auto-renews at period end
+
+3. **Cancel:**
+   - Immediate: Access ends immediately
+   - At period end: Access until period ends
+   - Status: 'canceled'
+
+4. **Reactivate:**
+   - Restore canceled subscription
+   - Resume billing
+   - Status: 'active'
+
+**Tier Comparison:**
+- Identifies upgrade vs downgrade
+- Calculates price difference
+- Lists new features gained
+- Helps users make informed decisions
+
+**Trial Periods:**
+- Free: 0 days (no trial)
+- Pro: 14 days free trial
+- Enterprise: 30 days free trial
+- Status: 'trialing' during trial
+- Auto-converts to 'active' after trial
+
+**Example Usage:**
+
+```typescript
+const membership = new MembershipService();
+
+// Get all tiers
+const tiers = membership.getTiers();
+
+// Subscribe to Pro
+const subscription = await membership.subscribe('user_001', 'pro', 'pm_card_123');
+// Status: 'trialing' (14-day trial)
+
+// Check access
+const hasVoiceCloning = await membership.hasAccess('user_001', 'Voice cloning');
+// Returns: true
+
+// Check if can process video
+const canProcess = await membership.canPerformAction('user_001', 'process_video');
+// Returns: { allowed: true }
+
+// Track usage
+await membership.trackVideoProcessing('user_001');
+
+// Get usage stats
+const usage = await membership.getUsage('user_001');
+// Returns: { videosProcessed: 1, percentUsed: { videos: 1 }, ... }
+
+// Upgrade to Enterprise
+await membership.updateSubscription('user_001', 'enterprise');
+
+// Cancel subscription
+await membership.cancelSubscription('user_001', false); // Cancel at period end
+```
+
+**Integration:**
+- API routes exist: `POST /api/membership/subscribe`, `POST /api/membership/cancel` (Shubh completed)
+- Frontend UI (Srushti's task 4.4b)
+- Stripe integration ready (mock for now)
+- In-memory storage for MVP (DynamoDB ready)
+
+**Key Features:**
+- 3 subscription tiers (Free, Pro, Enterprise)
+- Trial periods (14-30 days)
+- Feature-based access control
+- Limit-based usage enforcement
+- Usage tracking and analytics
+- Upgrade/downgrade support
+- Cancel and reactivate
+- Tier comparison
+- Stripe integration ready
+- Monthly billing periods
+- Automatic usage resets
+- Percent used calculations
+- Mock data for testing
+
+**Use Cases:**
+- Monetize platform with subscriptions
+- Tiered feature access
+- Usage-based limits
+- Trial conversions
+- Upgrade upsells
+- Usage analytics
+- Billing management
+- Access control
+
+**Business Impact:**
+- Recurring revenue stream (MRR)
+- Tiered pricing captures different segments
+- Free tier for user acquisition
+- Pro tier for serious creators ($29/mo)
+- Enterprise tier for agencies ($99/mo)
+- Trial periods increase conversions
+- Usage limits encourage upgrades
+- Clear upgrade path
+
+**Revenue Potential:**
+- 1000 Pro users: $29,000/month ($348k/year)
+- 100 Enterprise users: $9,900/month ($118k/year)
+- Total: $38,900/month ($467k/year)
+- Plus marketplace revenue (30% of sales)
+
+**Pricing Strategy:**
+- Free tier: User acquisition, viral growth
+- Pro tier: Sweet spot for individual creators
+- Enterprise tier: High-value agencies/teams
+- Trial periods: Reduce friction, increase conversions
+- Monthly billing: Lower barrier to entry
+
+**Next Steps for Production:**
+- Integrate Stripe API for real payments
+- Add yearly billing option (20% discount)
+- Implement usage alerts (80%, 90%, 100%)
+- Add overage charges for Enterprise
+- Implement grace period for failed payments
+- Add invoice generation
+- Setup webhook handlers for Stripe events
+- Add payment method management
+- Implement proration for upgrades/downgrades
+- Add referral program (discount for referrals)
+
+
+
+---
+
+### ✅ Task 4.5a: Create Automation Service (COMPLETED)
+
+Created comprehensive automation service in `src/services/automation.service.ts` that enables scheduled posting, auto-repurposing, workflow automation, and platform integrations with cron job support.
+
+**Core Functionality:**
+
+1. **Schedule Management**
+   - `createSchedule()` - Create one-time or recurring schedule
+   - `getSchedule()` - Get schedule by ID
+   - `getUserSchedules()` - Get all user's schedules
+   - `updateSchedule()` - Update schedule details
+   - `toggleSchedule()` - Pause/resume schedule
+   - `deleteSchedule()` - Delete schedule
+   - `executeSchedule()` - Execute scheduled action (called by cron)
+
+2. **Automation Management**
+   - `createAutomation()` - Create if-this-then-that automation
+   - `getAutomation()` - Get automation by ID
+   - `getUserAutomations()` - Get all user's automations
+   - `updateAutomation()` - Update automation
+   - `toggleAutomation()` - Pause/resume automation
+   - `deleteAutomation()` - Delete automation
+   - `triggerAutomation()` - Execute automation when trigger fires
+
+3. **Post Scheduling**
+   - `schedulePost()` - Schedule post to platform
+   - `getScheduledPosts()` - Get all scheduled posts
+   - `cancelScheduledPost()` - Cancel scheduled post
+   - `executePost()` - Post to platform (called by schedule)
+
+4. **Workflow Templates**
+   - `getWorkflowTemplates()` - Get pre-built workflow templates
+   - `createFromTemplate()` - Create automation from template
+   - 3 templates: Auto-Repurpose, Cross-Platform Publishing, Weekly Batch
+
+5. **Statistics**
+   - `getStatistics()` - Get automation stats (schedules, automations, posts)
+
+**Data Structures:**
+
+**Schedule:**
+```typescript
+{
+  scheduleId: string,
+  userId: string,
+  name: string,
+  description: string,
+  type: 'one_time' | 'recurring',
+  cronExpression?: string, // For recurring (e.g., '0 9 * * *')
+  scheduledTime?: string, // For one-time
+  action: ScheduleAction,
+  status: 'active' | 'paused' | 'completed' | 'failed',
+  lastRun?: string,
+  nextRun?: string,
+  runCount: number,
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+**Automation:**
+```typescript
+{
+  automationId: string,
+  userId: string,
+  name: string,
+  description: string,
+  trigger: AutomationTrigger,
+  actions: AutomationAction[],
+  status: 'active' | 'paused',
+  runCount: number,
+  lastRun?: string,
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+**AutomationTrigger:**
+```typescript
+{
+  type: 'video_uploaded' | 'content_generated' | 'schedule' | 'webhook' | 'platform_post',
+  config: Record<string, any>
+}
+```
+
+**AutomationAction:**
+```typescript
+{
+  type: 'generate_content' | 'post_to_platform' | 'send_email' | 'create_thumbnail' | 'translate',
+  config: Record<string, any>,
+  order: number // Execution order
+}
+```
+
+**PostSchedule:**
+```typescript
+{
+  postId: string,
+  contentId: string,
+  platform: 'youtube' | 'instagram' | 'tiktok' | 'twitter' | 'linkedin' | 'facebook',
+  scheduledTime: string,
+  content: {
+    title?: string,
+    description?: string,
+    caption?: string,
+    hashtags?: string[],
+    mediaUrl?: string
+  },
+  status: 'scheduled' | 'posted' | 'failed',
+  postedAt?: string,
+  error?: string
+}
+```
+
+**Schedule Types:**
+
+**One-Time Schedule:**
+- Runs once at specified time
+- Status changes to 'completed' after execution
+- Example: Post video on March 1st at 3 PM
+
+**Recurring Schedule:**
+- Runs on cron schedule
+- Automatically calculates next run time
+- Example: Generate content every day at 9 AM
+
+**Cron Expression Examples:**
+- `0 9 * * *` - Every day at 9 AM
+- `0 9 * * 1` - Every Monday at 9 AM
+- `0 */6 * * *` - Every 6 hours
+- `0 0 1 * *` - First day of every month
+
+**Automation Triggers:**
+
+1. **video_uploaded** - When user uploads video
+2. **content_generated** - When content generation completes
+3. **schedule** - Time-based trigger (cron)
+4. **webhook** - External webhook trigger
+5. **platform_post** - When content posted to platform
+
+**Automation Actions:**
+
+1. **generate_content** - Generate platform-specific content
+2. **post_to_platform** - Post to social platform
+3. **send_email** - Send email notification
+4. **create_thumbnail** - Generate thumbnail
+5. **translate** - Translate to languages
+
+**Workflow Templates:**
+
+**Template 1: Auto-Repurpose Video**
+- Trigger: video_uploaded
+- Actions:
+  1. Generate content for YouTube, Instagram, TikTok
+  2. Create thumbnail
+  3. Translate to Hindi and Spanish
+- Use case: Automatic content repurposing
+
+**Template 2: Cross-Platform Publishing**
+- Trigger: content_generated
+- Actions:
+  1. Post to YouTube immediately
+  2. Post to Instagram 1 hour later
+  3. Post to TikTok 2 hours later
+- Use case: Staggered multi-platform distribution
+
+**Template 3: Weekly Content Batch**
+- Trigger: schedule (Every Monday 9 AM)
+- Actions:
+  1. Generate 7 days of content
+  2. Send email notification
+- Use case: Weekly content planning
+
+**Example Usage:**
+
+```typescript
+const automation = new AutomationService();
+
+// Create recurring schedule
+const schedule = await automation.createSchedule(
+  'user_001',
+  'Daily Content Generation',
+  {
+    type: 'generate_content',
+    config: { platforms: ['youtube', 'instagram'] }
+  },
+  {
+    type: 'recurring',
+    cronExpression: '0 9 * * *', // Every day at 9 AM
+    description: 'Generate content daily'
+  }
+);
+
+// Create automation
+const autoRepurpose = await automation.createAutomation(
+  'user_001',
+  'Auto-Repurpose Videos',
+  {
+    type: 'video_uploaded',
+    config: {}
+  },
+  [
+    {
+      type: 'generate_content',
+      config: { platforms: ['youtube', 'instagram', 'tiktok'] },
+      order: 1
+    },
+    {
+      type: 'create_thumbnail',
+      config: {},
+      order: 2
+    },
+    {
+      type: 'translate',
+      config: { languages: ['hi', 'es'] },
+      order: 3
+    }
+  ],
+  'Automatically repurpose uploaded videos'
+);
+
+// Schedule post
+const post = await automation.schedulePost(
+  'user_001',
+  'content_001',
+  'youtube',
+  '2026-03-01T15:00:00Z',
+  {
+    title: 'How to Make Butter Chicken',
+    description: 'Learn to make authentic butter chicken...',
+    hashtags: ['cooking', 'indian', 'recipe']
+  }
+);
+
+// Create from template
+const workflow = await automation.createFromTemplate(
+  'user_001',
+  'template_001', // Auto-Repurpose template
+  'My Auto-Repurpose Workflow'
+);
+
+// Get statistics
+const stats = automation.getStatistics('user_001');
+// Returns: { totalSchedules: 5, activeSchedules: 3, ... }
+```
+
+**Integration:**
+- API routes exist: `POST /api/automation/create`, `GET /api/automation/list` (Shubh completed)
+- Frontend UI (Srushti's task 4.5b) - Visual workflow builder
+- Cron job integration ready (node-cron or AWS EventBridge)
+- Platform API integrations ready (mock for now)
+
+**Key Features:**
+- One-time and recurring schedules
+- Cron expression support
+- If-this-then-that automations
+- Multi-step workflows
+- Workflow templates
+- Post scheduling to 6 platforms
+- Trigger-based automation
+- Action ordering
+- Pause/resume functionality
+- Execution tracking (run count, last run)
+- Next run calculation
+- Error handling and status tracking
+- Statistics and analytics
+- Mock data for testing
+
+**Use Cases:**
+- Schedule posts to optimal times
+- Auto-repurpose uploaded videos
+- Batch content generation
+- Cross-platform distribution
+- Recurring content creation
+- Automated translations
+- Thumbnail generation
+- Email notifications
+- Webhook integrations
+
+**Business Impact:**
+- Saves time with automation (set and forget)
+- Increases consistency (never miss a post)
+- Optimizes posting times (schedule for peak engagement)
+- Scales content production (batch processing)
+- Reduces manual work (auto-repurposing)
+- Improves workflow efficiency
+- Enables complex workflows
+- Differentiator from competitors
+
+**Automation Examples:**
+
+**Example 1: Daily Content Pipeline**
+- Schedule: Every day at 9 AM
+- Action: Generate content for all platforms
+- Result: Fresh content ready every morning
+
+**Example 2: Video Upload Workflow**
+- Trigger: Video uploaded
+- Actions:
+  1. Generate platform content
+  2. Create thumbnails
+  3. Translate to 3 languages
+  4. Schedule posts
+- Result: Complete workflow automated
+
+**Example 3: Weekly Batch**
+- Schedule: Every Monday at 9 AM
+- Action: Generate 7 days of content
+- Result: Week's content ready in advance
+
+**Scalability:**
+- In-memory for MVP
+- DynamoDB for production
+- AWS EventBridge for cron jobs
+- SQS for action queuing
+- Lambda for action execution
+- Platform API rate limiting handled
+
+**Next Steps for Production:**
+- Integrate cron job library (node-cron)
+- Implement platform API integrations (YouTube, Instagram, etc.)
+- Add action queue (SQS) for reliability
+- Implement retry logic for failed actions
+- Add webhook support
+- Implement action conditions (if-then-else)
+- Add action delays (wait X minutes)
+- Implement action loops (repeat N times)
+- Add email notification service
+- Implement SMS notifications
+- Add Slack/Discord integrations
+- Implement analytics tracking
+- Add A/B testing for scheduled posts
+- Implement optimal time suggestions (AI-powered)
 
