@@ -45,6 +45,10 @@ import {
   PredictTrendsResponse,
   MultiplyGenerateRequest,
   MultiplyGenerateResponse,
+  MultiplyV2GenerateRequest,
+  MultiplyV2GenerateResponse,
+  MultiplyV2StatusResponse,
+  MultiplyV2ResultsResponse,
   CreateWorkspaceRequest,
   Workspace,
   WorkspaceUsersResponse,
@@ -620,6 +624,40 @@ class ApiClient {
         method: 'POST',
         body: data,
         timeout: 120000,
+      }),
+  };
+
+  multiplyV2 = {
+    /**
+     * Generate 100+ content pieces from a single video
+     * @param data - Content multiplication request with video details and preferences
+     * @returns Promise with multiplication result including all generated pieces
+     */
+    generate: (data: MultiplyV2GenerateRequest) =>
+      this.request<MultiplyV2GenerateResponse>('/api/multiply-v2/generate', {
+        method: 'POST',
+        body: data,
+        timeout: 180000, // 3 minutes for large content generation
+      }),
+
+    /**
+     * Check the status of a content generation job
+     * @param jobId - The unique job identifier returned from generate
+     * @returns Promise with current job status and progress
+     */
+    getStatus: (jobId: string) =>
+      this.request<MultiplyV2StatusResponse>(`/api/multiply-v2/status/${jobId}`, {
+        method: 'GET',
+      }),
+
+    /**
+     * Fetch all generated content pieces for a completed job
+     * @param jobId - The unique job identifier
+     * @returns Promise with complete multiplication results
+     */
+    getResults: (jobId: string) =>
+      this.request<MultiplyV2ResultsResponse>(`/api/multiply-v2/results/${jobId}`, {
+        method: 'GET',
       }),
   };
 
