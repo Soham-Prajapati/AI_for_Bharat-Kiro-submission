@@ -359,7 +359,7 @@ export const api = {
   - **Output:** `{ timeSaved: '5.5 hours', moneySaved: '$275', roi: '2750%' }`
   - **Test:** Various video lengths, verify calculations
 
-- [/] **2.4b: Build ROI dashboard (Srushti)**
+- [x] **2.4b: Build ROI dashboard (Srushti)** ✅
   - **What:** Show savings over time
   - **Where:** `frontend/components/ROIDashboard.tsx`
   - **Components:** SavingsCounter, ROIChart, ProjectionGraph
@@ -391,7 +391,7 @@ export const api = {
   - **Output:** Culturally adapted content
   - **Test:** English content → Hindi, verify cultural references changed
 
-- [ ] **2.5b: Build cultural settings UI (Srushti)**
+- [/] **2.5b: Build cultural settings UI (Srushti)**
   - **What:** Let user select target regions
   - **Where:** `frontend/components/CulturalSettings.tsx`
   - **Design:** Checkbox list of regions, preview changes
