@@ -1017,3 +1017,116 @@ export interface ExportAnalyticsResponse {
   expiresAt: string;
 }
 
+// ============================================================================
+// SAFETY & MODERATION TYPES
+// ============================================================================
+
+export type ContentType = 'text' | 'image' | 'video' | 'audio';
+export type ViolationCategory = 'explicit' | 'violence' | 'hate_speech' | 'harassment' | 'spam' | 'misinformation' | 'copyright' | 'privacy' | 'dangerous';
+export type ViolationSeverity = 'low' | 'medium' | 'high' | 'critical';
+export type SafetyStrictness = 'low' | 'medium' | 'high';
+
+export interface SafetyCheckRequest {
+  contentId: string;
+  contentType: ContentType;
+  content?: string;
+  url?: string;
+  platforms?: string[];
+  strictness?: SafetyStrictness;
+}
+
+export interface ViolationLocation {
+  start?: number;
+  end?: number;
+  timestamp?: number;
+  boundingBox?: {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  };
+}
+
+export interface Violation {
+  violationId: string;
+  category: ViolationCategory;
+  severity: ViolationSeverity;
+  confidence: number;
+  description: string;
+  location?: ViolationLocation;
+  platformViolations?: string[];
+}
+
+export interface ModerationLabel {
+  label: string;
+  confidence: number;
+  parentLabel?: string;
+}
+
+export interface PlatformCompliance {
+  compliant: boolean;
+  violations: string[];
+  warnings: string[];
+}
+
+export interface SafetyCheckResult {
+  checkId: string;
+  contentId: string;
+  safe: boolean;
+  overallScore: number;
+  violations: Violation[];
+  warnings: string[];
+  suggestions: string[];
+  platformCompliance: Record<string, PlatformCompliance>;
+  moderationLabels?: ModerationLabel[];
+  checkedAt: string;
+}
+
+export interface SafetyCheckResponse {
+  success: boolean;
+  result: SafetyCheckResult;
+}
+
+export interface SafetyHistoryResponse {
+  success: boolean;
+  contentId: string;
+  checks: SafetyCheckResult[];
+  total: number;
+}
+
+export interface ApproveContentRequest {
+  checkId: string;
+  contentId: string;
+  approvedBy: string;
+  notes?: string;
+}
+
+export interface ApproveContentResponse {
+  success: boolean;
+  checkId: string;
+  contentId: string;
+  status: 'approved';
+  approvedBy: string;
+  approvedAt: string;
+  message: string;
+}
+
+export interface RejectContentRequest {
+  checkId: string;
+  contentId: string;
+  rejectedBy: string;
+  reason: string;
+  notes?: string;
+}
+
+export interface RejectContentResponse {
+  success: boolean;
+  checkId: string;
+  contentId: string;
+  status: 'rejected';
+  rejectedBy: string;
+  rejectedAt: string;
+  reason: string;
+  message: string;
+}
+
