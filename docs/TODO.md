@@ -933,7 +933,7 @@ export const api = {
   - **Output:** `{ safe: boolean, violations: Violation[], suggestions: string[] }`
   - **Test:** Feed unsafe content, verify detection
 
-- [/] **5.5b: Build safety UI (Srushti)**
+- [x] **5.5b: Build safety UI (Srushti)** ✅
   - **What:** Safety dashboard, violation alerts
   - **Where:** `frontend/components/SafetyDashboard.tsx`
   - **Design:** Traffic light system (green/yellow/red)
@@ -995,7 +995,7 @@ export const api = {
   - **Output:** `{ regions: Region[], creators: Creator[], collaborations: Collab[] }`
   - **Test:** Create regional hub, match creators
 
-- [ ] **5.7b: Build regional network UI (Srushti)**
+- [x] **5.7b: Build regional network UI (Srushti)** ✅
   - **What:** Regional map, creator directory
   - **Where:** `frontend/app/regional-network/page.tsx`
   - **Components:** RegionMap, CreatorCard, CollabRequest
