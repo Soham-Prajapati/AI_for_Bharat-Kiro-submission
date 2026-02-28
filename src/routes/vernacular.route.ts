@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
+import { localizationService } from '../services/localization.service';
 
 const router = Router();
 
@@ -12,20 +13,9 @@ router.post('/translate', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('content and targetLanguage required');
   }
 
-  // TODO: Replace with real vernacular.service.ts
-  const mockTranslation = {
-    original: content,
-    translated: `[${targetLanguage.toUpperCase()}] ${content}`,
-    targetLanguage,
-    confidence: 0.95,
-    culturalAdaptations: [
-      'Replaced "Thanksgiving" with "Diwali"',
-      'Converted USD to INR'
-    ],
-    source: 'mock'
-  };
+  const translation = await localizationService.translateToLanguage(content, targetLanguage);
 
-  res.json(mockTranslation);
+  res.json(translation);
 }));
 
 export default router;

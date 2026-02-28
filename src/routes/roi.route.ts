@@ -6,7 +6,7 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
-import { roiCalculatorService } from '../services/roi-calculator.service';
+import { unifiedAnalyticsService } from '../services/unified-analytics.service';
 
 const router = Router();
 
@@ -21,7 +21,7 @@ router.get('/:userId', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('userId required');
   }
 
-  const roi = await roiCalculatorService.calculate(userId);
+  const roi = await unifiedAnalyticsService.calculateROI(userId);
 
   res.json({
     success: true,
