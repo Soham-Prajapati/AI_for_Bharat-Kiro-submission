@@ -807,7 +807,7 @@ export const api = {
 ### Day 5.1: ADHD Navigator (Feature #19) 🧠
 **Read:** `docs/PROJECT_PLAN.md` → Search for "ADHD"
 
-- [ ] **5.1a: Create ADHD-friendly service (Nidhi)**
+- [x] **5.1a: Create ADHD-friendly service (Nidhi)** ✅
   - **What:** Focus mode, distraction-free interface
   - **Where:** `src/services/adhd-navigator.service.ts`
   - **How:**
