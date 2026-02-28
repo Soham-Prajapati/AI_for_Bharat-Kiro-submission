@@ -6,7 +6,7 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
-import { viralPredictorService } from '../services/viral-predictor.service';
+import { viralIntelligenceService } from '../services/viral-intelligence.service';
 
 const router = Router();
 
@@ -21,7 +21,7 @@ router.post('/predict', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('transcript (non-empty string) required');
   }
 
-  const prediction = await viralPredictorService.predict(transcript, metadata);
+  const prediction = await viralIntelligenceService.predict(transcript, metadata);
 
   res.json({
     success: true,

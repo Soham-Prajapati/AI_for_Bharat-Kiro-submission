@@ -6,7 +6,7 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
-import { ecosystemAnalyticsService } from '../services/ecosystem-analytics.service';
+import { unifiedAnalyticsService } from '../services/unified-analytics.service';
 import { cacheService } from '../services/cache.service';
 
 const router = Router();
@@ -39,7 +39,7 @@ router.get('/:userId', asyncHandler(async (req: Request, res: Response) => {
   }
 
   // Fetch fresh data
-  const analytics = await ecosystemAnalyticsService.getAnalytics(userId);
+  const analytics = await unifiedAnalyticsService.getAnalytics(userId);
   
   // Cache for 1 hour
   cacheService.set(cacheKey, analytics, CACHE_TTL);

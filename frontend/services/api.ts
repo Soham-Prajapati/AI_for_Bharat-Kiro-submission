@@ -616,7 +616,7 @@ class ApiClient {
 
   multiply = {
     generate: (data: MultiplyGenerateRequest) =>
-      this.request<MultiplyGenerateResponse>('/api/multiply/generate', {
+      this.request<MultiplyGenerateResponse>('/api/multiply-v2/generate', {
         method: 'POST',
         body: data,
         timeout: 120000,

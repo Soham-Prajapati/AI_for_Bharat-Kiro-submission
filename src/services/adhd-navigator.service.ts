@@ -694,7 +694,7 @@ export class ADHDNavigatorService {
   /**
    * Advance Pomodoro cycle
    */
-  advancePomodoroC ycle(userId: string): PomodoroConfig {
+  advancePomorodoCycle(userId: string): PomodoroConfig {
     const config = this.getPomodoroConfig(userId);
     const preferences = this.getUserPreferences(userId);
 
@@ -828,7 +828,7 @@ export class ADHDNavigatorService {
     userProgress.statistics.mostProductiveHour = mostProductiveHour;
 
     // Most productive day of week
-    const dayCount s = new Map<number, number>();
+    const dayCounts = new Map<number, number>();
     completedSessions.forEach(s => {
       const day = new Date(s.startTime).getDay();
       dayCounts.set(day, (dayCounts.get(day) || 0) + 1);

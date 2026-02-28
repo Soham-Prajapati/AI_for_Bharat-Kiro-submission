@@ -6,7 +6,7 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
-import { culturalAdapterService } from '../services/cultural-adapter.service';
+import { localizationService } from '../services/localization.service';
 
 const router = Router();
 
@@ -25,7 +25,7 @@ router.post('/adapt', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('targetRegion (string) required');
   }
 
-  const adaptation = await culturalAdapterService.adapt(content, targetRegion);
+  const adaptation = await localizationService.adaptForRegion(content, targetRegion);
 
   res.json({
     success: true,
@@ -39,7 +39,7 @@ router.post('/adapt', asyncHandler(async (req: Request, res: Response) => {
  * Get list of supported regions
  */
 router.get('/regions', asyncHandler(async (req: Request, res: Response) => {
-  const regions = culturalAdapterService.getSupportedRegions();
+  const regions = localizationService.getSupportedRegions();
 
   res.json({
     success: true,
