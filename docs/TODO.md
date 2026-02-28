@@ -213,21 +213,21 @@ export const api = {
   - **Test:** Click each mode, verify state updates
 
 ### Day 1.5: Testing Setup
-- [ ] **1.5a: Setup Jest + test structure (Lakshmi)**
+- [/] **1.5a: Setup Jest + test structure (Lakshmi)**
   - **What:** Configure Jest for TypeScript
   - **Where:** `jest.config.js`, `src/__tests__/setup.ts`
   - **How:** Install `@types/jest`, `ts-jest`
   - **Output:** `npm test` runs successfully
   - **Test:** Create sample test, verify it passes
 
-- [ ] **1.5b: Create unit tests for prompts (Lakshmi)**
+- [/] **1.5b: Create unit tests for prompts (Lakshmi)**
   - **What:** Test each prompt function
   - **Where:** `src/__tests__/prompts/*.test.ts`
   - **How:** Mock transcript input, verify output structure
   - **Coverage:** All 8 prompts, >80% code coverage
   - **Test:** `npm test -- prompts`
 
-- [ ] **1.5c: Create integration tests (Lakshmi)**
+- [x] **1.5c: Create integration tests (Lakshmi)** ✅
   - **What:** Test full upload → process → generate flow
   - **Where:** `src/__tests__/integration/e2e.test.ts`
   - **How:** Use `supertest` to call API endpoints
