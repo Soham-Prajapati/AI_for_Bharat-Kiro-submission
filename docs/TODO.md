@@ -599,7 +599,7 @@ export const api = {
 ### Day 4.1: Marketplace (Feature #12) 🛒
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Marketplace"
 
-- [ ] **4.1a: Create marketplace service (Nidhi)**
+- [x] **4.1a: Create marketplace service (Nidhi)** ✅
   - **What:** Buy/sell content templates, scripts, thumbnails
   - **Where:** `src/services/marketplace.service.ts`
   - **How:**
