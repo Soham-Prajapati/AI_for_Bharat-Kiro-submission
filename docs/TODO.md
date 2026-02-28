@@ -234,7 +234,7 @@ export const api = {
   - **Test:** Upload file → verify S3 → verify Transcribe → verify Bedrock
   - **Duration:** Should complete in <30 seconds
 
-- [ ] **1.5d: Setup CI/CD pipeline (Lakshmi)**
+- [x] **1.5d: Setup CI/CD pipeline (Lakshmi)** ✅
   - **What:** GitHub Actions for auto-deploy
   - **Where:** `.github/workflows/deploy.yml`
   - **How:** On push to `main`, run tests → build → deploy to AWS
