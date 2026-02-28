@@ -68,6 +68,10 @@
 - ✅ 4.6a: Analytics dashboard service (deep insights, metrics, forecasting)
 - ✅ 4.7a: Platform integration service (OAuth, auto-posting to 6 platforms)
 - ✅ 5.1a: ADHD Navigator service (focus mode, Pomodoro, gamification)
+- ✅ 5.2a: Creative Director service (AI feedback on 10 dimensions)
+- ✅ 5.3a: Viral Analyzer service (reverse engineer viral content, extract patterns)
+- ✅ 5.4a: Content Multiplier V2 service (1→100+ pieces with AI variations)
+- ✅ 5.5a: Safety service (content moderation, compliance checking)
 
 ### Shubh (Backend + AWS)
 - ✅ 1.2-1.3: All API routes + AWS services
@@ -5162,3 +5166,1548 @@ const insights = adhd.getFocusInsights('user_001');
 - Add ADHD-specific resources
 - Implement accessibility features (screen reader, high contrast)
 
+
+
+
+---
+
+### ✅ Task 5.2a: Create Creative Director Service (COMPLETED)
+
+Created comprehensive AI feedback service in `src/services/creative-director.service.ts` that analyzes content quality across 10 dimensions and provides actionable improvement suggestions before publishing.
+
+**Core Functionality:**
+
+1. **Content Analysis**
+   - `analyzeContent()` - Comprehensive analysis across all dimensions
+   - Returns overall score (0-100), letter grade (A+ to F), and detailed feedback
+
+2. **10-Dimension Analysis**
+   - `analyzeHook()` - First 3-5 seconds, title strength, attention-grabbers
+   - `analyzeStructure()` - Organization, paragraph balance, transitions
+   - `analyzePacing()` - Sentence length, variety, rhythm, momentum
+   - `analyzeClarity()` - Language simplicity, jargon, examples, definitions
+   - `analyzeEngagement()` - Questions, direct address, storytelling, emotion
+   - `analyzeEmotionalImpact()` - Emotional language, vulnerability, empathy
+   - `analyzeValueDelivery()` - Actionable tips, benefits, proof/credibility
+   - `analyzeCallToAction()` - CTA presence, urgency, benefit emphasis
+   - `analyzeSEO()` - Title/description length, keywords, timestamps
+   - `analyzeTechnicalQuality()` - Grammar, filler words, duration, capitalization
+
+3. **Scoring & Grading**
+   - `calculateOverallScore()` - Average of 10 dimensions (0-100 scale)
+   - `calculateGrade()` - Letter grade: A+ (97+), A (93+), B+ (87+), B (83+), C+ (77+), C (70+), D (60+), F (<60)
+   - `extractTopStrengths()` - Top 3 strengths from highest-scoring dimensions
+   - `extractTopWeaknesses()` - Top 3 weaknesses from lowest-scoring dimensions
+   - `generatePriorityImprovements()` - Top 5 actionable suggestions
+
+4. **Improvement Suggestions**
+   - `generateImprovements()` - Detailed suggestions with priority, impact, effort
+   - Categories: structure, pacing, engagement, clarity, seo, technical
+   - Priority levels: high, medium, low
+   - Effort estimates: easy, moderate, difficult
+   - Impact descriptions and examples provided
+
+5. **Best Practices Comparison**
+   - `compareBestPractices()` - Compare against platform-specific standards
+   - Checks: duration, title length, hook strength, CTA, engagement
+   - Gap analysis: aligned, minor_gap, major_gap
+   - Platform-specific recommendations
+
+6. **Engagement Estimation**
+   - `estimateEngagement()` - Predict views, engagement rate, viral potential
+   - Based on overall score and platform
+   - Platform multipliers: TikTok (2.0x), Instagram (1.5x), YouTube (1.0x), etc.
+
+**Data Structures:**
+
+**DimensionScore:**
+```typescript
+{
+  dimension: string,
+  score: number, // 0-10
+  feedback: string,
+  strengths: string[],
+  weaknesses: string[],
+  suggestions: string[]
+}
+```
+
+**ContentScore:**
+```typescript
+{
+  overallScore: number, // 0-100
+  grade: 'A+' | 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' | 'F',
+  dimensions: DimensionScore[],
+  summary: string,
+  topStrengths: string[],
+  topWeaknesses: string[],
+  priorityImprovements: string[]
+}
+```
+
+**ImprovementSuggestion:**
+```typescript
+{
+  suggestionId: string,
+  category: 'structure' | 'pacing' | 'engagement' | 'clarity' | 'seo' | 'technical',
+  priority: 'high' | 'medium' | 'low',
+  title: string,
+  description: string,
+  impact: string,
+  effort: 'easy' | 'moderate' | 'difficult',
+  examples?: string[]
+}
+```
+
+**AnalysisResult:**
+```typescript
+{
+  analysisId: string,
+  contentId?: string,
+  score: ContentScore,
+  improvements: ImprovementSuggestion[],
+  bestPractices: BestPracticeComparison[],
+  estimatedEngagement: {
+    views: string,
+    engagement: string,
+    viralPotential: number
+  },
+  analyzedAt: string
+}
+```
+
+**10 Dimensions Explained:**
+
+**1. Hook (0-10):**
+- Analyzes first 2 sentences and title
+- Checks for: questions, bold claims, numbers, emotional words
+- Title strength evaluation (power words, numbers, optimal length)
+- Scoring: +1.5 strong title, +1 question, +1 bold claim, +0.5 numbers
+- Penalty: -1 if hook too long (>200 chars)
+
+**2. Structure (0-10):**
+- Checks for intro, body, conclusion
+- Paragraph balance (3-6 sentences optimal)
+- Transition words (first, next, however, therefore)
+- Scoring: +2 clear structure, +1.5 balanced paragraphs, +1.5 transitions
+
+**3. Pacing (0-10):**
+- Average words per sentence (15-25 optimal)
+- Sentence length variety (variance > 20)
+- Momentum builders (but, suddenly, imagine, now)
+- Scoring: +2 optimal length, +2 variety, +1 momentum
+
+**4. Clarity (0-10):**
+- Complex word ratio (<10% good, >20% bad)
+- Jargon detection (synergy, leverage, paradigm)
+- Examples (for example, such as, imagine)
+- Definitions (means, is defined as, refers to)
+- Scoring: +2 simple language, +1.5 examples, +1 definitions, -0.5 jargon
+
+**5. Engagement (0-10):**
+- Question count (3+ good)
+- Direct address (you, your)
+- Storytelling (story, remember when, experience)
+- Emotional language (love, excited, frustrated)
+- Scoring: +2 questions, +1.5 direct address, +1.5 storytelling, +1 emotion
+
+**6. Emotional Impact (0-10):**
+- Emotional word density (>5% good)
+- Positive, negative, surprise words
+- Vulnerability (struggled, failed, learned, mistake)
+- Empathy (understand, feel, know how, relate)
+- Scoring: +2 emotional density, +2 vulnerability, +1 empathy
+
+**7. Value Delivery (0-10):**
+- Actionable tips (tip, trick, hack, method, technique)
+- Numbered lists (first, second, 1., 2.)
+- Benefits (benefit, help you, allow you, will get)
+- Proof (study, research, data, proven, tested)
+- Scoring: +2 tips, +1.5 numbers, +1.5 benefits, +1 proof
+
+**8. Call-to-Action (0-10):**
+- CTA presence (subscribe, like, comment, share, follow)
+- Urgency (now, today, don't wait, limited)
+- Benefit in CTA (so you can, to help you, you'll get)
+- Multiple CTAs penalty (>3 = -1)
+- Scoring: +3 CTA, +1.5 urgency, +1.5 benefit, -1 too many
+
+**9. SEO (0-10):**
+- Title length (50-60 chars optimal)
+- Title keywords (how to, best, guide, tips, tutorial)
+- Description length (150-160 chars optimal)
+- Keyword density (main keyword 3-5 times)
+- Timestamps (for video content)
+- Scoring: +1.5 title length, +1.5 title keywords, +1.5 description, +1.5 keyword density, +1 timestamps
+
+**10. Technical Quality (0-10):**
+- Grammar/formatting (no double spaces, commas)
+- Filler words (<2% good, >5% bad)
+- Duration (platform-specific optimal ranges)
+- Capitalization (>90% sentences capitalized)
+- Scoring: +2 clean formatting, +2 minimal fillers, +2 optimal duration, +1 capitalization
+
+**Scoring System:**
+
+**Overall Score Calculation:**
+- Sum all 10 dimension scores
+- Divide by 10 (average)
+- Multiply by 10 to get 0-100 scale
+- Round to nearest integer
+
+**Grade Mapping:**
+- 97-100: A+ (Exceptional)
+- 93-96: A (Excellent)
+- 87-92: B+ (Very Good)
+- 83-86: B (Good)
+- 77-82: C+ (Above Average)
+- 70-76: C (Average)
+- 60-69: D (Below Average)
+- 0-59: F (Needs Major Revision)
+
+**Summary Generation:**
+- 90+: "Excellent content! Minor tweaks will make it even better."
+- 80-89: "Strong content. Focus on improving weaker areas."
+- 70-79: "Good foundation. Build on strengths, address weaknesses."
+- 60-69: "Decent start, but significant improvements needed."
+- <60: "Needs major revision. Start with fundamental issues."
+
+**Best Practices by Platform:**
+
+**Duration:**
+- YouTube: 480-900 seconds (8-15 minutes)
+- TikTok: 15-60 seconds
+- Instagram: 15-90 seconds
+- Twitter: 30-140 seconds
+- LinkedIn: 60-180 seconds (1-3 minutes)
+- Blog: 300-600 seconds (5-10 minutes read time)
+
+**Title Length:** 50-60 characters (all platforms)
+
+**Hook Timing:** First 3-5 seconds critical (all platforms)
+
+**Engagement Estimation:**
+
+**Score-Based Multipliers:**
+- 90+: 5x views, 8% engagement, 85% viral potential
+- 80-89: 3x views, 6% engagement, 70% viral potential
+- 70-79: 2x views, 4% engagement, 50% viral potential
+- 60-69: 1.5x views, 3% engagement, 30% viral potential
+- <60: 1x views, 2% engagement, 15% viral potential
+
+**Platform Multipliers:**
+- TikTok: 2.0x (highest viral potential)
+- Instagram: 1.5x
+- YouTube: 1.0x (baseline)
+- Twitter: 0.8x
+- LinkedIn: 0.6x
+- Blog: 0.5x
+
+**Example Analysis:**
+
+Input: "How to Make Perfect Butter Chicken" (YouTube video, 600 seconds)
+
+Output:
+- Overall Score: 82/100 (Grade: B)
+- Top Strengths: Strong hook, Clear structure, Good engagement
+- Top Weaknesses: Missing CTA, Weak SEO, No timestamps
+- Priority Improvements:
+  1. Add clear CTA at end (High priority, Easy effort)
+  2. Add SEO keywords to title (High priority, Easy effort)
+  3. Include timestamps in description (Medium priority, Easy effort)
+- Estimated Engagement: 3.0K+ views, 6.0% engagement, 70% viral potential
+
+**Use Cases:**
+- Pre-publish content review
+- Quality assurance for creators
+- Content improvement coaching
+- A/B testing different versions
+- Training new content creators
+- Agency quality control
+- Platform optimization
+- Competitive analysis
+
+**Integration:**
+- API route exists: `POST /api/creative-director/analyze` (Shubh completed)
+- Frontend UI (Srushti's task 5.2b) - Score cards, improvement list
+- In-memory storage for MVP (DynamoDB ready)
+- Mock data for testing
+
+**Key Features:**
+- 10-dimension comprehensive analysis
+- Actionable improvement suggestions
+- Priority-based recommendations
+- Effort and impact estimates
+- Best practice comparisons
+- Platform-specific optimization
+- Engagement prediction
+- Letter grade scoring
+- Top strengths/weaknesses extraction
+- Example suggestions provided
+- Gap analysis (aligned/minor/major)
+- SEO optimization checks
+- Technical quality validation
+- Emotional impact measurement
+- Value delivery assessment
+
+**Business Impact:**
+- Improves content quality before publishing
+- Reduces trial-and-error for creators
+- Increases engagement rates
+- Provides objective feedback
+- Saves time on revisions
+- Builds creator confidence
+- Differentiator from competitors
+- Enables data-driven improvements
+- Reduces poor-performing content
+- Increases platform success rates
+
+
+
+---
+
+### ✅ Task 5.3a: Create Viral Analyzer Service (COMPLETED)
+
+Created comprehensive viral content analysis service in `src/services/viral-analyzer.service.ts` that reverse engineers viral content to extract success patterns, identify viral hooks, detect emotional triggers, and generate step-by-step replication guides.
+
+**Core Functionality:**
+
+1. **analyzeViralContent(request)** - Complete viral analysis
+   - Calculates viral score (0-100) based on engagement metrics
+   - Analyzes viral factors: view velocity, engagement rate, shareability, retention, algorithm friendliness
+   - Extracts viral patterns from content (8 pre-loaded patterns + custom detection)
+   - Identifies hooks (6 types: question, bold claim, story tease, shock, curiosity gap, problem statement)
+   - Detects emotional triggers (7 emotions: curiosity, surprise, joy, fear, anger, sadness, excitement)
+   - Identifies viral formulas used (Story-Driven Value, Problem-Agitate-Solution, Listicle)
+   - Generates step-by-step replication guide
+   - Provides competitor insights
+   - Predicts performance for similar content
+   - Returns comprehensive analysis with actionable recommendations
+
+2. **calculateViralScore(metrics)** - Viral score calculation
+   - Formula: (shareRate × 1000 × 40%) + (engagementRate × 100 × 30%) + (likeRate × 100 × 20%) + (commentRate × 100 × 10%)
+   - Share rate is most important factor (40% weight) - shares drive virality
+   - Engagement rate (30%), like rate (20%), comment rate (10%)
+   - Returns score 0-100 (capped at 100)
+
+3. **calculateViralFactors(request)** - Detailed factor analysis
+   - View Velocity: Views per day since publication
+   - Engagement Rate: (likes + comments + shares) / views × 100
+   - Shareability: shares / views × 100 (most important for virality)
+   - Retention Estimate: Based on engagement patterns (0-100%)
+   - Algorithm Friendliness: Weighted score of engagement signals (0-100)
+   - Returns all factors with precise calculations
+
+4. **extractPatterns(request)** - Pattern extraction
+   - Checks content against 8 pre-loaded viral patterns in database
+   - Detects custom patterns specific to this content:
+     - Repetition for emphasis (repeated key phrases)
+     - Data-driven claims (numbers, statistics, percentages)
+     - Contrarian angle (controversial or unpopular opinions)
+   - Returns patterns sorted by effectiveness
+   - Each pattern includes: name, category, description, frequency, effectiveness, examples, replication guide
+
+5. **identifyHooks(request)** - Hook identification
+   - Analyzes first 3 sentences for hook types
+   - 6 hook types detected:
+     - Question: Engages brain, creates curiosity gaps (85% effectiveness)
+     - Bold Claim: Creates intrigue with superlatives (90% effectiveness)
+     - Story Tease: Taps into love for narratives (88% effectiveness)
+     - Shock: Triggers emotional response (92% effectiveness)
+     - Curiosity Gap: Creates information gap (87% effectiveness)
+     - Problem Statement: Identifies with pain points (83% effectiveness)
+   - Returns hooks with timestamp, effectiveness score, reasoning, replication template
+
+6. **detectEmotionalTriggers(request)** - Emotional analysis
+   - Analyzes each sentence for emotional content
+   - 7 emotions detected:
+     - Curiosity: Drives continued watching (80% intensity)
+     - Surprise: Creates memorable moments (85% intensity)
+     - Joy/Excitement: Increases sharing (75% intensity)
+     - Fear/Concern: Strong engagement trigger (90% intensity)
+     - Anger/Frustration: Drives comments (88% intensity)
+     - Sadness: Emotional connection (70% intensity)
+     - Excitement: High energy engagement (85% intensity)
+   - Returns top 10 triggers with timestamp, intensity, context, impact
+
+7. **identifyFormulas(request, patterns)** - Formula detection
+   - Detects 3 viral formulas:
+     - Story-Driven Value: Hook + Story + Value + CTA (85% success rate)
+     - Problem-Agitate-Solution (PAS): Problem + Agitation + Solution (82% success rate)
+     - Listicle: Hook with Number + Points + Summary (78% success rate)
+   - Each formula includes: structure, timing breakdown, key elements, success rate, best platforms
+   - Returns formulas detected in content
+
+8. **generateReplicationGuide(request, patterns, hooks, formulas)** - Step-by-step guide
+   - Summary: Overview of viral strategy used
+   - Step-by-step: 7-10 actionable steps to replicate success
+   - Dos list: 10 best practices (hook first, high energy, specific numbers, etc.)
+   - Don'ts list: 8 common mistakes to avoid (slow intros, monotone, no CTA, etc.)
+   - Critical elements: 5 must-have components
+   - Timing breakdown: Second-by-second action plan
+   - Script template: Ready-to-use template with placeholders
+
+9. **generateCompetitorInsights(request, patterns)** - Competitive analysis
+   - Compares performance vs creator's average
+   - Analyzes views-to-followers ratio
+   - Identifies what made this content different
+   - Platform-specific insights (TikTok, YouTube, Instagram)
+   - Returns top 5 actionable insights
+
+10. **predictPerformance(viralScore, platform)** - Performance prediction
+    - Estimates views based on viral score and platform
+    - Platform multipliers: TikTok (3.0x), Instagram (2.0x), YouTube (1.5x), Twitter (1.0x), LinkedIn (0.8x)
+    - Score multipliers: 90+ (10x), 80-89 (5x), 70-79 (3x), 60-69 (2x)
+    - Estimates engagement rate (0-15%)
+    - Returns formatted predictions (e.g., "50K+ views", "8.5% engagement")
+
+**Viral Pattern Database (8 Pre-loaded Patterns):**
+
+1. **Pattern Interrupt** (Hook, 90% effectiveness)
+   - Breaks expected pattern to capture attention
+   - Examples: "Wait, before you scroll...", "Stop! This is important..."
+   - Replication: Use unexpected words in first 3 seconds
+
+2. **Social Proof** (Storytelling, 82% effectiveness)
+   - References others doing/saying something
+   - Examples: "Everyone is talking about...", "Millions of people..."
+   - Replication: Mention how many people are affected
+
+3. **Transformation Story** (Storytelling, 88% effectiveness)
+   - Shows before/after or journey
+   - Examples: "I went from X to Y...", "Before vs After..."
+   - Replication: Share transformation with specific details
+
+4. **Controversy Bait** (Emotion, 95% effectiveness)
+   - Takes controversial stance to spark debate
+   - Examples: "Unpopular opinion:", "Hot take:", "This will make you mad..."
+   - Replication: Challenge common beliefs (stay authentic)
+
+5. **Urgency/Scarcity** (CTA, 80% effectiveness)
+   - Creates time pressure or limited availability
+   - Examples: "Only 24 hours left...", "Before it's too late..."
+   - Replication: Add time-sensitive element
+
+6. **Relatability Hook** (Hook, 85% effectiveness)
+   - Starts with universally relatable situation
+   - Examples: "We've all been there...", "You know that feeling when..."
+   - Replication: Open with audience's shared experience
+
+7. **Value Stacking** (Structure, 78% effectiveness)
+   - Delivers multiple tips/insights rapidly
+   - Examples: "5 ways to...", "3 secrets...", "Here are 7 tips..."
+   - Replication: Package multiple quick tips
+
+8. **Cliffhanger** (Pacing, 87% effectiveness)
+   - Teases information to keep watching
+   - Examples: "But wait, there's more...", "Number 3 will shock you..."
+   - Replication: Tease best point early, deliver later
+
+**Hook Types (6 Types):**
+
+1. **Question Hook** (85% effectiveness)
+   - Why it works: Questions engage brain and create curiosity gaps
+   - Template: "Have you ever wondered..." or "What if I told you..."
+
+2. **Bold Claim Hook** (90% effectiveness)
+   - Why it works: Bold claims create intrigue and promise value
+   - Template: "The #1 mistake...", "The secret that changed..."
+
+3. **Story Tease Hook** (88% effectiveness)
+   - Why it works: Taps into natural love for narratives
+   - Template: "Let me tell you about the time..." or "This happened to me..."
+
+4. **Shock Hook** (92% effectiveness)
+   - Why it works: Shock triggers emotional response and demands attention
+   - Template: "You won't believe what happened..." or "This is insane..."
+
+5. **Curiosity Gap Hook** (87% effectiveness)
+   - Why it works: Creates information gap that viewers want to fill
+   - Template: "I thought X, but then Y happened..."
+
+6. **Problem Statement Hook** (83% effectiveness)
+   - Why it works: Identifies with viewer's pain points and promises solution
+   - Template: "Struggling with X? Here's why..." or "The problem with X is..."
+
+**Viral Formulas (3 Formulas):**
+
+1. **Story-Driven Value Formula** (85% success rate)
+   - Structure: Strong Hook → Personal Story → Value/Tips → Call-to-Action
+   - Timing: Hook (0-5s), Story (5-30s), Value (30-80s), CTA (80-90s)
+   - Key Elements: Attention-grabbing opening, relatable experience, actionable takeaways, clear next step
+   - Best For: YouTube, Instagram, TikTok
+
+2. **Problem-Agitate-Solution (PAS)** (82% success rate)
+   - Structure: Identify Problem → Agitate Pain → Present Solution
+   - Timing: Problem (0-10s), Agitate (10-25s), Solution (25-90s)
+   - Key Elements: Relatable problem, amplify frustration, clear solution, proof/results
+   - Best For: LinkedIn, YouTube, Blog
+
+3. **Listicle Formula** (78% success rate)
+   - Structure: Hook with Number → Point 1 → Point 2 → Point 3+ → Summary
+   - Timing: Hook (0-5s), Points (5-75s), Summary (75-90s)
+   - Key Elements: Specific number in title, clear structure, quick pacing, memorable points
+   - Best For: TikTok, Instagram, Twitter
+
+**Emotional Triggers (7 Emotions):**
+
+1. **Curiosity** (80% intensity)
+   - Keywords: wonder, curious, secret, hidden, reveal, discover
+   - Impact: Drives viewers to keep watching to satisfy curiosity
+
+2. **Surprise** (85% intensity)
+   - Keywords: surprising, unexpected, shocking, believe, imagine
+   - Impact: Creates memorable moments that increase sharing
+
+3. **Joy/Excitement** (75% intensity)
+   - Keywords: amazing, incredible, love, excited, happy, wonderful
+   - Impact: Positive emotions increase engagement and sharing
+
+4. **Fear/Concern** (90% intensity)
+   - Keywords: danger, risk, warning, careful, avoid, mistake
+   - Impact: Fear triggers strong engagement and protective sharing
+
+5. **Anger/Frustration** (88% intensity)
+   - Keywords: angry, frustrated, unfair, wrong, terrible, hate
+   - Impact: Anger drives comments and passionate engagement
+
+6. **Sadness** (70% intensity)
+   - Keywords: sad, heartbreaking, loss, tragedy, unfortunate
+   - Impact: Emotional connection and empathy-driven sharing
+
+7. **Excitement** (85% intensity)
+   - Keywords: thrilling, exhilarating, pumped, energized
+   - Impact: High energy drives immediate engagement
+
+**Replication Guide Components:**
+
+1. **Summary**: One-sentence overview of viral strategy
+2. **Step-by-Step**: 7-10 actionable steps to replicate
+3. **Dos List**: 10 best practices to follow
+4. **Don'ts List**: 8 common mistakes to avoid
+5. **Critical Elements**: 5 must-have components
+6. **Timing Breakdown**: Second-by-second action plan
+7. **Script Template**: Ready-to-use template with structure
+
+**Example Dos List:**
+- Hook viewers in the first 3 seconds
+- Maintain high energy and enthusiasm
+- Use specific numbers and data
+- Tell personal stories
+- Create curiosity gaps
+- Deliver clear value
+- Edit tightly - no wasted time
+- Include a clear call-to-action
+
+**Example Don'ts List:**
+- Don't bury the lead - hook first
+- Don't use slow intros or long explanations
+- Don't be monotone - vary your energy
+- Don't forget the call-to-action
+- Don't make it too long - respect viewer time
+- Don't use jargon without explanation
+- Don't forget to edit out mistakes
+- Don't copy exactly - adapt to your style
+
+**Output Structure:**
+```typescript
+{
+  analysisId: 'viral_001',
+  contentId: 'content_001',
+  viralScore: 87,
+  viralFactors: {
+    viewVelocity: 50000, // views per day
+    engagementRate: 8.5, // percentage
+    shareability: 2.3, // percentage
+    retentionEstimate: 85, // percentage
+    algorithmFriendliness: 88 // 0-100
+  },
+  patterns: [
+    {
+      patternId: 'pattern_001',
+      name: 'Pattern Interrupt',
+      category: 'hook',
+      description: 'Breaks expected pattern to capture attention',
+      frequency: 75,
+      effectiveness: 90,
+      examples: ['Wait, before you scroll...'],
+      howToReplicate: 'Use unexpected words in first 3 seconds'
+    }
+  ],
+  hooks: [
+    {
+      hookId: 'hook_001',
+      type: 'question',
+      text: 'Have you ever wondered why some videos go viral?',
+      timestamp: 0,
+      effectiveness: 85,
+      whyItWorks: 'Questions engage the brain and create curiosity gaps',
+      replicationTemplate: 'Start with "Have you ever wondered..."'
+    }
+  ],
+  emotionalTriggers: [
+    {
+      triggerId: 'trigger_001',
+      emotion: 'curiosity',
+      intensity: 80,
+      timestamp: 0,
+      context: 'Have you ever wondered why...',
+      impact: 'Drives viewers to keep watching'
+    }
+  ],
+  formulas: [
+    {
+      formulaId: 'formula_001',
+      name: 'Story-Driven Value Formula',
+      structure: ['Strong Hook', 'Personal Story', 'Value/Tips', 'Call-to-Action'],
+      timing: { 'hook': '0-5s', 'story': '5-30s', 'value': '30-80s', 'cta': '80-90s' },
+      keyElements: ['Attention-grabbing opening', 'Relatable experience', 'Actionable takeaways'],
+      successRate: 85,
+      bestFor: ['YouTube', 'Instagram', 'TikTok']
+    }
+  ],
+  replicationGuide: {
+    summary: 'This content went viral using Story-Driven Value Formula with question hook and 8 viral patterns.',
+    stepByStep: [
+      '1. Start with a powerful hook using a question',
+      '2. Share a relatable personal story',
+      '3. Deliver actionable value',
+      '4. End with clear call-to-action'
+    ],
+    dosList: ['Hook viewers in first 3 seconds', 'Use specific numbers', 'Tell personal stories'],
+    dontsList: ['Don\'t bury the lead', 'Don\'t use slow intros', 'Don\'t be monotone'],
+    criticalElements: ['Question hook in first 3 seconds', 'Pattern Interrupt', 'High-energy delivery'],
+    timingBreakdown: [
+      { timeRange: '0-3s', action: 'Hook', purpose: 'Capture attention immediately' },
+      { timeRange: '3-10s', action: 'Setup', purpose: 'Establish value proposition' }
+    ],
+    scriptTemplate: '# Viral Content Script Template\n\n## Hook (0-3s)\n[Question or bold claim]\n\n## Story\n[Personal experience]\n\n## Value\n[Tips and insights]\n\n## CTA\n[Clear next step]'
+  },
+  competitorInsights: [
+    'This content performed 3x better than creator\'s average',
+    'Uses 8 viral patterns - more than typical content'
+  ],
+  predictedPerformance: {
+    estimatedViews: '50K+',
+    estimatedEngagement: '8.7%',
+    viralPotential: 87
+  },
+  analyzedAt: '2026-02-28T...'
+}
+```
+
+**Helper Methods:**
+
+1. **checkPatternPresence(transcript, pattern)** - Pattern detection
+   - Simple keyword matching (production uses AI)
+   - Checks if pattern examples appear in content
+
+2. **detectCustomPatterns(request)** - Custom pattern detection
+   - Finds repeated phrases (2+ occurrences)
+   - Detects numbers and statistics
+   - Identifies controversial language
+   - Returns custom patterns specific to this content
+
+3. **findRepeatedPhrases(transcript)** - Repetition analysis
+   - Finds 3-word phrases repeated 2+ times
+   - Returns top 3 most repeated phrases
+   - Used for "Repetition for Emphasis" pattern
+
+4. **analyzeHookType(text, timestamp)** - Hook classification
+   - Analyzes sentence structure and keywords
+   - Classifies into 6 hook types
+   - Returns hook object with effectiveness and template
+
+5. **analyzeEmotionalContent(text, timestamp)** - Emotion detection
+   - Keyword-based emotion detection
+   - Returns emotion with intensity and impact
+   - Supports 7 emotion types
+
+6. **generateStepByStep(formula, hook, patterns)** - Step generation
+   - Creates 7-10 actionable steps
+   - Based on formula structure and patterns
+   - Includes specific instructions for each step
+
+7. **getElementDescription(element)** - Element explanation
+   - Provides description for formula elements
+   - Used in step-by-step guide
+   - Maps element names to actionable descriptions
+
+8. **generateTimingBreakdown(formula, duration)** - Timing guide
+   - Creates second-by-second action plan
+   - Based on formula timing or default breakdown
+   - Includes purpose for each time segment
+
+9. **generateScriptTemplate(hook, formula)** - Template generation
+   - Creates markdown script template
+   - Includes hook, formula structure, placeholders
+   - Ready to use for content creation
+
+10. **getPlatformInsights(platform, metrics)** - Platform analysis
+    - Platform-specific optimization insights
+    - Duration recommendations
+    - Share rate analysis
+    - Returns 2-3 platform-specific insights
+
+11. **getAnalysis(analysisId)** - Retrieve analysis
+    - Get analysis by ID
+    - Returns full analysis object or null
+
+12. **getUserAnalyses(userId, limit)** - User history
+    - Get user's past analyses
+    - Sorted by date (newest first)
+    - Default limit: 20 analyses
+
+13. **getMockAnalysis()** - Testing helper
+    - Returns complete mock analysis
+    - Used for testing and demos
+    - Includes all components
+
+**Integration:**
+- API route exists: `POST /api/viral-analyzer/analyze` (Shubh completed)
+- Frontend visualization (Srushti's task 5.3b)
+- Used to reverse engineer viral content and learn success patterns
+- Helps creators understand what makes content go viral
+
+**Key Features:**
+- Comprehensive viral analysis (score, factors, patterns, hooks, emotions, formulas)
+- 8 pre-loaded viral patterns with effectiveness scores
+- 6 hook types with replication templates
+- 7 emotional triggers with intensity scores
+- 3 viral formulas with timing breakdowns
+- Custom pattern detection (repetition, numbers, controversy)
+- Step-by-step replication guide (7-10 steps)
+- Dos and don'ts lists (10 dos, 8 don'ts)
+- Critical elements identification (5 must-haves)
+- Second-by-second timing breakdown
+- Ready-to-use script template
+- Competitor insights (performance comparison)
+- Performance prediction (views, engagement, viral potential)
+- Platform-specific insights (TikTok, YouTube, Instagram)
+- Analysis history tracking
+- Mock data for testing
+
+**Use Cases:**
+- Reverse engineer viral videos to understand success patterns
+- Learn from competitors' viral content
+- Get step-by-step guide to replicate viral success
+- Identify hooks and emotional triggers that work
+- Understand viral formulas and timing
+- Predict performance of similar content
+- Optimize content before publishing
+- Study viral patterns across platforms
+- Build content strategy based on proven patterns
+- Train creators on viral content principles
+
+**Business Impact:**
+- Helps creators learn from viral content
+- Provides actionable replication guides (not just analysis)
+- Reduces trial and error in content creation
+- Increases chances of creating viral content
+- Educates creators on viral principles
+- Differentiator from basic analytics tools
+- Premium feature for monetization
+- Builds creator confidence with proven patterns
+
+**Viral Score Calculation:**
+- Share rate: 40% weight (most important for virality)
+- Engagement rate: 30% weight (likes + comments + shares)
+- Like rate: 20% weight (audience approval)
+- Comment rate: 10% weight (discussion generation)
+- Formula ensures shares are prioritized (shares = virality)
+
+**Viral Factors:**
+- View Velocity: How fast content is gaining views (views/day)
+- Engagement Rate: Overall engagement percentage
+- Shareability: Share rate (most important metric)
+- Retention Estimate: Estimated watch-through rate
+- Algorithm Friendliness: How well content performs with platform algorithms
+
+**Pattern Categories:**
+- Hook: Attention-grabbing opening techniques
+- Structure: Content organization patterns
+- Pacing: Rhythm and momentum techniques
+- Emotion: Emotional trigger patterns
+- Storytelling: Narrative techniques
+- CTA: Call-to-action patterns
+- Technical: Production and editing patterns
+
+**Performance Prediction:**
+- Based on viral score and platform
+- Platform multipliers: TikTok (3x), Instagram (2x), YouTube (1.5x), Twitter (1x), LinkedIn (0.8x)
+- Score multipliers: 90+ (10x), 80-89 (5x), 70-79 (3x), 60-69 (2x), <60 (1x)
+- Estimates views and engagement rate
+- Provides viral potential score
+
+**Technical Implementation:**
+- TypeScript with full type safety
+- Pattern database with 8 pre-loaded patterns
+- Custom pattern detection algorithms
+- Hook classification with 6 types
+- Emotion detection with 7 emotions
+- Formula identification with 3 formulas
+- Replication guide generation
+- Performance prediction algorithms
+- Mock data for testing
+- Ready for production use
+
+This service enables creators to learn from viral content and replicate success patterns with step-by-step guidance, making viral content creation more systematic and less random.
+
+
+---
+
+### ✅ Task 5.4a: Create Content Multiplier V2 Service (COMPLETED)
+
+Created advanced content repurposing service in `src/services/content-multiplier-v2.service.ts` that transforms 1 video into 100+ pieces of content with AI-generated variations, platform-specific optimizations, auto-scheduling recommendations, and content calendar generation.
+
+**Core Functionality:**
+
+1. **multiplyContent(request)** - Main multiplication engine
+   - Generates content for all requested platforms and types
+   - Creates multiple variations per content type (1-5 variations)
+   - Generates content calendar with optimal posting times
+   - Calculates comprehensive analytics
+   - Provides strategic recommendations
+   - Returns 100+ content pieces ready to publish
+
+2. **generateContentPiece(request, platform, contentType, variation)** - Single piece generation
+   - Extracts key points from transcript
+   - Generates content based on type (10 types supported)
+   - Creates platform-specific hashtags
+   - Generates media metadata (video, image, audio)
+   - Estimates engagement score (0-100)
+   - Determines priority (high/medium/low)
+   - Returns complete content piece ready to publish
+
+**Supported Content Types (10 Types):**
+
+1. **Short** - Short-form video (60s)
+   - Hook + key insight + CTA format
+   - Platform-specific CTAs (TikTok: "Follow for more!", YouTube: "Like and subscribe!")
+   - Visual suggestions included
+   - 10 hashtags generated
+   - Estimated engagement: High (1.5x multiplier)
+
+2. **Reel** - Instagram/TikTok reel (30s)
+   - Quick tip format with emojis
+   - 5 format variations: Quick tip, Did you know, Here's how, The truth about, Stop doing this
+   - 20 hashtags generated
+   - Estimated engagement: Very High (1.8x multiplier)
+
+3. **Story** - 24-hour ephemeral content
+   - 5 templates: Hot take, Quick thought, Pro tip, Today's lesson, Fun fact
+   - Interactive CTAs (Swipe up, DM me, Reply with emoji)
+   - Image-based
+   - Estimated engagement: Medium (1.2x multiplier)
+
+4. **Post** - Social media post
+   - Platform-specific formatting:
+     - LinkedIn: Professional numbered list format
+     - Facebook: Casual with tag CTA
+     - Generic: Simple format with question
+   - 15 hashtags generated
+   - Estimated engagement: Medium (1.0x multiplier)
+
+5. **Thread** - Twitter thread
+   - Multi-tweet format (1/ 2/ 3/ etc.)
+   - Up to 6 tweets per thread
+   - Ends with retweet CTA
+   - Estimated engagement: Good (1.3x multiplier)
+
+6. **Carousel** - Multi-slide content
+   - Up to 6 slides
+   - Slide-by-slide breakdown
+   - Swipe CTA at end
+   - 15 hashtags generated
+   - Estimated engagement: Good (1.4x multiplier)
+
+7. **Infographic** - Data visualization
+   - Numbered list format
+   - Visual design suggestions
+   - Data-focused
+   - Estimated engagement: High (1.6x multiplier)
+
+8. **Quote** - Quote card
+   - Extracts quotable sentences (<150 chars)
+   - Beautiful design suggestions
+   - 10 hashtags generated
+   - Estimated engagement: Medium (1.1x multiplier)
+
+9. **Audiogram** - Audio snippet with waveform
+   - 60-second audio clip
+   - Animated waveform visual
+   - Caption overlay
+   - Estimated engagement: Medium (1.2x multiplier)
+
+10. **Blog** - Long-form blog post
+    - Full markdown structure (H1, H2, paragraphs)
+    - Introduction, multiple points, conclusion
+    - Comment CTA at end
+    - Estimated engagement: Medium-Low (0.9x multiplier)
+
+**Supported Platforms (8 Platforms):**
+- YouTube (1.3x engagement multiplier)
+- Instagram (1.5x engagement multiplier)
+- TikTok (1.8x engagement multiplier)
+- Twitter (1.2x engagement multiplier)
+- LinkedIn (1.0x engagement multiplier)
+- Facebook (1.1x engagement multiplier)
+- Pinterest (1.2x engagement multiplier)
+- Reddit (1.4x engagement multiplier)
+
+**Content Generation Features:**
+
+1. **extractKeyPoints(transcript)** - Key point extraction
+   - Extracts 10 key points from transcript
+   - Takes every 3rd sentence (filters short sentences)
+   - Fallback to generic point if transcript is short
+   - Used as foundation for all content pieces
+
+2. **generateHashtags(content, platform, count)** - Hashtag generation
+   - Extracts 4+ letter words from content
+   - Capitalizes first letter
+   - Adds platform-specific trending hashtags:
+     - Instagram: #InstaGood, #PhotoOfTheDay, #InstaDaily
+     - TikTok: #FYP, #ForYou, #Viral
+     - LinkedIn: #Professional, #Career, #Business
+   - Returns requested count of hashtags
+
+3. **estimateEngagement(contentType, platform, content)** - Engagement prediction
+   - Base score: 50
+   - Content type multipliers (0.9x - 1.8x)
+   - Platform multipliers (1.0x - 1.8x)
+   - Quality factors:
+     - Has hashtags: +10%
+     - Has emojis: +10%
+     - Has CTA: +15%
+     - Is short (<500 chars): +5%
+   - Returns score 0-100 (capped at 100)
+
+4. **determinePriority(engagement, contentType, platform)** - Priority assignment
+   - High priority: Engagement ≥80 OR (high-value platform + high-value type)
+   - Medium priority: Engagement ≥60
+   - Low priority: Engagement <60
+   - High-value platforms: TikTok, Instagram, YouTube
+   - High-value types: Short, Reel, Infographic
+
+**Content Calendar Features:**
+
+1. **generateContentCalendar(pieces)** - Calendar generation
+   - Distributes pieces over 30 days
+   - 3-4 pieces per day
+   - Sorts by priority (high → medium → low)
+   - Assigns optimal posting times per platform
+   - Generates daily themes
+   - Returns 30-day content calendar
+
+2. **getOptimalPostingTime(platform, date)** - Optimal timing
+   - Platform-specific optimal hours:
+     - Instagram: 9am, 12pm, 5pm
+     - TikTok: 7am, 12pm, 7pm
+     - Twitter: 8am, 12pm, 5pm
+     - LinkedIn: 8am, 12pm, 5pm (business hours)
+     - Facebook: 9am, 1pm, 7pm
+     - YouTube: 2pm, 6pm, 8pm
+     - Pinterest: 8pm, 9pm, 10pm (evening)
+     - Reddit: 7am, 12pm, 9pm
+   - Randomly selects from optimal hours
+   - Returns scheduled datetime
+
+3. **generateDayTheme(pieces)** - Daily theme
+   - Video Content Day: Shorts/reels
+   - Visual Content Day: Infographics/carousels
+   - Long-Form Content Day: Blogs/threads
+   - Engagement Day: Quotes/stories
+   - Mixed Content Day: Various types
+
+**Analytics Features:**
+
+1. **calculateAnalytics(pieces, request)** - Comprehensive analytics
+   - Pieces by platform: Count per platform
+   - Pieces by type: Count per content type
+   - Estimated reach: Total potential reach (followers × pieces × platform multiplier)
+   - Estimated engagement: Average engagement score across all pieces
+   - Content diversity: Score 0-100 based on unique types and platforms
+   - Returns complete analytics object
+
+**Platform Reach Multipliers:**
+- TikTok: 15% (highest reach)
+- Instagram: 10%
+- YouTube: 8%
+- Pinterest: 7%
+- Facebook: 6%
+- Twitter: 5%
+- LinkedIn: 4%
+- Reddit: 12%
+
+**Recommendations Features:**
+
+1. **generateRecommendations(pieces, request)** - Strategic recommendations
+   - Priority focus: Highlights high-priority pieces
+   - Platform focus: Identifies platform with most content
+   - Content type analysis: Identifies short-form vs long-form focus
+   - Scheduling advice: Calendar duration and consistency tips
+   - Engagement optimization: Suggests improvements if avg engagement <50
+   - Returns top 5 actionable recommendations
+
+**Retrieval Methods:**
+
+1. **getMultiplication(multiplyId)** - Get full result
+2. **getPiecesByPlatform(multiplyId, platform)** - Filter by platform
+3. **getPiecesByType(multiplyId, type)** - Filter by content type
+4. **getHighPriorityPieces(multiplyId)** - Get high-priority pieces only
+5. **getContentCalendar(multiplyId)** - Get 30-day calendar
+
+**Output Structure:**
+```typescript
+{
+  multiplyId: 'multiply_123',
+  videoId: 'video_456',
+  totalPieces: 120,
+  pieces: [
+    {
+      pieceId: 'piece_001',
+      type: 'short',
+      platform: 'tiktok',
+      title: 'Quick tip',
+      content: 'Wait, you need to see this...',
+      hashtags: ['#FYP', '#ForYou', '#Viral'],
+      media: {
+        type: 'video',
+        url: 'video_456_short_1.mp4',
+        duration: 60
+      },
+      scheduledTime: '2026-03-01T07:00:00Z',
+      estimatedEngagement: 85,
+      priority: 'high',
+      variation: 1
+    }
+  ],
+  contentCalendar: [
+    {
+      date: '2026-03-01',
+      dayOfWeek: 'Saturday',
+      pieces: [...],
+      theme: 'Video Content Day'
+    }
+  ],
+  analytics: {
+    piecesByPlatform: {
+      'tiktok': 30,
+      'instagram': 25,
+      'youtube': 20
+    },
+    piecesByType: {
+      'short': 24,
+      'reel': 24,
+      'post': 16
+    },
+    estimatedReach: 180000,
+    estimatedEngagement: 72,
+    contentDiversity: 88
+  },
+  recommendations: [
+    'Focus on 45 high-priority pieces first for maximum impact',
+    'tiktok has the most content (30 pieces) - prioritize this platform',
+    'Heavy focus on short-form content - great for viral potential'
+  ],
+  generatedAt: '2026-02-28T...'
+}
+```
+
+**Example Multiplication:**
+
+Input:
+- 1 video (5-minute transcript)
+- 8 platforms (YouTube, Instagram, TikTok, Twitter, LinkedIn, Facebook, Pinterest, Reddit)
+- 10 content types (Short, Reel, Story, Post, Thread, Carousel, Infographic, Quote, Audiogram, Blog)
+- 3 variations per type
+
+Output:
+- 240 content pieces (8 platforms × 10 types × 3 variations)
+- 30-day content calendar (8 pieces per day)
+- Platform distribution: TikTok (30), Instagram (30), YouTube (30), etc.
+- Type distribution: Short (24), Reel (24), Story (24), etc.
+- Estimated reach: 360,000 people
+- Average engagement: 72/100
+- Content diversity: 88/100
+
+**Brand Voice Support:**
+- Professional: Formal language, business-focused
+- Casual: Relaxed tone, conversational
+- Humorous: Funny, entertaining
+- Inspirational: Motivational, uplifting
+- Educational: Teaching-focused, informative
+
+**Integration:**
+- API route exists: `POST /api/multiply-v2/generate` (Shubh completed)
+- Frontend UI (Srushti's task 5.4b)
+- Used to maximize content output from single video
+- Enables consistent multi-platform presence
+
+**Key Features:**
+- 10 content types supported (short, reel, story, post, thread, carousel, infographic, quote, audiogram, blog)
+- 8 platforms supported (YouTube, Instagram, TikTok, Twitter, LinkedIn, Facebook, Pinterest, Reddit)
+- 1-5 variations per content type
+- AI-generated variations (different hooks, formats, angles)
+- Platform-specific optimizations (hashtags, CTAs, formatting)
+- Engagement estimation (0-100 score)
+- Priority assignment (high/medium/low)
+- 30-day content calendar with optimal posting times
+- Daily themes (Video Day, Visual Day, Long-Form Day, etc.)
+- Comprehensive analytics (reach, engagement, diversity)
+- Strategic recommendations (top 5 actionable insights)
+- Hashtag generation (platform-specific trending tags)
+- Media metadata (video, image, audio URLs)
+- Retrieval methods (by platform, type, priority)
+
+**Use Cases:**
+- Maximize content output from single video (1 → 100+)
+- Maintain consistent multi-platform presence
+- Fill content calendar for 30 days
+- Optimize posting schedule with platform-specific timing
+- Prioritize high-engagement content
+- Diversify content types and formats
+- Scale content production without additional recording
+- Plan content strategy with analytics and recommendations
+
+**Business Impact:**
+- Dramatically increases content output (100x multiplier)
+- Reduces content creation time (1 video → 30 days of content)
+- Enables consistent posting across all platforms
+- Optimizes engagement with platform-specific content
+- Provides data-driven content strategy
+- Differentiator from basic repurposing tools
+- Premium feature for monetization
+- Helps creators maintain active presence without burnout
+
+**Content Quality Factors:**
+- Hashtags: +10% engagement
+- Emojis: +10% engagement
+- Call-to-action: +15% engagement
+- Short content (<500 chars): +5% engagement
+- High-value platform: +80% engagement
+- High-value content type: +80% engagement
+
+**Scheduling Strategy:**
+- Distributes content over 30 days
+- 3-4 pieces per day (sustainable posting frequency)
+- Prioritizes high-engagement content first
+- Assigns optimal posting times per platform
+- Groups content by daily themes
+- Maintains variety and consistency
+
+This service enables creators to maximize their content output and maintain a consistent multi-platform presence with minimal additional effort, transforming a single video into a month's worth of optimized content.
+
+
+---
+
+### ✅ Task 5.5a: Create Safety & Moderation Service (COMPLETED)
+
+Created comprehensive content moderation service in `src/services/safety.service.ts` that checks content safety and platform compliance using AWS Rekognition for images/videos and AWS Bedrock for text, ensuring content meets platform guidelines and brand safety standards.
+
+**Core Functionality:**
+
+1. **checkSafety(request)** - Complete safety check
+   - Checks text, image, or video content
+   - Detects violations across 9 categories
+   - Checks platform-specific compliance
+   - Generates actionable suggestions
+   - Calculates overall safety score (0-100)
+   - Returns comprehensive safety report
+
+2. **checkTextSafety(text, strictness)** - Text moderation
+   - Uses AWS Bedrock for AI-powered analysis (production)
+   - Rule-based detection for testing
+   - Detects 6 violation categories
+   - Identifies warnings (mild issues)
+   - Returns violations, warnings, and moderation labels
+
+3. **checkImageSafety(imageUrl, strictness)** - Image moderation
+   - Uses AWS Rekognition DetectModerationLabels API (production)
+   - Detects explicit content, violence, graphic imagery
+   - Provides confidence scores (0-100)
+   - Returns violations with bounding boxes
+   - Mock implementation for testing
+
+4. **checkVideoSafety(videoUrl, strictness)** - Video moderation
+   - Uses AWS Rekognition Video StartContentModeration API (production)
+   - Frame-by-frame analysis
+   - Timestamp-based violation detection
+   - Detects explicit content, violence across video
+   - Mock implementation for testing
+
+5. **checkPlatformCompliance(violations, platforms, content)** - Platform compliance
+   - Checks against 6 platform guidelines (YouTube, Instagram, TikTok, Twitter, LinkedIn, Facebook)
+   - Validates character limits
+   - Checks banned keywords
+   - Identifies age gate requirements
+   - Returns per-platform compliance report
+
+6. **calculateSafetyScore(violations)** - Safety scoring
+   - Base score: 100 (completely safe)
+   - Deductions: Critical (-40), High (-25), Medium (-15), Low (-5)
+   - Returns score 0-100
+   - Score <60 = unsafe, 60-80 = caution, 80+ = safe
+
+7. **generateSuggestions(violations)** - Fix recommendations
+   - Category-specific suggestions
+   - Actionable steps to resolve violations
+   - Returns top 5 most impactful suggestions
+
+**Violation Categories (9 Categories):**
+
+1. **Explicit** - Adult or sexual content
+   - Severity: High/Critical
+   - Platforms affected: YouTube, Instagram, TikTok, LinkedIn, Facebook
+   - Detection: Keywords, image analysis, video analysis
+   - Suggestions: Remove/blur content, add age restriction
+
+2. **Violence** - Violent or graphic content
+   - Severity: High
+   - Platforms affected: YouTube, Instagram, TikTok, Facebook
+   - Detection: Keywords, image analysis, video analysis
+   - Suggestions: Remove violent imagery, add content warnings
+
+3. **Hate Speech** - Discriminatory or hateful language
+   - Severity: Critical
+   - Platforms affected: All platforms
+   - Detection: Keywords, AI analysis
+   - Suggestions: Remove hateful language, rephrase inclusively
+
+4. **Harassment** - Bullying or threatening content
+   - Severity: High
+   - Platforms affected: All platforms
+   - Detection: AI analysis, context evaluation
+   - Suggestions: Remove threatening language, be respectful
+
+5. **Spam** - Overly promotional or spam content
+   - Severity: Medium
+   - Platforms affected: Twitter, LinkedIn, Reddit
+   - Detection: Keyword frequency, promotional patterns
+   - Suggestions: Reduce promotional language, focus on value
+
+6. **Misinformation** - Unverified or false claims
+   - Severity: Medium/High
+   - Platforms affected: All platforms
+   - Detection: AI analysis, claim verification
+   - Suggestions: Add sources, label opinions vs facts
+
+7. **Copyright** - Copyrighted material
+   - Severity: High
+   - Platforms affected: YouTube, Instagram, TikTok
+   - Detection: Content ID, manual review
+   - Suggestions: Remove copyrighted content, use royalty-free
+
+8. **Privacy** - Personal information exposure
+   - Severity: High
+   - Platforms affected: All platforms
+   - Detection: Pattern matching (emails, phone numbers)
+   - Suggestions: Remove personal information, anonymize data
+
+9. **Dangerous** - Dangerous activities or instructions
+   - Severity: Critical
+   - Platforms affected: YouTube, TikTok, Instagram
+   - Detection: AI analysis, keyword detection
+   - Suggestions: Remove dangerous content, add safety warnings
+
+**Severity Levels:**
+
+- **Critical**: Immediate action required, content cannot be published (-40 points)
+- **High**: Serious violation, likely to be removed by platforms (-25 points)
+- **Medium**: Moderate violation, may trigger warnings (-15 points)
+- **Low**: Minor issue, best practice violation (-5 points)
+
+**Text Moderation Features:**
+
+1. **Explicit Content Detection**
+   - Keywords: explicit, nsfw, adult, sexual, porn
+   - Confidence: 85%
+   - Severity: High
+   - Platforms: YouTube, Instagram, TikTok, LinkedIn
+
+2. **Hate Speech Detection**
+   - Keywords: hate, racist, sexist, homophobic, discriminat*
+   - Confidence: 90%
+   - Severity: Critical
+   - Platforms: All
+
+3. **Violence Detection**
+   - Keywords: kill, murder, attack, weapon, bomb, terror*
+   - Confidence: 80%
+   - Severity: High
+   - Platforms: YouTube, Instagram, TikTok, Facebook
+
+4. **Spam Detection**
+   - Keywords: click here, buy now, limited time, act now, free money, get rich
+   - Threshold: 3+ spam phrases
+   - Confidence: 75%
+   - Severity: Medium
+   - Platforms: Twitter, LinkedIn, Reddit
+
+5. **Misinformation Indicators**
+   - Keywords: fake news, conspiracy, hoax, cover-up, they don't want you to know
+   - Confidence: 60%
+   - Warning only (not violation)
+   - Suggestion: Add sources
+
+6. **Excessive Caps Detection**
+   - Threshold: >50% capital letters
+   - Warning: Perceived as shouting
+   - Suggestion: Use normal case
+
+7. **Profanity Detection**
+   - Keywords: damn, hell, crap, suck
+   - Warning: Mild profanity
+   - Suggestion: May not be suitable for all audiences
+
+**Image Moderation Features:**
+
+1. **AWS Rekognition Integration** (Production)
+   - DetectModerationLabels API
+   - Confidence threshold: 80%
+   - Categories: Explicit Nudity, Suggestive, Violence, Visually Disturbing, Rude Gestures, Drugs, Tobacco, Alcohol, Gambling, Hate Symbols
+
+2. **Mock Detection** (Testing)
+   - URL pattern matching
+   - Simulates Rekognition responses
+   - Returns moderation labels with confidence scores
+
+3. **Bounding Box Support**
+   - Identifies location of violations in image
+   - Coordinates: left, top, width, height
+   - Enables targeted blurring or cropping
+
+**Video Moderation Features:**
+
+1. **AWS Rekognition Video Integration** (Production)
+   - StartContentModeration API
+   - Frame-by-frame analysis
+   - Timestamp-based violations
+   - Asynchronous processing
+
+2. **Mock Detection** (Testing)
+   - URL pattern matching
+   - Simulates frame analysis
+   - Returns violations with timestamps
+
+3. **Duration Compliance**
+   - Checks platform duration limits
+   - TikTok: 10 minutes max
+   - Instagram Reels: 90 seconds max
+   - YouTube Shorts: 60 seconds max
+
+**Platform Guidelines (6 Platforms):**
+
+1. **YouTube**
+   - Max text length: 5,000 characters
+   - Requires age gate: Yes
+   - Banned keywords: spam, scam, fake
+   - Allows explicit: No
+   - Allows violence: No
+   - Allows political: Yes
+
+2. **Instagram**
+   - Max text length: 2,200 characters
+   - Requires age gate: Yes
+   - Banned keywords: follow for follow, like for like
+   - Allows explicit: No
+   - Allows violence: No
+   - Allows political: Yes
+
+3. **TikTok**
+   - Max text length: 2,200 characters
+   - Requires age gate: Yes
+   - Banned keywords: 18+, adult only
+   - Allows explicit: No
+   - Allows violence: No
+   - Allows political: Yes
+
+4. **Twitter**
+   - Max text length: 280 characters
+   - Requires age gate: No
+   - Banned keywords: None
+   - Allows explicit: Yes (with sensitive content warning)
+   - Allows violence: No
+   - Allows political: Yes
+
+5. **LinkedIn**
+   - Max text length: 3,000 characters
+   - Requires age gate: No
+   - Banned keywords: get rich quick, mlm
+   - Allows explicit: No
+   - Allows violence: No
+   - Allows political: Yes
+
+6. **Facebook**
+   - Max text length: 63,206 characters
+   - Requires age gate: Yes
+   - Banned keywords: clickbait
+   - Allows explicit: No
+   - Allows violence: No
+   - Allows political: Yes
+
+**Platform Compliance Checks:**
+
+1. **Character Limit Validation**
+   - Checks content length against platform limits
+   - Warning if exceeded
+   - Suggestion: Shorten content or split into multiple posts
+
+2. **Banned Keyword Detection**
+   - Checks for platform-specific banned keywords
+   - Violation if found
+   - Suggestion: Remove or replace banned terms
+
+3. **Age Gate Requirements**
+   - Identifies content requiring age restrictions
+   - Warning if explicit content on age-gated platform
+   - Suggestion: Add age restriction or remove content
+
+4. **Violation Mapping**
+   - Maps detected violations to affected platforms
+   - Per-platform compliance report
+   - Identifies which platforms will reject content
+
+**Strictness Levels:**
+
+- **Low**: Permissive, only flags critical violations
+- **Medium**: Balanced, flags high and critical violations (default)
+- **High**: Strict, flags all violations including low severity
+
+**Output Structure:**
+```typescript
+{
+  checkId: 'check_123',
+  contentId: 'content_456',
+  safe: false,
+  overallScore: 55,
+  violations: [
+    {
+      violationId: 'violation_001',
+      category: 'hate_speech',
+      severity: 'critical',
+      confidence: 90,
+      description: 'Potential hate speech or discriminatory language detected',
+      platformViolations: ['youtube', 'instagram', 'tiktok', 'twitter', 'linkedin', 'facebook']
+    }
+  ],
+  warnings: [
+    'Content may contain unverified claims - consider adding sources',
+    'Excessive use of capital letters may be perceived as shouting'
+  ],
+  suggestions: [
+    'Remove discriminatory or hateful language',
+    'Rephrase content to be more inclusive',
+    'Review content for unintentional bias'
+  ],
+  platformCompliance: {
+    'youtube': {
+      compliant: false,
+      violations: ['hate_speech: Potential hate speech detected'],
+      warnings: []
+    },
+    'instagram': {
+      compliant: false,
+      violations: ['hate_speech: Potential hate speech detected'],
+      warnings: []
+    }
+  },
+  moderationLabels: [
+    { label: 'Hate Speech', confidence: 90 },
+    { label: 'Safe', confidence: 95, parentLabel: 'General' }
+  ],
+  checkedAt: '2026-02-28T...'
+}
+```
+
+**Retrieval Methods:**
+
+1. **getCheck(checkId)** - Get check by ID
+2. **getContentChecks(contentId)** - Get all checks for content (sorted by date)
+3. **getPlatformGuidelines(platform)** - Get platform-specific guidelines
+
+**Integration:**
+- API route exists: `POST /api/safety/check` (Shubh completed)
+- Frontend safety dashboard (Srushti's task 5.5b)
+- Used before publishing content to ensure compliance
+- Prevents platform violations and account suspensions
+
+**Key Features:**
+- Multi-content type support (text, image, video, audio)
+- 9 violation categories (explicit, violence, hate speech, harassment, spam, misinformation, copyright, privacy, dangerous)
+- 4 severity levels (critical, high, medium, low)
+- AWS Rekognition integration for images/videos (production-ready)
+- AWS Bedrock integration for text (production-ready)
+- Rule-based fallback for testing
+- 6 platform guidelines (YouTube, Instagram, TikTok, Twitter, LinkedIn, Facebook)
+- Platform-specific compliance checks
+- Character limit validation
+- Banned keyword detection
+- Age gate requirements
+- Safety score calculation (0-100)
+- Actionable suggestions (top 5)
+- Confidence scoring (0-100)
+- Location tracking (text position, image bounding box, video timestamp)
+- Moderation labels with parent categories
+- Strictness levels (low, medium, high)
+- Check history tracking
+
+**Use Cases:**
+- Pre-publish content safety check
+- Platform compliance validation
+- Brand safety protection
+- Automated content moderation
+- Violation detection and prevention
+- Multi-platform compliance checking
+- Content policy enforcement
+- Risk assessment before publishing
+
+**Business Impact:**
+- Prevents platform violations and account suspensions
+- Protects brand reputation
+- Ensures compliance with platform guidelines
+- Reduces manual moderation effort
+- Automates safety checks
+- Provides actionable fix suggestions
+- Differentiator from tools without safety features
+- Enterprise feature for brand safety
+
+**AWS Integration (Production):**
+
+1. **AWS Rekognition** - Image/Video moderation
+   - DetectModerationLabels API for images
+   - StartContentModeration API for videos
+   - Confidence threshold: 80%
+   - Returns moderation labels with confidence scores
+
+2. **AWS Bedrock** - Text moderation
+   - Claude 3 for AI-powered text analysis
+   - Context-aware violation detection
+   - Nuanced understanding of language
+   - Returns violations with explanations
+
+**Safety Score Calculation:**
+- Base: 100 (completely safe)
+- Critical violation: -40 points
+- High violation: -25 points
+- Medium violation: -15 points
+- Low violation: -5 points
+- Minimum: 0 (completely unsafe)
+
+**Score Interpretation:**
+- 90-100: Excellent (completely safe)
+- 80-89: Good (minor issues)
+- 60-79: Caution (moderate issues)
+- 40-59: Unsafe (serious issues)
+- 0-39: Critical (cannot publish)
+
+**Suggestion Categories:**
+
+1. **Explicit Content**: Remove/blur, add age restriction, use appropriate language
+2. **Hate Speech**: Remove hateful language, rephrase inclusively, review for bias
+3. **Violence**: Remove violent imagery, add content warnings, find alternatives
+4. **Spam**: Reduce promotional language, focus on value, remove excessive CTAs
+5. **Misinformation**: Add sources, label opinions vs facts, verify information
+
+This service ensures content is safe, compliant, and ready for publication across all platforms, protecting both creators and the platform from violations and reputational damage.
