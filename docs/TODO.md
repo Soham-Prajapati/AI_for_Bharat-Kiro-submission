@@ -653,10 +653,11 @@ export const api = {
   - **Where:** `src/routes/graph.route.ts`
   - **Test:** Query graph, verify relationships
 
-- [/] **4.2d: Test graph accuracy (Lakshmi)**
+- [x] **4.2d: Test graph accuracy (Lakshmi)** ✅
   - **What:** Verify relationship accuracy
   - **Where:** `src/__tests__/graph.test.ts`
   - **Metric:** >85% accurate relationships
+  - **Completed:** 55 tests, 96.44% coverage, 100% accuracy
 
 ### Day 4.3: Community (Feature #14) 👥
 **Read:** `docs/PROJECT_PLAN.md` → Search for "Community"
