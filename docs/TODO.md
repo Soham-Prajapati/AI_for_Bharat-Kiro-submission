@@ -372,7 +372,7 @@ export const api = {
   - **Output:** ROI data from Nidhi's service
   - **Test:** Call with user who processed 50 videos
 
-- [ ] **2.4d: Test ROI calculations (Lakshmi)**
+- [/] **2.4d: Test ROI calculations (Lakshmi)**
   - **What:** Verify math is correct
   - **Where:** `src/__tests__/roi.test.ts`
   - **Test:** Edge cases (1 video, 1000 videos)
@@ -737,7 +737,7 @@ export const api = {
   - **Where:** `src/routes/automation.route.ts`
   - **Test:** Create automation, verify triggers
 
-- [/] **4.5d: Test automation reliability (Lakshmi)**
+- [x] **4.5d: Test automation reliability (Lakshmi)** ✅
   - **What:** Test scheduled tasks, error handling
   - **Where:** `src/__tests__/automation.test.ts`
   - **Metric:** >99% execution success rate
@@ -1043,7 +1043,7 @@ export const api = {
   - **Test:** Start generation, verify progress updates
 
 ### Day 6.3: Testing
-- [/] **6.3a: E2E tests for all features (Lakshmi)**
+- [ ] **6.3a: E2E tests for all features (Lakshmi)**
   - **What:** Test complete user flows
   - **Where:** `src/__tests__/e2e/*.test.ts`
   - **Flows:** Upload → Process → Generate → Export

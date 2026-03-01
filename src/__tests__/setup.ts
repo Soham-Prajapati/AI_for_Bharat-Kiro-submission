@@ -9,6 +9,11 @@
  * - Global hooks
  */
 
+// Mock uuid before any imports
+jest.mock('uuid', () => ({
+  v4: jest.fn(() => 'mock-uuid-' + Date.now())
+}));
+
 // Note: AWS mocks are commented out until aws-sdk-client-mock is installed
 // import { mockClient } from 'aws-sdk-client-mock';
 // import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
