@@ -1,0 +1,135 @@
+You are a Senior AI Systems Engineer.
+
+Project: Content Intelligence Platform (Hackathon Project)
+Owner: Nidhi – AI Intelligence Lead
+Deadline: March 4, 2026 – 11:59 PM IST
+
+Tech Stack:
+- Node.js + TypeScript
+- AWS Bedrock (LLM inference)
+- Ollama (local LLM fallback)
+- 8 structured prompt files
+- 3 Creator Modes
+- Quality validation pipeline
+
+Your Task:
+Create a comprehensive TESTING_PLAN.md file that defines how to test all AI services in a safe, cost-controlled, modular way before demo day.
+
+IMPORTANT:
+This is a hackathon project. Testing must:
+- Minimize Bedrock token usage
+- Avoid unnecessary API calls
+- Prevent infinite regeneration loops
+- Be demo-safe
+- Be modular (test services independently before full pipeline)
+
+-------------------------------------------------
+SERVICES TO TEST
+-------------------------------------------------
+
+src/prompts/*.prompt.ts (8 prompt files)
+src/services/mode-detection.service.ts
+src/services/human-content-processor.service.ts
+src/services/ai-content-generator.service.ts
+src/services/platform-content-generator.service.ts
+src/services/seo-translation.service.ts
+src/services/quality-validator.service.ts
+src/services/ollama.service.ts
+
+-------------------------------------------------
+TESTING REQUIREMENTS
+-------------------------------------------------
+
+The TESTING_PLAN.md must include:
+
+1. Testing Philosophy
+   - Why modular AI testing is required
+   - Why mocking is important before real AI calls
+   - Cost-awareness (Bedrock is paid per token)
+
+2. 3-Phase Testing Strategy
+
+PHASE 1 – Mock Testing (No Real AI Calls)
+- Mock Bedrock responses
+- Mock Ollama responses
+- Test:
+    - Mode detection logic
+    - Prompt formatting
+    - Validator scoring logic
+    - Error handling
+- Explain how to implement mock services in TypeScript
+
+PHASE 2 – Controlled Real AI Testing
+- Use short inputs only
+- Limit to max 3 test cases per service
+- Disable regeneration loops
+- Log token usage
+- Test:
+    - Normal input
+    - Edge case input
+    - Invalid input
+
+PHASE 3 – Full Integration Testing
+- Run full pipeline for each Creator Mode (only once each)
+- Use 1 realistic content example per mode
+- Validate:
+    - Mode detection
+    - Content generation
+    - SEO optimization
+    - Quality scoring
+    - Final output format
+
+3. Folder Structure for Testing
+
+Suggest a clean structure like:
+src/tests/
+  - mode-detection.test.ts
+  - quality-validator.test.ts
+  - generator.test.ts
+  - integration.test.ts
+
+4. Example Test Script Templates
+
+Provide simple TypeScript templates for:
+- Testing Mode Detection
+- Testing Quality Validator
+- Testing AI Generator (with short input)
+- Testing Full Pipeline
+
+5. Demo Safety Checklist
+
+Include:
+- Pre-demo validation steps
+- Fallback to Ollama if Bedrock fails
+- How to avoid rate-limit crashes
+- Logging strategy
+- Final verification checklist before March 4 submission
+
+6. Estimated AI Call Budget Plan
+
+Provide a safe estimate like:
+- Total controlled Bedrock calls
+- Max tokens per test
+- Suggested cap
+
+7. Clear Execution Order
+
+The plan must clearly state:
+Step 1 → Implement mocks  
+Step 2 → Test logic  
+Step 3 → Controlled AI calls  
+Step 4 → Full mode testing  
+Step 5 → Freeze prompts  
+
+-------------------------------------------------
+
+OUTPUT FORMAT:
+Generate a professional, structured TESTING_PLAN.md file
+with headings, subheadings, and checklists.
+
+This plan will be followed by an AI coding agent to implement the testing layer.
+
+Be precise.
+Be structured.
+Be cost-aware.
+Be hackathon-optimized.
