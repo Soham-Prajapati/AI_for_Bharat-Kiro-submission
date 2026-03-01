@@ -2,7 +2,6 @@
 _bmad/
 _bmad-output/
 .gemini/
-.github/
 
 # Kiro IDE
 .kiro/

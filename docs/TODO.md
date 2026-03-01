@@ -234,7 +234,7 @@ export const api = {
   - **Test:** Upload file → verify S3 → verify Transcribe → verify Bedrock
   - **Duration:** Should complete in <30 seconds
 
-- [ ] **1.5d: Setup CI/CD pipeline (Lakshmi)**
+- [/] **1.5d: Setup CI/CD pipeline (Lakshmi)**
   - **What:** GitHub Actions for auto-deploy
   - **Where:** `.github/workflows/deploy.yml`
   - **How:** On push to `main`, run tests → build → deploy to AWS
@@ -306,7 +306,7 @@ export const api = {
   - **Caching:** Cache results for 1 hour in DynamoDB
   - **Test:** Call twice, verify second call is faster
 
-- [ ] **2.2d: Test analytics accuracy (Lakshmi)**
+- [/] **2.2d: Test analytics accuracy (Lakshmi)**
   - **What:** Verify calculations are correct
   - **Where:** `src/__tests__/analytics.test.ts`
   - **Test:** Mock platform data, verify engagement rate formula
