@@ -470,7 +470,7 @@ export const api = {
   - **Caching:** Cache for 6 hours
   - **Test:** Call API, verify fresh data
 
-- [ ] **3.2d: Test prediction accuracy (Lakshmi)**
+- [/] **3.2d: Test prediction accuracy (Lakshmi)**
   - **What:** Validate against real trend data
   - **Where:** `src/__tests__/trends.test.ts`
   - **Dataset:** Last 3 months of trends
