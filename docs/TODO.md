@@ -234,7 +234,7 @@ export const api = {
   - **Test:** Upload file → verify S3 → verify Transcribe → verify Bedrock
   - **Duration:** Should complete in <30 seconds
 
-- [/] **1.5d: Setup CI/CD pipeline (Lakshmi)**
+- [x] **1.5d: Setup CI/CD pipeline (Lakshmi)** ✅
   - **What:** GitHub Actions for auto-deploy
   - **Where:** `.github/workflows/deploy.yml`
   - **How:** On push to `main`, run tests → build → deploy to AWS
@@ -339,7 +339,7 @@ export const api = {
   - **Output:** Viral score from Nidhi's service
   - **Test:** Sample transcript, verify score in range 0-100
 
-- [ ] **2.3d: Test prediction accuracy (Lakshmi)**
+- [/] **2.3d: Test prediction accuracy (Lakshmi)**
   - **What:** Validate against known viral videos
   - **Where:** `src/__tests__/viral.test.ts`
   - **Dataset:** 50 viral + 50 non-viral videos
@@ -737,7 +737,7 @@ export const api = {
   - **Where:** `src/routes/automation.route.ts`
   - **Test:** Create automation, verify triggers
 
-- [ ] **4.5d: Test automation reliability (Lakshmi)**
+- [/] **4.5d: Test automation reliability (Lakshmi)**
   - **What:** Test scheduled tasks, error handling
   - **Where:** `src/__tests__/automation.test.ts`
   - **Metric:** >99% execution success rate
@@ -1043,7 +1043,7 @@ export const api = {
   - **Test:** Start generation, verify progress updates
 
 ### Day 6.3: Testing
-- [ ] **6.3a: E2E tests for all features (Lakshmi)**
+- [/] **6.3a: E2E tests for all features (Lakshmi)**
   - **What:** Test complete user flows
   - **Where:** `src/__tests__/e2e/*.test.ts`
   - **Flows:** Upload → Process → Generate → Export
