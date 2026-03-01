@@ -1055,7 +1055,7 @@ export const api = {
   - **Test:** Start generation, verify progress updates
 
 ### Day 6.3: Testing
-- [ ] **6.3a: E2E tests for all features (Lakshmi)**
+- [/] **6.3a: E2E tests for all features (Lakshmi)**
   - **What:** Test complete user flows
   - **Where:** `src/__tests__/e2e/*.test.ts`
   - **Flows:** Upload → Process → Generate → Export
