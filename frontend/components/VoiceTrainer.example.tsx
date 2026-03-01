@@ -89,7 +89,7 @@ export function BasicVoiceTrainerExample() {
                   <p className="text-sm opacity-90">
                     Your voice model is ready. Model ID: {modelId}
                   </p>
-                </div>
+                </h3>
                 <button
                   onClick={() => setShowSuccess(false)}
                   className="ml-auto hover:bg-white/20 rounded p-1"
@@ -125,7 +125,7 @@ export function BasicVoiceTrainerExample() {
                 <div>
                   <h3 className="font-semibold mb-1">Error</h3>
                   <p className="text-sm opacity-90">{error}</p>
-                </div>
+                </p>
                 <button
                   onClick={() => setError(null)}
                   className="ml-auto hover:bg-white/20 rounded p-1"
@@ -162,7 +162,7 @@ export function BasicVoiceTrainerExample() {
                       <p className="text-sm text-gray-400">
                         Capture at least 5 voice samples (10 seconds each)
                       </p>
-                    </div>
+                    </li>
                   </li>
                   <li className="flex gap-3">
                     <span className="flex-shrink-0 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
@@ -173,7 +173,7 @@ export function BasicVoiceTrainerExample() {
                       <p className="text-sm text-gray-400">
                         Play back samples and remove any you don't like
                       </p>
-                    </div>
+                    </li>
                   </li>
                   <li className="flex gap-3">
                     <span className="flex-shrink-0 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
@@ -184,7 +184,7 @@ export function BasicVoiceTrainerExample() {
                       <p className="text-sm text-gray-400">
                         AI analyzes your voice and creates a custom model
                       </p>
-                    </div>
+                    </li>
                   </li>
                   <li className="flex gap-3">
                     <span className="flex-shrink-0 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
@@ -195,7 +195,7 @@ export function BasicVoiceTrainerExample() {
                       <p className="text-sm text-gray-400">
                         Use your voice model to create AI-generated audio
                       </p>
-                    </div>
+                    </li>
                   </li>
                 </ol>
               </div>
@@ -211,7 +211,7 @@ export function BasicVoiceTrainerExample() {
                   <li>• Use a good quality microphone</li>
                   <li>• Record different types of sentences</li>
                 </ul>
-              </div>
+              </ul>
             </div>
 
             {/* Right Column - Trainer */}
@@ -271,7 +271,7 @@ export function BasicVoiceTrainerExample() {
                       </svg>
                       View Dashboard
                     </button>
-                  </div>
+                  </li>
                 </div>
               )}
             </div>

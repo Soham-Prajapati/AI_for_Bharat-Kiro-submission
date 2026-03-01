@@ -37,7 +37,7 @@ export default function GenerationProgressExample() {
                 <span className="text-sm text-gray-600 dark:text-gray-400">
                   {isConnected ? 'Connected' : 'Disconnected'}
                 </span>
-              </div>
+              </h2>
             </div>
             
             <button
@@ -47,7 +47,7 @@ export default function GenerationProgressExample() {
             >
               {jobId ? 'Generating...' : 'Start Generation'}
             </button>
-          </div>
+          </h1>
 
           {jobId && (
             <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
@@ -82,7 +82,7 @@ export default function GenerationProgressExample() {
               <span>On completion, results are displayed automatically</span>
             </li>
           </ol>
-        </div>
+        </h3>
       </div>
 
       {/* Generation Progress Modal */}

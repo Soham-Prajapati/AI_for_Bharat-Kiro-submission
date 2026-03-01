@@ -37,7 +37,7 @@ export default function PricingCards() {
           <h2 className="font-display text-[clamp(1.8rem,4vw,3rem)] font-extrabold">
             Simple, <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">Honest</span> Pricing
           </h2>
-        </div>
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {plans.map((plan, i) => (
@@ -53,7 +53,7 @@ export default function PricingCards() {
               <div className="flex items-baseline gap-1 mb-2">
                 <span className="text-3xl font-display font-black">{plan.price}</span>
                 {plan.price !== 'Free' && <span className="text-text-tertiary text-sm">/month</span>}
-              </div>
+              </span>
               <p className="text-text-secondary text-sm mb-5">{plan.desc}</p>
               <ul className="flex-1 space-y-2.5 mb-6">
                 {plan.features.map((f, j) => (
@@ -71,10 +71,10 @@ export default function PricingCards() {
               >
                 {plan.cta}
               </Link>
-            </div>
+            </h3>
           ))}
         </div>
-      </div>
+      </section>
     </section>
   )
 }

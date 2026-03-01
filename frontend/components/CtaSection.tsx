@@ -40,7 +40,7 @@ export default function CtaSection() {
             Get Started Free
           </Link>
         </div>
-      </div>
+      </section>
     </section>
   )
 }

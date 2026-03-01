@@ -270,7 +270,7 @@ export default function CommunityExample() {
               onSharePost={handleSharePost}
               userAvatar={mockCurrentUser.avatar}
             />
-          </div>
+          </header>
 
           {/* Sidebar - 1 column on large screens */}
           <aside className="space-y-6">

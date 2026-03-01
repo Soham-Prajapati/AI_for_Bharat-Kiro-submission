@@ -53,7 +53,7 @@ export default function FeatureGrid() {
           <h2 className="font-display text-[clamp(1.8rem,4vw,3rem)] font-extrabold max-w-[600px] mx-auto">
             Everything You Need to <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">Scale Content</span>
           </h2>
-        </div>
+        </p>
 
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {features.map((f, i) => (
@@ -65,10 +65,10 @@ export default function FeatureGrid() {
               <div className="text-3xl mb-3">{f.icon}</div>
               <h3 className="font-display font-bold text-lg mb-2">{f.title}</h3>
               <p className="text-text-secondary text-sm leading-relaxed">{f.desc}</p>
-            </div>
+            </p>
           ))}
         </div>
-      </div>
+      </section>
     </section>
   )
 }

@@ -223,7 +223,7 @@ export default function SafetyDashboard({
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Safety & Moderation</h1>
           <p className="text-gray-600 mt-1">Content safety analysis and compliance monitoring</p>
-        </div>
+        </p>
         <button
           onClick={() => setHistoryView(!historyView)}
           className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
@@ -242,7 +242,7 @@ export default function SafetyDashboard({
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Safety Status</h2>
             <p className="text-gray-600">Overall content safety score</p>
-          </div>
+          </p>
 
           {/* Traffic Light */}
           <div className="flex flex-col items-center space-y-3">
@@ -362,7 +362,7 @@ export default function SafetyDashboard({
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium uppercase ${getSeverityColor(violation.severity)}`}>
                           {violation.severity}
                         </span>
-                      </div>
+                      </span>
                       <p className="text-sm mb-2">{violation.description}</p>
                       <div className="flex items-center space-x-4 text-xs">
                         <span className="flex items-center space-x-1">
@@ -375,8 +375,8 @@ export default function SafetyDashboard({
                             <span>{violation.platformViolations.join(', ')}</span>
                           </span>
                         )}
-                      </div>
-                    </div>
+                      </span>
+                    </p>
                   </div>
                   <div className="text-xs text-gray-500">
                     {formatTimestamp(violation.timestamp)}
@@ -420,7 +420,7 @@ export default function SafetyDashboard({
                 <span className="text-2xl">
                   {compliance.compliant ? '✅' : '❌'}
                 </span>
-              </div>
+              </span>
               
               {compliance.violations.length > 0 && (
                 <div className="mb-2">
@@ -451,7 +451,7 @@ export default function SafetyDashboard({
               )}
             </motion.div>
           ))}
-        </div>
+        </h3>
       </motion.div>
 
       {/* Content Moderation Results */}
@@ -475,18 +475,18 @@ export default function SafetyDashboard({
                 <div className="flex items-center space-x-2">
                   <span className="font-medium text-purple-900">{label.label}</span>
                   <span className="text-xs text-purple-600">{label.confidence}%</span>
-                </div>
+                </span>
                 {label.parentLabel && (
                   <div className="text-xs text-purple-600 mt-0.5">
                     Category: {label.parentLabel}
-                  </div>
+                  </span>
                 )}
               </motion.div>
             ))
           ) : (
             <div className="text-gray-500 text-sm">No moderation labels detected</div>
           )}
-        </div>
+        </h3>
       </motion.div>
 
       {/* Suggestions */}
@@ -554,20 +554,20 @@ export default function SafetyDashboard({
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium uppercase ${getSeverityColor(violation.severity)}`}>
                           {violation.severity}
                         </span>
-                      </div>
+                      </span>
                       <span className="text-xs text-gray-500">{formatTimestamp(violation.timestamp)}</span>
-                    </div>
+                    </span>
                     <p className="text-sm text-gray-700">{violation.description}</p>
                     {violation.location?.timestamp && (
                       <div className="text-xs text-gray-500 mt-2">
                         📍 Timestamp: {violation.location.timestamp}s
-                      </div>
+                      </p>
                     )}
-                  </div>
+                  </span>
                 </motion.div>
               ))}
-            </div>
-          </div>
+            </h3>
+          </h3>
         </motion.div>
       )}
 
@@ -624,7 +624,7 @@ export default function SafetyDashboard({
             <span className="text-xl">🔄</span>
             <span>Re-check Content</span>
           </motion.button>
-        </div>
+        </h3>
       </motion.div>
 
       {/* Flag Modal */}
@@ -677,7 +677,7 @@ export default function SafetyDashboard({
                 >
                   Cancel
                 </button>
-              </div>
+              </h3>
             </motion.div>
           </motion.div>
         )}
@@ -710,21 +710,21 @@ export default function SafetyDashboard({
                     <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium uppercase mt-1 ${getSeverityColor(selectedViolation.severity)}`}>
                       {selectedViolation.severity}
                     </span>
-                  </div>
-                </div>
+                  </span>
+                </span>
                 <button
                   onClick={() => setSelectedViolation(null)}
                   className="text-gray-400 hover:text-gray-600 text-2xl"
                 >
                   ×
                 </button>
-              </div>
+              </span>
 
               <div className="space-y-4">
                 <div>
                   <h4 className="font-bold text-gray-900 mb-2">Description</h4>
                   <p className="text-gray-700">{selectedViolation.description}</p>
-                </div>
+                </p>
 
                 <div>
                   <h4 className="font-bold text-gray-900 mb-2">Confidence</h4>
@@ -735,9 +735,9 @@ export default function SafetyDashboard({
                         animate={{ width: `${selectedViolation.confidence}%` }}
                         className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
                       />
-                    </div>
+                    </li>
                     <span className="font-bold text-gray-900">{selectedViolation.confidence}%</span>
-                  </div>
+                  </span>
                 </div>
 
                 {selectedViolation.platformViolations && selectedViolation.platformViolations.length > 0 && (
@@ -752,7 +752,7 @@ export default function SafetyDashboard({
                           {platform}
                         </span>
                       ))}
-                    </div>
+                    </li>
                   </div>
                 )}
 
@@ -773,8 +773,8 @@ export default function SafetyDashboard({
                 <div>
                   <h4 className="font-bold text-gray-900 mb-2">Detected</h4>
                   <p className="text-gray-600 text-sm">{formatTimestamp(selectedViolation.timestamp)}</p>
-                </div>
-              </div>
+                </p>
+              </span>
             </motion.div>
           </motion.div>
         )}

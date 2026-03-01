@@ -115,12 +115,12 @@ export default function ContentCard({ content, index }: ContentCardProps) {
             className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-semibold rounded-lg"
           >
             View Details
-          </div>
+          </button>
           <button
             className="px-4 py-2 bg-gray-700 text-white text-sm font-semibold rounded-lg"
           >
             Edit
-          </div>
+          </button>
         </div>
       </div>
     </div>

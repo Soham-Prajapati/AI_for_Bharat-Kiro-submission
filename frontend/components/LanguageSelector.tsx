@@ -251,7 +251,7 @@ export default function LanguageSelector({
                 <div className="flex items-center gap-2">
                   <span className="text-3xl">{selectedLang.flag}</span>
                   <span className="text-sm text-gray-400">{selectedLang.name}</span>
-                </div>
+                </span>
               </div>
 
               <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
@@ -259,7 +259,7 @@ export default function LanguageSelector({
                   <span className="text-xs text-gray-500 uppercase tracking-wider">
                     Native Script
                   </span>
-                </div>
+                </span>
                 <motion.p
                   key={selected}
                   className="text-2xl text-white font-medium leading-relaxed"
@@ -275,11 +275,11 @@ export default function LanguageSelector({
                 <div className="flex items-center gap-2">
                   <span>📝</span>
                   <span>Script: {selectedLang.nativeName}</span>
-                </div>
+                </span>
                 <div className="flex items-center gap-2">
                   <span>🗣️</span>
                   <span>Code: {selectedLang.code.toUpperCase()}</span>
-                </div>
+                </span>
               </div>
             </motion.div>
           )}
@@ -320,7 +320,7 @@ export default function LanguageSelector({
         <div className="flex-1 text-left">
           <div className="text-sm font-semibold text-white">{selectedLang.name}</div>
           <div className="text-xs text-gray-400">{selectedLang.nativeName}</div>
-        </div>
+        </span>
         <motion.span
           className="text-gray-400"
           animate={{ rotate: isDropdownOpen ? 180 : 0 }}
@@ -377,11 +377,11 @@ export default function LanguageSelector({
                     <div className="flex-1 text-left">
                       <div className="text-sm font-semibold text-white">
                         {language.name}
-                      </div>
+                      </span>
                       <div className="text-xs text-gray-400">
                         {language.nativeName}
                       </div>
-                    </div>
+                    </span>
                     {isSelected && (
                       <span className="text-green-400 text-lg">✓</span>
                     )}

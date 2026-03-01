@@ -434,7 +434,7 @@ function HooksSection({ hooks, index }: HooksSectionProps) {
                 <div>
                   <div className="text-sm font-semibold text-white capitalize">
                     {hook.type.replace('_', ' ')}
-                  </div>
+                  </span>
                   <div className="text-xs text-gray-400">Position: {hook.position}</div>
                 </div>
               </div>
@@ -464,13 +464,13 @@ function HooksSection({ hooks, index }: HooksSectionProps) {
                   <div key={sIdx} className="flex items-start gap-2 text-xs text-blue-400">
                     <span>💡</span>
                     <span>{suggestion}</span>
-                  </div>
+                  </span>
                 ))}
               </div>
             )}
           </div>
         ))}
-      </div>
+      </h3>
     </div>
   )
 }
@@ -506,10 +506,10 @@ function EmotionalPeaksSection({ peaks, index }: EmotionalPeaksSectionProps) {
                 <div>
                   <div className="text-sm font-semibold text-white capitalize">
                     {peak.emotion}
-                  </div>
+                  </span>
                   <div className="text-xs text-gray-400">
                     {peak.timestamp ? formatTime(peak.timestamp) : `Pos: ${peak.position}`}
-                  </div>
+                  </span>
                 </div>
               </div>
               <div
@@ -532,7 +532,7 @@ function EmotionalPeaksSection({ peaks, index }: EmotionalPeaksSectionProps) {
             </div>
           </div>
         ))}
-      </div>
+      </h3>
     </div>
   )
 }
@@ -563,11 +563,11 @@ function PacingAnalysisSection({ pacing, index }: PacingAnalysisSectionProps) {
           <div className="text-xs text-gray-400 mb-2">Overall Pace</div>
           <div className="text-lg font-bold text-white capitalize">
             {pacing.overallPace.replace('_', ' ')}
-          </div>
+          </span>
           <div className="text-sm" style={{ color: paceColor }}>
             Score: {pacing.paceScore}
           </div>
-        </div>
+        </h3>
 
         <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700">
           <div className="text-xs text-gray-400 mb-2">Sentence Variety</div>
@@ -616,7 +616,7 @@ function PacingAnalysisSection({ pacing, index }: PacingAnalysisSectionProps) {
                       {segment.pace}
                     </span>
                     <span className="text-xs text-gray-300">{segment.description}</span>
-                  </div>
+                  </span>
                 </div>
               </div>
             ))}
@@ -634,7 +634,7 @@ function PacingAnalysisSection({ pacing, index }: PacingAnalysisSectionProps) {
             >
               <span className="text-blue-400">→</span>
               <span className="text-sm text-gray-300">{rec}</span>
-            </div>
+            </span>
           ))}
         </div>
       )}
@@ -669,8 +669,8 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
             style={{ color: getScoreColor(retention.predictedRetention) }}
           >
             {retention.predictedRetention}%
-          </div>
-        </div>
+          </span>
+        </h3>
 
         <div className="bg-gradient-to-br from-purple-900/30 to-gray-800/30 rounded-lg p-4 border border-purple-700/30">
           <div className="text-xs text-purple-400 mb-2">Avg Watch Time</div>
@@ -692,7 +692,7 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
           <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
             <span>⚠️</span>
             <span>Potential Dropoff Points</span>
-          </div>
+          </span>
           <div className="space-y-3">
             {retention.dropoffPoints.map((point, idx) => (
               <div
@@ -714,13 +714,13 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
                       {point.timestamp ? formatTime(point.timestamp) : `Pos: ${point.position}`}
                     </span>
                   </div>
-                </div>
+                </span>
                 <div className="text-sm text-gray-300 mb-2">{point.reason}</div>
                 <div className="flex items-start gap-2 text-xs text-blue-400">
                   <span>💡</span>
                   <span>{point.suggestion}</span>
-                </div>
-              </div>
+                </span>
+              </span>
             ))}
           </div>
         </div>
@@ -731,7 +731,7 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
           <div className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
             <span>✨</span>
             <span>Strong Points</span>
-          </div>
+          </span>
           <div className="space-y-3">
             {retention.strongPoints.map((point, idx) => (
               <div
@@ -742,7 +742,7 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
                   <div>
                     <div className="text-xs text-gray-400 mb-1">
                       {point.timestamp ? formatTime(point.timestamp) : `Pos: ${point.position}`}
-                    </div>
+                    </span>
                     <div className="text-sm text-gray-300">{point.reason}</div>
                   </div>
                   <div
@@ -752,7 +752,7 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
                     {point.strength}
                   </div>
                 </div>
-              </div>
+              </span>
             ))}
           </div>
         </div>
@@ -824,9 +824,9 @@ function ImprovementsSection({ improvements, index }: ImprovementsSectionProps) 
                 <div className="text-sm text-gray-300">{improvement.implementation}</div>
               </div>
             </div>
-          </div>
+          </span>
         ))}
-      </div>
+      </h3>
     </div>
   )
 }
@@ -877,7 +877,7 @@ export default function DopamineOptimizer({
           <span>50</span>
           <span>75</span>
           <span>100</span>
-        </div>
+        </span>
       </div>
 
       {/* Tab Navigation */}
@@ -917,12 +917,12 @@ export default function DopamineOptimizer({
               <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-400 text-sm">Hooks</span>
                 <span className="text-2xl">🎣</span>
-              </div>
+              </span>
               <div className="text-3xl font-bold text-white">{data.hooks.length}</div>
               <div className="text-xs text-gray-400 mt-1">
                 Avg: {Math.round(data.hooks.reduce((sum, h) => sum + h.strength, 0) / data.hooks.length)}
-              </div>
-            </div>
+              </span>
+            </span>
 
             <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
@@ -930,12 +930,12 @@ export default function DopamineOptimizer({
               <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-400 text-sm">Emotional Peaks</span>
                 <span className="text-2xl">💫</span>
-              </div>
+              </span>
               <div className="text-3xl font-bold text-white">{data.emotionalPeaks.length}</div>
               <div className="text-xs text-gray-400 mt-1">
                 Avg: {Math.round(data.emotionalPeaks.reduce((sum, p) => sum + p.intensity, 0) / data.emotionalPeaks.length)}
-              </div>
-            </div>
+              </span>
+            </span>
 
             <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
@@ -943,12 +943,12 @@ export default function DopamineOptimizer({
               <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-400 text-sm">Pacing</span>
                 <span className="text-2xl">⚡</span>
-              </div>
+              </span>
               <div className="text-3xl font-bold text-white">{data.pacingAnalysis.paceScore}</div>
               <div className="text-xs text-gray-400 mt-1 capitalize">
                 {data.pacingAnalysis.overallPace.replace('_', ' ')}
-              </div>
-            </div>
+              </span>
+            </span>
 
             <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
@@ -956,14 +956,14 @@ export default function DopamineOptimizer({
               <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-400 text-sm">Retention</span>
                 <span className="text-2xl">📊</span>
-              </div>
+              </span>
               <div className="text-3xl font-bold text-white">
                 {data.retentionPrediction.predictedRetention}%
-              </div>
+              </span>
               <div className="text-xs text-gray-400 mt-1">
                 {formatTime(data.retentionPrediction.averageWatchTime)} avg
               </div>
-            </div>
+            </span>
           </div>
 
           {/* Improvements */}
@@ -1014,9 +1014,9 @@ export default function DopamineOptimizer({
                     </div>
                     <div className="text-sm text-gray-300 italic mb-2">"{cliff.text}"</div>
                     <div className="text-xs text-blue-400">{cliff.effectiveness}</div>
-                  </div>
+                  </span>
                 ))}
-              </div>
+              </h3>
             </div>
           )}
         </div>

@@ -23,7 +23,7 @@ export default function DashboardPage() {
       <div className="mb-8">
         <h1 className="text-h1 text-text-primary mb-2">Dashboard</h1>
         <p className="text-text-secondary">Welcome back! Here's your content overview.</p>
-      </div>
+      </p>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -36,7 +36,7 @@ export default function DashboardPage() {
                 {stat.change}
               </div>
             </div>
-          </div>
+          </h1>
         ))}
       </div>
 
@@ -95,7 +95,7 @@ export default function DashboardPage() {
                         <span>{item.engagement} views</span>
                       </>
                     )}
-                  </div>
+                  </span>
                 </div>
                 <div className="ml-4">
                   <span className={`px-3 py-1 rounded-md text-xs font-medium ${

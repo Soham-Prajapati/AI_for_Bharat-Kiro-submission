@@ -140,7 +140,7 @@ function ScoreCard({ label, score, icon, animated = true, delay = 0 }: ScoreCard
         <div className="flex items-center gap-2">
           {icon && <span className="text-2xl">{icon}</span>}
           <h3 className="text-sm font-medium text-gray-400">{label}</h3>
-        </div>
+        </h3>
       </div>
 
       <div className="flex items-end gap-3">
@@ -195,9 +195,9 @@ function FeedbackItem({ feedback, index }: FeedbackItemProps) {
             >
               {feedback.rating}
             </span>
-          </div>
+          </span>
           <p className="text-sm text-gray-400 leading-relaxed">{feedback.comment}</p>
-        </div>
+        </p>
       </div>
     </motion.div>
   )
@@ -216,7 +216,7 @@ function ImprovementList({ improvements }: ImprovementListProps) {
     return (
       <div className="text-center py-8 text-gray-500">
         <p>No improvements needed - your content is excellent!</p>
-      </div>
+      </p>
     )
   }
 
@@ -603,7 +603,7 @@ export default function CreativeDirector({
                   {analysisState.result.feedback.map((feedback, index) => (
                     <FeedbackItem key={index} feedback={feedback} index={index} />
                   ))}
-                </div>
+                </span>
               </motion.div>
 
               {/* Improvements */}

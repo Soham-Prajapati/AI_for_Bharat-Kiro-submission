@@ -38,19 +38,19 @@ export function BasicGridExample() {
               <div>
                 <span className="text-gray-400">Code:</span>
                 <span className="text-white ml-2">{selectedLanguage.code}</span>
-              </div>
+              </span>
               <div>
                 <span className="text-gray-400">Name:</span>
                 <span className="text-white ml-2">{selectedLanguage.name}</span>
-              </div>
+              </span>
               <div>
                 <span className="text-gray-400">Native Name:</span>
                 <span className="text-white ml-2">{selectedLanguage.nativeName}</span>
-              </div>
+              </span>
               <div>
                 <span className="text-gray-400">Flag:</span>
                 <span className="text-2xl ml-2">{selectedLanguage.flag}</span>
-              </div>
+              </span>
             </div>
           </div>
         )}
@@ -161,7 +161,7 @@ export function TranslationIntegrationExample() {
               {loading ? (
                 <div className="flex items-center justify-center h-full">
                   <span className="text-gray-400">Translating...</span>
-                </div>
+                </span>
               ) : translatedText ? (
                 <p>{translatedText}</p>
               ) : (
@@ -217,7 +217,7 @@ export function WizardExample() {
                 }`}
               >
                 {s < step ? '✓' : s}
-              </div>
+              </p>
               {s < 3 && (
                 <div
                   className={`w-16 h-1 ${
@@ -264,7 +264,7 @@ export function WizardExample() {
                     {type === 'Audio' && '🎵'}
                     {type === 'Text' && '📝'}
                     {type === 'Image' && '🖼️'}
-                  </div>
+                  </button>
                   <div className="text-white font-semibold">{type}</div>
                 </button>
               ))}
@@ -294,7 +294,7 @@ export function WizardExample() {
                   <div>
                     <div className="text-white font-semibold">
                       Language: {language?.name}
-                    </div>
+                    </span>
                     <div className="text-gray-400 text-sm">
                       {language?.nativeName}
                     </div>
@@ -371,7 +371,7 @@ export function SidebarWidgetExample() {
               </div>
             </div>
           </div>
-        </div>
+        </aside>
       </aside>
 
       {/* Main Content */}

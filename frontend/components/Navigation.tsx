@@ -39,7 +39,7 @@ export default function Navigation() {
                     }`}>
                       <Icon className="w-4 h-4" />
                       <span className="text-sm font-medium">{item.label}</span>
-                    </div>
+                    </span>
                     
                     {isActive && (
                       <div

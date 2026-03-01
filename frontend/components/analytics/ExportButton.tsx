@@ -60,6 +60,6 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
           </div>
         </>
       )}
-    </div>
+    </button>
   );
 };

@@ -78,9 +78,9 @@ export function ContentListExample() {
           }}>
             Delete
           </button>
-        </div>
+        </p>
       ))}
-    </div>
+    </h2>
   );
 }
 
@@ -138,7 +138,7 @@ export function ContentGeneratorExample() {
         <div>
           <p>{generationStatus.message}</p>
           <progress value={generationStatus.progress} max={100} />
-        </div>
+        </p>
       )}
     </div>
   );
@@ -176,7 +176,7 @@ export function SettingsExample() {
           <option value="dark">Dark</option>
           <option value="system">System</option>
         </select>
-      </div>
+      </h3>
 
       <div>
         <h3>Notifications</h3>
@@ -204,8 +204,8 @@ export function SettingsExample() {
           />
           In-App Notifications
         </label>
-      </div>
-    </div>
+      </h3>
+    </h2>
   );
 }
 
@@ -252,10 +252,10 @@ export function UserProfileExample() {
           />
           Auto Save
         </label>
-      </div>
+      </h3>
 
       <button onClick={handleLogout}>Logout</button>
-    </div>
+    </button>
   );
 }
 
@@ -274,7 +274,7 @@ export function ErrorHandlerExample() {
     <div style={{ padding: '10px', background: '#fee', border: '1px solid red' }}>
       <strong>Error:</strong> {state.error}
       <button onClick={() => actions.clearError()}>Dismiss</button>
-    </div>
+    </button>
   );
 }
 
@@ -292,6 +292,6 @@ export function LoadingIndicatorExample() {
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
       <div className="spinner">Loading...</div>
-    </div>
+    </p>
   );
 }

@@ -120,7 +120,7 @@ export default function SubscriptionManagement({
                 >
                   Keep Plan
                 </button>
-              </div>
+              </h3>
             </div>
           </div>
         )}

@@ -113,14 +113,14 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
         >
           <p className="text-purple-300 text-sm mb-1">Total Purchases</p>
           <p className="text-3xl font-bold text-white">{transactions.length}</p>
-        </div>
+        </p>
 
         <div
           className="bg-gradient-to-br from-green-500/20 to-green-600/10 rounded-xl p-6 border border-green-500/30"
         >
           <p className="text-green-300 text-sm mb-1">Total Spent</p>
           <p className="text-3xl font-bold text-white">${totalSpent.toFixed(2)}</p>
-        </div>
+        </p>
 
         <div
           className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 rounded-xl p-6 border border-blue-500/30"
@@ -133,7 +133,7 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
               return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
             }).length}
           </p>
-        </div>
+        </p>
       </div>
 
       {/* Transactions List */}
@@ -144,7 +144,7 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
           <p className="text-gray-500 text-sm mt-2">
             Browse the marketplace to find templates, scripts, and more
           </p>
-        </div>
+        </p>
       ) : (
         <div className="space-y-4">
           {transactions.map((transaction, index) => (
@@ -171,11 +171,11 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
                       <span>{formatDate(transaction.purchasedAt)}</span>
-                    </div>
+                    </span>
                     <div className="flex items-center gap-2">
                       <CreditCard className="w-4 h-4" />
                       <span className="capitalize">{transaction.paymentMethod}</span>
-                    </div>
+                    </span>
                   </div>
                 </div>
 
@@ -203,9 +203,9 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
                   </p>
                 </div>
               )}
-            </div>
+            </p>
           ))}
-        </div>
+        </p>
       )}
     </div>
   );

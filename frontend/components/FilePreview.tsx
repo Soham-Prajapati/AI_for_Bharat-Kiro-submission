@@ -44,7 +44,7 @@ export default function FilePreview({ file, onRemove }: FilePreviewProps) {
                 <span className="font-medium">Type:</span>
                 {file.type.split('/')[1]?.toUpperCase() || 'Unknown'}
               </span>
-            </div>
+            </span>
           </div>
         </div>
 

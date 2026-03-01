@@ -447,7 +447,7 @@ export default function KnowledgeGraph({
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
           <p className="text-gray-400">Loading knowledge graph...</p>
-        </div>
+        </p>
       </div>
     )
   }
@@ -464,7 +464,7 @@ export default function KnowledgeGraph({
           >
             Retry
           </button>
-        </div>
+        </p>
       </div>
     )
   }
@@ -481,7 +481,7 @@ export default function KnowledgeGraph({
             <p className="text-sm text-gray-400">
               {filteredData.nodes.length} nodes, {filteredData.edges.length} connections
             </p>
-          </div>
+          </h2>
           
           {/* Controls */}
           <div className="flex items-center gap-2">
@@ -580,7 +580,7 @@ export default function KnowledgeGraph({
                   style={{ backgroundColor: NODE_COLORS[hoveredNode.type] }}
                 />
                 <span className="font-semibold text-white capitalize">{hoveredNode.type}</span>
-              </div>
+              </span>
               <div className="text-sm text-white font-medium">{hoveredNode.label}</div>
               <div className="text-xs text-gray-400 mt-1">Weight: {hoveredNode.weight}</div>
             </div>
@@ -594,15 +594,15 @@ export default function KnowledgeGraph({
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: NODE_COLORS.content }} />
             <span className="text-sm text-gray-300">Content</span>
-          </div>
+          </span>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: NODE_COLORS.topic }} />
             <span className="text-sm text-gray-300">Topics</span>
-          </div>
+          </span>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: NODE_COLORS.creator }} />
             <span className="text-sm text-gray-300">Creators</span>
-          </div>
+          </span>
         </div>
         
         <div className="text-sm text-gray-400">
@@ -624,15 +624,15 @@ export default function KnowledgeGraph({
                     style={{ backgroundColor: NODE_COLORS[selectedNode.type] }}
                   />
                   <h3 className="text-lg font-bold text-white">{selectedNode.label}</h3>
-                </div>
+                </h3>
                 <p className="text-sm text-gray-400 capitalize mb-2">Type: {selectedNode.type}</p>
                 <p className="text-sm text-gray-400">Weight: {selectedNode.weight}</p>
                 {selectedNode.metadata && (
                   <div className="mt-2 text-xs text-gray-500">
                     <pre>{JSON.stringify(selectedNode.metadata, null, 2)}</pre>
-                  </div>
+                  </p>
                 )}
-              </div>
+              </p>
               <button
                 onClick={() => setSelectedNode(null)}
                 className="text-gray-400 hover:text-white"

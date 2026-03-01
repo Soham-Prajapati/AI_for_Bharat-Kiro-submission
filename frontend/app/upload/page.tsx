@@ -38,7 +38,7 @@ export default function UploadPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Upload Content</h1>
         <p className="text-gray-400">Upload your video or audio file to get started</p>
-      </div>
+      </p>
 
       <div className="space-y-6">
         <FileUploader onFileSelect={handleFileSelect} selectedFile={selectedFile} />
@@ -57,7 +57,7 @@ export default function UploadPage() {
             >
               Cancel
             </button>
-          </div>
+          </h1>
         )}
 
         {isUploading && (
@@ -66,7 +66,7 @@ export default function UploadPage() {
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-gray-400">Processing...</span>
                 <span className="text-white font-medium">{uploadProgress}%</span>
-              </div>
+              </span>
               <div className="h-2 bg-black rounded-full overflow-hidden">
                 <div
                   className="h-full bg-white transition-all duration-300"

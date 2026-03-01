@@ -58,7 +58,7 @@ export default function Navbar() {
               <span className="text-xl">👤</span>
               <span className="text-sm text-gray-300">Account</span>
             </button>
-          </div>
+          </button>
 
           {/* Mobile menu button */}
           <button
@@ -67,8 +67,8 @@ export default function Navbar() {
           >
             <span className="text-2xl">{isMenuOpen ? '✕' : '☰'}</span>
           </button>
-        </div>
-      </div>
+        </button>
+      </nav>
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
@@ -98,8 +98,8 @@ export default function Navbar() {
                 <span className="mr-2">👤</span>
                 Account
               </button>
-            </div>
-          </div>
+            </button>
+          </button>
         </div>
       )}
     </nav>

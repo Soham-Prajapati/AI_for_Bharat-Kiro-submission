@@ -97,7 +97,7 @@ function InsightCard({ insight, index }: { insight: Insight; index: number }) {
                   >
                     <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
                       <p className="text-gray-400 text-sm">{insight.details}</p>
-                    </div>
+                    </p>
                   </div>
                 )}
               
@@ -110,7 +110,7 @@ function InsightCard({ insight, index }: { insight: Insight; index: number }) {
               className={`${config.textColor} bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors`}
             >
               {insight.action.label}
-            </div>
+            </button>
           )}
         </div>
       </div>
@@ -145,7 +145,7 @@ export default function InsightPanel({
           {[1, 2, 3].map((i) => (
             <div key={i} className="animate-pulse bg-gray-700/30 rounded-xl h-32"></div>
           ))}
-        </div>
+        </h2>
       </div>
     );
   }
@@ -193,7 +193,7 @@ export default function InsightPanel({
         <div className="text-center py-12 text-gray-500">
           <div className="text-4xl mb-2">🔍</div>
           <p>No insights available</p>
-        </div>
+        </p>
       ) : (
         <div className="space-y-4">
           
@@ -236,6 +236,6 @@ function FilterButton({
       }`}
     >
       {label} <span className="opacity-75">({count})</span>
-    </div>
+    </button>
   );
 }

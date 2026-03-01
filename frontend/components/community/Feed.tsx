@@ -135,7 +135,7 @@ export default function Feed({
             </svg>
             <h3 className="text-xl font-semibold text-gray-300 mb-2">No posts yet</h3>
             <p className="text-gray-500">Be the first to share something!</p>
-          </div>
+          </p>
         ) : (
           posts.map((post) => (
             <PostCard
@@ -165,7 +165,7 @@ export default function Feed({
         {!hasMore && posts.length > 0 && (
           <div className="text-center py-8">
             <p className="text-gray-500">You've reached the end</p>
-          </div>
+          </p>
         )}
       </div>
     </div>

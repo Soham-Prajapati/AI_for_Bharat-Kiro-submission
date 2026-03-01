@@ -274,7 +274,7 @@ export const ADHDNavigator: React.FC = () => {
             <p className="celebration-subtext">
               {sessionType === 'work' ? 'Time for a break!' : 'Ready for another session?'}
             </p>
-          </div>
+          </h2>
         </div>
       )}
 
@@ -303,7 +303,7 @@ export const ADHDNavigator: React.FC = () => {
           >
             🏆
           </button>
-        </div>
+        </h1>
       </div>
 
       {/* Main Content */}
@@ -367,7 +367,7 @@ export const ADHDNavigator: React.FC = () => {
                 <button className="add-btn" onClick={createTask}>
                   ➕ Add Task
                 </button>
-              </div>
+              </h2>
             ) : (
               <div className="current-task">
                 <div className="task-header">
@@ -375,7 +375,7 @@ export const ADHDNavigator: React.FC = () => {
                   <button className="clear-btn" onClick={clearTask}>
                     ✖️
                   </button>
-                </div>
+                </h3>
                 
                 <div className="steps-container">
                   <h4 className="steps-title">Break it down:</h4>
@@ -428,7 +428,7 @@ export const ADHDNavigator: React.FC = () => {
               <div className="stat-card">
                 <div className="stat-value">{stats.totalSessions}</div>
                 <div className="stat-label">Total Sessions</div>
-              </div>
+              </h2>
               <div className="stat-card">
                 <div className="stat-value">{Math.floor(stats.totalWorkTime / 60)}h</div>
                 <div className="stat-label">Focus Time</div>
@@ -465,7 +465,7 @@ export const ADHDNavigator: React.FC = () => {
                           className="achievement-progress-fill"
                           style={{ width: `${(achievement.progress / achievement.target) * 100}%` }}
                         />
-                      </div>
+                      </h3>
                       <span className="achievement-progress-text">
                         {achievement.progress}/{achievement.target}
                       </span>
@@ -473,7 +473,7 @@ export const ADHDNavigator: React.FC = () => {
                   </div>
                 </div>
               ))}
-            </div>
+            </h2>
           </div>
         )}
       </div>
