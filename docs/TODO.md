@@ -213,21 +213,21 @@ export const api = {
   - **Test:** Click each mode, verify state updates
 
 ### Day 1.5: Testing Setup
-- [/] **1.5a: Setup Jest + test structure (Lakshmi)**
+- [x] **1.5a: Setup Jest + test structure (Lakshmi)** ✅
   - **What:** Configure Jest for TypeScript
   - **Where:** `jest.config.js`, `src/__tests__/setup.ts`
   - **How:** Install `@types/jest`, `ts-jest`
   - **Output:** `npm test` runs successfully
   - **Test:** Create sample test, verify it passes
 
-- [/] **1.5b: Create unit tests for prompts (Lakshmi)**
+- [x] **1.5b: Create unit tests for prompts (Lakshmi)** ✅
   - **What:** Test each prompt function
   - **Where:** `src/__tests__/prompts/*.test.ts`
   - **How:** Mock transcript input, verify output structure
   - **Coverage:** All 8 prompts, >80% code coverage
   - **Test:** `npm test -- prompts`
 
-- [/] **1.5c: Create integration tests (Lakshmi)**
+- [x] **1.5c: Create integration tests (Lakshmi)** ✅
   - **What:** Test full upload → process → generate flow
   - **Where:** `src/__tests__/integration/e2e.test.ts`
   - **How:** Use `supertest` to call API endpoints
@@ -372,7 +372,7 @@ export const api = {
   - **Output:** ROI data from Nidhi's service
   - **Test:** Call with user who processed 50 videos
 
-- [/] **2.4d: Test ROI calculations (Lakshmi)**
+- [x] **2.4d: Test ROI calculations (Lakshmi)** ✅
   - **What:** Verify math is correct
   - **Where:** `src/__tests__/roi.test.ts`
   - **Test:** Edge cases (1 video, 1000 videos)
@@ -404,7 +404,7 @@ export const api = {
   - **Output:** Adapted content
   - **Test:** Sample content, verify adaptations
 
-- [ ] **2.5d: Test cultural adaptations (Lakshmi)**
+- [/] **2.5d: Test cultural adaptations (Lakshmi)**
   - **What:** Verify accuracy of adaptations
   - **Where:** `src/__tests__/cultural.test.ts`
   - **Test:** 10 idioms, verify correct regional equivalents
