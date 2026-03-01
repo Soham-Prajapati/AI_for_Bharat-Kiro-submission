@@ -650,7 +650,7 @@ export const api = {
   - **Where:** `src/routes/graph.route.ts`
   - **Test:** Query graph, verify relationships
 
-- [ ] **4.2d: Test graph accuracy (Lakshmi)**
+- [/] **4.2d: Test graph accuracy (Lakshmi)**
   - **What:** Verify relationship accuracy
   - **Where:** `src/__tests__/graph.test.ts`
   - **Metric:** >85% accurate relationships
