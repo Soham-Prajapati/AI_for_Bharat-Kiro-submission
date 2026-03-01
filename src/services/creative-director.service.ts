@@ -580,7 +580,7 @@ export class CreativeDirectorService {
       score += 1.5;
       strengths.push('Clearly states benefits');
     } else {
-      weaknesses.push('Doesn't clearly state benefits');
+      weaknesses.push('Does not clearly state benefits');
       suggestions.push('Explicitly state what viewers will gain');
     }
 

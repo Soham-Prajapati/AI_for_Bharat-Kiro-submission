@@ -1,10 +1,12 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
+import { contentMultiplierV2Service } from '../services/content-multiplier-v2.service';
 
 const router = Router();
 
 // POST /api/multiply/generate - Generate multiple content pieces
+// @deprecated Use /api/multiply-v2/generate instead
 router.post('/generate', asyncHandler(async (req: Request, res: Response) => {
   const { videoId, transcript, platforms } = req.body;
 
@@ -16,29 +18,16 @@ router.post('/generate', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('platforms array is required');
   }
 
-  // TODO: Replace with real content-multiplier.service.ts
-  const mockOutputs = {
-    clips: Array.from({ length: 10 }, (_, i) => ({
-      id: `clip-${i}`,
-      duration: 15 + i * 5,
-      url: `https://mock-clip-${i}.mp4`,
-      platform: platforms[i % platforms.length]
-    })),
-    quotes: Array.from({ length: 15 }, (_, i) => ({
-      id: `quote-${i}`,
-      text: `Inspirational quote ${i}`,
-      imageUrl: `https://mock-quote-${i}.jpg`
-    })),
-    audiograms: Array.from({ length: 10 }, (_, i) => ({
-      id: `audio-${i}`,
-      duration: 30,
-      url: `https://mock-audio-${i}.mp3`
-    })),
-    totalPieces: 35,
-    generatedAt: new Date().toISOString()
-  };
+  const result = await contentMultiplierV2Service.multiplyContent({
+    transcript,
+    platforms,
+    videoId: videoId || `video-${Date.now()}`,
+    duration: req.body.duration || 600,
+    contentTypes: req.body.contentTypes || ['short', 'post', 'quote'],
+    variations: req.body.variations || 1
+  });
 
-  res.json(mockOutputs);
+  res.json(result);
 }));
 
 export default router;
