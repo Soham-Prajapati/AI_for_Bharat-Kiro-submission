@@ -684,7 +684,7 @@ export const api = {
   - **Test:** Create post, fetch feed, verify
   - **Implemented:** Full service + 15 API endpoints + tests
 
-- [ ] **4.3d: Test moderation (Lakshmi)**
+- [/] **4.3d: Test moderation (Lakshmi)**
   - **What:** Test spam detection, content moderation
   - **Where:** `src/__tests__/community.test.ts`
   - **Test:** Post spam, verify auto-moderation
