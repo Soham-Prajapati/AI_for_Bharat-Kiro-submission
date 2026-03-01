@@ -1,0 +1,50 @@
+# Gitleaks configuration file
+title = "Gitleaks Security Configuration"
+
+[extend]
+# useDefault will extend the base configuration with additional rules
+useDefault = true
+
+[allowlist]
+description = "Allowlist for false positives"
+paths = [
+  '''node_modules/''',
+  '''\.git/''',
+  '''package-lock\.json''',
+  '''yarn\.lock''',
+  '''pnpm-lock\.yaml''',
+]
+
+# Allowlist specific patterns that are known false positives
+regexes = [
+  '''example\.com''',
+  '''your-api-key-here''',
+  '''INSERT_.*_HERE''',
+  '''REPLACE_.*_WITH''',
+  '''<YOUR_.*>''',
+  '''dummy.*key''',
+  '''test.*secret''',
+  '''fake.*token''',
+]
+
+# Allowlist specific commits (if needed)
+commits = []
+
+# Custom rules for additional secret patterns
+[[rules]]
+id = "custom-api-key"
+description = "Custom API Key Pattern"
+regex = '''(?i)(api[_-]?key|apikey)['":\s]*[=:]\s*['"][a-zA-Z0-9]{32,}['"]'''
+tags = ["api", "key"]
+
+[[rules]]
+id = "custom-token"
+description = "Custom Token Pattern"
+regex = '''(?i)(token|auth)['":\s]*[=:]\s*['"][a-zA-Z0-9_\-]{20,}['"]'''
+tags = ["token", "auth"]
+
+[[rules]]
+id = "private-key"
+description = "Private Key Detection"
+regex = '''-----BEGIN (RSA|DSA|EC|OPENSSH) PRIVATE KEY-----'''
+tags = ["private-key", "security"]
