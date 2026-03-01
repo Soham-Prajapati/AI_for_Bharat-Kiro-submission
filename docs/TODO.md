@@ -339,7 +339,7 @@ export const api = {
   - **Output:** Viral score from Nidhi's service
   - **Test:** Sample transcript, verify score in range 0-100
 
-- [/] **2.3d: Test prediction accuracy (Lakshmi)**
+- [x] **2.3d: Test prediction accuracy (Lakshmi)** ✅
   - **What:** Validate against known viral videos
   - **Where:** `src/__tests__/viral.test.ts`
   - **Dataset:** 50 viral + 50 non-viral videos
