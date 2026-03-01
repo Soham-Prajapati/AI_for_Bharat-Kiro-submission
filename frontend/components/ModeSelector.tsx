@@ -99,8 +99,8 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
               <div
                 key={mode.id}
                 className="relative"
-                onHoverStart={() => setHoveredMode(mode.id)}
-                onHoverEnd={() => setHoveredMode(null)}
+                onMouseEnter={() => setHoveredMode(mode.id)}
+                onMouseLeave={() => setHoveredMode(null)}
               >
                 {/* Recommended Badge */}
                 {mode.recommended && (
@@ -175,7 +175,7 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
                         >
                           <span className="text-green-400 mr-2 mt-0.5">✓</span>
                           <span>{benefit}</span>
-                        </div>
+                        </li>
                       ))}
                     </ul>
 
@@ -193,7 +193,7 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
                       aria-pressed={isSelected}
                     >
                       {isSelected ? '✓ Selected' : 'Select Mode'}
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>
