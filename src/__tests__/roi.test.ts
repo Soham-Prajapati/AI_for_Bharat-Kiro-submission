@@ -14,6 +14,11 @@ import {
   randomString,
 } from './setup';
 
+// Helper function to parse currency strings like "$12,495.00"
+const parseCurrency = (currencyString: string): number => {
+  return parseFloat(currencyString.replace(/[$,]/g, ''));
+};
+
 describe('ROICalculatorService', () => {
   describe('calculate', () => {
     it('should return ROI calculation for a valid user ID', async () => {
@@ -70,7 +75,7 @@ describe('ROICalculatorService', () => {
       // Money saved: $12,500 - $5 = $12,495
       
       expect(roi.moneySaved).toBeDefined();
-      const moneySaved = parseFloat(roi.moneySaved);
+      const moneySaved = parseCurrency(roi.moneySaved);
       expect(moneySaved).toBeGreaterThan(0);
       expect(moneySaved).toBeCloseTo(12495, 0);
     });
@@ -172,7 +177,7 @@ describe('ROICalculatorService', () => {
       expect(roi.projections.monthly.videos).toBeCloseTo(17, 0);
       
       // Monthly savings = $12,495 / 3 = $4,165
-      const monthlySavings = parseFloat(roi.projections.monthly.savings);
+      const monthlySavings = parseCurrency(roi.projections.monthly.savings);
       expect(monthlySavings).toBeCloseTo(4165, 0);
     });
 
@@ -185,7 +190,7 @@ describe('ROICalculatorService', () => {
       expect(roi.projections.yearly.videos).toBe(200);
       
       // Yearly savings = $12,495 * 4 = $49,980
-      const yearlySavings = parseFloat(roi.projections.yearly.savings);
+      const yearlySavings = parseCurrency(roi.projections.yearly.savings);
       expect(yearlySavings).toBeCloseTo(49980, 0);
     });
 
@@ -195,8 +200,8 @@ describe('ROICalculatorService', () => {
       
       expect(yearlyVideos).toBeGreaterThan(monthlyVideos);
       
-      const monthlySavings = parseFloat(roi.projections.monthly.savings);
-      const yearlySavings = parseFloat(roi.projections.yearly.savings);
+      const monthlySavings = parseCurrency(roi.projections.monthly.savings);
+      const yearlySavings = parseCurrency(roi.projections.yearly.savings);
       
       expect(yearlySavings).toBeGreaterThan(monthlySavings);
     });
@@ -205,8 +210,8 @@ describe('ROICalculatorService', () => {
       expect(roi.projections.monthly.videos).toBeGreaterThan(0);
       expect(roi.projections.yearly.videos).toBeGreaterThan(0);
       
-      const monthlySavings = parseFloat(roi.projections.monthly.savings);
-      const yearlySavings = parseFloat(roi.projections.yearly.savings);
+      const monthlySavings = parseCurrency(roi.projections.monthly.savings);
+      const yearlySavings = parseCurrency(roi.projections.yearly.savings);
       
       expect(monthlySavings).toBeGreaterThan(0);
       expect(yearlySavings).toBeGreaterThan(0);
@@ -255,7 +260,7 @@ describe('ROICalculatorService', () => {
       const roi = await roiCalculatorService.calculate('test-user');
       
       // ROI = ((moneySaved / aiCost) * 100)%
-      const moneySaved = parseFloat(roi.moneySaved);
+      const moneySaved = parseCurrency(roi.moneySaved);
       const aiCost = roi.breakdown.aiCost;
       const expectedROI = ((moneySaved / aiCost) * 100).toFixed(0);
       
@@ -295,7 +300,7 @@ describe('ROICalculatorService', () => {
         // Manual: 5 hours * $50 = $250
         // AI: 1 * $0.10 = $0.10
         // Saved: $249.90
-        const moneySaved = parseFloat(roi.moneySaved);
+        const moneySaved = parseCurrency(roi.moneySaved);
         expect(moneySaved).toBeCloseTo(249.90, 2);
       });
 
@@ -344,7 +349,7 @@ describe('ROICalculatorService', () => {
         // Manual: 5000 hours * $50 = $250,000
         // AI: 1000 * $0.10 = $100
         // Saved: $249,900
-        const moneySaved = parseFloat(roi.moneySaved);
+        const moneySaved = parseCurrency(roi.moneySaved);
         expect(moneySaved).toBeCloseTo(249900, 0);
       });
 
@@ -366,7 +371,7 @@ describe('ROICalculatorService', () => {
         expect(roi.projections.yearly.videos).toBe(4000);
         
         // Yearly savings: $249,900 * 4 = $999,600
-        const yearlySavings = parseFloat(roi.projections.yearly.savings);
+        const yearlySavings = parseCurrency(roi.projections.yearly.savings);
         expect(yearlySavings).toBeCloseTo(999600, 0);
       });
     });
@@ -396,7 +401,7 @@ describe('ROICalculatorService', () => {
       });
 
       it('should calculate zero money saved for 0 videos', () => {
-        const moneySaved = parseFloat(roi.moneySaved);
+        const moneySaved = parseCurrency(roi.moneySaved);
         expect(moneySaved).toBe(0);
       });
 
@@ -415,8 +420,8 @@ describe('ROICalculatorService', () => {
         expect(roi.projections.monthly.videos).toBe(0);
         expect(roi.projections.yearly.videos).toBe(0);
         
-        const monthlySavings = parseFloat(roi.projections.monthly.savings);
-        const yearlySavings = parseFloat(roi.projections.yearly.savings);
+        const monthlySavings = parseCurrency(roi.projections.monthly.savings);
+        const yearlySavings = parseCurrency(roi.projections.yearly.savings);
         
         expect(monthlySavings).toBe(0);
         expect(yearlySavings).toBe(0);
@@ -478,7 +483,7 @@ describe('ROICalculatorService', () => {
     it('should have money saved equal to manual cost minus AI cost', async () => {
       const roi = await roiCalculatorService.calculate('test-user');
       
-      const moneySaved = parseFloat(roi.moneySaved);
+      const moneySaved = parseCurrency(roi.moneySaved);
       const expectedSavings = roi.breakdown.manualCost - roi.breakdown.aiCost;
       
       expect(moneySaved).toBeCloseTo(expectedSavings, 2);
@@ -488,7 +493,7 @@ describe('ROICalculatorService', () => {
       const roi = await roiCalculatorService.calculate('test-user');
       
       expect(roi.videosProcessed).toBeGreaterThanOrEqual(0);
-      expect(parseFloat(roi.moneySaved)).toBeGreaterThanOrEqual(0);
+      expect(parseCurrency(roi.moneySaved)).toBeGreaterThanOrEqual(0);
       expect(roi.breakdown.manualCost).toBeGreaterThanOrEqual(0);
       expect(roi.breakdown.aiCost).toBeGreaterThanOrEqual(0);
       expect(roi.projections.monthly.videos).toBeGreaterThanOrEqual(0);
@@ -610,7 +615,7 @@ describe('ROICalculatorService', () => {
     it('should demonstrate value proposition', async () => {
       const roi = await roiCalculatorService.calculate('test-user');
       
-      const moneySaved = parseFloat(roi.moneySaved);
+      const moneySaved = parseCurrency(roi.moneySaved);
       const aiCost = roi.breakdown.aiCost;
       
       // Money saved should be at least 100x the AI cost
