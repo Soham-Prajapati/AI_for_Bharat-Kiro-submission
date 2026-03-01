@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 
 interface FilePreviewProps {
   file: File
@@ -23,12 +22,8 @@ export default function FilePreview({ file, onRemove }: FilePreviewProps) {
   }
 
   return (
-    <motion.div
+    <div
       className="p-6 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700"
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.3 }}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-4 flex-1 min-w-0">
@@ -53,11 +48,9 @@ export default function FilePreview({ file, onRemove }: FilePreviewProps) {
           </div>
         </div>
 
-        <motion.button
+        <button
           onClick={onRemove}
           className="flex-shrink-0 p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
           aria-label="Remove file"
         >
           <svg
@@ -73,8 +66,8 @@ export default function FilePreview({ file, onRemove }: FilePreviewProps) {
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        </motion.button>
+        </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

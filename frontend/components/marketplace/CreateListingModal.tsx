@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, AlertCircle } from 'lucide-react';
 import { CreateListingRequest, ListingType } from '@/types/api';
 
@@ -90,12 +89,9 @@ export default function CreateListingModal({ userId, onClose, onCreate }: Create
   };
 
   return (
-    <AnimatePresence>
+    
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
+        <div
           className="bg-gray-900 border border-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         >
           {/* Header */}
@@ -265,8 +261,8 @@ export default function CreateListingModal({ userId, onClose, onCreate }: Create
               </button>
             </div>
           </form>
-        </motion.div>
+        </div>
       </div>
-    </AnimatePresence>
+    
   );
 }

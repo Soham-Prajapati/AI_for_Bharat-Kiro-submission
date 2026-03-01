@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 
 export interface Insight {
   id: string;
@@ -56,10 +55,7 @@ export const InsightPanel: React.FC<InsightPanelProps> = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
       className="rounded-xl border border-gray-800 bg-gradient-to-br from-gray-900/50 to-gray-800/30 p-6 backdrop-blur-sm"
     >
       <div className="mb-4 flex items-center gap-2">
@@ -71,11 +67,8 @@ export const InsightPanel: React.FC<InsightPanelProps> = ({
         {insights.map((insight, index) => {
           const styles = getInsightStyles(insight.type);
           return (
-            <motion.div
+            <div
               key={insight.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
               className={`rounded-lg border bg-gradient-to-r p-4 ${styles.border} ${styles.bg}`}
             >
               <div className="flex gap-3">
@@ -105,10 +98,10 @@ export const InsightPanel: React.FC<InsightPanelProps> = ({
                   )}
                 </div>
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>
-    </motion.div>
+    </div>
   );
 };

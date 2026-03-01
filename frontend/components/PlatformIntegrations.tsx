@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/context/ToastContext';
 
 // Types
@@ -169,14 +168,12 @@ const PlatformIntegrations: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
           className="mb-8"
         >
           <h1 className="text-4xl font-bold text-white mb-2">Platform Integrations</h1>
           <p className="text-gray-400">Connect and manage your social media accounts</p>
-        </motion.div>
+        </div>
 
         {/* Platform Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -197,7 +194,7 @@ const PlatformIntegrations: React.FC = () => {
       </div>
 
       {/* Settings Modal */}
-      <AnimatePresence>
+      
         {showSettingsModal && selectedPlatform && (
           <SettingsModal
             platform={selectedPlatform}
@@ -212,7 +209,7 @@ const PlatformIntegrations: React.FC = () => {
             }
           />
         )}
-      </AnimatePresence>
+      
     </div>
   );
 };
@@ -262,10 +259,7 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+    <div
       className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-300"
       style={{
         boxShadow: `0 4px 20px ${platform.color}15`,
@@ -316,10 +310,7 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
 
       {/* Account Info */}
       {platform.status === 'connected' && platform.account && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
+        <div
           className="mb-4 space-y-3"
         >
           <div className="flex items-center justify-between">
@@ -338,27 +329,23 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
               {formatLastSync(platform.account.lastSync)}
             </span>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Error Message */}
       {platform.status === 'error' && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+        <div
           className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg"
         >
           <p className="text-sm text-red-400">Connection failed. Please try again.</p>
-        </motion.div>
+        </div>
       )}
 
       {/* Actions */}
       <div className="space-y-2">
         {platform.status === 'connected' ? (
           <>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={() => onSync(platform.id)}
               disabled={platform.isLoading}
               className="w-full px-4 py-2 bg-gradient-to-r text-white text-sm font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -389,20 +376,16 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
               ) : (
                 'Sync Now'
               )}
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            </div>
+            <button
               onClick={() => onDisconnect(platform.id)}
               className="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm font-semibold rounded-lg transition-all"
             >
               Disconnect
-            </motion.button>
+            </div>
           </>
         ) : (
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             onClick={() => onConnect(platform.id)}
             disabled={platform.isLoading}
             className="w-full px-4 py-2 bg-gradient-to-r text-white text-sm font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -433,10 +416,10 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
             ) : (
               'Connect'
             )}
-          </motion.button>
+          </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -459,17 +442,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const platformConfig = PLATFORM_CONFIG[platform];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+    <div
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={onClose}
     >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
+      <div
         onClick={(e) => e.stopPropagation()}
         className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-gray-700"
       >
@@ -514,8 +491,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 settings.autoPost ? 'bg-green-500' : 'bg-gray-600'
               }`}
             >
-              <motion.div
-                animate={{ x: settings.autoPost ? 24 : 0 }}
+              <div
                 className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full"
               />
             </button>
@@ -533,8 +509,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 settings.notifications ? 'bg-green-500' : 'bg-gray-600'
               }`}
             >
-              <motion.div
-                animate={{ x: settings.notifications ? 24 : 0 }}
+              <div
                 className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full"
               />
             </button>
@@ -570,17 +545,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
         {/* Actions */}
         <div className="flex gap-3">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             onClick={onClose}
             className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition-all"
           >
             Cancel
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          </div>
+          <button
             onClick={onSave}
             className="flex-1 px-4 py-2 text-white font-semibold rounded-lg transition-all"
             style={{
@@ -588,10 +559,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             }}
           >
             Save Changes
-          </motion.button>
+          </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

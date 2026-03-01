@@ -1,6 +1,5 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import apiClient from '@/services/api'
 
@@ -471,11 +470,8 @@ export default function KnowledgeGraph({
   }
   
   return (
-    <motion.div
+    <div
       className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 overflow-hidden ${className}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
     >
       {/* Header */}
       <div className="p-4 border-b border-gray-700">
@@ -569,13 +565,10 @@ export default function KnowledgeGraph({
         />
         
         {/* Tooltip */}
-        <AnimatePresence>
+        
           {hoveredNode && (
-            <motion.div
+            <div
               className="absolute pointer-events-none bg-gray-900/95 backdrop-blur-sm border border-gray-700 rounded-lg p-3 shadow-xl"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
               style={{
                 left: hoveredNode.x! * zoom + pan.x + 20,
                 top: hoveredNode.y! * zoom + pan.y - 40
@@ -590,9 +583,9 @@ export default function KnowledgeGraph({
               </div>
               <div className="text-sm text-white font-medium">{hoveredNode.label}</div>
               <div className="text-xs text-gray-400 mt-1">Weight: {hoveredNode.weight}</div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        
       </div>
       
       {/* Legend */}
@@ -618,13 +611,10 @@ export default function KnowledgeGraph({
       </div>
       
       {/* Selected Node Details */}
-      <AnimatePresence>
+      
         {selectedNode && (
-          <motion.div
+          <div
             className="p-4 border-t border-gray-700 bg-gray-800/70"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
           >
             <div className="flex items-start justify-between">
               <div>
@@ -650,9 +640,9 @@ export default function KnowledgeGraph({
                 ✕
               </button>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
-    </motion.div>
+      
+    </div>
   )
 }

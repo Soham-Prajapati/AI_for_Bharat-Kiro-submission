@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { ShoppingBag, Search, Filter, TrendingUp } from 'lucide-react';
 import apiClient from '@/services/api';
 import ListingCard from '@/components/marketplace/ListingCard';
@@ -91,10 +90,7 @@ export default function MarketplacePage() {
       {/* Header */}
       <div className="border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+          <div
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
@@ -139,7 +135,7 @@ export default function MarketplacePage() {
             <p className="text-gray-400 text-sm sm:text-base">
               Buy and sell content templates, scripts, and assets
             </p>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -158,10 +154,7 @@ export default function MarketplacePage() {
             />
 
             {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+            <div
               className="mb-6 flex items-center gap-4 text-sm text-gray-400"
             >
               <span>
@@ -172,7 +165,7 @@ export default function MarketplacePage() {
                   Search: "{searchQuery}"
                 </span>
               )}
-            </motion.div>
+            </div>
 
             {/* Listings Grid */}
             {loading ? (

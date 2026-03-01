@@ -55,10 +55,58 @@ export interface TextSelection {
 
 export interface UserPresence {
   userId: string;
-  cursor: CursorPosition | null;
-  selection: TextSelection | null;
+  user: User;
+  cursor?: CursorPosition | null;
+  selection?: TextSelection | null;
   isTyping: boolean;
-  lastActivity: number;
+  lastActive: Date;
+  lastActivity?: number;
+  cursorPosition?: { line: number; column: number };
+}
+
+// ============================================================================
+// WORKSPACE UI TYPES
+// ============================================================================
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  color: string;
+}
+
+export interface Reply {
+  id: string;
+  commentId: string;
+  userId: string;
+  user: User;
+  content: string;
+  createdAt: Date;
+}
+
+export interface Comment {
+  id: string;
+  workspaceId: string;
+  userId: string;
+  user: User;
+  content: string;
+  position: { line: number; column: number };
+  resolved: boolean;
+  replies: Reply[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface VersionHistoryEntry {
+  id: string;
+  workspaceId: string;
+  version: number;
+  userId: string;
+  user: User;
+  changes: string;
+  content: string;
+  timestamp: Date;
 }
 
 // ============================================================================

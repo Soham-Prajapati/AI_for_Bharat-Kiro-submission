@@ -1,6 +1,5 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
 export type InsightType = 'opportunity' | 'warning' | 'success';
@@ -58,11 +57,7 @@ function InsightCard({ insight, index }: { insight: Insight; index: number }) {
   const config = insightConfig[insight.type];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3, delay: index * 0.1 }}
+    <div
       className={`${config.bgColor} ${config.borderColor} border rounded-xl p-4 hover:shadow-lg transition-shadow`}
       role="article"
       aria-label={`${insight.type} insight: ${insight.title}`}
@@ -94,38 +89,32 @@ function InsightCard({ insight, index }: { insight: Insight; index: number }) {
                 {isExpanded ? 'Hide details' : 'Show details'}
               </button>
 
-              <AnimatePresence>
+              
                 {isExpanded && (
-                  <motion.div
+                  <div
                     id={`insight-details-${insight.id}`}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
                     <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
                       <p className="text-gray-400 text-sm">{insight.details}</p>
                     </div>
-                  </motion.div>
+                  </div>
                 )}
-              </AnimatePresence>
+              
             </>
           )}
 
           {insight.action && (
-            <motion.button
+            <button
               onClick={insight.action.onClick}
               className={`${config.textColor} bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors`}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
             >
               {insight.action.label}
-            </motion.button>
+            </div>
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -148,10 +137,8 @@ export default function InsightPanel({
 
   if (loading) {
     return (
-      <motion.div
+      <div
         className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6 ${className}`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
       >
         <h2 className="text-2xl font-bold text-white mb-6">AI Insights</h2>
         <div className="space-y-4">
@@ -159,16 +146,13 @@ export default function InsightPanel({
             <div key={i} className="animate-pulse bg-gray-700/30 rounded-xl h-32"></div>
           ))}
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div
+    <div
       className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6 ${className}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
       role="region"
       aria-label="AI Insights Panel"
     >
@@ -212,14 +196,14 @@ export default function InsightPanel({
         </div>
       ) : (
         <div className="space-y-4">
-          <AnimatePresence mode="popLayout">
+          
             {filteredInsights.map((insight, index) => (
               <InsightCard key={insight.id} insight={insight} index={index} />
             ))}
-          </AnimatePresence>
+          
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
 
@@ -245,15 +229,13 @@ function FilterButton({
     : 'bg-purple-600 text-white';
 
   return (
-    <motion.button
+    <button
       onClick={onClick}
       className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
         active ? colorClasses : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
       }`}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
     >
       {label} <span className="opacity-75">({count})</span>
-    </motion.button>
+    </div>
   );
 }

@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Recommendation, PLATFORM_COLORS, PLATFORM_NAMES } from '@/types/analytics';
 import { AlertCircle, TrendingUp, Lightbulb } from 'lucide-react';
 
@@ -31,10 +30,7 @@ const priorityConfig = {
 
 export default function RecommendationList({ recommendations }: RecommendationListProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.7 }}
+    <div
       className="bg-gray-800 rounded-xl p-6 border border-gray-700"
     >
       <h2 className="text-2xl font-bold text-white mb-6">AI Recommendations</h2>
@@ -46,11 +42,8 @@ export default function RecommendationList({ recommendations }: RecommendationLi
           const platformColor = rec.platform ? PLATFORM_COLORS[rec.platform] : undefined;
           
           return (
-            <motion.div
+            <div
               key={rec.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.8 + index * 0.1 }}
               className={`p-4 rounded-lg border ${config.borderColor} ${config.bgColor} hover:bg-opacity-20 transition-all duration-300`}
             >
               <div className="flex items-start gap-3">
@@ -77,10 +70,10 @@ export default function RecommendationList({ recommendations }: RecommendationLi
                   <p className="text-gray-200 text-sm leading-relaxed">{rec.message}</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useState } from 'react'
 import {
   Radar,
@@ -116,11 +115,8 @@ export default function DNAChart({
       
       if (dimension) {
         return (
-          <motion.div
+          <div
             className="bg-gray-900/95 backdrop-blur-sm border border-gray-700 rounded-lg p-4 shadow-xl"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.2 }}
           >
             <div className="flex items-center gap-2 mb-2">
               <span className="text-2xl">{dimension.icon}</span>
@@ -132,7 +128,7 @@ export default function DNAChart({
             <div className="text-sm text-gray-300 max-w-xs">
               {dimension.description}
             </div>
-          </motion.div>
+          </div>
         )
       }
     }
@@ -140,11 +136,8 @@ export default function DNAChart({
   }
 
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
     >
       {/* Header */}
       <div className="mb-6">
@@ -199,26 +192,19 @@ export default function DNAChart({
 
       {/* Legend with dimension details */}
       {showLegend && (
-        <motion.div
+        <div
           className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
         >
           {dnaData.dimensions.map((dimension, index) => (
-            <motion.div
+            <div
               key={dimension.dimension}
               className={`p-4 rounded-lg border transition-all cursor-pointer ${
                 hoveredDimension === dimension.dimension
                   ? 'bg-gray-700/70 border-gray-500'
                   : 'bg-gray-800/30 border-gray-700'
               }`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 + index * 0.1 }}
               onMouseEnter={() => setHoveredDimension(dimension.dimension)}
               onMouseLeave={() => setHoveredDimension(null)}
-              whileHover={{ scale: 1.05 }}
             >
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-2xl">{dimension.icon}</span>
@@ -240,31 +226,21 @@ export default function DNAChart({
               
               {/* Progress bar */}
               <div className="mt-3 h-2 bg-gray-700 rounded-full overflow-hidden">
-                <motion.div
+                <div
                   className="h-full rounded-full"
                   style={{ 
                     background: `linear-gradient(90deg, ${dimension.color}dd, ${dimension.color})` 
                   }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${dimension.value}%` }}
-                  transition={{ 
-                    delay: 1.2 + index * 0.1, 
-                    duration: 0.8, 
-                    ease: 'easeOut' 
-                  }}
                 />
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       )}
 
       {/* Summary Stats */}
-      <motion.div
+      <div
         className="mt-6 pt-6 border-t border-gray-700 grid grid-cols-3 gap-4 text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
       >
         <div>
           <div className="text-2xl font-bold text-purple-400">
@@ -287,7 +263,7 @@ export default function DNAChart({
           </div>
           <div className="text-xs text-gray-400 mt-1">Total Dimensions</div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   )
 }

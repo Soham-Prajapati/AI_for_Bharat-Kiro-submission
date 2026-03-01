@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useState } from 'react'
 
 type CreatorMode = 'ai-first' | 'hybrid' | 'human-first'
@@ -80,12 +79,8 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
       <div className="max-w-7xl mx-auto">
-        <motion.div
+        <div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
             Choose Your Creator Mode
@@ -93,7 +88,7 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Select the workflow that matches your content creation style
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {modes.map((mode, index) => {
@@ -101,32 +96,25 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
             const isHovered = hoveredMode === mode.id
 
             return (
-              <motion.div
+              <div
                 key={mode.id}
                 className="relative"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15, duration: 0.5 }}
                 onHoverStart={() => setHoveredMode(mode.id)}
                 onHoverEnd={() => setHoveredMode(null)}
               >
                 {/* Recommended Badge */}
                 {mode.recommended && (
-                  <motion.div
+                  <div
                     className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 }}
                   >
                     <span className="inline-block px-4 py-1 text-sm font-semibold text-white bg-gradient-to-r from-pink-500 to-purple-500 rounded-full shadow-lg">
                       ⭐ Recommended
                     </span>
-                  </motion.div>
+                  </div>
                 )}
 
                 {/* Card */}
-                <motion.div
+                <div
                   className={`
                     relative h-full p-8 rounded-2xl backdrop-blur-sm transition-all duration-300
                     ${isSelected 
@@ -138,10 +126,6 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
                     borderColor: isSelected ? `rgb(168, 85, 247)` : undefined,
                     boxShadow: isSelected ? '0 0 40px rgba(168, 85, 247, 0.4)' : undefined
                   }}
-                  whileHover={{ y: -8 }}
-                  animate={{
-                    scale: isSelected ? 1.02 : 1
-                  }}
                 >
                   {/* Gradient overlay */}
                   <div 
@@ -150,32 +134,19 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
 
                   {/* Glowing border effect for selected */}
                   {isSelected && (
-                    <motion.div
+                    <div
                       className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${mode.gradient} opacity-20 blur-xl`}
                       style={{ zIndex: -1 }}
-                      animate={{
-                        opacity: [0.2, 0.3, 0.2]
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
                     />
                   )}
 
                   <div className="relative z-10">
                     {/* Icon */}
-                    <motion.div 
+                    <div 
                       className="text-6xl mb-4"
-                      animate={{
-                        scale: isHovered ? 1.1 : 1,
-                        rotate: isHovered ? [0, -5, 5, 0] : 0
-                      }}
-                      transition={{ duration: 0.3 }}
                     >
                       {mode.icon}
-                    </motion.div>
+                    </div>
 
                     {/* Title */}
                     <h3 className="text-2xl font-bold mb-1 text-white">
@@ -198,22 +169,18 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
                     {/* Benefits List */}
                     <ul className="space-y-3 mb-8">
                       {mode.benefits.map((benefit, idx) => (
-                        <motion.li
+                        <li
                           key={idx}
                           className="flex items-start text-gray-300 text-sm"
-                          initial={{ opacity: 0, x: -10 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: index * 0.15 + idx * 0.05 }}
                         >
                           <span className="text-green-400 mr-2 mt-0.5">✓</span>
                           <span>{benefit}</span>
-                        </motion.li>
+                        </div>
                       ))}
                     </ul>
 
                     {/* Select Button */}
-                    <motion.button
+                    <button
                       onClick={() => onModeSelect(mode.id)}
                       className={`
                         w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300
@@ -222,32 +189,26 @@ export default function ModeSelector({ selectedMode, onModeSelect }: ModeSelecto
                           : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }
                       `}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
                       aria-label={`Select ${mode.title} mode`}
                       aria-pressed={isSelected}
                     >
                       {isSelected ? '✓ Selected' : 'Select Mode'}
-                    </motion.button>
+                    </div>
                   </div>
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             )
           })}
         </div>
 
         {/* Info Footer */}
-        <motion.div
+        <div
           className="mt-12 text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8 }}
         >
           <p className="text-gray-400 text-sm">
             💡 You can change your creator mode anytime in settings
           </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

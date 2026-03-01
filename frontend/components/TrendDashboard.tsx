@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import {
   LineChart,
@@ -625,12 +624,8 @@ function TrendCard({ trend, index }: TrendCardProps) {
   const statusIcon = getStatusIcon(trend.status)
 
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5 hover:border-gray-600 transition-colors"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ scale: 1.02 }}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
@@ -649,15 +644,12 @@ function TrendCard({ trend, index }: TrendCardProps) {
           </div>
         </div>
         
-        <motion.div
+        <div
           className="text-2xl font-bold"
           style={{ color: statusColor }}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: index * 0.05 + 0.2, type: 'spring' }}
         >
           +{trend.growthRate}%
-        </motion.div>
+        </div>
       </div>
 
       {/* Metrics */}
@@ -709,7 +701,7 @@ function TrendCard({ trend, index }: TrendCardProps) {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -812,12 +804,9 @@ function PlatformHeatmap({ trend }: PlatformHeatmapProps) {
   return (
     <div className="space-y-2">
       {trend.platformIntensity.map((item, index) => (
-        <motion.div
+        <div
           key={item.platform}
           className="flex items-center gap-3"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.05 }}
         >
           <div className="w-24 text-sm text-gray-300 flex items-center gap-2">
             <span>{getPlatformIcon(item.platform)}</span>
@@ -825,21 +814,18 @@ function PlatformHeatmap({ trend }: PlatformHeatmapProps) {
           </div>
           
           <div className="flex-1 h-8 bg-gray-700/30 rounded-lg overflow-hidden relative">
-            <motion.div
+            <div
               className="h-full rounded-lg flex items-center justify-end pr-3"
               style={{
                 backgroundColor: getIntensityColor(item.intensity)
               }}
-              initial={{ width: 0 }}
-              animate={{ width: `${item.intensity}%` }}
-              transition={{ duration: 0.8, delay: index * 0.05 }}
             >
               <span className="text-xs font-bold text-white">
                 {item.intensity}%
               </span>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   )
@@ -870,10 +856,7 @@ export default function TrendDashboard({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+      <div
       >
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-3xl font-bold text-white">
@@ -886,69 +869,54 @@ export default function TrendDashboard({
         <p className="text-gray-400">
           Real-time trending topics with AI-powered predictions and platform analytics
         </p>
-      </motion.div>
+      </div>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <motion.div
+        <div
           className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">Total Trends</span>
             <span className="text-2xl">📊</span>
           </div>
           <div className="text-3xl font-bold text-white">{data.trends.length}</div>
-        </motion.div>
+        </div>
 
-        <motion.div
+        <div
           className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.15 }}
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">Rising</span>
             <span className="text-2xl">📈</span>
           </div>
           <div className="text-3xl font-bold text-green-400">{risingCount}</div>
-        </motion.div>
+        </div>
 
-        <motion.div
+        <div
           className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">At Peak</span>
             <span className="text-2xl">🔥</span>
           </div>
           <div className="text-3xl font-bold text-amber-400">{peakCount}</div>
-        </motion.div>
+        </div>
 
-        <motion.div
+        <div
           className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.25 }}
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">Declining</span>
             <span className="text-2xl">📉</span>
           </div>
           <div className="text-3xl font-bold text-red-400">{decliningCount}</div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Filter Buttons */}
-      <motion.div
+      <div
         className="flex gap-3 flex-wrap"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.3 }}
       >
         {(['all', 'rising', 'peak', 'declining'] as const).map((status) => (
           <button
@@ -963,7 +931,7 @@ export default function TrendDashboard({
             {status === 'all' ? 'All Trends' : `${getStatusIcon(status)} ${getStatusLabel(status)}`}
           </button>
         ))}
-      </motion.div>
+      </div>
 
       {/* Trend Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -980,16 +948,12 @@ export default function TrendDashboard({
 
       {/* Selected Trend Detail Modal */}
       {selectedTrend && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           onClick={() => setSelectedTrend(null)}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-gray-700 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-            initial={{ scale: 0.9, y: 20 }}
-            animate={{ scale: 1, y: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">
@@ -1083,17 +1047,14 @@ export default function TrendDashboard({
                 </div>
               )}
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
 
       {/* Top Predictions Section */}
       {showPredictions && (
-        <motion.div
+        <div
           className="bg-gradient-to-br from-purple-900/20 to-gray-800/50 backdrop-blur-sm rounded-xl border border-purple-700/30 p-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
             <span>🔮</span>
@@ -1105,12 +1066,9 @@ export default function TrendDashboard({
               .sort((a, b) => b.confidence - a.confidence)
               .slice(0, 3)
               .map((trend, index) => (
-                <motion.div
+                <div
                   key={trend.id}
                   className="bg-gray-800/30 rounded-lg p-4 border border-gray-700"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <div className="text-2xl font-bold text-purple-400">
@@ -1127,17 +1085,14 @@ export default function TrendDashboard({
                   </div>
                   
                   <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-                    <motion.div
+                    <div
                       className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${trend.confidence}%` }}
-                      transition={{ duration: 1, delay: 0.6 + index * 0.1 }}
                     />
                   </div>
-                </motion.div>
+                </div>
               ))}
           </div>
-        </motion.div>
+        </div>
       )}
     </div>
   )

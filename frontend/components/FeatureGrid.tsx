@@ -1,123 +1,73 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger)
 
 const features = [
-  {
-    icon: '🎯',
-    title: 'Platform Optimization',
-    description: 'AI adapts content for YouTube, Instagram, LinkedIn, Twitter, Facebook, and TikTok with platform-specific best practices.',
-    gradient: 'from-purple-500 to-pink-500'
-  },
-  {
-    icon: '🌐',
-    title: '9 Indian Languages',
-    description: 'Create content in Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati, Kannada, Malayalam, and Punjabi.',
-    gradient: 'from-blue-500 to-cyan-500'
-  },
-  {
-    icon: '⚡',
-    title: '60-Second Generation',
-    description: 'What takes 4-6 hours manually now takes just 60 seconds. Save 80% of your content creation time.',
-    gradient: 'from-green-500 to-emerald-500'
-  },
-  {
-    icon: '🎨',
-    title: 'Smart Formatting',
-    description: 'Automatic hashtags, captions, descriptions, and thumbnails optimized for each platform.',
-    gradient: 'from-orange-500 to-red-500'
-  },
-  {
-    icon: '📊',
-    title: 'Analytics Dashboard',
-    description: 'Track performance across all platforms with unified analytics and insights.',
-    gradient: 'from-indigo-500 to-purple-500'
-  },
-  {
-    icon: '🤖',
-    title: 'AI Learning',
-    description: 'Our AI learns from your content style and audience preferences to improve over time.',
-    gradient: 'from-pink-500 to-rose-500'
-  }
+  { icon: '🎯', title: 'Multi-Platform', desc: 'Generate for YouTube, Instagram, LinkedIn, Twitter, Facebook, TikTok', span: 'col-span-1' },
+  { icon: '🌍', title: '9 Indian Languages', desc: 'Hindi, Tamil, Telugu, Kannada, Malayalam, Bengali, Marathi, Gujarati, English', span: 'col-span-1 md:col-span-2' },
+  { icon: '⚡', title: '60 Seconds Flat', desc: 'Transform 1 video into 6 platform-optimized posts in under a minute', span: 'col-span-1' },
+  { icon: '🧠', title: 'Creator DNA', desc: 'AI learns your style, tone, and personality for authentic content', span: 'col-span-1' },
+  { icon: '📊', title: 'Viral Predictor', desc: 'Get viral score predictions before you post — hooks, pacing, emotional peaks', span: 'col-span-1' },
+  { icon: '💰', title: 'ROI Calculator', desc: 'Track time and money saved with detailed analytics', span: 'col-span-1' },
 ]
 
 export default function FeatureGrid() {
+  const gridRef = useRef<HTMLDivElement>(null)
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    const scroller = document.querySelector('#main-scroll') || undefined
+
+    // Clip-path wipe reveal
+    cardRefs.current.filter(Boolean).forEach((card, i) => {
+      gsap.fromTo(card, {
+        clipPath: 'inset(0 0 100% 0)',
+        opacity: 0,
+      }, {
+        clipPath: 'inset(0 0 0% 0)',
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: card,
+          scroller,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse',
+        },
+        delay: i * 0.06,
+      })
+    })
+
+    return () => { ScrollTrigger.getAll().forEach(t => t.kill()) }
+  }, [])
+
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-            Powerful Features
+    <section className="py-28 px-6 relative">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="text-center mb-16">
+          <p className="text-text-tertiary text-xs uppercase tracking-[0.2em] mb-3">Features</p>
+          <h2 className="font-display text-[clamp(1.8rem,4vw,3rem)] font-extrabold max-w-[600px] mx-auto">
+            Everything You Need to <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">Scale Content</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Everything you need to scale your content across multiple platforms
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              className="group relative p-8 bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 hover:border-gray-600 transition-all duration-300"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ y: -5 }}
-            >
-              {/* Gradient overlay on hover */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`} />
-              
-              <div className="relative z-10">
-                <div className="text-5xl mb-4">{feature.icon}</div>
-                <h3 className="text-2xl font-bold mb-3 text-white">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-400 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-
-              {/* Animated border gradient */}
-              <motion.div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300`}
-                style={{ zIndex: -1 }}
-              />
-            </motion.div>
-          ))}
         </div>
 
-        {/* Platform Icons */}
-        <motion.div
-          className="mt-20 text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-        >
-          <p className="text-gray-400 mb-6 text-lg">Supported Platforms</p>
-          <div className="flex flex-wrap justify-center gap-8 items-center">
-            {['YouTube', 'Instagram', 'LinkedIn', 'Twitter', 'Facebook', 'TikTok'].map((platform, index) => (
-              <motion.div
-                key={platform}
-                className="px-6 py-3 bg-gray-800 rounded-lg border border-gray-700 text-gray-300 font-semibold"
-                whileHover={{ scale: 1.1, borderColor: '#a855f7' }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                {platform}
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {features.map((f, i) => (
+            <div
+              key={i}
+              ref={el => { cardRefs.current[i] = el }}
+              className={`glass glass-hover rounded-2xl p-7 group transition-all duration-300 hover:-translate-y-1 ${f.span}`}
+            >
+              <div className="text-3xl mb-3">{f.icon}</div>
+              <h3 className="font-display font-bold text-lg mb-2">{f.title}</h3>
+              <p className="text-text-secondary text-sm leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

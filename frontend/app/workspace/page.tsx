@@ -6,7 +6,6 @@ import UserPresence from '@/components/workspace/UserPresence';
 import CommentThread from '@/components/workspace/CommentThread';
 import VersionHistory from '@/components/workspace/VersionHistory';
 import {
-  WorkspaceDocument,
   UserPresence as UserPresenceType,
   Comment,
   VersionHistoryEntry,

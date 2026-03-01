@@ -13,7 +13,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { motion } from 'framer-motion';
 
 export interface TrendChartProps {
   data: any[];
@@ -58,10 +57,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
       className="rounded-xl border border-gray-800 bg-gradient-to-br from-gray-900/50 to-gray-800/30 p-6 backdrop-blur-sm"
     >
       <h3 className="mb-4 text-lg font-semibold text-white">{title}</h3>
@@ -136,6 +132,6 @@ export const TrendChart: React.FC<TrendChartProps> = ({
           </LineChart>
         )}
       </ResponsiveContainer>
-    </motion.div>
+    </div>
   );
 };

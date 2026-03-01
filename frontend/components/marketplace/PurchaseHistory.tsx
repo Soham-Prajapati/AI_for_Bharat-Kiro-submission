@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Download, Calendar, CreditCard, FileText, AlertCircle } from 'lucide-react';
 import { Transaction } from '@/types/api';
 
@@ -109,30 +108,21 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
     <div>
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+        <div
           className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 rounded-xl p-6 border border-purple-500/30"
         >
           <p className="text-purple-300 text-sm mb-1">Total Purchases</p>
           <p className="text-3xl font-bold text-white">{transactions.length}</p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+        <div
           className="bg-gradient-to-br from-green-500/20 to-green-600/10 rounded-xl p-6 border border-green-500/30"
         >
           <p className="text-green-300 text-sm mb-1">Total Spent</p>
           <p className="text-3xl font-bold text-white">${totalSpent.toFixed(2)}</p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+        <div
           className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 rounded-xl p-6 border border-blue-500/30"
         >
           <p className="text-blue-300 text-sm mb-1">This Month</p>
@@ -143,7 +133,7 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
               return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
             }).length}
           </p>
-        </motion.div>
+        </div>
       </div>
 
       {/* Transactions List */}
@@ -158,11 +148,8 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
       ) : (
         <div className="space-y-4">
           {transactions.map((transaction, index) => (
-            <motion.div
+            <div
               key={transaction.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
               className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-colors"
             >
               <div className="flex items-start justify-between mb-4">
@@ -216,7 +203,7 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
                   </p>
                 </div>
               )}
-            </motion.div>
+            </div>
           ))}
         </div>
       )}

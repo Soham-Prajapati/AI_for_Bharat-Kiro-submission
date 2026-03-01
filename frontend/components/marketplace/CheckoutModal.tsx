@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { X, CreditCard, Lock, CheckCircle, AlertCircle } from 'lucide-react';
 import { Listing } from '@/types/api';
 import apiClient from '@/services/api';
@@ -57,12 +56,9 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
   };
 
   return (
-    <AnimatePresence>
+    
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
+        <div
           className="bg-gray-900 border border-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         >
           {/* Header */}
@@ -262,8 +258,8 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
               </>
             )}
           </div>
-        </motion.div>
+        </div>
       </div>
-    </AnimatePresence>
+    
   );
 }

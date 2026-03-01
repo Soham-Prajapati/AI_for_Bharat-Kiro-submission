@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import apiClient from '@/services/api'
 import { CulturalAdaptation, CulturalChange } from '@/types/api'
 
@@ -202,10 +201,8 @@ export default function CulturalSettings({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <motion.div
+      <div
         initial={animated ? { opacity: 0, y: -20 } : {}}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
       >
         <h2 className="text-3xl font-bold text-white mb-2">
           🌍 Cultural Adaptation
@@ -213,14 +210,12 @@ export default function CulturalSettings({
         <p className="text-gray-400">
           Adapt your content for different regional audiences with culturally relevant references
         </p>
-      </motion.div>
+      </div>
 
       {/* Region Selection */}
-      <motion.div
+      <div
         className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
         initial={animated ? { opacity: 0, y: 20 } : {}}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
       >
         <h3 className="text-xl font-semibold text-white mb-4">
           Select Target Region
@@ -242,7 +237,7 @@ export default function CulturalSettings({
               }
 
               return (
-                <motion.button
+                <button
                   key={region}
                   onClick={() => handleRegionChange(region)}
                   className={`p-4 rounded-lg border-2 transition-all ${
@@ -251,29 +246,23 @@ export default function CulturalSettings({
                       : 'bg-gray-800/50 border-gray-700 hover:border-purple-500'
                   }`}
                   initial={animated ? { opacity: 0, scale: 0.9 } : {}}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: 0.2 + index * 0.05 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   title={info.description}
                 >
                   <div className="text-3xl mb-2">{info.flag}</div>
                   <div className="text-sm font-semibold text-white">
                     {info.name}
                   </div>
-                </motion.button>
+                </div>
               )
             })}
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* Content Input */}
-      <motion.div
+      <div
         className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
         initial={animated ? { opacity: 0, y: 20 } : {}}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
       >
         <h3 className="text-xl font-semibold text-white mb-4">
           Content to Adapt
@@ -290,12 +279,10 @@ export default function CulturalSettings({
           <span className="text-sm text-gray-400">
             {content.length} characters
           </span>
-          <motion.button
+          <button
             onClick={handleAdaptClick}
             disabled={loading || !content.trim()}
             className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -305,45 +292,36 @@ export default function CulturalSettings({
             ) : (
               'Adapt Content'
             )}
-          </motion.button>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Error Message */}
-      <AnimatePresence>
+      
         {error && (
-          <motion.div
+          <div
             className="p-4 bg-red-900/20 border border-red-800/30 rounded-lg"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
           >
             <p className="text-red-400">⚠️ {error}</p>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      
 
       {/* Loading State */}
       {loading && (
-        <motion.div
+        <div
           className="bg-gray-800/50 rounded-xl p-6 animate-pulse"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
         >
           <div className="h-32 bg-gray-700 rounded mb-4"></div>
           <div className="h-24 bg-gray-700 rounded"></div>
-        </motion.div>
+        </div>
       )}
 
       {/* Adaptation Results */}
-      <AnimatePresence>
+      
         {!loading && adaptation && showPreview && (
-          <motion.div
+          <div
             className="space-y-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.6 }}
           >
             {/* Adapted Content */}
             <div className="bg-gradient-to-br from-green-900/20 to-gray-800/50 backdrop-blur-sm rounded-xl border border-green-800/30 p-6">
@@ -384,12 +362,9 @@ export default function CulturalSettings({
 
                 <div className="space-y-3">
                   {adaptation.changes.map((change, index) => (
-                    <motion.div
+                    <div
                       key={index}
                       className="flex items-center gap-4 p-4 bg-gray-900/50 rounded-lg border border-gray-700"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
                     >
                       <div className="text-2xl">
                         {getChangeIcon(change.type)}
@@ -416,7 +391,7 @@ export default function CulturalSettings({
                           </span>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -430,9 +405,9 @@ export default function CulturalSettings({
                 </p>
               </div>
             )}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      
     </div>
   )
 }

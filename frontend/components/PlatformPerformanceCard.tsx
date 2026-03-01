@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { Platform, PLATFORM_COLORS, PLATFORM_NAMES } from '@/types/analytics';
 
@@ -58,10 +57,8 @@ export default function PlatformPerformanceCard({
 
   if (loading) {
     return (
-      <motion.div
+      <div
         className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5 ${className}`}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
       >
         <div className="animate-pulse">
           <div className="flex items-center gap-3 mb-4">
@@ -77,21 +74,18 @@ export default function PlatformPerformanceCard({
             <div className="h-3 bg-gray-700 rounded"></div>
           </div>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   const isPositive = change !== undefined && change >= 0;
 
   return (
-    <motion.div
+    <div
       className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5 hover:border-gray-600 transition-all ${
         onClick ? 'cursor-pointer' : ''
       } ${className}`}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
       whileHover={onClick ? { y: -4, scale: 1.02 } : {}}
-      transition={{ duration: 0.3 }}
       onClick={onClick}
       role={onClick ? 'button' : 'article'}
       aria-label={`${platformName} performance card`}
@@ -158,7 +152,7 @@ export default function PlatformPerformanceCard({
           </ResponsiveContainer>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
 

@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
 // ============================================================================
@@ -126,11 +125,8 @@ export default function ViralScoreGauge({
   const rotation = (displayScore / 100) * 180 - 90
 
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
     >
       {/* Header */}
       <div className="mb-6">
@@ -170,7 +166,7 @@ export default function ViralScoreGauge({
             />
             
             {/* Colored progress arc */}
-            <motion.path
+            <path
               d="M 20 90 A 80 80 0 0 1 180 90"
               fill="none"
               stroke="url(#gaugeGradient)"
@@ -178,16 +174,10 @@ export default function ViralScoreGauge({
               strokeLinecap="round"
               strokeDasharray="251.2"
               strokeDashoffset={251.2 - (displayScore / 100) * 251.2}
-              initial={{ strokeDashoffset: 251.2 }}
-              animate={{ strokeDashoffset: 251.2 - (displayScore / 100) * 251.2 }}
-              transition={{ duration: animated ? 2 : 0, ease: 'easeOut' }}
             />
 
             {/* Needle */}
-            <motion.g
-              initial={{ rotate: -90 }}
-              animate={{ rotate: rotation }}
-              transition={{ duration: animated ? 2 : 0, ease: 'easeOut' }}
+            <div g
               style={{ transformOrigin: '100px 90px' }}
             >
               <line
@@ -200,20 +190,17 @@ export default function ViralScoreGauge({
                 strokeLinecap="round"
               />
               <circle cx="100" cy="90" r="6" fill={scoreColor} />
-            </motion.g>
+            </div>
           </svg>
 
           {/* Score Display */}
           <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
-            <motion.div
+            <div
               className="text-5xl font-bold"
               style={{ color: scoreColor }}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.5, duration: 0.5, type: 'spring' }}
             >
               {displayScore}
-            </motion.div>
+            </div>
             <div className="text-sm text-gray-400 mt-1">{scoreLabel}</div>
           </div>
         </div>
@@ -230,21 +217,15 @@ export default function ViralScoreGauge({
 
       {/* Viral Factors */}
       {showFactors && data.factors.length > 0 && (
-        <motion.div
+        <div
           className="mb-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
         >
           <h3 className="text-lg font-semibold text-white mb-4">Key Factors</h3>
           <div className="space-y-3">
             {data.factors.map((factor, index) => (
-              <motion.div
+              <div
                 key={factor.name}
                 className="bg-gray-800/30 rounded-lg p-4 border border-gray-700"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1 + index * 0.1 }}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-semibold text-white">
@@ -261,50 +242,37 @@ export default function ViralScoreGauge({
                 
                 {/* Progress bar */}
                 <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-                  <motion.div
+                  <div
                     className="h-full rounded-full"
                     style={{ backgroundColor: getScoreColor(factor.impact) }}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${factor.impact}%` }}
-                    transition={{
-                      delay: 1.2 + index * 0.1,
-                      duration: 0.8,
-                      ease: 'easeOut'
-                    }}
                   />
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Recommendations */}
       {showRecommendations && data.recommendations.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.6 }}
+        <div
         >
           <h3 className="text-lg font-semibold text-white mb-4">
             💡 Recommendations
           </h3>
           <div className="space-y-2">
             {data.recommendations.map((recommendation, index) => (
-              <motion.div
+              <div
                 key={index}
                 className="flex items-start gap-3 bg-blue-900/20 border border-blue-800/30 rounded-lg p-3"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.6 + index * 0.1 }}
               >
                 <span className="text-blue-400 mt-0.5">→</span>
                 <span className="text-sm text-gray-300">{recommendation}</span>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       )}
-    </motion.div>
+    </div>
   )
 }

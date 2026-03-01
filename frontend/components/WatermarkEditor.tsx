@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import apiClient from '@/services/api';
 import { useToastNotifications } from '@/hooks/useToastNotifications';
 
@@ -242,11 +241,8 @@ export default function WatermarkEditor({
         {/* Left Panel - Controls */}
         <div className="lg:col-span-1 space-y-6">
           {/* Logo Upload */}
-          <motion.div
+          <div
             className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
           >
             <h3 className="text-lg font-semibold text-white mb-4">Logo</h3>
             
@@ -289,14 +285,11 @@ export default function WatermarkEditor({
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
 
           {/* Position Presets */}
-          <motion.div
+          <div
             className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
           >
             <h3 className="text-lg font-semibold text-white mb-4">Position</h3>
             
@@ -325,14 +318,11 @@ export default function WatermarkEditor({
                 </p>
               </div>
             )}
-          </motion.div>
+          </div>
 
           {/* Opacity Control */}
-          <motion.div
+          <div
             className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
           >
             <h3 className="text-lg font-semibold text-white mb-4">Opacity</h3>
             
@@ -353,14 +343,11 @@ export default function WatermarkEditor({
                 <span className="text-gray-400">100%</span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Size Control */}
-          <motion.div
+          <div
             className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.3 }}
           >
             <h3 className="text-lg font-semibold text-white mb-4">Size</h3>
             
@@ -381,14 +368,11 @@ export default function WatermarkEditor({
                 <span className="text-gray-400">Large</span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Rotation Control */}
-          <motion.div
+          <div
             className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
           >
             <h3 className="text-lg font-semibold text-white mb-4">Rotation</h3>
             
@@ -409,16 +393,13 @@ export default function WatermarkEditor({
                 <span className="text-gray-400">180°</span>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Right Panel - Preview */}
         <div className="lg:col-span-2">
-          <motion.div
+          <div
             className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5 h-full"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.5 }}
           >
             <h3 className="text-lg font-semibold text-white mb-4">Preview</h3>
             
@@ -460,7 +441,7 @@ export default function WatermarkEditor({
 
               {/* Watermark Overlay */}
               {settings.logoUrl && previewUrl && (
-                <motion.div
+                <div
                   className="absolute cursor-move"
                   style={{
                     left: `${settings.customPosition.x}%`,
@@ -484,8 +465,6 @@ export default function WatermarkEditor({
                       },
                     }));
                   }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   <img
                     src={settings.logoUrl}
@@ -497,7 +476,7 @@ export default function WatermarkEditor({
                     }}
                     className="max-w-none"
                   />
-                </motion.div>
+                </div>
               )}
             </div>
 
@@ -521,7 +500,7 @@ export default function WatermarkEditor({
                 )}
               </button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>

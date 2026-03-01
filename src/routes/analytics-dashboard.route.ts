@@ -10,7 +10,7 @@ const cache = new CacheService();
 router.get('/metrics', asyncHandler(async (req: Request, res: Response) => {
   const { userId, timeRange = '30d' } = req.query;
   const cacheKey = `analytics:metrics:${userId}:${timeRange}`;
-  const cached = await cache.get(cacheKey);
+  const cached = cache.get(cacheKey);
 
   if (cached) {
     return res.json(JSON.parse(cached as string));
@@ -18,7 +18,7 @@ router.get('/metrics', asyncHandler(async (req: Request, res: Response) => {
 
   const metrics = await unifiedAnalyticsService.getDashboardMetrics(userId as string, timeRange as string);
 
-  await cache.set(cacheKey, JSON.stringify(metrics), 600); // 10 min cache
+  cache.set(cacheKey, JSON.stringify(metrics), 600); // 10 min cache
   res.json(metrics);
 }));
 
