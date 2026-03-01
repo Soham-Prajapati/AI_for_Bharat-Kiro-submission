@@ -32,7 +32,7 @@ export function useContentGeneration() {
 
       const response = await apiClient.generate.create({
         jobId: params.fileId,
-        platforms: params.platforms,
+        platforms: params.platforms as any,
         language: params.language as any,
         creatorMode: params.creatorMode as any,
       });
@@ -52,7 +52,7 @@ export function useContentGeneration() {
           platforms: params.platforms,
           language: params.language,
           creatorMode: params.creatorMode,
-          qualityScore: response.qualityScore,
+          qualityScore: (response as any).qualityScore,
         },
       };
 
@@ -81,7 +81,7 @@ export function useContentGeneration() {
     try {
       actions.setLoading(true);
       const response = await apiClient.generate.get(generationId);
-      
+
       const contentItem: ContentItem = {
         id: response.generationId,
         title: `Generated Content - ${new Date().toLocaleDateString()}`,
@@ -91,10 +91,10 @@ export function useContentGeneration() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         metadata: {
-          qualityScore: response.qualityScore,
+          qualityScore: (response as any).qualityScore,
         },
       };
-      
+
       actions.addContentItem(contentItem);
       return { success: true };
     } catch (error) {

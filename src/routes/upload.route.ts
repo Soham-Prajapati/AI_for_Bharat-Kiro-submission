@@ -3,6 +3,7 @@ import multer from 'multer';
 import { S3Service } from '../services/s3.service';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError, AWSError } from '../types/errors';
+import { videoURLProcessor } from '../services/video-url-processor.service';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 100 * 1024 * 1024 } });
@@ -42,6 +43,32 @@ router.post('/', upload.single('file'), asyncHandler(async (req: Request, res: R
     });
   } catch (error: any) {
     throw new AWSError(error.message || 'Upload failed', 'S3');
+  }
+}));
+
+// Process YouTube or any supported Video URL
+router.post('/youtube', asyncHandler(async (req: Request, res: Response) => {
+  const { url } = req.body;
+  const userId = req.body.userId || 'anonymous';
+
+  if (!url) {
+    throw new ValidationError('Video URL is required');
+  }
+
+  try {
+    // Note: processFromURL currently simulates extraction for the demo to return quickly
+    const result = await videoURLProcessor.processFromURL(url, userId);
+
+    res.json({
+      success: true,
+      fileId: result.videoId,
+      metadata: result.metadata,
+      domain: result.domain,
+      status: 'processing',
+      type: 'url'
+    });
+  } catch (error: any) {
+    throw new AWSError(error.message || 'Failed to process video URL', 'Video URL Processor');
   }
 }));
 

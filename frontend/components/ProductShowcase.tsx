@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger)
 
-const urls = ['app.contentai.in/upload', 'app.contentai.in/processing', 'app.contentai.in/dashboard']
+const urls = ['app.kla.ai/upload', 'app.kla.ai/processing', 'app.kla.ai/dashboard']
 const captions = [
   { title: 'Step 1 — Upload Anything', desc: 'Drop a video, paste a YouTube link, or import audio.' },
   { title: 'Step 2 — Watch AI Work Live', desc: 'Transcription, domain detection, multi-platform generation — streamed via SSE.' },

@@ -14,7 +14,7 @@ const Toast: React.FC<{ toast: ToastType }> = ({ toast }) => {
     const startTime = Date.now();
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
-      const remaining = Math.max(0, 100 - (elapsed / toast.duration) * 100);
+      const remaining = Math.max(0, 100 - (elapsed / (toast.duration || 5000)) * 100);
       setProgress(remaining);
 
       if (remaining === 0) {

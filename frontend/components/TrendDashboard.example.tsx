@@ -5,6 +5,7 @@
  * with various configurations and custom data.
  */
 
+import React from 'react';
 import TrendDashboard, { TrendDashboardData, TrendData } from './TrendDashboard'
 
 // ============================================================================

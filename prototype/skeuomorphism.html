@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QALAA | Skeuomorphism Theme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            background: url('https://www.transparenttextures.com/patterns/dark-leather.png') #2c2c2c;
+            color: #f1f1f1;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        /* Machined Metal Panel */
+        .metal-panel {
+            background: linear-gradient(to bottom, #e0e0e0 0%, #b8b8b8 100%);
+            border: 1px solid #777;
+            border-bottom: 2px solid #555;
+            border-radius: 12px;
+            box-shadow:
+                inset 0 1px 1px rgba(255, 255, 255, 0.8),
+                0 10px 20px rgba(0, 0, 0, 0.5),
+                0 0 0 6px rgba(0, 0, 0, 0.1);
+            color: #333;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        /* Leather Card */
+        .leather-card {
+            background: url('https://www.transparenttextures.com/patterns/leather.png') #5c4033;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 2px 5px rgba(0, 0, 0, 0.5);
+            color: #f9dcb3;
+        }
+
+        /* Physical Glass Screen */
+        .crt-screen {
+            background: radial-gradient(circle at center, #1b3a1d 0%, #0a1f0b 100%);
+            border: 8px solid #111;
+            border-radius: 16px;
+            box-shadow:
+                inset 0 5px 20px rgba(0, 0, 0, 1),
+                inset 0 -2px 5px rgba(255, 255, 255, 0.2),
+                0 2px 0 rgba(255, 255, 255, 0.3);
+            color: #3f0;
+            font-family: 'Courier New', Courier, monospace;
+            text-shadow: 0 0 5px #3f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crt-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+            border-radius: 8px 8px 0 0;
+        }
+
+        /* Physical Button */
+        .physical-btn {
+            background: linear-gradient(to bottom, #e23b3b 0%, #a01a1a 100%);
+            border: 1px solid #5a0000;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            box-shadow:
+                inset 0 4px 8px rgba(255, 100, 100, 0.6),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.3),
+                0 8px 0 #5a0000,
+                0 15px 20px rgba(0, 0, 0, 0.6);
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.8);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.1s;
+        }
+
+        .physical-btn:active {
+            transform: translateY(6px);
+            box-shadow:
+                inset 0 4px 8px rgba(255, 100, 100, 0.6),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.3),
+                0 2px 0 #5a0000,
+                0 5px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Stitched UI Divider */
+        .stitch-line {
+            border-bottom: 2px dashed rgba(0, 0, 0, 0.5);
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            height: 0;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center py-12 px-6">
+
+    <div class="metal-panel w-full max-w-4xl p-10">
+
+        <header class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full border-4 border-gray-400"
+                    style="background: radial-gradient(circle, #ddd, #888); box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 2px 2px rgba(255,255,255,0.8)">
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black uppercase tracking-widest text-[#222]"
+                        style="text-shadow: 0 1px 0 #fff">QALAA Engine</h1>
+                    <p class="text-xs font-bold uppercase tracking-widest">Model: V3-Titanium</p>
+                </div>
+            </div>
+
+            <!-- Metallic Switch -->
+            <div
+                style="background: #222; border-radius: 20px; padding: 4px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.4)">
+                <div
+                    style="background: linear-gradient(to bottom, #d0d0d0, #888); width: 30px; height: 20px; border-radius: 10px; border: 1px solid #555; box-shadow: 0 2px 2px rgba(0,0,0,0.5)">
+                </div>
+            </div>
+        </header>
+
+        <div class="stitch-line"></div>
+
+        <div class="flex flex-col md:flex-row gap-10 items-center justify-between my-12">
+            <div class="flex-1">
+                <h2 class="text-4xl font-black mb-4 tracking-tight" style="text-shadow: 0 2px 0 #fff">The Return to
+                    Reality</h2>
+                <p class="text-lg font-medium leading-relaxed opacity-80 mb-6">Textures, depth, shadows, and physical
+                    metaphors. Buttons you want to push. Screens you want to touch. No flat design allowed.</p>
+
+                <div class="leather-card p-6">
+                    <h3 class="font-bold text-xl uppercase tracking-widest mb-2 border-b border-[#3a251b] pb-2"
+                        style="text-shadow: 0 1px 0 rgba(0,0,0,0.5)">Creator Log</h3>
+                    <p class="italic text-sm">"The system successfully distributed 6 assets prior to memory
+                        fragmentation."</p>
+                </div>
+            </div>
+
+            <!-- The Big Physical Button -->
+            <div class="bg-[#1a1a1a] p-8 rounded-2xl flex flex-col items-center shadow-inner border border-gray-600">
+                <p class="text-[#888] font-bold text-xs uppercase tracking-widest mb-6"
+                    style="text-shadow: 0 1px 0 #000">Master Control</p>
+                <button class="physical-btn">PROCESS<br><span class="text-xs opacity-80">ENGAGE</span></button>
+            </div>
+        </div>
+
+        <div class="crt-screen p-6 h-48 flex items-end">
+            <div>
+                <p>> SYSTEM INITIATED...</p>
+                <p>> LOADING BEDROCK MODELS [OK]</p>
+                <p>> AWAITING VIDEO INPUT_ <span class="animate-pulse">_</span></p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

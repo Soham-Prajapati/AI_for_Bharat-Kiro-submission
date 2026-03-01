@@ -61,7 +61,7 @@ export function generateMockListings(count: number = 100): Listing[] {
     const type = types[i % types.length];
     const titleOptions = titles[type];
     const title = `${titleOptions[i % titleOptions.length]} ${Math.floor(i / titleOptions.length) + 1}`;
-    
+
     listings.push({
       id: `listing_${i.toString().padStart(4, '0')}`,
       title,
@@ -99,7 +99,7 @@ export const demoScenarios = {
     console.log(`🔍 Scenario 2: Search for "${query}"`);
     const results = listings.filter(
       l => l.title.toLowerCase().includes(query.toLowerCase()) ||
-           l.description?.toLowerCase().includes(query.toLowerCase())
+        l.description?.toLowerCase().includes(query.toLowerCase())
     );
     console.log(`✅ Found ${results.length} results`);
     return results;
@@ -145,30 +145,30 @@ export const demoScenarios = {
   },
 
   // Scenario 6: Combined filters
-  combinedFilters: (listings: Listing[], query: string, type: ListingType, minPrice: number, maxPrice: number) => {
+  combinedFilters: (listings: Listing[], query: string, type: ListingType | 'all', minPrice: number, maxPrice: number) => {
     console.log(`🎨 Scenario 6: Combined Filters`);
     console.log(`   - Search: "${query}"`);
     console.log(`   - Type: ${type}`);
     console.log(`   - Price: $${minPrice}-$${maxPrice}`);
-    
+
     let results = listings;
-    
+
     // Apply search
     if (query) {
       results = results.filter(
         l => l.title.toLowerCase().includes(query.toLowerCase()) ||
-             l.description?.toLowerCase().includes(query.toLowerCase())
+          l.description?.toLowerCase().includes(query.toLowerCase())
       );
     }
-    
+
     // Apply type filter
     if (type !== 'all') {
       results = results.filter(l => l.type === type);
     }
-    
+
     // Apply price filter
     results = results.filter(l => l.price >= minPrice && l.price <= maxPrice);
-    
+
     console.log(`✅ Found ${results.length} listings matching all filters`);
     return results;
   },
@@ -176,25 +176,25 @@ export const demoScenarios = {
   // Scenario 7: Performance test
   performanceTest: () => {
     console.log('⚡ Scenario 7: Performance Test');
-    
+
     const start = performance.now();
     const listings = generateMockListings(150);
     const generateTime = performance.now() - start;
-    
+
     const searchStart = performance.now();
     const searchResults = listings.filter(l => l.title.toLowerCase().includes('template'));
     const searchTime = performance.now() - searchStart;
-    
+
     const filterStart = performance.now();
     const filterResults = listings.filter(l => l.type === 'template' && l.price >= 20 && l.price <= 50);
     const filterTime = performance.now() - filterStart;
-    
+
     console.log(`✅ Performance Results:`);
     console.log(`   - Generate 150 listings: ${generateTime.toFixed(2)}ms`);
     console.log(`   - Search 150 listings: ${searchTime.toFixed(2)}ms`);
     console.log(`   - Filter 150 listings: ${filterTime.toFixed(2)}ms`);
     console.log(`   - Total time: ${(generateTime + searchTime + filterTime).toFixed(2)}ms`);
-    
+
     return {
       generateTime,
       searchTime,
@@ -209,36 +209,36 @@ export const demoScenarios = {
 // Run all demo scenarios
 export function runAllDemos() {
   console.log('🚀 Running Marketplace Demo Scenarios\n');
-  
+
   // Scenario 1: Browse
   const listings = demoScenarios.browse100Listings();
   console.log('');
-  
+
   // Scenario 2: Search
   demoScenarios.searchListings(listings, 'template');
   console.log('');
-  
+
   // Scenario 3: Filter by type
   demoScenarios.filterByType(listings, 'script');
   console.log('');
-  
+
   // Scenario 4: Filter by price
   demoScenarios.filterByPrice(listings, 20, 50);
   console.log('');
-  
+
   // Scenario 5: Purchase
   const sampleListing = listings[0];
   demoScenarios.purchaseListing(sampleListing);
   console.log('');
-  
+
   // Scenario 6: Combined filters
   demoScenarios.combinedFilters(listings, 'video', 'template', 30, 70);
   console.log('');
-  
+
   // Scenario 7: Performance
   demoScenarios.performanceTest();
   console.log('');
-  
+
   console.log('✅ All demo scenarios completed successfully!');
 }
 

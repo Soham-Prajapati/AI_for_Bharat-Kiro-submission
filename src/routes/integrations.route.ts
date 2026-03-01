@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
+import { platformIntegrationService } from '../services/platform-integration.service';
 
 const router = Router();
 
@@ -12,18 +13,14 @@ router.post('/connect', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('userId, platform, and accessToken required');
   }
 
-  // TODO: Replace with real platform-integration.service.ts and OAuth
-  const mockConnection = {
-    connectionId: `conn_${Date.now()}`,
+  // Uses the actual platform integration service
+  const connection = await platformIntegrationService.connectPlatform(
     userId,
     platform,
-    status: 'connected',
-    connectedAt: new Date().toISOString(),
-    expiresAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(), // 60 days
-    source: 'mock'
-  };
+    accessToken
+  );
 
-  res.json(mockConnection);
+  res.json(connection);
 }));
 
 // POST /api/integrations/post - Post content to platform
@@ -34,35 +31,25 @@ router.post('/post', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('connectionId, content, and platform required');
   }
 
-  // TODO: Replace with real platform-integration.service.ts
-  const mockPost = {
-    postId: `post_${Date.now()}`,
+  // Uses the actual platform integration service
+  // Note: the PostRequest type doesn't support a separate 'platform' directly in its type signature,
+  // but it expects the connectionId to infer the platform inside the service.
+  const postResult = await platformIntegrationService.postToPlatform({
     connectionId,
-    platform,
-    status: 'published',
-    url: `https://${platform}.com/post/${Date.now()}`,
-    postedAt: new Date().toISOString(),
-    source: 'mock'
-  };
+    content
+  });
 
-  res.json(mockPost);
+  res.json(postResult);
 }));
 
 // GET /api/integrations/list/:userId - List user connections
 router.get('/list/:userId', asyncHandler(async (req: Request, res: Response) => {
   const { userId } = req.params;
 
-  // TODO: Replace with real platform-integration.service.ts
-  const mockConnections = {
-    connections: [
-      { platform: 'youtube', status: 'connected', connectedAt: '2026-02-20' },
-      { platform: 'instagram', status: 'connected', connectedAt: '2026-02-21' },
-      { platform: 'linkedin', status: 'disconnected', connectedAt: null }
-    ],
-    source: 'mock'
-  };
+  // Uses the actual platform integration service
+  const connections = await platformIntegrationService.getUserConnections(userId);
 
-  res.json(mockConnections);
+  res.json({ connections });
 }));
 
 export default router;

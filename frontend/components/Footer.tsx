@@ -55,7 +55,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/[0.05]">
-          <p className="text-text-tertiary text-xs">© 2026 ContentAI. Built for AI for Bharat.</p>
+          <p className="text-text-tertiary text-xs">© 2026 KLA. Built for AI for Bharat.</p>
           <p className="text-text-tertiary text-xs">Powered by AWS Bedrock · Claude 3 · AWS Transcribe</p>
         </div>
       </div>

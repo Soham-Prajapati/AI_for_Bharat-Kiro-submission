@@ -1,241 +1,140 @@
-# Design System & User Flow - ContentAI Web App
+# ✨ Design System — QALAA (formerly ContentAI)
 
-## Current Problems
-1. ❌ Looks AI-generated (generic black theme)
-2. ❌ No clear user flow
-3. ❌ Inconsistent spacing and typography
-4. ❌ No design system/tokens
-5. ❌ Landing page doesn't match app aesthetic
+> **Phase 5 Delivery**
+> A comprehensive design system mapping the "Luminous Glass" aesthetic to tangible UI tokens and component structures.
 
-## Design Research - Modern SaaS Apps
+---
 
-### Reference Apps Analysis
+## 5.1 Design Direction: "Luminous Glass"
 
-**Linear** (Project Management)
-- Colors: Purple accent (#5E6AD2), Dark backgrounds (#16171D, #1C1D24)
-- Typography: Inter font, clear hierarchy
-- Spacing: Consistent 8px grid
-- Feel: Professional, fast, minimal
+**Design Thesis:** 
+QALAA's design should feel like a command center for creators — transparent enough to build trust (you see how the AI thinks), structured enough to feel powerful (you're in control), and luminous enough to feel alive. We use deep void backgrounds overlaid with frosted glass panels, illuminated by brand-specific glows and neo-brutal CTA accents.
 
-**Notion** (Productivity)
-- Colors: Warm grays, subtle accents
-- Typography: Clear, readable
-- Spacing: Generous whitespace
-- Feel: Calm, organized, friendly
+## 5.2 Design Tokens
 
-**Vercel** (Developer Platform)
-- Colors: Black (#000), White (#FFF), Gray scale
-- Typography: Geist font, technical
-- Spacing: Tight, efficient
-- Feel: Technical, precise, modern
+### Colors (CSS Variables)
 
-**Stripe** (Payments)
-- Colors: Purple (#635BFF), Blue gradients
-- Typography: Clean sans-serif
-- Spacing: Balanced
-- Feel: Trustworthy, professional
+```css
+/* Core Backgrounds */
+--bg-void:       #030712; /* Base layer - never pure black */
+--bg-deep:       #0A0E1A; /* Secondary deep layer */
+--bg-glass:      rgba(255, 255, 255, 0.04); /* Default card surface */
+--bg-glass-hover:rgba(255, 255, 255, 0.07); /* Hovered card surface */
 
-## Chosen Direction: Technical + Creative Hybrid
+/* Borders & Dividers */
+--border-glass:   rgba(255, 255, 255, 0.06);
+--border-hover:   rgba(255, 255, 255, 0.12);
+--border-focus:   rgba(99, 102, 241, 0.5); /* Indigo focus ring */
 
-### Design Principles
-1. **Professional First** - Not flashy, trustworthy
-2. **Content-Focused** - Let user's content shine
-3. **Fast & Efficient** - Quick actions, clear paths
-4. **Scalable** - Works for 1 video or 1000
+/* Brand Colors */
+--brand-400:  #818CF8;
+--brand-500:  #6366F1; /* Primary CTA Action */
+--brand-600:  #4F46E5;
+--brand-glow: rgba(99, 102, 241, 0.2);
 
-## Design System
+/* Accents & Status */
+--accent-cyan: #22D3EE; /* Secondary data highlights */
+--success:     #10B981;
+--warning:     #F59E0B;
+--error:       #EF4444;
 
-### Color Palette
-```
-Primary (Brand):
-- Indigo 600: #4F46E5 (Primary actions, links)
-- Indigo 700: #4338CA (Hover states)
-- Indigo 500: #6366F1 (Accents)
-
-Backgrounds:
-- Base: #0F0F0F (Main background)
-- Elevated: #1A1A1A (Cards, panels)
-- Overlay: #262626 (Modals, dropdowns)
-
-Borders:
-- Subtle: #262626
-- Default: #404040
-- Strong: #525252
-
-Text:
-- Primary: #FAFAFA (Headings, important)
-- Secondary: #A3A3A3 (Body text)
-- Tertiary: #737373 (Captions, meta)
-
-Status Colors:
-- Success: #10B981 (Green)
-- Warning: #F59E0B (Amber)
-- Error: #EF4444 (Red)
-- Info: #3B82F6 (Blue)
+/* Text */
+--text-primary:   #F9FAFB; /* Headings */
+--text-secondary: #9CA3AF; /* Body */
+--text-tertiary:  #6B7280; /* Meta / Captions */
 ```
 
-### Typography
-```
-Font Family: 
-- Primary: Inter (system-ui fallback)
-- Mono: JetBrains Mono (code, technical)
+### Typography Hierarchy
 
-Scale:
-- Display: 48px / 56px (Hero headings)
-- H1: 36px / 44px (Page titles)
-- H2: 24px / 32px (Section titles)
-- H3: 20px / 28px (Card titles)
-- Body: 16px / 24px (Main text)
-- Small: 14px / 20px (Captions)
-- Tiny: 12px / 16px (Labels)
+```css
+/* Fonts */
+--font-display: 'Outfit', sans-serif; /* For Headlines ONLY */
+--font-body:    'Inter', sans-serif;  /* For Body Text */
+--font-mono:    'JetBrains Mono', monospace; /* Code/Stats */
 
-Weights:
-- Regular: 400
-- Medium: 500
-- Semibold: 600
-- Bold: 700
+/* Scale */
+.text-hero { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; letter-spacing: -0.02em; }
+.text-h1   { font-family: var(--font-display); font-size: 2.25rem; font-weight: 800; letter-spacing: -0.01em; }
+.text-h2   { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.01em; }
+.text-h3   { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
+.text-body { font-family: var(--font-body); font-size: 1rem; font-weight: 400; line-height: 1.6; }
+.text-small{ font-family: var(--font-body); font-size: 0.875rem; font-weight: 500; }
 ```
 
-### Spacing System (8px grid)
-```
-xs: 4px
-sm: 8px
-md: 16px
-lg: 24px
-xl: 32px
-2xl: 48px
-3xl: 64px
-```
+### Spacing & Grid (8px Base)
 
-### Component Patterns
+* **xs**: 4px (Icon padding)
+* **sm**: 8px (Between related elements)
+* **md**: 16px (Component internal padding)
+* **lg**: 24px (Card padding standard)
+* **xl**: 32px (Card padding large / between sections)
+* **2xl**: 48px (Major section gaps)
+* **3xl**: 64px (Vertical section padding)
+* **hero**: 120px (Landing page vertical rhythm)
 
-**Buttons:**
-- Primary: Indigo bg, white text, 12px padding, rounded-lg
-- Secondary: Transparent bg, border, hover bg
-- Ghost: No border, hover bg
+---
 
-**Cards:**
-- Background: #1A1A1A
-- Border: 1px solid #262626
-- Padding: 24px
-- Radius: 12px
-- Hover: Border #404040
+## 5.3 Core Component Library
 
-**Inputs:**
-- Background: #0F0F0F
-- Border: 1px solid #262626
-- Focus: Border indigo-600, ring
-- Padding: 12px 16px
-- Radius: 8px
+### 1. Glass Card (The Foundation)
+The primary container for all UI elements.
+* **Background:** `--bg-glass`
+* **Backdrop Filter:** `blur(24px)`
+* **Border:** 1px solid `--border-glass`
+* **Radius:** `20px`
+* **Padding:** `24px` or `32px`
+* **Interaction:** On hover, transition `background` to `--bg-glass-hover` and `border-color` to `--border-hover`, while translating Y by `-2px`.
 
-## User Flow
+### 2. Primary Button (Neo-Brutal Glow)
+The main call to action. Max one per screen.
+* **Background:** Linear gradient (`#6366F1` to `#4F46E5`)
+* **Text Color:** `#FFFFFF`
+* **Font Weight:** 600 (Inter)
+* **Border Radius:** `12px`
+* **Glow:** `box-shadow: 0 0 20px rgba(99, 102, 241, 0.3)`
+* **Interaction:** On hover, increase glow opacity to 0.5 and `transform: translateY(-1px)`.
 
-### Primary Flow: Upload → Process → Review → Publish
+### 3. Ghost Button
+For secondary or cancel actions.
+* **Background:** Transparent
+* **Border:** 1px solid `--border-glass`
+* **Text Color:** `--text-secondary`
+* **Border Radius:** `12px`
+* **Interaction:** On hover, change background to `--bg-glass` and text to `--text-primary`.
 
-```
-1. LANDING PAGE (/)
-   ↓ [Get Started] button
-   
-2. ONBOARDING (/onboarding) - NEW
-   - Welcome screen
-   - Select content type (Video/Audio/Text)
-   - Choose platforms (multi-select)
-   - Choose languages (multi-select)
-   ↓ [Continue to Upload]
-   
-3. UPLOAD (/upload)
-   - Drag & drop zone
-   - File preview
-   - Platform/language selection (pre-filled from onboarding)
-   ↓ [Process Content]
-   
-4. PROCESSING (/processing/:id) - NEW
-   - Progress indicator
-   - Real-time status updates
-   - Estimated time remaining
-   ↓ Auto-redirect when complete
-   
-5. REVIEW (/review/:id) - NEW
-   - Side-by-side view of all platform versions
-   - Edit capabilities
-   - Preview for each platform
-   - Viral score for each
-   ↓ [Approve All] or [Edit Individual]
-   
-6. DASHBOARD (/dashboard)
-   - All content library
-   - Analytics overview
-   - Quick actions
-```
+### 4. Input Fields
+* **Background:** `rgba(255, 255, 255, 0.02)`
+* **Border:** 1px solid `--border-glass`
+* **Radius:** `12px`
+* **Padding:** 12px 16px
+* **Text:** `--text-primary`
+* **Focus State:** Border changes to `--brand-500` with a 3px glow ring `box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2)`.
 
-### Secondary Flows
+### 5. Badges/Tags
+Used for Platform labels (YouTube, LinkedIn) or Status (Processing, Complete).
+* **Background:** `--bg-glass` (or subtle status tint `.1` opacity)
+* **Border:** 1px solid `--border-glass`
+* **Radius:** `50px` (Pill shape)
+* **Padding:** 4px 12px
+* **Text Format:** `--text-small`, uppercase tracking.
 
-**Analytics Flow:**
-Dashboard → Analytics → Detailed Report → Export
+---
 
-**Marketplace Flow:**
-Dashboard → Marketplace → Template Detail → Purchase → Apply to Content
+## 5.4 Layout & Architecture
 
-**Community Flow:**
-Dashboard → Community → Forums/Groups → Post/Comment
+### Bento Grid Configuration
+Used extensively for Dashboard and Feature showcases.
+* **Grid Template Columns:** `repeat(3, 1fr)` (Desktop), `1fr` (Mobile).
+* **Grid Gap:** `20px`.
+* **Span Rules:** Cards can span 1 or 2 columns based on content density. No 3-column spans (that becomes a banner).
 
-## Page Redesigns Needed
+### Navigation Bar
+* **Position:** Fixed top, `z-index: 50`.
+* **Background:** `--bg-void` with 80% opacity and `blur(12px)`.
+* **Border Bottom:** 1px solid `--border-glass`.
 
-### Priority 1 (Core Flow)
-1. ✅ Landing page - Keep current, add better CTA
-2. 🔄 Onboarding page - CREATE NEW
-3. 🔄 Upload page - Simplify, focus
-4. 🔄 Processing page - CREATE NEW
-5. 🔄 Review page - CREATE NEW
-6. 🔄 Dashboard - Redesign with new system
+## 5.5 Animation Primitives
 
-### Priority 2 (Supporting)
-7. Analytics page
-8. Marketplace page
-9. Community page
-10. Workspace page
-
-## Implementation Plan
-
-### Phase 1: Design System Setup (30 min)
-- [ ] Create design tokens file
-- [ ] Update Tailwind config
-- [ ] Create base component library
-
-### Phase 2: Core Flow Pages (2 hours)
-- [ ] Onboarding page (new)
-- [ ] Upload page (redesign)
-- [ ] Processing page (new)
-- [ ] Review page (new)
-- [ ] Dashboard (redesign)
-
-### Phase 3: Polish (1 hour)
-- [ ] Consistent spacing
-- [ ] Typography hierarchy
-- [ ] Micro-interactions (CSS only, no framer-motion)
-- [ ] Loading states
-- [ ] Empty states
-
-## Key Differences from Current Design
-
-**Before:**
-- Generic black (#000000)
-- No clear flow
-- Inconsistent spacing
-- AI-generated feel
-
-**After:**
-- Purposeful dark theme (#0F0F0F base)
-- Clear 5-step flow
-- 8px grid system
-- Professional SaaS feel
-- Indigo accent color (brand identity)
-- Consistent component patterns
-
-## Success Metrics
-
-✅ Looks like a real SaaS product
-✅ Clear user journey from upload to publish
-✅ Consistent design language
-✅ Professional, not flashy
-✅ Fast and efficient UX
+* **Micro-interactions (Hover/Focus):** `200ms ease`
+* **Component Reveal (Scroll in):** `300ms ease-out` (Translate Y from 20px to 0, Opacity 0 to 1).
+* **Background Shimmer:** Continuous `20s ease-in-out` infinite loop for aurora background spheres.

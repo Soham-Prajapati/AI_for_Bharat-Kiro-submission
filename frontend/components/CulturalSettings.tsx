@@ -202,7 +202,6 @@ export default function CulturalSettings({
     <div className="space-y-6">
       {/* Header */}
       <div
-        initial={animated ? { opacity: 0, y: -20 } : {}}
       >
         <h2 className="text-3xl font-bold text-white mb-2">
           🌍 Cultural Adaptation
@@ -215,7 +214,6 @@ export default function CulturalSettings({
       {/* Region Selection */}
       <div
         className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-        initial={animated ? { opacity: 0, y: 20 } : {}}
       >
         <h3 className="text-xl font-semibold text-white mb-4">
           Select Target Region
@@ -245,7 +243,6 @@ export default function CulturalSettings({
                       ? 'bg-purple-600 border-purple-400'
                       : 'bg-gray-800/50 border-gray-700 hover:border-purple-500'
                   }`}
-                  initial={animated ? { opacity: 0, scale: 0.9 } : {}}
                   title={info.description}
                 >
                   <div className="text-3xl mb-2">{info.flag}</div>
@@ -262,7 +259,6 @@ export default function CulturalSettings({
       {/* Content Input */}
       <div
         className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-        initial={animated ? { opacity: 0, y: 20 } : {}}
       >
         <h3 className="text-xl font-semibold text-white mb-4">
           Content to Adapt

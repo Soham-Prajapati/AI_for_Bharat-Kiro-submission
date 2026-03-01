@@ -70,7 +70,7 @@ describe('ADHD Navigator API', () => {
           userId: testUserId,
           taskName: 'Test task'
         });
-      
+
       sessionId = response.body.session.id;
     });
 
@@ -85,8 +85,13 @@ describe('ADHD Navigator API', () => {
     });
 
     it('should award first session reward', async () => {
+      const uniqueUserId = `new-user-${Date.now()}`;
+      const startRes = await request(app)
+        .post('/api/adhd/session/start')
+        .send({ userId: uniqueUserId, taskName: 'New test task' });
+
       const response = await request(app)
-        .post(`/api/adhd/session/${sessionId}/complete`);
+        .post(`/api/adhd/session/${startRes.body.session.id}/complete`);
 
       expect(response.body.rewards.length).toBeGreaterThan(0);
       expect(response.body.rewards[0].name).toBe('First Focus');
@@ -103,7 +108,7 @@ describe('ADHD Navigator API', () => {
           userId: testUserId,
           taskName: 'Test task'
         });
-      
+
       sessionId = response.body.session.id;
     });
 
@@ -127,7 +132,7 @@ describe('ADHD Navigator API', () => {
           userId: testUserId,
           taskName: 'Test task'
         });
-      
+
       sessionId = response.body.session.id;
     });
 
