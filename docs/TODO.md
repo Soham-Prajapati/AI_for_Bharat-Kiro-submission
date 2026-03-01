@@ -404,7 +404,7 @@ export const api = {
   - **Output:** Adapted content
   - **Test:** Sample content, verify adaptations
 
-- [/] **2.5d: Test cultural adaptations (Lakshmi)**
+- [x] **2.5d: Test cultural adaptations (Lakshmi)** ✅
   - **What:** Verify accuracy of adaptations
   - **Where:** `src/__tests__/cultural.test.ts`
   - **Test:** 10 idioms, verify correct regional equivalents
@@ -440,7 +440,7 @@ export const api = {
   - **WebSocket:** `/ws/workspace/:id` for real-time sync
   - **Test:** Create workspace, join, edit, verify sync
 
-- [ ] **3.1d: Test collaboration (Lakshmi)**
+- [/] **3.1d: Test collaboration (Lakshmi)**
   - **What:** Test concurrent editing, conflict resolution
   - **Where:** `src/__tests__/workspace.test.ts`
   - **Test:** 10 concurrent users, verify data integrity
