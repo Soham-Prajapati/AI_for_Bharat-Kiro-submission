@@ -2,7 +2,6 @@
 
 import DNAChart from '@/components/DNAChart'
 import { CreatorDNA } from '@/types/dna'
-import { motion } from 'framer-motion'
 import { useState } from 'react'
 
 // Multiple creator profiles for comparison
@@ -154,11 +153,8 @@ export default function DNADemoPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <motion.div
+        <div
           className="text-center mb-12"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
         >
           <h1 className="text-5xl font-bold text-white mb-4">
             Creator DNA Visualization
@@ -166,17 +162,14 @@ export default function DNADemoPage() {
           <p className="text-xl text-gray-400">
             Explore personality dimensions across different creator profiles
           </p>
-        </motion.div>
+        </div>
 
         {/* Profile Selector */}
-        <motion.div
+        <div
           className="flex justify-center gap-4 mb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
         >
           {creatorProfiles.map((profile, index) => (
-            <motion.button
+            <div
               key={profile.creatorId}
               onClick={() => setSelectedProfile(index)}
               className={`px-6 py-3 rounded-lg font-semibold transition-all ${
@@ -184,13 +177,11 @@ export default function DNADemoPage() {
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               {profile.creatorName}
-            </motion.button>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* DNA Chart */}
         <DNAChart 
@@ -201,11 +192,8 @@ export default function DNADemoPage() {
         />
 
         {/* Info Section */}
-        <motion.div
+        <div
           className="mt-12 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
         >
           <h3 className="text-2xl font-bold text-white mb-4">
             About Creator DNA
@@ -228,7 +216,7 @@ export default function DNADemoPage() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   )

@@ -67,12 +67,9 @@ export function BasicVoiceTrainerExample() {
         </div>
 
         {/* Notifications */}
-        <AnimatePresence>
+        
           {showSuccess && (
-            <motion.div
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
+            <div
               className="fixed top-4 right-4 z-50 max-w-md"
             >
               <div className="bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-start gap-3">
@@ -106,14 +103,11 @@ export function BasicVoiceTrainerExample() {
                   </svg>
                 </button>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
+            <div
               className="fixed top-4 right-4 z-50 max-w-md"
             >
               <div className="bg-red-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-start gap-3">
@@ -145,9 +139,9 @@ export function BasicVoiceTrainerExample() {
                   </svg>
                 </button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        
 
         {/* Main Content */}
         <div className="max-w-6xl mx-auto">
@@ -230,9 +224,7 @@ export function BasicVoiceTrainerExample() {
 
               {/* Post-Training Actions */}
               {modelId && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                <div
                   className="mt-6 bg-gray-800/50 backdrop-blur rounded-2xl p-6 border border-gray-700"
                 >
                   <h3 className="text-xl font-semibold text-white mb-4">
@@ -280,7 +272,7 @@ export function BasicVoiceTrainerExample() {
                       View Dashboard
                     </button>
                   </div>
-                </motion.div>
+                </div>
               )}
             </div>
           </div>

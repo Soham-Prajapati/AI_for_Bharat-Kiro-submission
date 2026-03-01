@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import {
   LineChart,
   Line,
@@ -77,25 +76,21 @@ export default function TrendChart({
 }: TrendChartProps) {
   if (loading) {
     return (
-      <motion.div
+      <div
         className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6 ${className}`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
       >
         {title && <h2 className="text-2xl font-bold text-white mb-6">{title}</h2>}
         <div className="animate-pulse" style={{ height }}>
           <div className="h-full bg-gray-700/30 rounded"></div>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <motion.div
+      <div
         className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6 ${className}`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
       >
         {title && <h2 className="text-2xl font-bold text-white mb-6">{title}</h2>}
         <div
@@ -107,16 +102,13 @@ export default function TrendChart({
             <p>No data available</p>
           </div>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div
+    <div
       className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6 ${className}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
       role="region"
       aria-label={title || 'Trend chart'}
     >
@@ -169,6 +161,6 @@ export default function TrendChart({
           ))}
         </LineChart>
       </ResponsiveContainer>
-    </motion.div>
+    </div>
   );
 }

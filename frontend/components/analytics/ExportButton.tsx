@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 
 export interface ExportButtonProps {
   onExport: (format: 'csv' | 'pdf' | 'json') => void;
@@ -45,10 +44,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+          <div
             className="absolute right-0 top-full z-20 mt-2 w-48 overflow-hidden rounded-lg border border-gray-700 bg-gray-900 shadow-xl"
           >
             {exportOptions.map((option) => (
@@ -61,7 +57,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
                 <span>{option.label}</span>
               </button>
             ))}
-          </motion.div>
+          </div>
         </>
       )}
     </div>

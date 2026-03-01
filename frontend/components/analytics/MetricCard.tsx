@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 
 export interface MetricCardProps {
   title: string;
@@ -42,10 +41,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
       className={`relative overflow-hidden rounded-xl border bg-gradient-to-br p-6 backdrop-blur-sm ${
         colorClasses[color as keyof typeof colorClasses] || colorClasses.blue
       }`}
@@ -71,6 +67,6 @@ export const MetricCard: React.FC<MetricCardProps> = ({
           <span className="text-xs text-gray-500">vs last period</span>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 };

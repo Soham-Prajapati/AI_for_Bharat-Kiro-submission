@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { ContentItem } from '@/types/content'
 
 interface ContentCardProps {
@@ -34,12 +33,8 @@ export default function ContentCard({ content, index }: ContentCardProps) {
   }
 
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 overflow-hidden hover:border-purple-500/50 transition-all"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      whileHover={{ scale: 1.02, y: -5 }}
     >
       {/* Thumbnail */}
       <div className={`h-48 bg-gradient-to-br ${platformColors[content.platform]} flex items-center justify-center relative`}>
@@ -116,22 +111,18 @@ export default function ContentCard({ content, index }: ContentCardProps) {
 
         {/* Actions */}
         <div className="flex gap-2 mt-4">
-          <motion.button
+          <button
             className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-semibold rounded-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             View Details
-          </motion.button>
-          <motion.button
+          </div>
+          <button
             className="px-4 py-2 bg-gray-700 text-white text-sm font-semibold rounded-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             Edit
-          </motion.button>
+          </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

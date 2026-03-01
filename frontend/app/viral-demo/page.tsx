@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import ViralScoreGauge, { ViralScoreData } from '@/components/ViralScoreGauge'
 import apiClient from '@/services/api'
 
@@ -63,11 +62,8 @@ export default function ViralDemoPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
-        <motion.div
+        <div
           className="text-center mb-12"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
         >
           <h1 className="text-5xl font-bold text-white mb-4">
             🚀 Viral Score Analyzer
@@ -75,21 +71,18 @@ export default function ViralDemoPage() {
           <p className="text-xl text-gray-300">
             Predict your content's viral potential with AI
           </p>
-        </motion.div>
+        </div>
 
         {/* Sample Content Buttons */}
-        <motion.div
+        <div
           className="mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h2 className="text-2xl font-bold text-white mb-4">
             Try Sample Content
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {sampleContents.map((sample, index) => (
-              <motion.button
+              <div
                 key={index}
                 onClick={() => handleSampleClick(index)}
                 className={`p-6 rounded-xl border-2 transition-all ${
@@ -97,8 +90,6 @@ export default function ViralDemoPage() {
                     ? 'bg-purple-600 border-purple-400'
                     : 'bg-gray-800/50 border-gray-700 hover:border-purple-500'
                 }`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
               >
                 <h3 className="text-lg font-semibold text-white mb-2">
                   {sample.title}
@@ -106,17 +97,14 @@ export default function ViralDemoPage() {
                 <p className="text-sm text-gray-300 line-clamp-3">
                   {sample.transcript}
                 </p>
-              </motion.button>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Custom Input */}
-        <motion.div
+        <div
           className="mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <h2 className="text-2xl font-bold text-white mb-4">
             Or Analyze Your Own Content
@@ -132,50 +120,41 @@ export default function ViralDemoPage() {
               <span className="text-sm text-gray-400">
                 {customTranscript.length} characters
               </span>
-              <motion.button
+              <button
                 onClick={handleCustomAnalyze}
                 disabled={loading || !customTranscript.trim()}
                 className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 {loading ? 'Analyzing...' : 'Analyze Content'}
-              </motion.button>
+              </button>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Error Message */}
         {error && (
-          <motion.div
+          <div
             className="mb-8 p-4 bg-red-900/20 border border-red-800/30 rounded-lg"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
           >
             <p className="text-red-400">⚠️ {error}</p>
-          </motion.div>
+          </div>
         )}
 
         {/* Loading State */}
         {loading && (
-          <motion.div
+          <div
             className="mb-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
           >
             <div className="bg-gray-800/50 rounded-xl p-6 animate-pulse">
               <div className="h-64 bg-gray-700 rounded mb-4"></div>
               <div className="h-32 bg-gray-700 rounded"></div>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Viral Score Gauge */}
         {!loading && viralData && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+          <div
           >
             <ViralScoreGauge 
               data={viralData}
@@ -183,16 +162,13 @@ export default function ViralDemoPage() {
               showFactors={true}
               showRecommendations={true}
             />
-          </motion.div>
+          </div>
         )}
 
         {/* Info Section */}
         {!viralData && !loading && (
-          <motion.div
+          <div
             className="mt-12 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
           >
             <h2 className="text-2xl font-bold text-white mb-4">
               How It Works
@@ -226,7 +202,7 @@ export default function ViralDemoPage() {
                 </p>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

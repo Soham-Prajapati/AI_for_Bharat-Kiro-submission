@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { BarChart3, Upload, LayoutDashboard, Home } from 'lucide-react';
 
 const navItems = [
@@ -43,10 +42,8 @@ export default function Navigation() {
                     </div>
                     
                     {isActive && (
-                      <motion.div
-                        layoutId="activeTab"
+                      <div
                         className="absolute inset-0 bg-blue-500/10 rounded-lg border border-blue-500/30"
-                        transition={{ type: 'spring', duration: 0.5 }}
                       />
                     )}
                   </Link>

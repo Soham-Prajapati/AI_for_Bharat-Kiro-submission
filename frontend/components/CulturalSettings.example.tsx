@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import CulturalSettings from './CulturalSettings'
 import { CulturalAdaptation } from '@/types/api'
 
@@ -62,11 +61,8 @@ export default function CulturalSettingsExample() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
-        <motion.div
+        <div
           className="text-center mb-12"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
         >
           <h1 className="text-5xl font-bold text-white mb-4">
             🌍 Cultural Adaptation Demo
@@ -74,21 +70,18 @@ export default function CulturalSettingsExample() {
           <p className="text-xl text-gray-300">
             Adapt your content for different regional audiences
           </p>
-        </motion.div>
+        </div>
 
         {/* Sample Content Selector */}
-        <motion.div
+        <div
           className="mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h2 className="text-2xl font-bold text-white mb-4">
             Try Sample Content
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {SAMPLE_CONTENTS.map((sample, index) => (
-              <motion.button
+              <button
                 key={index}
                 onClick={() => handleSampleClick(index)}
                 className={`p-4 rounded-xl border-2 transition-all text-left ${
@@ -96,8 +89,6 @@ export default function CulturalSettingsExample() {
                     ? 'bg-purple-600 border-purple-400'
                     : 'bg-gray-800/50 border-gray-700 hover:border-purple-500'
                 }`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
               >
                 <h3 className="text-lg font-semibold text-white mb-2">
                   {sample.title}
@@ -105,16 +96,13 @@ export default function CulturalSettingsExample() {
                 <p className="text-sm text-gray-300 line-clamp-3">
                   {sample.content}
                 </p>
-              </motion.button>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Main Component */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+        <div
         >
           <CulturalSettings
             initialContent={customContent}
@@ -122,15 +110,12 @@ export default function CulturalSettingsExample() {
             showPreview={true}
             animated={true}
           />
-        </motion.div>
+        </div>
 
         {/* Adaptation History */}
         {adaptationHistory.length > 0 && (
-          <motion.div
+          <div
             className="mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
           >
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6">
               <div className="flex items-center justify-between mb-4">
@@ -156,12 +141,9 @@ export default function CulturalSettingsExample() {
               {showHistory && (
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {adaptationHistory.map((adaptation, index) => (
-                    <motion.div
+                    <div
                       key={index}
                       className="p-4 bg-gray-900/50 rounded-lg border border-gray-700"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-semibold text-purple-400">
@@ -174,20 +156,17 @@ export default function CulturalSettingsExample() {
                       <p className="text-sm text-gray-300 line-clamp-2">
                         {adaptation.adaptedContent}
                       </p>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Info Cards */}
-        <motion.div
+        <div
           className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
         >
           <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-6">
             <div className="text-4xl mb-3">🎯</div>
@@ -218,14 +197,11 @@ export default function CulturalSettingsExample() {
               Supports India, UK, US, Canada, Australia, and more regions coming soon
             </p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Usage Example Code */}
-        <motion.div
+        <div
           className="mt-12 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
         >
           <h3 className="text-xl font-semibold text-white mb-4">
             💻 Usage Example
@@ -252,14 +228,11 @@ export default function MyPage() {
 }`}
             </code>
           </pre>
-        </motion.div>
+        </div>
 
         {/* API Usage Example */}
-        <motion.div
+        <div
           className="mt-6 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.1 }}
         >
           <h3 className="text-xl font-semibold text-white mb-4">
             🔌 Direct API Usage
@@ -283,7 +256,7 @@ console.log(regions.regions)
 // Output: ['india', 'uk', 'us', 'canada', 'australia']`}
             </code>
           </pre>
-        </motion.div>
+        </div>
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
 'use client'
 
-import { motion, AnimatePresence, Reorder } from 'framer-motion'
 import { useState, useCallback } from 'react'
 
 // ============================================================================
@@ -255,10 +254,8 @@ export default function AutomationBuilder({
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <motion.div
+        <div
           className="mb-8"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
         >
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -270,42 +267,36 @@ export default function AutomationBuilder({
               </p>
             </div>
             <div className="flex gap-3">
-              <motion.button
+              <button
                 onClick={() => setView('builder')}
                 className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                   view === 'builder'
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 Builder
-              </motion.button>
-              <motion.button
+              </div>
+              <button
                 onClick={() => setView('list')}
                 className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                   view === 'list'
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 Automations ({existingAutomations.length})
-              </motion.button>
+              </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Builder View */}
         {view === 'builder' && (
           <div className="space-y-6">
             {/* Basic Info */}
-            <motion.div
+            <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
             >
               <h2 className="text-xl font-bold text-white mb-4">Basic Information</h2>
               <div className="space-y-4">
@@ -334,14 +325,11 @@ export default function AutomationBuilder({
                   />
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Trigger Section */}
-            <motion.div
+            <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
             >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -375,29 +363,24 @@ export default function AutomationBuilder({
                   onRemove={() => setSelectedTrigger(null)}
                 />
               )}
-            </motion.div>
+            </div>
 
             {/* Conditions Section */}
             {selectedTrigger && (
-              <motion.div
+              <div
                 className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold text-white flex items-center gap-2">
                     <span>🔍</span>
                     <span>Conditions (Optional)</span>
                   </h2>
-                  <motion.button
+                  <button
                     onClick={addCondition}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                   >
                     + Add Condition
-                  </motion.button>
+                  </div>
                 </div>
 
                 {conditions.length === 0 ? (
@@ -418,30 +401,25 @@ export default function AutomationBuilder({
                     ))}
                   </div>
                 )}
-              </motion.div>
+              </div>
             )}
 
             {/* Actions Section */}
             {selectedTrigger && (
-              <motion.div
+              <div
                 className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold text-white flex items-center gap-2">
                     <span>🎬</span>
                     <span>Actions *</span>
                   </h2>
-                  <motion.button
+                  <button
                     onClick={() => setShowActionSelector(true)}
                     className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold text-sm"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                   >
                     + Add Action
-                  </motion.button>
+                  </div>
                 </div>
 
                 {actions.length === 0 ? (
@@ -467,16 +445,13 @@ export default function AutomationBuilder({
                     ))}
                   </Reorder.Group>
                 )}
-              </motion.div>
+              </div>
             )}
 
             {/* Visual Flow Diagram */}
             {selectedTrigger && actions.length > 0 && (
-              <motion.div
+              <div
                 className="bg-gradient-to-br from-purple-900/20 to-gray-800/50 backdrop-blur-sm rounded-xl border border-purple-700/30 p-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
               >
                 <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                   <span>📊</span>
@@ -487,44 +462,35 @@ export default function AutomationBuilder({
                   conditions={conditions}
                   actions={actions}
                 />
-              </motion.div>
+              </div>
             )}
 
             {/* Action Buttons */}
             {selectedTrigger && (
-              <motion.div
+              <div
                 className="flex items-center justify-between gap-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
               >
-                <motion.button
+                <button
                   onClick={resetBuilder}
                   className="px-6 py-3 bg-gray-700 text-white rounded-lg font-semibold"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   Reset
-                </motion.button>
+                </div>
                 <div className="flex gap-4">
-                  <motion.button
+                  <button
                     onClick={handleTest}
                     className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                   >
                     Test Automation
-                  </motion.button>
-                  <motion.button
+                  </div>
+                  <button
                     onClick={handleSave}
                     className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                   >
                     Save Automation
-                  </motion.button>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             )}
           </div>
         )}
@@ -539,14 +505,14 @@ export default function AutomationBuilder({
       </div>
 
       {/* Action Selector Modal */}
-      <AnimatePresence>
+      
         {showActionSelector && (
           <ActionSelectorModal
             onSelect={addAction}
             onClose={() => setShowActionSelector(false)}
           />
         )}
-      </AnimatePresence>
+      
     </div>
   )
 }
@@ -563,19 +529,14 @@ interface TriggerCardProps {
 
 function TriggerCard({ trigger, index, onSelect }: TriggerCardProps) {
   return (
-    <motion.div
+    <div
       className={`bg-gradient-to-br ${trigger.color} p-6 rounded-xl cursor-pointer border-2 border-transparent hover:border-white/30 transition-all`}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: index * 0.1 }}
-      whileHover={{ scale: 1.05, y: -5 }}
-      whileTap={{ scale: 0.95 }}
       onClick={onSelect}
     >
       <div className="text-4xl mb-3">{trigger.icon}</div>
       <h3 className="text-lg font-bold text-white mb-2">{trigger.label}</h3>
       <p className="text-sm text-white/80">{trigger.description}</p>
-    </motion.div>
+    </div>
   )
 }
 
@@ -593,10 +554,8 @@ function SelectedTrigger({ trigger, onRemove }: SelectedTriggerProps) {
   if (!triggerOption) return null
 
   return (
-    <motion.div
+    <div
       className={`bg-gradient-to-br ${triggerOption.color} p-6 rounded-xl relative`}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
     >
       <button
         onClick={onRemove}
@@ -620,7 +579,7 @@ function SelectedTrigger({ trigger, onRemove }: SelectedTriggerProps) {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -637,11 +596,8 @@ interface ConditionRowProps {
 
 function ConditionRow({ condition, index, onUpdate, onRemove }: ConditionRowProps) {
   return (
-    <motion.div
+    <div
       className="bg-gray-700/50 rounded-lg p-4 border border-gray-600"
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.05 }}
     >
       <div className="flex items-center gap-3">
         <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -670,16 +626,14 @@ function ConditionRow({ condition, index, onUpdate, onRemove }: ConditionRowProp
             className="px-3 py-2 bg-gray-600 text-white rounded border border-gray-500 focus:border-blue-500 focus:outline-none text-sm"
           />
         </div>
-        <motion.button
+        <button
           onClick={onRemove}
           className="w-8 h-8 bg-red-600/20 hover:bg-red-600/40 rounded flex items-center justify-center text-red-400"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
         >
           ✕
-        </motion.button>
+        </div>
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -703,10 +657,6 @@ function ActionRow({ action, index, onUpdate, onRemove }: ActionRowProps) {
       value={action}
       id={action.id}
       className="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-move"
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.05 }}
-      whileHover={{ scale: 1.02 }}
     >
       <div className="flex items-start gap-4">
         <div className="flex items-center gap-3 flex-1">
@@ -789,14 +739,12 @@ function ActionRow({ action, index, onUpdate, onRemove }: ActionRowProps) {
             </div>
           </div>
         </div>
-        <motion.button
+        <button
           onClick={onRemove}
           className="w-8 h-8 bg-red-600/20 hover:bg-red-600/40 rounded flex items-center justify-center text-red-400"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
         >
           ✕
-        </motion.button>
+        </div>
       </div>
     </Reorder.Item>
   )
@@ -818,31 +766,23 @@ function FlowDiagram({ trigger, conditions, actions }: FlowDiagramProps) {
   return (
     <div className="flex flex-col items-center gap-4">
       {/* Trigger Node */}
-      <motion.div
+      <div
         className={`bg-gradient-to-br ${triggerOption?.color} p-4 rounded-xl min-w-[200px] text-center`}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
       >
         <div className="text-3xl mb-2">{triggerOption?.icon}</div>
         <div className="text-white font-semibold text-sm">{triggerOption?.label}</div>
-      </motion.div>
+      </div>
 
       {/* Arrow */}
-      <motion.div
+      <div
         className="w-1 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"
-        initial={{ height: 0 }}
-        animate={{ height: 32 }}
-        transition={{ delay: 0.2 }}
       />
 
       {/* Conditions Node (if any) */}
       {conditions.length > 0 && (
         <>
-          <motion.div
+          <div
             className="bg-blue-900/30 border-2 border-blue-500 p-4 rounded-xl min-w-[200px]"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
           >
             <div className="text-2xl mb-2 text-center">🔍</div>
             <div className="text-white font-semibold text-sm text-center mb-2">
@@ -858,13 +798,10 @@ function FlowDiagram({ trigger, conditions, actions }: FlowDiagramProps) {
                 <div className="text-xs text-blue-400">+{conditions.length - 2} more</div>
               )}
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
+          <div
             className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"
-            initial={{ height: 0 }}
-            animate={{ height: 32 }}
-            transition={{ delay: 0.4 }}
           />
         </>
       )}
@@ -874,12 +811,9 @@ function FlowDiagram({ trigger, conditions, actions }: FlowDiagramProps) {
         {actions.map((action, index) => {
           const actionOption = ACTION_OPTIONS.find(a => a.type === action.type)
           return (
-            <motion.div
+            <div
               key={action.id}
               className="w-full"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 + index * 0.1 }}
             >
               <div className={`bg-gradient-to-br ${actionOption?.color} p-4 rounded-xl`}>
                 <div className="flex items-center gap-3">
@@ -895,28 +829,22 @@ function FlowDiagram({ trigger, conditions, actions }: FlowDiagramProps) {
               {index < actions.length - 1 && (
                 <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full mx-auto my-2" />
               )}
-            </motion.div>
+            </div>
           )
         })}
       </div>
 
       {/* Success Node */}
-      <motion.div
+      <div
         className="w-1 h-8 bg-gradient-to-b from-pink-500 to-green-500 rounded-full"
-        initial={{ height: 0 }}
-        animate={{ height: 32 }}
-        transition={{ delay: 0.5 + actions.length * 0.1 }}
       />
 
-      <motion.div
+      <div
         className="bg-gradient-to-br from-green-500 to-emerald-500 p-4 rounded-xl min-w-[200px] text-center"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.6 + actions.length * 0.1 }}
       >
         <div className="text-3xl mb-2">✅</div>
         <div className="text-white font-semibold text-sm">Automation Complete</div>
-      </motion.div>
+      </div>
     </div>
   )
 }
@@ -932,18 +860,12 @@ interface ActionSelectorModalProps {
 
 function ActionSelectorModal({ onSelect, onClose }: ActionSelectorModalProps) {
   return (
-    <motion.div
+    <div
       className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
       onClick={onClose}
     >
-      <motion.div
+      <div
         className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-2xl w-full"
-        initial={{ scale: 0.9, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.9, y: 20 }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
@@ -958,24 +880,19 @@ function ActionSelectorModal({ onSelect, onClose }: ActionSelectorModalProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {ACTION_OPTIONS.map((action, index) => (
-            <motion.div
+            <div
               key={action.type}
               className={`bg-gradient-to-br ${action.color} p-5 rounded-xl cursor-pointer border-2 border-transparent hover:border-white/30 transition-all`}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               onClick={() => onSelect(action.type)}
             >
               <div className="text-4xl mb-3">{action.icon}</div>
               <h4 className="text-lg font-bold text-white mb-2">{action.label}</h4>
               <p className="text-sm text-white/80">{action.description}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   )
 }
 
@@ -1006,15 +923,13 @@ function AutomationList({ automations, onEdit }: AutomationListProps) {
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <motion.div
+      <div
         className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
       >
         <div className="flex items-center gap-3">
           <span className="text-sm text-gray-400">Filter:</span>
           {(['all', 'active', 'inactive', 'draft'] as const).map((status) => (
-            <motion.button
+            <button
               key={status}
               onClick={() => setFilter(status)}
               className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
@@ -1022,26 +937,22 @@ function AutomationList({ automations, onEdit }: AutomationListProps) {
                   ? 'bg-purple-600 text-white'
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               {status.charAt(0).toUpperCase() + status.slice(1)}
-            </motion.button>
+            </div>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* Automation Cards */}
       {filteredAutomations.length === 0 ? (
-        <motion.div
+        <div
           className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-12 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
         >
           <div className="text-6xl mb-4">🤖</div>
           <h3 className="text-xl font-bold text-white mb-2">No Automations Found</h3>
           <p className="text-gray-400">Create your first automation to get started</p>
-        </motion.div>
+        </div>
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {filteredAutomations.map((automation, index) => (
@@ -1074,12 +985,8 @@ function AutomationCard({ automation, index, onEdit, getStatusColor }: Automatio
   const triggerOption = TRIGGER_OPTIONS.find(t => t.type === automation.trigger.type)
 
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6 hover:border-purple-500/50 transition-all"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      whileHover={{ y: -5 }}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
@@ -1093,14 +1000,12 @@ function AutomationCard({ automation, index, onEdit, getStatusColor }: Automatio
             <p className="text-sm text-gray-400 mb-3">{automation.description}</p>
           )}
         </div>
-        <motion.button
+        <button
           onClick={onEdit}
           className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold text-sm"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
         >
           Edit
-        </motion.button>
+        </div>
       </div>
 
       {/* Workflow Summary */}
@@ -1140,6 +1045,6 @@ function AutomationCard({ automation, index, onEdit, getStatusColor }: Automatio
           <span>Created: {new Date(automation.createdAt).toLocaleDateString()}</span>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

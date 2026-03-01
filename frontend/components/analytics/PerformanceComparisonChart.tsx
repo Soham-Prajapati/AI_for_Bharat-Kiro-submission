@@ -16,7 +16,6 @@ import {
   PolarRadiusAxis,
   Radar,
 } from 'recharts';
-import { motion } from 'framer-motion';
 
 export interface ComparisonData {
   platform: string;
@@ -66,10 +65,7 @@ export const PerformanceComparisonChart: React.FC<PerformanceComparisonChartProp
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
       className="rounded-xl border border-gray-800 bg-gradient-to-br from-gray-900/50 to-gray-800/30 p-6 backdrop-blur-sm"
     >
       <h3 className="mb-4 text-lg font-semibold text-white">{title}</h3>
@@ -131,6 +127,6 @@ export const PerformanceComparisonChart: React.FC<PerformanceComparisonChartProp
           </BarChart>
         )}
       </ResponsiveContainer>
-    </motion.div>
+    </div>
   );
 };

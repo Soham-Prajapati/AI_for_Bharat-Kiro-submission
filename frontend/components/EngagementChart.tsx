@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { EngagementDataPoint, PLATFORM_COLORS } from '@/types/analytics';
 
@@ -10,10 +9,7 @@ interface EngagementChartProps {
 
 export default function EngagementChart({ data }: EngagementChartProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.6 }}
+    <div
       className="bg-gray-800 rounded-xl p-6 border border-gray-700"
     >
       <h2 className="text-2xl font-bold text-white mb-6">Engagement Over Time</h2>
@@ -101,6 +97,6 @@ export default function EngagementChart({ data }: EngagementChartProps) {
           />
         </LineChart>
       </ResponsiveContainer>
-    </motion.div>
+    </div>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 
 export interface PlatformMetrics {
   platform: string;
@@ -43,10 +42,7 @@ export const PlatformPerformanceCard: React.FC<PlatformPerformanceCardProps> = (
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3, delay: index * 0.1 }}
+    <div
       className="group relative overflow-hidden rounded-xl border border-gray-800 bg-gradient-to-br from-gray-900/80 to-gray-800/50 p-6 backdrop-blur-sm transition-all hover:border-gray-700 hover:shadow-xl"
     >
       {/* Background gradient effect */}
@@ -106,15 +102,12 @@ export const PlatformPerformanceCard: React.FC<PlatformPerformanceCardProps> = (
       {/* Progress Bar */}
       <div className="relative mt-4">
         <div className="h-2 overflow-hidden rounded-full bg-gray-800">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${metrics.engagement}%` }}
-            transition={{ duration: 1, delay: index * 0.1 + 0.3 }}
+          <div
             className="h-full rounded-full"
             style={{ backgroundColor: metrics.color }}
           />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };

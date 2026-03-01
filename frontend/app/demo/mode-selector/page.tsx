@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import ModeSelector from '@/components/ModeSelector'
-import { motion } from 'framer-motion'
 
 type CreatorMode = 'ai-first' | 'hybrid' | 'human-first'
 
@@ -23,10 +22,8 @@ export default function ModeSelectorDemo() {
 
       {/* Current State Display */}
       <div className="max-w-7xl mx-auto px-8 py-8">
-        <motion.div
+        <div
           className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
         >
           <h2 className="text-xl font-bold text-white mb-4">Current State</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -45,7 +42,7 @@ export default function ModeSelectorDemo() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Component Demo */}
         <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
@@ -57,11 +54,8 @@ export default function ModeSelectorDemo() {
         </div>
 
         {/* Usage Example */}
-        <motion.div
+        <div
           className="bg-gray-800 rounded-lg p-6 mt-8 border border-gray-700"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
         >
           <h2 className="text-xl font-bold text-white mb-4">Usage Example</h2>
           <pre className="bg-gray-900 rounded p-4 overflow-x-auto">
@@ -84,14 +78,11 @@ function MyComponent() {
 }`}
             </code>
           </pre>
-        </motion.div>
+        </div>
 
         {/* Features List */}
-        <motion.div
+        <div
           className="bg-gray-800 rounded-lg p-6 mt-8 border border-gray-700"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
         >
           <h2 className="text-xl font-bold text-white mb-4">Component Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -116,14 +107,11 @@ function MyComponent() {
               </ul>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Quick Actions */}
-        <motion.div
+        <div
           className="mt-8 flex flex-wrap gap-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
         >
           <button
             onClick={() => setSelectedMode('ai-first')}
@@ -143,7 +131,7 @@ function MyComponent() {
           >
             Select Human-First
           </button>
-        </motion.div>
+        </div>
       </div>
     </div>
   )

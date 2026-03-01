@@ -1,188 +1,63 @@
 'use client'
 
-import { motion } from 'framer-motion'
-
-const footerLinks = {
-  product: [
-    { name: 'Features', href: '#features' },
-    { name: 'Pricing', href: '#pricing' },
-    { name: 'API', href: '#api' },
-    { name: 'Integrations', href: '#integrations' }
-  ],
-  company: [
-    { name: 'About', href: '#about' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'Careers', href: '#careers' },
-    { name: 'Contact', href: '#contact' }
-  ],
-  resources: [
-    { name: 'Documentation', href: '#docs' },
-    { name: 'Help Center', href: '#help' },
-    { name: 'Community', href: '#community' },
-    { name: 'Status', href: '#status' }
-  ],
-  legal: [
-    { name: 'Privacy', href: '#privacy' },
-    { name: 'Terms', href: '#terms' },
-    { name: 'Security', href: '#security' },
-    { name: 'Cookies', href: '#cookies' }
-  ]
-}
-
-const socialLinks = [
-  { name: 'Twitter', icon: '𝕏', href: '#' },
-  { name: 'LinkedIn', icon: 'in', href: '#' },
-  { name: 'YouTube', icon: '▶', href: '#' },
-  { name: 'Instagram', icon: '📷', href: '#' }
-]
+import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-8">
+    <footer className="relative py-20 px-6 border-t border-white/[0.05]">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
           {/* Brand */}
-          <div className="col-span-2">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400 mb-4">
-                Content Intelligence
-              </h3>
-              <p className="text-gray-400 mb-4 max-w-xs">
-                Transform your content across 6 platforms in 60 seconds with AI-powered intelligence.
-              </p>
-              <div className="flex space-x-4">
-                {socialLinks.map((social) => (
-                  <motion.a
-                    key={social.name}
-                    href={social.href}
-                    className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={social.name}
-                  >
-                    {social.icon}
-                  </motion.a>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Product Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-          >
-            <h4 className="text-white font-semibold mb-4">Product</h4>
-            <ul className="space-y-2">
-              {footerLinks.product.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
+          <div className="md:col-span-1">
+            <div className="font-display font-bold text-xl mb-3">Content<span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">AI</span></div>
+            <p className="text-text-tertiary text-sm leading-relaxed mb-3">
+              AI-powered content intelligence for Indian creators. 1 Video. 6 Platforms. 60 Seconds.
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              {['AWS Bedrock', 'Claude 3'].map(t => (
+                <span key={t} className="text-[0.6rem] px-2 py-0.5 rounded bg-accent-orange/10 border border-accent-orange/15 text-accent-orange font-mono">{t}</span>
               ))}
-            </ul>
-          </motion.div>
-
-          {/* Company Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <h4 className="text-white font-semibold mb-4">Company</h4>
-            <ul className="space-y-2">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Resources Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
-            <h4 className="text-white font-semibold mb-4">Resources</h4>
-            <ul className="space-y-2">
-              {footerLinks.resources.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Legal Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-          >
-            <h4 className="text-white font-semibold mb-4">Legal</h4>
-            <ul className="space-y-2">
-              {footerLinks.legal.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        </div>
-
-        {/* Bottom Bar */}
-        <motion.div
-          className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-        >
-          <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2024 Content Intelligence Platform. All rights reserved.
-          </p>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-400 text-sm">Made with ❤️ for creators</span>
-            <div className="flex space-x-2">
-              <span className="px-3 py-1 bg-gray-800 rounded-full text-xs text-gray-400">
-                🇮🇳 India
-              </span>
-              <span className="px-3 py-1 bg-gray-800 rounded-full text-xs text-gray-400">
-                9 Languages
-              </span>
             </div>
           </div>
-        </motion.div>
+
+          {/* Product */}
+          <div>
+            <h4 className="font-display font-semibold text-sm mb-4 text-text-primary">Product</h4>
+            <ul className="space-y-2.5 text-text-secondary text-sm">
+              <li><Link href="/upload" className="hover:text-text-primary transition-colors">Upload</Link></li>
+              <li><Link href="/dashboard" className="hover:text-text-primary transition-colors">Dashboard</Link></li>
+              <li><Link href="/analytics" className="hover:text-text-primary transition-colors">Analytics</Link></li>
+              <li><Link href="/marketplace" className="hover:text-text-primary transition-colors">Marketplace</Link></li>
+            </ul>
+          </div>
+
+          {/* Features */}
+          <div>
+            <h4 className="font-display font-semibold text-sm mb-4 text-text-primary">Features</h4>
+            <ul className="space-y-2.5 text-text-secondary text-sm">
+              <li>Multi-Platform Generation</li>
+              <li>9 Indian Languages</li>
+              <li>Creator DNA Analysis</li>
+              <li>Viral Score Predictor</li>
+            </ul>
+          </div>
+
+          {/* Team */}
+          <div>
+            <h4 className="font-display font-semibold text-sm mb-4 text-text-primary">Team</h4>
+            <ul className="space-y-2.5 text-text-secondary text-sm">
+              <li>AI for Bharat 2026</li>
+              <li><Link href="/community" className="hover:text-text-primary transition-colors">Community</Link></li>
+              <li><Link href="/membership" className="hover:text-text-primary transition-colors">Pricing</Link></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/[0.05]">
+          <p className="text-text-tertiary text-xs">© 2026 ContentAI. Built for AI for Bharat.</p>
+          <p className="text-text-tertiary text-xs">Powered by AWS Bedrock · Claude 3 · AWS Transcribe</p>
+        </div>
       </div>
     </footer>
   )

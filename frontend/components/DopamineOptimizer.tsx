@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
 // ============================================================================
@@ -372,7 +371,7 @@ function ScoreGauge({ score, animated }: ScoreGaugeProps) {
             strokeLinecap="round"
           />
           
-          <motion.path
+          <path
             d="M 20 90 A 80 80 0 0 1 180 90"
             fill="none"
             stroke="url(#dopamineGradient)"
@@ -380,32 +379,23 @@ function ScoreGauge({ score, animated }: ScoreGaugeProps) {
             strokeLinecap="round"
             strokeDasharray="251.2"
             strokeDashoffset={251.2 - (displayScore / 100) * 251.2}
-            initial={{ strokeDashoffset: 251.2 }}
-            animate={{ strokeDashoffset: 251.2 - (displayScore / 100) * 251.2 }}
-            transition={{ duration: animated ? 2 : 0, ease: 'easeOut' }}
           />
 
-          <motion.g
-            initial={{ rotate: -90 }}
-            animate={{ rotate: rotation }}
-            transition={{ duration: animated ? 2 : 0, ease: 'easeOut' }}
+          <div g
             style={{ transformOrigin: '100px 90px' }}
           >
             <line x1="100" y1="90" x2="100" y2="30" stroke={scoreColor} strokeWidth="3" strokeLinecap="round" />
             <circle cx="100" cy="90" r="6" fill={scoreColor} />
-          </motion.g>
+          </div>
         </svg>
 
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
-          <motion.div
+          <div
             className="text-5xl font-bold"
             style={{ color: scoreColor }}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.5, type: 'spring' }}
           >
             {displayScore}
-          </motion.div>
+          </div>
           <div className="text-sm text-gray-400 mt-1">{scoreLabel}</div>
         </div>
       </div>
@@ -424,11 +414,8 @@ interface HooksSectionProps {
 
 function HooksSection({ hooks, index }: HooksSectionProps) {
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
     >
       <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
         <span>🎣</span>
@@ -437,12 +424,9 @@ function HooksSection({ hooks, index }: HooksSectionProps) {
 
       <div className="space-y-4">
         {hooks.map((hook, idx) => (
-          <motion.div
+          <div
             key={idx}
             className="bg-gray-800/30 rounded-lg p-4 border border-gray-700"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 + idx * 0.05 }}
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -468,12 +452,9 @@ function HooksSection({ hooks, index }: HooksSectionProps) {
             </div>
 
             <div className="h-2 bg-gray-700 rounded-full overflow-hidden mb-3">
-              <motion.div
+              <div
                 className="h-full rounded-full"
                 style={{ backgroundColor: getScoreColor(hook.strength) }}
-                initial={{ width: 0 }}
-                animate={{ width: `${hook.strength}%` }}
-                transition={{ duration: 0.8, delay: index * 0.1 + idx * 0.05 + 0.2 }}
               />
             </div>
 
@@ -487,10 +468,10 @@ function HooksSection({ hooks, index }: HooksSectionProps) {
                 ))}
               </div>
             )}
-          </motion.div>
+          </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -505,11 +486,8 @@ interface EmotionalPeaksSectionProps {
 
 function EmotionalPeaksSection({ peaks, index }: EmotionalPeaksSectionProps) {
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
     >
       <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
         <span>💫</span>
@@ -518,12 +496,9 @@ function EmotionalPeaksSection({ peaks, index }: EmotionalPeaksSectionProps) {
 
       <div className="space-y-4">
         {peaks.map((peak, idx) => (
-          <motion.div
+          <div
             key={idx}
             className="bg-gradient-to-r from-purple-900/20 to-gray-800/30 rounded-lg p-4 border border-purple-700/30"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 + idx * 0.05 }}
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -551,17 +526,14 @@ function EmotionalPeaksSection({ peaks, index }: EmotionalPeaksSectionProps) {
             </div>
 
             <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-              <motion.div
+              <div
                 className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
-                initial={{ width: 0 }}
-                animate={{ width: `${peak.intensity}%` }}
-                transition={{ duration: 0.8, delay: index * 0.1 + idx * 0.05 + 0.2 }}
               />
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -578,11 +550,8 @@ function PacingAnalysisSection({ pacing, index }: PacingAnalysisSectionProps) {
   const paceColor = getScoreColor(pacing.paceScore)
 
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
     >
       <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
         <span>⚡</span>
@@ -604,11 +573,8 @@ function PacingAnalysisSection({ pacing, index }: PacingAnalysisSectionProps) {
           <div className="text-xs text-gray-400 mb-2">Sentence Variety</div>
           <div className="text-lg font-bold text-white">{pacing.sentenceVariety}%</div>
           <div className="h-2 bg-gray-700 rounded-full overflow-hidden mt-2">
-            <motion.div
+            <div
               className="h-full rounded-full bg-blue-500"
-              initial={{ width: 0 }}
-              animate={{ width: `${pacing.sentenceVariety}%` }}
-              transition={{ duration: 0.8, delay: index * 0.1 + 0.2 }}
             />
           </div>
         </div>
@@ -617,11 +583,8 @@ function PacingAnalysisSection({ pacing, index }: PacingAnalysisSectionProps) {
           <div className="text-xs text-gray-400 mb-2">Rhythm Score</div>
           <div className="text-lg font-bold text-white">{pacing.rhythmScore}%</div>
           <div className="h-2 bg-gray-700 rounded-full overflow-hidden mt-2">
-            <motion.div
+            <div
               className="h-full rounded-full bg-green-500"
-              initial={{ width: 0 }}
-              animate={{ width: `${pacing.rhythmScore}%` }}
-              transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
             />
           </div>
         </div>
@@ -632,12 +595,9 @@ function PacingAnalysisSection({ pacing, index }: PacingAnalysisSectionProps) {
           <div className="text-sm font-semibold text-white mb-3">Pacing Timeline</div>
           <div className="space-y-2">
             {pacing.timeline.map((segment, idx) => (
-              <motion.div
+              <div
                 key={idx}
                 className="flex items-center gap-3"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 + idx * 0.05 }}
               >
                 <div className="text-xs text-gray-400 w-20">
                   {formatTime(segment.start)} - {formatTime(segment.end)}
@@ -658,7 +618,7 @@ function PacingAnalysisSection({ pacing, index }: PacingAnalysisSectionProps) {
                     <span className="text-xs text-gray-300">{segment.description}</span>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -678,7 +638,7 @@ function PacingAnalysisSection({ pacing, index }: PacingAnalysisSectionProps) {
           ))}
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }
 
@@ -693,11 +653,8 @@ interface RetentionPredictionSectionProps {
 
 function RetentionPredictionSection({ retention, index }: RetentionPredictionSectionProps) {
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
     >
       <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
         <span>📊</span>
@@ -738,12 +695,9 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
           </div>
           <div className="space-y-3">
             {retention.dropoffPoints.map((point, idx) => (
-              <motion.div
+              <div
                 key={idx}
                 className="bg-red-900/20 border border-red-800/30 rounded-lg p-4"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 + idx * 0.05 }}
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -766,7 +720,7 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
                   <span>💡</span>
                   <span>{point.suggestion}</span>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -780,12 +734,9 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
           </div>
           <div className="space-y-3">
             {retention.strongPoints.map((point, idx) => (
-              <motion.div
+              <div
                 key={idx}
                 className="bg-green-900/20 border border-green-800/30 rounded-lg p-4"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 + idx * 0.05 }}
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -801,12 +752,12 @@ function RetentionPredictionSection({ retention, index }: RetentionPredictionSec
                     {point.strength}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }
 
@@ -821,11 +772,8 @@ interface ImprovementsSectionProps {
 
 function ImprovementsSection({ improvements, index }: ImprovementsSectionProps) {
   return (
-    <motion.div
+    <div
       className="bg-gradient-to-br from-blue-900/20 to-gray-800/50 backdrop-blur-sm rounded-xl border border-blue-700/30 p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
     >
       <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
         <span>🚀</span>
@@ -834,12 +782,9 @@ function ImprovementsSection({ improvements, index }: ImprovementsSectionProps) 
 
       <div className="space-y-4">
         {improvements.map((improvement, idx) => (
-          <motion.div
+          <div
             key={idx}
             className="bg-gray-800/50 rounded-lg p-5 border border-gray-700"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 + idx * 0.05 }}
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -879,10 +824,10 @@ function ImprovementsSection({ improvements, index }: ImprovementsSectionProps) 
                 <div className="text-sm text-gray-300">{improvement.implementation}</div>
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -901,10 +846,7 @@ export default function DopamineOptimizer({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+      <div
       >
         <h2 className="text-3xl font-bold text-white mb-2">
           Dopamine Optimizer
@@ -912,14 +854,11 @@ export default function DopamineOptimizer({
         <p className="text-gray-400">
           AI-powered content analysis for maximum engagement and retention
         </p>
-      </motion.div>
+      </div>
 
       {/* Overall Score */}
-      <motion.div
+      <div
         className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
       >
         <div className="text-center mb-4">
           <h3 className="text-xl font-semibold text-white mb-2">
@@ -939,14 +878,11 @@ export default function DopamineOptimizer({
           <span>75</span>
           <span>100</span>
         </div>
-      </motion.div>
+      </div>
 
       {/* Tab Navigation */}
-      <motion.div
+      <div
         className="flex gap-3"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.2 }}
       >
         <button
           onClick={() => setActiveTab('overview')}
@@ -968,18 +904,15 @@ export default function DopamineOptimizer({
         >
           Detailed Analysis
         </button>
-      </motion.div>
+      </div>
 
       {/* Overview Tab */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <motion.div
+            <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-400 text-sm">Hooks</span>
@@ -989,13 +922,10 @@ export default function DopamineOptimizer({
               <div className="text-xs text-gray-400 mt-1">
                 Avg: {Math.round(data.hooks.reduce((sum, h) => sum + h.strength, 0) / data.hooks.length)}
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
+            <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.35 }}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-400 text-sm">Emotional Peaks</span>
@@ -1005,13 +935,10 @@ export default function DopamineOptimizer({
               <div className="text-xs text-gray-400 mt-1">
                 Avg: {Math.round(data.emotionalPeaks.reduce((sum, p) => sum + p.intensity, 0) / data.emotionalPeaks.length)}
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
+            <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.4 }}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-400 text-sm">Pacing</span>
@@ -1021,13 +948,10 @@ export default function DopamineOptimizer({
               <div className="text-xs text-gray-400 mt-1 capitalize">
                 {data.pacingAnalysis.overallPace.replace('_', ' ')}
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
+            <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.45 }}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-400 text-sm">Retention</span>
@@ -1039,7 +963,7 @@ export default function DopamineOptimizer({
               <div className="text-xs text-gray-400 mt-1">
                 {formatTime(data.retentionPrediction.averageWatchTime)} avg
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Improvements */}
@@ -1061,11 +985,8 @@ export default function DopamineOptimizer({
           <RetentionPredictionSection retention={data.retentionPrediction} index={3} />
 
           {data.cliffhangers.length > 0 && (
-            <motion.div
+            <div
               className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
             >
               <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 <span>🎬</span>
@@ -1074,12 +995,9 @@ export default function DopamineOptimizer({
 
               <div className="space-y-3">
                 {data.cliffhangers.map((cliff, idx) => (
-                  <motion.div
+                  <div
                     key={idx}
                     className="bg-gray-800/30 rounded-lg p-4 border border-gray-700"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + idx * 0.05 }}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div>
@@ -1096,10 +1014,10 @@ export default function DopamineOptimizer({
                     </div>
                     <div className="text-sm text-gray-300 italic mb-2">"{cliff.text}"</div>
                     <div className="text-xs text-blue-400">{cliff.effectiveness}</div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
       )}

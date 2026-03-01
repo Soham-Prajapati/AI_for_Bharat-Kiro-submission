@@ -6,10 +6,9 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
-import { ROICalculatorService } from '../services/roi-calculator.service';
+import { unifiedAnalyticsService } from '../services/unified-analytics.service';
 
 const router = Router();
-const roiCalculatorService = new ROICalculatorService();
 
 /**
  * GET /api/roi/:userId
@@ -23,7 +22,7 @@ router.get('/:userId', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('userId required');
   }
 
-  const roi = roiCalculatorService.calculateUserROI(userId, Number(videosProcessed));
+  const roi = await unifiedAnalyticsService.calculateROI(userId);
 
   res.json(roi);
 }));

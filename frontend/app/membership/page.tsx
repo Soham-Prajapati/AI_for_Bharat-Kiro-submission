@@ -6,7 +6,7 @@ import SubscriptionManagement from '@/components/SubscriptionManagement';
 import { useToast } from '@/context/ToastContext';
 
 export default function MembershipPage() {
-  const { showToast } = useToast();
+  const { addToast } = useToast();
   const [currentPlanId, setCurrentPlanId] = useState<string>('free');
   const [showManagement, setShowManagement] = useState(false);
 
@@ -18,15 +18,15 @@ export default function MembershipPage() {
 
   const handleSubscribe = (tierId: string) => {
     if (tierId === currentPlanId) {
-      showToast('You are already on this plan', 'info');
+      addToast('info', 'You are already on this plan');
       return;
     }
 
     if (tierId === 'enterprise') {
-      showToast('Redirecting to sales team...', 'info');
+      addToast('info', 'Redirecting to sales team...');
       // In production, this would open a contact form or redirect to sales
       setTimeout(() => {
-        showToast('Sales team will contact you within 24 hours', 'success');
+        addToast('success', 'Sales team will contact you within 24 hours');
       }, 1500);
       return;
     }
@@ -34,14 +34,14 @@ export default function MembershipPage() {
     // Simulate subscription change
     setCurrentPlanId(tierId);
     setShowManagement(true);
-    showToast(
-      `Successfully ${tierId === 'free' ? 'downgraded to' : 'upgraded to'} ${tierId.charAt(0).toUpperCase() + tierId.slice(1)} plan!`,
-      'success'
+    addToast(
+      'success',
+      `Successfully ${tierId === 'free' ? 'downgraded to' : 'upgraded to'} ${tierId.charAt(0).toUpperCase() + tierId.slice(1)} plan!`
     );
   };
 
   const handleUpgrade = () => {
-    showToast('Redirecting to upgrade options...', 'info');
+    addToast('info', 'Redirecting to upgrade options...');
     setShowManagement(false);
     // Scroll to pricing table
     window.scrollTo({ top: 400, behavior: 'smooth' });
@@ -50,17 +50,17 @@ export default function MembershipPage() {
   const handleDowngrade = () => {
     if (currentPlanId === 'enterprise') {
       setCurrentPlanId('pro');
-      showToast('Downgraded to Pro plan. Changes will take effect at the end of your billing period.', 'success');
+      addToast('success', 'Downgraded to Pro plan. Changes will take effect at the end of your billing period.');
     } else if (currentPlanId === 'pro') {
       setCurrentPlanId('free');
-      showToast('Downgraded to Free plan. Changes will take effect at the end of your billing period.', 'success');
+      addToast('success', 'Downgraded to Free plan. Changes will take effect at the end of your billing period.');
     }
   };
 
   const handleCancel = () => {
     setCurrentPlanId('free');
     setShowManagement(false);
-    showToast('Subscription cancelled. You will retain access until the end of your billing period.', 'success');
+    addToast('success', 'Subscription cancelled. You will retain access until the end of your billing period.');
   };
 
   return (

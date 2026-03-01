@@ -1,6 +1,5 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useMemo } from 'react'
 import apiClient from '@/services/api'
 import { MultiplyGenerateResponse, Clip, Quote, Audiogram } from '@/types/api'
@@ -201,11 +200,8 @@ export default function ContentMultiplier({
   }
 
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
     >
       {/* Header */}
       <div className="mb-6">
@@ -219,12 +215,10 @@ export default function ContentMultiplier({
 
       {/* Generate Button */}
       {!contentData && (
-        <motion.button
+        <button
           onClick={handleGenerate}
           disabled={isLoading || !transcript}
           className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed mb-6"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
@@ -237,18 +231,16 @@ export default function ContentMultiplier({
           ) : (
             'Generate 50+ Content Pieces'
           )}
-        </motion.button>
+        </div>
       )}
 
       {/* Error Message */}
       {error && (
-        <motion.div
+        <div
           className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
         >
           {error}
-        </motion.div>
+        </div>
       )}
 
       {/* Content Display */}
@@ -301,30 +293,26 @@ export default function ContentMultiplier({
 
             {/* View Mode Toggle */}
             <div className="flex gap-2">
-              <motion.button
+              <button
                 onClick={() => setViewMode('grid')}
                 className={`px-4 py-2 rounded-lg font-semibold ${
                   viewMode === 'grid'
                     ? 'bg-purple-600 text-white'
                     : 'bg-gray-700 text-gray-300'
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 Grid
-              </motion.button>
-              <motion.button
+              </div>
+              <button
                 onClick={() => setViewMode('tree')}
                 className={`px-4 py-2 rounded-lg font-semibold ${
                   viewMode === 'tree'
                     ? 'bg-purple-600 text-white'
                     : 'bg-gray-700 text-gray-300'
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 Tree
-              </motion.button>
+              </div>
             </div>
           </div>
 
@@ -346,30 +334,26 @@ export default function ContentMultiplier({
               >
                 Deselect All
               </button>
-              <motion.button
+              <button
                 onClick={handleExportSelected}
                 disabled={selectedItems.size === 0}
                 className="px-4 py-1 bg-purple-600 text-white text-sm font-semibold rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 Export Selected
-              </motion.button>
-              <motion.button
+              </div>
+              <button
                 onClick={handleExportAll}
                 className="px-4 py-1 bg-pink-600 text-white text-sm font-semibold rounded"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 Export All
-              </motion.button>
+              </div>
             </div>
           </div>
 
           {/* Content Grid/Tree */}
           {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              <AnimatePresence>
+              
                 {filteredContent.map((item, index) => (
                   <ContentCard
                     key={item.id}
@@ -381,7 +365,7 @@ export default function ContentMultiplier({
                     getTypeColor={getTypeColor}
                   />
                 ))}
-              </AnimatePresence>
+              
             </div>
           ) : (
             <ContentTree
@@ -395,21 +379,19 @@ export default function ContentMultiplier({
 
           {/* Empty State */}
           {filteredContent.length === 0 && (
-            <motion.div
+            <div
               className="text-center py-12"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
             >
               <div className="text-6xl mb-4">🔍</div>
               <div className="text-xl text-gray-400">No content found</div>
               <div className="text-sm text-gray-500 mt-2">
                 Try adjusting your filters or search query
               </div>
-            </motion.div>
+            </div>
           )}
         </>
       )}
-    </motion.div>
+    </div>
   )
 }
 
@@ -435,15 +417,10 @@ function ContentCard({
   getTypeColor
 }: ContentCardProps) {
   return (
-    <motion.div
+    <div
       className={`bg-gray-700/50 rounded-lg border-2 overflow-hidden cursor-pointer transition-all ${
         isSelected ? 'border-purple-500' : 'border-gray-600'
       }`}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ delay: index * 0.05, duration: 0.3 }}
-      whileHover={{ scale: 1.05, y: -5 }}
       onClick={onToggleSelect}
     >
       {/* Thumbnail */}
@@ -479,7 +456,7 @@ function ContentCard({
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -521,11 +498,9 @@ function ContentTree({
     <div className="space-y-4">
       {Object.entries(groupedContent).map(([type, items]) => (
         items.length > 0 && (
-          <motion.div
+          <div
             key={type}
             className="bg-gray-700/30 rounded-lg p-4"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="text-3xl">{getTypeIcon(type)}</div>
@@ -536,17 +511,13 @@ function ContentTree({
             </div>
             <div className="space-y-2">
               {items.map((item, index) => (
-                <motion.div
+                <div
                   key={item.id}
                   className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
                     selectedItems.has(item.id)
                       ? 'bg-purple-500/20 border border-purple-500'
                       : 'bg-gray-700/50 border border-gray-600'
                   }`}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ x: 5 }}
                   onClick={() => onToggleSelect(item.id)}
                 >
                   <div className="flex-shrink-0">
@@ -569,10 +540,10 @@ function ContentTree({
                   {item.duration && (
                     <div className="text-xs text-gray-400">{item.duration}s</div>
                   )}
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         )
       ))}
     </div>

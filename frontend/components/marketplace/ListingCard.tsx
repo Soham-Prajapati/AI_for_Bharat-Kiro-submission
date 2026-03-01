@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Star, ShoppingCart, Download, Eye } from 'lucide-react';
 import { Listing } from '@/types/api';
 
@@ -28,10 +27,7 @@ const typeIcons = {
 
 export default function ListingCard({ listing, index, onPurchase }: ListingCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
+    <div
       className={`bg-gradient-to-br ${typeColors[listing.type]} rounded-xl p-6 border hover:scale-105 transition-transform cursor-pointer`}
     >
       {/* Preview Image */}
@@ -109,6 +105,6 @@ export default function ListingCard({ listing, index, onPurchase }: ListingCardP
           {listing.status === 'active' ? 'Buy Now' : 'Unavailable'}
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 }

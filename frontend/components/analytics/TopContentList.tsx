@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 
 export interface ContentItem {
   id: string;
@@ -36,10 +35,7 @@ export const TopContentList: React.FC<TopContentListProps> = ({
   const displayContent = content.slice(0, limit);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
       className="rounded-xl border border-gray-800 bg-gradient-to-br from-gray-900/50 to-gray-800/30 p-6 backdrop-blur-sm"
     >
       <div className="mb-4 flex items-center justify-between">
@@ -51,11 +47,8 @@ export const TopContentList: React.FC<TopContentListProps> = ({
 
       <div className="space-y-3">
         {displayContent.map((item, index) => (
-          <motion.div
+          <div
             key={item.id}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
             className="group relative overflow-hidden rounded-lg border border-gray-800 bg-gray-900/50 p-4 transition-all hover:border-gray-700 hover:bg-gray-900/80"
           >
             <div className="flex gap-4">
@@ -123,17 +116,14 @@ export const TopContentList: React.FC<TopContentListProps> = ({
 
             {/* Engagement Bar */}
             <div className="mt-3 h-1 overflow-hidden rounded-full bg-gray-800">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${item.engagement}%` }}
-                transition={{ duration: 0.8, delay: index * 0.05 + 0.2 }}
+              <div
                 className="h-full rounded-full"
                 style={{ backgroundColor: item.platformColor }}
               />
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 };

@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import {
   LineChart,
@@ -171,36 +170,27 @@ function StatsCard({
   delay
 }: StatsCardProps) {
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay }}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="text-3xl">{icon}</div>
-        <motion.div
+        <div
           className="px-3 py-1 rounded-full text-xs font-semibold"
           style={{
             backgroundColor: `${color}20`,
             color: color
           }}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: delay + 0.3, type: 'spring' }}
         >
           Live
-        </motion.div>
+        </div>
       </div>
       
       <h3 className="text-gray-400 text-sm font-medium mb-2">{title}</h3>
       
-      <motion.div
+      <div
         className="text-3xl font-bold"
         style={{ color }}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: delay + 0.2, type: 'spring' }}
       >
         <AnimatedCounter
           value={value}
@@ -208,8 +198,8 @@ function StatsCard({
           suffix={suffix}
           prefix={prefix}
         />
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   )
 }
 
@@ -259,10 +249,7 @@ export default function ROIDashboard({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+      <div
       >
         <h2 className="text-3xl font-bold text-white mb-2">
           ROI Dashboard
@@ -270,7 +257,7 @@ export default function ROIDashboard({
         <p className="text-gray-400">
           Track your savings and return on investment with AI-powered video analysis
         </p>
-      </motion.div>
+      </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -312,11 +299,8 @@ export default function ROIDashboard({
 
       {/* Projections Chart */}
       {showProjections && (
-        <motion.div
+        <div
           className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
         >
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-2">
@@ -402,18 +386,15 @@ export default function ROIDashboard({
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Comparison Cards */}
       {showComparison && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Manual Approach */}
-          <motion.div
+          <div
             className="bg-gradient-to-br from-red-900/20 to-gray-800/50 backdrop-blur-sm rounded-xl border border-red-800/30 p-6"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="text-4xl">👤</div>
@@ -451,14 +432,11 @@ export default function ROIDashboard({
                 ⚠️ High cost, time-intensive, limited scalability
               </p>
             </div>
-          </motion.div>
+          </div>
 
           {/* AI Approach */}
-          <motion.div
+          <div
             className="bg-gradient-to-br from-green-900/20 to-gray-800/50 backdrop-blur-sm rounded-xl border border-green-800/30 p-6"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="text-4xl">🤖</div>
@@ -496,26 +474,20 @@ export default function ROIDashboard({
                 ✅ Low cost, fast processing, infinitely scalable
               </p>
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
 
       {/* Summary Banner */}
-      <motion.div
+      <div
         className="bg-gradient-to-r from-blue-900/30 via-purple-900/30 to-pink-900/30 backdrop-blur-sm rounded-xl border border-blue-700/30 p-8"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
       >
         <div className="text-center">
-          <motion.div
+          <div
             className="text-5xl mb-4"
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 1, type: 'spring', stiffness: 200 }}
           >
             🎉
-          </motion.div>
+          </div>
           
           <h3 className="text-2xl font-bold text-white mb-2">
             You're saving{' '}
@@ -543,7 +515,7 @@ export default function ROIDashboard({
             </span>
           </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

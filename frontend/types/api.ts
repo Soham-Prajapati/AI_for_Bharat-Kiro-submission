@@ -658,37 +658,6 @@ export interface AnalyzeViralResponse {
 }
 
 // ============================================================================
-// VOICE CLONING TYPES
-// ============================================================================
-
-export interface VoiceTrainRequest {
-  userId: string;
-  samples: File[];
-}
-
-export interface VoiceTrainResponse {
-  success: boolean;
-  modelId: string;
-  samplesUploaded: number;
-  status: 'training' | 'ready' | 'failed';
-  estimatedTime: string;
-  message: string;
-}
-
-export interface VoiceGenerateRequest {
-  modelId: string;
-  text: string;
-}
-
-export interface VoiceGenerateResponse {
-  success: boolean;
-  audioUrl: string;
-  duration: number;
-  status: 'completed' | 'processing' | 'failed';
-  message: string;
-}
-
-// ============================================================================
 // CULTURAL ADAPTATION TYPES
 // ============================================================================
 

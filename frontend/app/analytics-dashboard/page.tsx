@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
 import { MetricCard } from '@/components/analytics/MetricCard';
 import { TrendChart } from '@/components/analytics/TrendChart';
 import { PlatformPerformanceCard } from '@/components/analytics/PlatformPerformanceCard';
@@ -137,21 +136,16 @@ export default function AnalyticsDashboard() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <motion.h1
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
+              <div
                 className="text-3xl font-bold text-white"
               >
                 Analytics Dashboard
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.1 }}
+              </div>
+              <div
                 className="mt-1 text-sm text-gray-400"
               >
                 Comprehensive insights across all your platforms
-              </motion.p>
+              </div>
             </div>
             
             <div className="flex flex-wrap items-center gap-3">

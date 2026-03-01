@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import ModeSelector from '@/components/ModeSelector'
-import { motion } from 'framer-motion'
 
 type CreatorMode = 'ai-first' | 'hybrid' | 'human-first'
 
@@ -26,10 +25,7 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       {/* Header */}
       <div className="pt-12 pb-8 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+        <div
         >
           <h1 className="text-3xl font-bold text-white mb-2">
             Welcome to Content Intelligence Platform
@@ -37,7 +33,7 @@ export default function OnboardingPage() {
           <p className="text-gray-400">
             Step 1 of 3: Choose your creator mode
           </p>
-        </motion.div>
+        </div>
       </div>
 
       {/* Mode Selector */}
@@ -48,21 +44,16 @@ export default function OnboardingPage() {
 
       {/* Continue Button */}
       {selectedMode && (
-        <motion.div
+        <div
           className="flex justify-center pb-20"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
         >
-          <motion.button
+          <button
             onClick={handleContinue}
             className="px-12 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-purple-500/50 transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             Continue to Next Step →
-          </motion.button>
-        </motion.div>
+          </button>
+        </div>
       )}
     </div>
   )

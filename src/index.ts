@@ -57,7 +57,7 @@ app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -100,9 +100,6 @@ app.use('/api/community', communityRoute);
 app.use('/api/membership', membershipRoute);
 app.use('/api/automation', automationRoute);
 app.use('/api/workspace', workspaceRoute);
-app.use('/api/graph', graphRoute);
-app.use('/api/membership', membershipRoute);
-app.use('/api/automation', automationRoute);
 app.use('/api/analytics-dashboard', analyticsDashboardRoute);
 app.use('/api/integrations', integrationsRoute);
 app.use('/api/adhd', adhdRoute);
@@ -125,7 +122,7 @@ app.use(errorHandler);
 if (require.main === module) {
   server.listen(PORT, () => {
     console.log(`🚀 Content Intelligence Platform running on port ${PORT}`);
-    
+
     // Initialize WebSocket server
     workspaceWSServer.initialize(server);
     console.log(`🔌 WebSocket server ready at ws://localhost:${PORT}/ws/workspace`);

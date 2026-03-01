@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { PlatformData, PLATFORM_COLORS, PLATFORM_NAMES } from '@/types/analytics';
 import { TrendingUp, TrendingDown, Minus, Eye, Heart } from 'lucide-react';
 
@@ -33,10 +32,7 @@ export default function PlatformCard({ data, index }: PlatformCardProps) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+    <div
       className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-lg"
       style={{ 
         boxShadow: `0 4px 20px ${color}15`,
@@ -76,10 +72,7 @@ export default function PlatformCard({ data, index }: PlatformCardProps) {
           <p className="text-white font-semibold">{(data.engagement * 100).toFixed(1)}%</p>
         </div>
         <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${data.engagement * 100}%` }}
-            transition={{ duration: 1, delay: index * 0.1 + 0.3 }}
+          <div
             className="h-full rounded-full"
             style={{ backgroundColor: color }}
           />
@@ -101,6 +94,6 @@ export default function PlatformCard({ data, index }: PlatformCardProps) {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Plus, DollarSign, TrendingUp, Package, Edit, Trash2, Eye } from 'lucide-react';
 import { Listing, CreateListingRequest } from '@/types/api';
 import apiClient from '@/services/api';
@@ -110,10 +109,7 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
     <div>
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+        <div
           className="bg-gradient-to-br from-green-500/20 to-green-600/10 rounded-xl p-6 border border-green-500/30"
         >
           <div className="flex items-center gap-2 mb-2">
@@ -121,12 +117,9 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
             <p className="text-green-300 text-sm">Total Revenue</p>
           </div>
           <p className="text-3xl font-bold text-white">${totalRevenue.toFixed(2)}</p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+        <div
           className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 rounded-xl p-6 border border-blue-500/30"
         >
           <div className="flex items-center gap-2 mb-2">
@@ -134,12 +127,9 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
             <p className="text-blue-300 text-sm">Total Sales</p>
           </div>
           <p className="text-3xl font-bold text-white">{totalSales}</p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+        <div
           className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 rounded-xl p-6 border border-purple-500/30"
         >
           <div className="flex items-center gap-2 mb-2">
@@ -147,12 +137,9 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
             <p className="text-purple-300 text-sm">Active Listings</p>
           </div>
           <p className="text-3xl font-bold text-white">{listings.length}</p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+        <div
           className="bg-gradient-to-br from-yellow-500/20 to-yellow-600/10 rounded-xl p-6 border border-yellow-500/30"
         >
           <div className="flex items-center gap-2 mb-2">
@@ -160,7 +147,7 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
             <p className="text-yellow-300 text-sm">Avg Rating</p>
           </div>
           <p className="text-3xl font-bold text-white">{avgRating.toFixed(1)}</p>
-        </motion.div>
+        </div>
       </div>
 
       {/* Create Listing Button */}
@@ -193,11 +180,8 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
       ) : (
         <div className="space-y-4">
           {listings.map((listing, index) => (
-            <motion.div
+            <div
               key={listing.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
               className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-colors"
             >
               <div className="flex items-start justify-between">
@@ -268,7 +252,7 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       )}
