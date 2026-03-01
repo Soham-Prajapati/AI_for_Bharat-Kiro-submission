@@ -25,9 +25,13 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!(uuid)/)'
   ],
-  globals: {
-    'ts-jest': {
-      isolatedModules: true
-    }
+  transform: {
+    '^.+\\.ts$': ['ts-jest', {
+      isolatedModules: true,
+      tsconfig: {
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true
+      }
+    }]
   }
 };
