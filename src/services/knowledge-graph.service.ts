@@ -602,3 +602,5 @@ Return format:
     return { nodes, edges };
   }
 }
+
+export const knowledgeGraphService = new KnowledgeGraphService();

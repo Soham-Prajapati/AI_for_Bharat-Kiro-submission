@@ -30,6 +30,9 @@ ENV/
 
 # IDEs and Editors
 .vscode/
+.agent/
+.agents/
+.zencoder/
 .idea/
 *.swp
 *.swo

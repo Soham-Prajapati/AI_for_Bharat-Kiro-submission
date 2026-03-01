@@ -42,9 +42,9 @@ export class ViralAnalyzerService {
     const response = await apiClient.viralAnalyzer.analyze(request);
 
     // Validate response
-    this.validateResponse(response);
+    this.validateResponse(response as unknown as AnalyzeViralResponse);
 
-    return response;
+    return response as unknown as AnalyzeViralResponse;
   }
 
   /**

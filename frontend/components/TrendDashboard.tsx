@@ -751,7 +751,7 @@ function TimelineChart({ trend }: TimelineChartProps) {
               <stop offset="5%" stopColor={statusColor} stopOpacity={0.3} />
               <stop offset="95%" stopColor={statusColor} stopOpacity={0} />
             </linearGradient>
-          </AreaChart>
+          </defs>
           
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           
@@ -786,9 +786,9 @@ function TimelineChart({ trend }: TimelineChartProps) {
             dot={{ fill: '#8b5cf6', r: 4 }}
             name="Mentions"
           />
-        </ResponsiveContainer>
-      </div>
-    </Platform>
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
   )
 }
 

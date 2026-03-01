@@ -330,7 +330,7 @@ export default function ROIDashboard({
                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
                     <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
-                </LineChart>
+                </defs>
                 
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 
@@ -383,8 +383,8 @@ export default function ROIDashboard({
                   name="Total Savings"
                   strokeDasharray="5 5"
                 />
-              </ResponsiveContainer>
-            </div>
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       )}

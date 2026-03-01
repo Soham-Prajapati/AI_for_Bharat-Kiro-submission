@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Comment, CommentReply } from '@/types/workspace';
+import { Comment } from '@/types/workspace';
 
 interface CommentThreadProps {
   comment: Comment;

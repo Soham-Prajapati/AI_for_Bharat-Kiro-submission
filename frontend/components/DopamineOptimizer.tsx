@@ -361,7 +361,7 @@ function ScoreGauge({ score, animated }: ScoreGaugeProps) {
               <stop offset="66%" stopColor="#3b82f6" />
               <stop offset="100%" stopColor="#10b981" />
             </linearGradient>
-          </svg>
+          </defs>
           
           <path
             d="M 20 90 A 80 80 0 0 1 180 90"
@@ -381,13 +381,11 @@ function ScoreGauge({ score, animated }: ScoreGaugeProps) {
             strokeDashoffset={251.2 - (displayScore / 100) * 251.2}
           />
 
-          <div g
-            style={{ transformOrigin: '100px 90px' }}
-          >
+          <g style={{ transformOrigin: '100px 90px' }}>
             <line x1="100" y1="90" x2="100" y2="30" stroke={scoreColor} strokeWidth="3" strokeLinecap="round" />
             <circle cx="100" cy="90" r="6" fill={scoreColor} />
-          </div>
-        </div>
+          </g>
+        </svg>
 
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
           <div
@@ -399,7 +397,7 @@ function ScoreGauge({ score, animated }: ScoreGaugeProps) {
           <div className="text-sm text-gray-400 mt-1">{scoreLabel}</div>
         </div>
       </div>
-    </HookType>
+    </div>
   )
 }
 

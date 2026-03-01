@@ -3,6 +3,7 @@ import multer from 'multer';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
 import { S3Service } from '../services/s3.service';
+import { voiceCloneService } from '../services/voice-clone.service';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 50 * 1024 * 1024 } });
@@ -29,14 +30,21 @@ router.post('/train', upload.array('samples', 10), asyncHandler(async (req: Requ
     uploadedSamples.push(result.url);
   }
 
-  // TODO: Integrate with ElevenLabs or AWS Polly when service is ready
+  // Uses the actual voice clone service
+  const trainingResult = await voiceCloneService.trainVoice({
+    userId,
+    name: `Voice-${Date.now()}`,
+    audioSamples: uploadedSamples
+  });
+
   res.json({
     success: true,
-    modelId: `voice-${userId}-${Date.now()}`,
+    modelId: trainingResult.voiceId,
     samplesUploaded: uploadedSamples.length,
-    status: 'training',
+    status: trainingResult.status,
     estimatedTime: '5-10 minutes',
-    message: 'Voice model training started (mock)'
+    estimatedCompletion: trainingResult.estimatedCompletion,
+    message: 'Voice model training started'
   });
 }));
 
@@ -56,13 +64,18 @@ router.post('/generate', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('text must be less than 5000 characters');
   }
 
-  // TODO: Integrate with voice cloning service when ready
+  // Uses the actual voice clone service
+  const generationResult = await voiceCloneService.generateSpeech({
+    voiceId: modelId,
+    text
+  });
+
   res.json({
     success: true,
-    audioUrl: `https://mock-audio-url.com/${modelId}.mp3`,
-    duration: Math.ceil(text.length / 15), // ~15 chars per second
+    audioUrl: generationResult.audioUrl,
+    duration: generationResult.duration,
     status: 'completed',
-    message: 'Audio generated (mock)'
+    message: 'Audio generated'
   });
 }));
 

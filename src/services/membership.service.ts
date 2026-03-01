@@ -689,3 +689,5 @@ export class MembershipService {
     ];
   }
 }
+
+export const membershipService = new MembershipService();

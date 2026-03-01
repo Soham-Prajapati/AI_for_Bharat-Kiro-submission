@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QALAA | Glassmorphism Theme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            background: #eceff1;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.8;
+            z-index: -1;
+            animation: move 15s infinite alternate;
+        }
+
+        .blob-1 {
+            width: 50vw;
+            height: 50vw;
+            background: #ff0080;
+            top: -10%;
+            left: -10%;
+        }
+
+        .blob-2 {
+            width: 40vw;
+            height: 40vw;
+            background: #7928ca;
+            bottom: -10%;
+            right: -10%;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 30vw;
+            height: 30vw;
+            background: #00dfd8;
+            top: 40%;
+            left: 30%;
+            animation-delay: -10s;
+        }
+
+        @keyframes move {
+            100% {
+                transform: translate(100px, 50px) scale(1.1);
+            }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            border-radius: 24px;
+            color: #1a202c;
+        }
+
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: #1a202c;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="glass-panel w-full max-w-5xl p-12 relative overflow-hidden">
+        <!-- Shine effect -->
+        <div
+            class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/40 to-transparent pointer-events-none opacity-50">
+        </div>
+
+        <header class="flex justify-between items-center mb-16 relative z-10">
+            <h1 class="text-3xl font-black tracking-tighter">QALAA</h1>
+            <nav class="flex gap-6"><a href="#" class="font-medium hover:text-white transition">Product</a><a href="#"
+                    class="font-medium hover:text-white transition">Pricing</a></nav>
+        </header>
+
+        <main class="text-center relative z-10 max-w-3xl mx-auto">
+            <span
+                class="px-4 py-1.5 rounded-full bg-white/30 border border-white/50 text-sm font-semibold shadow-sm mb-6 inline-block">Theme
+                Variant 01</span>
+            <h2 class="text-6xl font-black mb-6 leading-tight">Hyper-Focus<br>Glassmorphism</h2>
+            <p class="text-xl mb-10 text-gray-800 font-medium">Using aggressive backdrop filters, translucent white
+                borders, and vibrant sub-surface mesh gradients to create a frosted UI layer.</p>
+            <div class="flex gap-4 justify-center">
+                <button class="glass-btn px-8 py-4 rounded-xl shadow-lg">Process Video</button>
+            </div>
+        </main>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 relative z-10">
+            <div class="glass-panel p-6 bg-white/10">
+                <h3 class="font-bold mb-2">Platform Engine</h3>
+                <p class="text-sm opacity-80">6 platforms supported instantly.</p>
+            </div>
+            <div class="glass-panel p-6 bg-white/10">
+                <h3 class="font-bold mb-2">Creator DNA</h3>
+                <p class="text-sm opacity-80">Perserves your exact voice.</p>
+            </div>
+            <div class="glass-panel p-6 bg-white/10">
+                <h3 class="font-bold mb-2">Local Languages</h3>
+                <p class="text-sm opacity-80">9 Indian dialects native generation.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
