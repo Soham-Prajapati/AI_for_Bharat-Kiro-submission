@@ -45,6 +45,10 @@ import {
   PredictTrendsResponse,
   MultiplyGenerateRequest,
   MultiplyGenerateResponse,
+  MultiplyV2GenerateRequest,
+  MultiplyV2GenerateResponse,
+  MultiplyV2StatusResponse,
+  MultiplyV2ResultsResponse,
   CreateWorkspaceRequest,
   Workspace,
   WorkspaceUsersResponse,
@@ -90,6 +94,13 @@ import {
   PlatformPerformanceResponse,
   ExportAnalyticsResponse,
   DateRange,
+  SafetyCheckRequest,
+  SafetyCheckResponse,
+  SafetyHistoryResponse,
+  ApproveContentRequest,
+  ApproveContentResponse,
+  RejectContentRequest,
+  RejectContentResponse,
 } from '@/types/api';
 
 // ============================================================================
@@ -623,6 +634,40 @@ class ApiClient {
       }),
   };
 
+  multiplyV2 = {
+    /**
+     * Generate 100+ content pieces from a single video
+     * @param data - Content multiplication request with video details and preferences
+     * @returns Promise with multiplication result including all generated pieces
+     */
+    generate: (data: MultiplyV2GenerateRequest) =>
+      this.request<MultiplyV2GenerateResponse>('/api/multiply-v2/generate', {
+        method: 'POST',
+        body: data,
+        timeout: 180000, // 3 minutes for large content generation
+      }),
+
+    /**
+     * Check the status of a content generation job
+     * @param jobId - The unique job identifier returned from generate
+     * @returns Promise with current job status and progress
+     */
+    getStatus: (jobId: string) =>
+      this.request<MultiplyV2StatusResponse>(`/api/multiply-v2/status/${jobId}`, {
+        method: 'GET',
+      }),
+
+    /**
+     * Fetch all generated content pieces for a completed job
+     * @param jobId - The unique job identifier
+     * @returns Promise with complete multiplication results
+     */
+    getResults: (jobId: string) =>
+      this.request<MultiplyV2ResultsResponse>(`/api/multiply-v2/results/${jobId}`, {
+        method: 'GET',
+      }),
+  };
+
   workspace = {
     create: (data: CreateWorkspaceRequest) =>
       this.request<{ success: boolean; workspace: Workspace }>('/api/workspace/create', {
@@ -851,6 +896,52 @@ class ApiClient {
           method: 'GET',
         }
       ),
+  };
+
+  safety = {
+    /**
+     * Check content for safety violations
+     * @param data - Safety check request with content details
+     * @returns Promise with safety check result including violations and suggestions
+     */
+    check: (data: SafetyCheckRequest) =>
+      this.request<SafetyCheckResponse>('/api/safety/check', {
+        method: 'POST',
+        body: data,
+        timeout: 60000, // 60 seconds for AI moderation
+      }),
+
+    /**
+     * Get violation history for specific content
+     * @param contentId - The unique content identifier
+     * @returns Promise with all safety checks performed on this content
+     */
+    getHistory: (contentId: string) =>
+      this.request<SafetyHistoryResponse>(`/api/safety/history/${contentId}`, {
+        method: 'GET',
+      }),
+
+    /**
+     * Approve flagged content after manual review
+     * @param data - Approval request with check ID and approver details
+     * @returns Promise with approval confirmation
+     */
+    approve: (data: ApproveContentRequest) =>
+      this.request<ApproveContentResponse>('/api/safety/approve', {
+        method: 'POST',
+        body: data,
+      }),
+
+    /**
+     * Reject unsafe content after manual review
+     * @param data - Rejection request with check ID, reason, and reviewer details
+     * @returns Promise with rejection confirmation
+     */
+    reject: (data: RejectContentRequest) =>
+      this.request<RejectContentResponse>('/api/safety/reject', {
+        method: 'POST',
+        body: data,
+      }),
   };
 }
 
