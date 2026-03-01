@@ -82,39 +82,7 @@
 - ⏳ No tasks completed yet
 
 
-## What's Left
 
-### Phase 1 (Core Features)
-- 8 polished prompts for different content types
-- 3 creator mode services (Human, AI, Platform)
-- Mode detection service
-- Complete backend API routes
-- AWS service integrations (S3, Transcribe, Bedrock)
-- Frontend pages and components
-- Comprehensive testing
-
-### Phase 2 (Integration)
-- Wire routes to services
-- Error handling and logging
-- Frontend-backend integration
-- Real-time streaming
-- Ollama integration
-- Quality validation
-
-### Phase 3 (Deployment)
-- AWS deployment
-- Monitoring setup
-- Demo preparation
-- Final polish and submission
-
-## Current State
-- Basic service layer exists with GitHub Models integration
-- Content processing framework in place
-- No API routes, frontend, or AWS integrations yet
-- Testing infrastructure minimal
-- ~15% complete per progress tracking
-
----
 
 ## Nidhi's Work Log
 
@@ -7831,3 +7799,1423 @@ They serve three distinct user needs. The `unifiedAnalyticsService` wraps all th
 ---
 
 
+
+
+---
+
+# 🚀 PROJECT STARTUP GUIDE
+
+## Complete Guide to Running Frontend, Backend, and Testing Integrations
+
+This guide will help you start the entire Content Intelligence Platform and test all the AI services you've built.
+
+---
+
+## 📋 Prerequisites
+
+Before starting, ensure you have:
+
+- ✅ **Node.js 18+** installed ([Download](https://nodejs.org/))
+- ✅ **npm** (comes with Node.js)
+- ✅ **Git** installed
+- ✅ **GitHub Token** for GitHub Models API ([Get one](https://github.com/settings/tokens))
+- ✅ **AWS Account** (optional for MVP, required for production)
+- ✅ **Code Editor** (VS Code recommended)
+
+---
+
+## ⚡ QUICK START (Fastest Way)
+
+### Option 1: Automated Startup Scripts
+
+**For Mac/Linux:**
+```bash
+# 1. Navigate to project
+cd AI_for_Bharat-Kiro-submission
+
+# 2. Make scripts executable
+chmod +x scripts/start.sh
+
+# 3. Run everything!
+./scripts/start.sh
+```
+
+**For Windows:**
+```cmd
+# 1. Navigate to project
+cd AI_for_Bharat-Kiro-submission
+
+# 2. Run everything!
+scripts\start.bat
+```
+
+**What this does:**
+- Installs all dependencies (backend + frontend)
+- Starts backend server on `http://localhost:3001`
+- Starts frontend server on `http://localhost:3000`
+- Opens browser automatically
+
+---
+
+## 🔧 MANUAL SETUP (Step-by-Step)
+
+### Step 1: Clone and Setup Environment
+
+```bash
+# Clone repository (if not already done)
+git clone <your-repo-url>
+cd AI_for_Bharat-Kiro-submission
+
+# Copy environment template
+cp .env.example .env
+```
+
+### Step 2: Configure Environment Variables
+
+Edit `.env` file and add your credentials:
+
+```bash
+# Required for MVP
+GITHUB_TOKEN=ghp_your_token_here_from_github_settings
+
+# Optional for MVP (use mock data)
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=your_aws_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret
+
+# Server Configuration
+PORT=3001
+NODE_ENV=development
+
+# Frontend URL
+ALLOWED_ORIGINS=http://localhost:3000
+```
+
+**How to get GitHub Token:**
+1. Go to https://github.com/settings/tokens
+2. Click "Generate new token (classic)"
+3. Select scope: `repo` (full control of private repositories)
+4. Copy the token (starts with `ghp_`)
+5. Paste into `.env` file
+
+### Step 3: Install Dependencies
+
+```bash
+# Install backend dependencies
+npm install
+
+# Install frontend dependencies
+cd frontend
+npm install
+cd ..
+```
+
+**Expected output:**
+```
+added 523 packages in 45s
+```
+
+### Step 4: Start Backend Server
+
+**Terminal 1 - Backend:**
+```bash
+# From project root
+npm run dev
+```
+
+**Expected output:**
+```
+[INFO] Server starting...
+[INFO] GitHub Models service initialized
+[INFO] All AI services loaded successfully
+[INFO] Server running on http://localhost:3001
+[INFO] Environment: development
+```
+
+**Backend is ready when you see:**
+- ✅ "Server running on http://localhost:3001"
+- ✅ No error messages
+
+### Step 5: Start Frontend Server
+
+**Terminal 2 - Frontend:**
+```bash
+# From project root
+cd frontend
+npm run dev
+```
+
+**Expected output:**
+```
+- ready started server on 0.0.0.0:3000, url: http://localhost:3000
+- event compiled client and server successfully
+```
+
+**Frontend is ready when you see:**
+- ✅ "ready started server"
+- ✅ "compiled successfully"
+
+---
+
+## 🌐 Access the Application
+
+Once both servers are running:
+
+| Service | URL | Purpose |
+|---------|-----|---------|
+| **Frontend** | http://localhost:3000 | Main user interface |
+| **Backend API** | http://localhost:3001 | REST API endpoints |
+| **Health Check** | http://localhost:3001/health | Server status |
+| **API Docs** | http://localhost:3001/api-docs | API documentation (if configured) |
+
+---
+
+## 🧪 Testing Your AI Services
+
+### Test 1: Health Check
+
+```bash
+# Test backend is running
+curl http://localhost:3001/health
+```
+
+**Expected response:**
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-03-01T10:30:00.000Z",
+  "services": {
+    "githubModels": "connected",
+    "database": "connected"
+  }
+}
+```
+
+### Test 2: DNA Analysis Service
+
+```bash
+# Test DNA analysis endpoint
+curl -X POST http://localhost:3001/api/dna/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "test_user_001",
+    "videoIds": ["video_001", "video_002", "video_003"]
+  }'
+```
+
+**Expected response:**
+```json
+{
+  "personality": "energetic",
+  "topics": ["technology", "tutorials", "reviews"],
+  "tone": "casual",
+  "vocabularyLevel": "intermediate",
+  "archetype": "educator",
+  "confidence": 0.87,
+  "traits": ["clear", "structured", "enthusiastic"],
+  "dimensions": {
+    "energy": 0.85,
+    "formality": 0.35,
+    "humor": 0.65,
+    "technicalDepth": 0.75,
+    "storytelling": 0.80
+  }
+}
+```
+
+### Test 3: Viral Score Prediction
+
+```bash
+# Test viral score predictor
+curl -X POST http://localhost:3001/api/viral/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transcript": "Want to know the secret to viral content? Today I am revealing the 5 strategies that helped me grow from 0 to 100K followers in just 3 months...",
+    "contentType": "video",
+    "duration": 180
+  }'
+```
+
+**Expected response:**
+```json
+{
+  "score": 78,
+  "factors": {
+    "hook": 85,
+    "pacing": 75,
+    "emotion": 80,
+    "trending": 70,
+    "length": 85
+  },
+  "suggestions": [
+    "Strong hook with curiosity gap",
+    "Good pacing - maintain variety",
+    "Emotional connection is strong"
+  ],
+  "confidence": 0.78,
+  "category": "high"
+}
+```
+
+### Test 4: Ecosystem Analytics
+
+```bash
+# Test ecosystem analytics
+curl http://localhost:3001/api/analytics/test_user_001
+```
+
+**Expected response:**
+```json
+{
+  "platforms": {
+    "youtube": {
+      "followers": 125000,
+      "engagement": 0.045,
+      "topPosts": 15,
+      "avgViews": 8500,
+      "growthRate": 0.12
+    },
+    "instagram": {
+      "followers": 45000,
+      "engagement": 0.068,
+      "topPosts": 8,
+      "avgViews": 3200,
+      "growthRate": 0.08
+    }
+  },
+  "recommendations": [
+    "Focus more on TikTok - highest engagement",
+    "LinkedIn shows strong growth potential"
+  ],
+  "bestPerforming": "tiktok",
+  "overallScore": 7.8
+}
+```
+
+### Test 5: Content Multiplier V2
+
+```bash
+# Test content multiplication
+curl -X POST http://localhost:3001/api/multiply/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sourceUrl": "https://example.com/video.mp4",
+    "sourceType": "video",
+    "platforms": ["youtube", "instagram", "tiktok"]
+  }'
+```
+
+**Expected response:**
+```json
+{
+  "totalPieces": 56,
+  "clips": [10],
+  "audiograms": [5],
+  "quoteCards": [12],
+  "infographics": [2],
+  "blogPosts": [2],
+  "socialPosts": [8],
+  "emailSnippets": [2],
+  "carouselPosts": [2],
+  "stories": [1],
+  "thumbnails": [4],
+  "processingTime": 45000,
+  "cost": 7.80
+}
+```
+
+---
+
+## 🎨 Testing Frontend Features
+
+### 1. Landing Page
+- Navigate to http://localhost:3000
+- Should see hero section, features, pricing
+- Test responsive design (resize browser)
+
+### 2. Upload Page
+- Navigate to http://localhost:3000/upload
+- Drag and drop a file
+- Should see upload progress
+- Should redirect to processing page
+
+### 3. Dashboard
+- Navigate to http://localhost:3000/dashboard
+- Should see generated content cards
+- Should see analytics charts
+- Test export functionality
+
+### 4. Analytics Page
+- Navigate to http://localhost:3000/analytics
+- Should see multi-platform comparison
+- Should see engagement charts
+- Should see recommendations
+
+### 5. Mode Selector
+- Navigate to http://localhost:3000/demo/mode-selector
+- Should see 3 mode cards (AI-First, Hybrid, Human-First)
+- Click each mode to test selection
+
+---
+
+## 🔍 Debugging and Troubleshooting
+
+### Common Issues and Solutions
+
+#### Issue 1: Port Already in Use
+
+**Error:**
+```
+Error: listen EADDRINUSE: address already in use :::3001
+```
+
+**Solution:**
+```bash
+# Mac/Linux - Kill process on port 3001
+lsof -ti:3001 | xargs kill -9
+
+# Windows - Kill process on port 3001
+netstat -ano | findstr :3001
+taskkill /PID <PID> /F
+
+# Or change port in .env
+PORT=3002
+```
+
+#### Issue 2: Module Not Found
+
+**Error:**
+```
+Error: Cannot find module 'express'
+```
+
+**Solution:**
+```bash
+# Reinstall dependencies
+rm -rf node_modules package-lock.json
+npm install
+
+# For frontend
+cd frontend
+rm -rf node_modules package-lock.json
+npm install
+```
+
+#### Issue 3: GitHub Token Invalid
+
+**Error:**
+```
+Error: GitHub Models API authentication failed
+```
+
+**Solution:**
+1. Check `.env` file has `GITHUB_TOKEN=ghp_...`
+2. Token should start with `ghp_`
+3. Verify token has `repo` scope
+4. Generate new token if needed
+5. Restart backend server after updating `.env`
+
+#### Issue 4: TypeScript Compilation Errors
+
+**Error:**
+```
+error TS2307: Cannot find module 'xyz'
+```
+
+**Solution:**
+```bash
+# Rebuild TypeScript
+npm run build
+
+# Or run with ts-node directly
+npm run dev
+```
+
+#### Issue 5: Frontend Build Errors
+
+**Error:**
+```
+Module not found: Can't resolve 'react'
+```
+
+**Solution:**
+```bash
+cd frontend
+rm -rf .next node_modules
+npm install
+npm run dev
+```
+
+---
+
+## 📊 Monitoring and Logs
+
+### Backend Logs
+
+Backend logs appear in Terminal 1:
+
+```
+[INFO] 2026-03-01 10:30:15 - Server started
+[INFO] 2026-03-01 10:30:20 - POST /api/dna/analyze - 200 - 1234ms
+[INFO] 2026-03-01 10:30:25 - GET /api/analytics/user_001 - 200 - 567ms
+[ERROR] 2026-03-01 10:30:30 - POST /api/viral/predict - 500 - Error: ...
+```
+
+**Log Levels:**
+- `INFO` - Normal operations
+- `WARN` - Warnings (non-critical)
+- `ERROR` - Errors (need attention)
+
+### Frontend Logs
+
+Frontend logs appear in:
+1. **Terminal 2** - Build and server logs
+2. **Browser Console** (F12) - Client-side logs
+
+### Viewing Detailed Logs
+
+```bash
+# Backend logs with more detail
+LOG_LEVEL=debug npm run dev
+
+# Frontend logs
+cd frontend
+npm run dev -- --debug
+```
+
+---
+
+## 🧪 Running Tests
+
+### Backend Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test file
+npm test -- ContentProcessor.test.ts
+
+# Run with coverage
+npm test -- --coverage
+
+# Watch mode (re-run on changes)
+npm test -- --watch
+```
+
+**Expected output:**
+```
+PASS  src/__tests__/ContentProcessor.test.ts
+  ContentProcessor
+    ✓ should validate video files (45ms)
+    ✓ should process text content (23ms)
+    ✓ should handle CSV files (67ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Time:        2.456s
+```
+
+### Frontend Tests
+
+```bash
+cd frontend
+npm test
+```
+
+### Integration Tests
+
+```bash
+# Test full workflow
+npm run test:integration
+```
+
+---
+
+## 🚀 Production Build
+
+### Build Backend
+
+```bash
+# Compile TypeScript to JavaScript
+npm run build
+
+# Output in dist/ folder
+# Run production build
+npm start
+```
+
+### Build Frontend
+
+```bash
+cd frontend
+
+# Create optimized production build
+npm run build
+
+# Output in .next/ folder
+# Run production build
+npm start
+```
+
+### Docker Build (Optional)
+
+```bash
+# Build Docker image
+docker build -t content-intelligence-platform .
+
+# Run container
+docker run -p 3001:3001 -p 3000:3000 content-intelligence-platform
+```
+
+---
+
+## 📁 Project Structure Overview
+
+```
+AI_for_Bharat-Kiro-submission/
+│
+├── 📂 src/                          # Backend source code
+│   ├── 📂 services/                 # All 27 AI services
+│   │   ├── dna-analysis.service.ts
+│   │   ├── viral-predictor.service.ts
+│   │   ├── ecosystem-analytics.service.ts
+│   │   ├── content-multiplier-v2.service.ts
+│   │   ├── cultural-adapter.service.ts
+│   │   ├── vernacular.service.ts
+│   │   ├── regional-network.service.ts
+│   │   └── ... (20 more services)
+│   │
+│   ├── 📂 routes/                   # API endpoints
+│   │   ├── dna.route.ts
+│   │   ├── viral.route.ts
+│   │   ├── analytics.route.ts
+│   │   └── ... (more routes)
+│   │
+│   ├── 📂 prompts/                  # 8 platform prompts
+│   │   ├── youtube-short.prompt.ts
+│   │   ├── instagram-reel.prompt.ts
+│   │   ├── tiktok.prompt.ts
+│   │   └── ... (5 more prompts)
+│   │
+│   ├── 📂 middleware/               # Express middleware
+│   ├── 📂 __tests__/                # Backend tests
+│   └── index.ts                     # Server entry point
+│
+├── 📂 frontend/                     # Frontend source code
+│   ├── 📂 app/                      # Next.js pages
+│   │   ├── page.tsx                 # Landing page
+│   │   ├── upload/page.tsx          # Upload page
+│   │   ├── dashboard/page.tsx       # Dashboard
+│   │   └── analytics/page.tsx       # Analytics
+│   │
+│   ├── 📂 components/               # React components
+│   │   ├── DNAChart.tsx
+│   │   ├── AnalyticsChart.tsx
+│   │   ├── ModeSelector.tsx
+│   │   └── ... (more components)
+│   │
+│   ├── 📂 hooks/                    # Custom React hooks
+│   ├── 📂 context/                  # State management
+│   └── 📂 lib/                      # Utilities
+│
+├── 📂 docs/                         # Documentation
+│   ├── TODO.md                      # All tasks
+│   ├── FEATURES_MASTER.md           # 28 features
+│   ├── PROJECT_PLAN.md              # Architecture
+│   └── ... (more docs)
+│
+├── 📄 .env                          # Environment variables (create this!)
+├── 📄 .env.example                  # Environment template
+├── 📄 package.json                  # Backend dependencies
+├── 📄 nidhi_ref.md                  # This file!
+└── 📄 README.md                     # Project overview
+```
+
+---
+
+## 🎯 Development Workflow
+
+### Daily Development Routine
+
+1. **Morning:**
+   ```bash
+   # Pull latest changes
+   git pull origin main
+   
+   # Start servers
+   ./scripts/start.sh
+   ```
+
+2. **During Development:**
+   - Backend changes: Auto-reload with `npm run dev`
+   - Frontend changes: Auto-reload with Next.js
+   - Test changes: `npm test`
+
+3. **Before Committing:**
+   ```bash
+   # Run tests
+   npm test
+   
+   # Check TypeScript
+   npm run build
+   
+   # Commit changes
+   git add .
+   git commit -m "feat: your feature description"
+   git push origin main
+   ```
+
+### Testing New Services
+
+When you add a new service:
+
+1. **Create service file:**
+   ```bash
+   # Example: new-feature.service.ts
+   src/services/new-feature.service.ts
+   ```
+
+2. **Create route:**
+   ```bash
+   # Example: new-feature.route.ts
+   src/routes/new-feature.route.ts
+   ```
+
+3. **Test with curl:**
+   ```bash
+   curl -X POST http://localhost:3001/api/new-feature \
+     -H "Content-Type: application/json" \
+     -d '{"test": "data"}'
+   ```
+
+4. **Create frontend component:**
+   ```bash
+   # Example: NewFeature.tsx
+   frontend/components/NewFeature.tsx
+   ```
+
+5. **Test in browser:**
+   - Navigate to http://localhost:3000
+   - Test the new feature UI
+
+---
+
+## 🔐 Security Checklist
+
+Before deploying to production:
+
+- [ ] Change `JWT_SECRET` in `.env` to strong random string
+- [ ] Never commit `.env` file to Git
+- [ ] Use environment variables for all secrets
+- [ ] Enable HTTPS in production
+- [ ] Set `NODE_ENV=production`
+- [ ] Configure CORS properly
+- [ ] Enable rate limiting
+- [ ] Add input validation
+- [ ] Sanitize user inputs
+- [ ] Use secure headers (helmet.js)
+
+---
+
+## 💰 Cost Monitoring
+
+### Check Current Costs
+
+```bash
+# GitHub Models API (currently free)
+# No cost tracking needed
+
+# AWS Services (if using)
+aws ce get-cost-and-usage \
+  --time-period Start=2026-03-01,End=2026-03-02 \
+  --granularity DAILY \
+  --metrics BlendedCost
+```
+
+### Estimated Costs (MVP)
+
+| Service | Usage | Cost/Month |
+|---------|-------|------------|
+| GitHub Models | Free tier | $0 |
+| AWS Transcribe | 1000 videos × 10 min | $240 |
+| AWS S3 | 100 GB + 500 GB transfer | $47 |
+| **Total** | | **$287** |
+
+---
+
+## 📚 Additional Resources
+
+### Documentation
+- **START_HERE.md** - Complete onboarding
+- **docs/TODO.md** - All tasks and progress
+- **docs/FEATURES_MASTER.md** - All 28 features
+- **docs/PROJECT_PLAN.md** - Full architecture
+- **docs/BACKEND_COMPLETE.md** - Backend API guide
+- **docs/QUICKSTART.md** - Quick start guide
+
+### API Documentation
+- **docs/api/API_REFERENCE.md** - Complete API reference
+- **docs/api/ENDPOINTS.md** - All endpoints
+- **docs/api/SCHEMAS.md** - Request/response schemas
+
+### Guides
+- **docs/guides/HOW_TO_RUN.md** - Detailed run guide
+- **docs/guides/DEVELOPMENT_WORKFLOW.md** - Dev workflow
+- **docs/guides/TESTING_GUIDE.md** - Testing guide
+- **docs/guides/DEPLOYMENT_GUIDE.md** - Deployment guide
+
+---
+
+## 🆘 Getting Help
+
+### If Something Doesn't Work:
+
+1. **Check logs** in both terminals
+2. **Verify environment** variables in `.env`
+3. **Restart servers** (Ctrl+C, then restart)
+4. **Clear cache** and reinstall dependencies
+5. **Check documentation** in `docs/` folder
+6. **Review error messages** carefully
+
+### Common Commands Reference
+
+```bash
+# Backend
+npm install          # Install dependencies
+npm run dev          # Start development server
+npm test             # Run tests
+npm run build        # Build for production
+npm start            # Run production build
+
+# Frontend
+cd frontend
+npm install          # Install dependencies
+npm run dev          # Start development server
+npm test             # Run tests
+npm run build        # Build for production
+npm start            # Run production build
+
+# Both
+./scripts/start.sh   # Start everything (Mac/Linux)
+scripts\start.bat    # Start everything (Windows)
+
+# Git
+git pull             # Get latest changes
+git add .            # Stage changes
+git commit -m "msg"  # Commit changes
+git push             # Push to remote
+```
+
+---
+
+## ✅ Verification Checklist
+
+After setup, verify everything works:
+
+### Backend Verification
+- [ ] Backend starts without errors
+- [ ] Health check returns `{"status":"ok"}`
+- [ ] Can call DNA analysis endpoint
+- [ ] Can call viral score endpoint
+- [ ] Can call analytics endpoint
+- [ ] Logs show successful service initialization
+
+### Frontend Verification
+- [ ] Frontend starts without errors
+- [ ] Landing page loads at http://localhost:3000
+- [ ] Upload page works
+- [ ] Dashboard displays
+- [ ] Analytics page shows charts
+- [ ] Mode selector works
+
+### Integration Verification
+- [ ] Frontend can call backend APIs
+- [ ] CORS is configured correctly
+- [ ] File uploads work
+- [ ] Real-time updates work
+- [ ] Error handling works
+
+---
+
+## 🎉 You're Ready!
+
+Once you see:
+- ✅ Backend running on http://localhost:3001
+- ✅ Frontend running on http://localhost:3000
+- ✅ Health check returns OK
+- ✅ Test API calls work
+
+**You're all set to start developing and testing!**
+
+### Next Steps:
+1. Open http://localhost:3000 in your browser
+2. Test the upload feature
+3. Try the DNA analysis
+4. Check the analytics dashboard
+5. Test content generation
+6. Review the viral score predictor
+
+**Happy coding! 🚀**
+
+---
+
+**END OF STARTUP GUIDE**
+
+
+---
+
+# 🔧 UNDERSTANDING THE STARTUP SCRIPTS
+
+## What Are `scripts/start.bat` and `scripts/start.sh`?
+
+These are **custom automation scripts we created** specifically for this project - they're not predefined by npm, Node.js, or any framework. They're convenience wrappers that automate the manual process of starting both backend and frontend servers.
+
+---
+
+## 📝 What `scripts/start.bat` Does (Windows)
+
+### Step-by-Step Execution Flow:
+
+```batch
+1. ✅ Checks if .env file exists
+   ↓ If not found → Shows error message and exits
+   ↓ If found → Continues
+   
+2. 📦 Checks if backend dependencies are installed (node_modules/)
+   ↓ If not installed → Runs: npm install
+   ↓ If installed → Skips
+   
+3. 📦 Checks if frontend dependencies are installed (frontend/node_modules/)
+   ↓ If not installed → Runs: cd frontend && npm install
+   ↓ If installed → Skips
+   
+4. 🚀 Opens NEW COMMAND WINDOW for backend
+   ↓ Runs: npm run dev
+   ↓ Backend starts on http://localhost:3001
+   
+5. ⏳ Waits 3 seconds
+   ↓ Gives backend time to initialize
+   
+6. 🚀 Opens NEW COMMAND WINDOW for frontend
+   ↓ Runs: cd frontend && npm run dev
+   ↓ Frontend starts on http://localhost:3000
+   
+7. ✅ Both servers now running in separate windows!
+   ↓ You can see logs in each window
+   ↓ Close windows to stop servers
+```
+
+### Actual Script Code:
+
+```batch
+@echo off
+REM Content Intelligence Platform - Windows Startup Script
+
+echo Starting Content Intelligence Platform...
+
+REM Check if .env exists
+if not exist ".env" (
+    echo Error: .env file not found!
+    echo Run: copy .env.example .env
+    exit /b 1
+)
+
+REM Check if node_modules exists
+if not exist "node_modules" (
+    echo Installing backend dependencies...
+    call npm install
+)
+
+REM Check if frontend\node_modules exists
+if not exist "frontend\node_modules" (
+    echo Installing frontend dependencies...
+    cd frontend
+    call npm install
+    cd ..
+)
+
+REM Start backend in new window
+start "Backend Server" cmd /k npm run dev
+
+REM Wait 3 seconds
+timeout /t 3 /nobreak >nul
+
+REM Start frontend in new window
+start "Frontend Server" cmd /k "cd frontend && npm run dev"
+
+echo Both servers started!
+pause
+```
+
+---
+
+## 🍎 What `scripts/start.sh` Does (Mac/Linux)
+
+### Step-by-Step Execution Flow:
+
+```bash
+1. ✅ Checks if .env file exists
+   ↓ If not found → Shows error message and exits
+   ↓ If found → Continues
+   
+2. 📦 Checks if backend dependencies are installed (node_modules/)
+   ↓ If not installed → Runs: npm install
+   ↓ If installed → Skips
+   
+3. 📦 Checks if frontend dependencies are installed (frontend/node_modules/)
+   ↓ If not installed → Runs: cd frontend && npm install && cd ..
+   ↓ If installed → Skips
+   
+4. 🚀 Starts backend in BACKGROUND
+   ↓ Runs: npm run dev &
+   ↓ Captures process ID (PID)
+   ↓ Backend starts on http://localhost:3001
+   
+5. ⏳ Waits 3 seconds
+   ↓ Gives backend time to initialize
+   
+6. 🚀 Starts frontend in BACKGROUND
+   ↓ Runs: cd frontend && npm run dev &
+   ↓ Captures process ID (PID)
+   ↓ Frontend starts on http://localhost:3000
+   
+7. ✅ Both servers running in same terminal!
+   ↓ Logs appear in same terminal
+   ↓ Press Ctrl+C to stop both servers cleanly
+```
+
+### Actual Script Code:
+
+```bash
+#!/bin/bash
+
+echo "🚀 Starting Content Intelligence Platform..."
+
+# Check if .env exists
+if [ ! -f ".env" ]; then
+    echo "❌ Error: .env file not found!"
+    echo "Run: cp .env.example .env"
+    exit 1
+fi
+
+# Check if node_modules exists
+if [ ! -d "node_modules" ]; then
+    echo "📦 Installing backend dependencies..."
+    npm install
+fi
+
+# Check if frontend/node_modules exists
+if [ ! -d "frontend/node_modules" ]; then
+    echo "📦 Installing frontend dependencies..."
+    cd frontend && npm install && cd ..
+fi
+
+echo "✅ Starting backend on http://localhost:3001"
+echo "✅ Starting frontend on http://localhost:3000"
+
+# Start backend in background
+npm run dev &
+BACKEND_PID=$!
+
+# Wait 3 seconds
+sleep 3
+
+# Start frontend in background
+cd frontend && npm run dev &
+FRONTEND_PID=$!
+
+# Cleanup function
+cleanup() {
+    echo "🛑 Stopping servers..."
+    kill $BACKEND_PID 2>/dev/null
+    kill $FRONTEND_PID 2>/dev/null
+    exit 0
+}
+
+# Trap Ctrl+C
+trap cleanup INT
+
+# Wait for both processes
+wait $BACKEND_PID $FRONTEND_PID
+```
+
+---
+
+## 🔧 What Commands The Scripts Actually Run
+
+### Backend Command: `npm run dev`
+
+From `package.json`:
+```json
+{
+  "scripts": {
+    "dev": "ts-node src/index.ts"
+  }
+}
+```
+
+**What this does:**
+- Runs TypeScript files directly without compiling to JavaScript
+- Starts Express server on port 3001
+- Loads all 27 AI services you created
+- Enables hot-reload (restarts on file changes)
+- Shows logs in terminal
+
+### Frontend Command: `npm run dev`
+
+From `frontend/package.json`:
+```json
+{
+  "scripts": {
+    "dev": "next dev"
+  }
+}
+```
+
+**What this does:**
+- Starts Next.js development server on port 3000
+- Enables hot-reload (updates browser on file changes)
+- Compiles React components on-the-fly
+- Shows build logs in terminal
+
+---
+
+## 🆚 Manual vs Script Comparison
+
+### Without Script (Manual Method):
+
+**Terminal 1 - Backend:**
+```bash
+# Step 1: Install dependencies
+npm install
+
+# Step 2: Start backend
+npm run dev
+
+# Keep this terminal open
+```
+
+**Terminal 2 - Frontend:**
+```bash
+# Step 1: Navigate to frontend
+cd frontend
+
+# Step 2: Install dependencies
+npm install
+
+# Step 3: Start frontend
+npm run dev
+
+# Keep this terminal open
+```
+
+**Total:** 6 commands, 2 terminals, manual dependency checks
+
+### With Script (Automated Method):
+
+**Windows:**
+```bash
+scripts\start.bat
+```
+
+**Mac/Linux:**
+```bash
+./scripts/start.sh
+```
+
+**Total:** 1 command, automatic dependency installation, automatic startup
+
+---
+
+## 📊 Feature Comparison Table
+
+| Feature | Manual Method | Script Method |
+|---------|--------------|---------------|
+| **Commands needed** | 6+ commands | 1 command |
+| **Terminals needed** | 2 separate | 0 (auto-opens) or 1 |
+| **Dependency check** | Manual | Automatic |
+| **Dependency install** | Manual | Automatic |
+| **Error checking** | None | Checks .env exists |
+| **Startup order** | Manual | Automatic (backend first) |
+| **Beginner-friendly** | No | Yes |
+| **Time to start** | ~2 minutes | ~30 seconds |
+
+---
+
+## 🎯 Why We Created These Scripts
+
+### Benefits:
+
+1. **Simplicity**: One command instead of remembering multiple steps
+2. **Automation**: Automatically installs dependencies if missing
+3. **Error Prevention**: Checks for .env file before starting
+4. **Proper Order**: Ensures backend starts before frontend
+5. **Beginner-Friendly**: New team members can start immediately
+6. **Consistency**: Everyone uses the same startup process
+7. **Time-Saving**: Reduces setup time from minutes to seconds
+
+### Use Cases:
+
+- **First-time setup**: Automatically installs everything
+- **Daily development**: Quick one-command startup
+- **After git pull**: Checks and installs new dependencies
+- **Demo preparation**: Fast, reliable startup
+- **Team onboarding**: No need to explain manual process
+
+---
+
+## 🔍 Key Differences: Windows vs Mac/Linux
+
+| Aspect | Windows (start.bat) | Mac/Linux (start.sh) |
+|--------|-------------------|---------------------|
+| **File extension** | `.bat` (batch file) | `.sh` (shell script) |
+| **Execution** | `scripts\start.bat` | `./scripts/start.sh` |
+| **Window behavior** | Opens 2 new CMD windows | Runs in same terminal |
+| **Process management** | Separate windows | Background processes |
+| **Stop servers** | Close each window | Press Ctrl+C once |
+| **Log viewing** | Each window shows its logs | Both logs in same terminal |
+| **Permissions** | No setup needed | May need: `chmod +x scripts/start.sh` |
+
+---
+
+## 💡 Understanding the Commands
+
+### 1. Dependency Installation
+
+**Backend:**
+```bash
+npm install
+```
+- Reads `package.json`
+- Downloads all packages listed in `dependencies` and `devDependencies`
+- Creates `node_modules/` folder
+- Creates `package-lock.json` (locks versions)
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+```
+- Same process but for frontend packages
+- Creates `frontend/node_modules/`
+- Creates `frontend/package-lock.json`
+
+### 2. Starting Backend
+
+```bash
+npm run dev
+```
+
+**What happens:**
+1. npm looks in `package.json` for `"dev"` script
+2. Finds: `"dev": "ts-node src/index.ts"`
+3. Runs `ts-node` (TypeScript executor)
+4. Executes `src/index.ts` (your Express server)
+5. Server loads all services and starts listening on port 3001
+
+**Output you'll see:**
+```
+[INFO] Server starting...
+[INFO] GitHub Models service initialized
+[INFO] Loading 27 AI services...
+[INFO] ✓ DNA Analysis Service
+[INFO] ✓ Viral Predictor Service
+[INFO] ✓ Ecosystem Analytics Service
+... (all services)
+[INFO] Server running on http://localhost:3001
+```
+
+### 3. Starting Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+**What happens:**
+1. npm looks in `frontend/package.json` for `"dev"` script
+2. Finds: `"dev": "next dev"`
+3. Runs Next.js development server
+4. Compiles React components
+5. Starts listening on port 3000
+
+**Output you'll see:**
+```
+- ready started server on 0.0.0.0:3000, url: http://localhost:3000
+- event compiled client and server successfully in 2.3s
+- wait compiling...
+- event compiled successfully in 456 ms
+```
+
+---
+
+## 🛠️ Customizing the Scripts
+
+### If You Want to Change Ports:
+
+**Edit `.env` file:**
+```env
+PORT=3002  # Change backend port
+```
+
+**Edit `frontend/package.json`:**
+```json
+{
+  "scripts": {
+    "dev": "next dev -p 3001"  // Change frontend port
+  }
+}
+```
+
+### If You Want to Add More Checks:
+
+**Example: Check Node.js version**
+
+Add to `start.bat`:
+```batch
+REM Check Node.js version
+node --version | findstr "v18 v20" >nul
+if errorlevel 1 (
+    echo Error: Node.js 18+ required!
+    exit /b 1
+)
+```
+
+Add to `start.sh`:
+```bash
+# Check Node.js version
+NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
+if [ "$NODE_VERSION" -lt 18 ]; then
+    echo "Error: Node.js 18+ required!"
+    exit 1
+fi
+```
+
+---
+
+## 🚨 Troubleshooting the Scripts
+
+### Issue 1: "Permission denied" (Mac/Linux)
+
+**Error:**
+```
+bash: ./scripts/start.sh: Permission denied
+```
+
+**Solution:**
+```bash
+chmod +x scripts/start.sh
+./scripts/start.sh
+```
+
+### Issue 2: Script doesn't find .env
+
+**Error:**
+```
+Error: .env file not found!
+```
+
+**Solution:**
+```bash
+# Windows
+copy .env.example .env
+
+# Mac/Linux
+cp .env.example .env
+
+# Then add your credentials to .env
+```
+
+### Issue 3: npm command not found
+
+**Error:**
+```
+'npm' is not recognized as an internal or external command
+```
+
+**Solution:**
+- Install Node.js from https://nodejs.org/
+- Restart terminal after installation
+- Verify: `node --version` and `npm --version`
+
+### Issue 4: Port already in use
+
+**Error:**
+```
+Error: listen EADDRINUSE: address already in use :::3001
+```
+
+**Solution:**
+```bash
+# Windows
+netstat -ano | findstr :3001
+taskkill /PID <PID> /F
+
+# Mac/Linux
+lsof -ti:3001 | xargs kill -9
+```
+
+---
+
+## 📚 Related Scripts in the Project
+
+### Other Useful Scripts:
+
+1. **`scripts/setup.sh` / `scripts/setup.bat`**
+   - First-time project setup
+   - Installs dependencies
+   - Creates .env file
+   - Configures Git hooks
+
+2. **`scripts/build.sh`**
+   - Builds production version
+   - Compiles TypeScript to JavaScript
+   - Optimizes frontend for deployment
+
+3. **`scripts/deploy.sh`**
+   - Deploys to AWS
+   - Runs tests before deployment
+   - Creates Docker images
+
+4. **`scripts/test-*.sh`**
+   - Test individual API endpoints
+   - Example: `test-dna-api.sh`, `test-viral-api.sh`
+
+---
+
+## ✅ Summary
+
+### Key Takeaways:
+
+1. **Custom Scripts**: We created these specifically for this project
+2. **Not Predefined**: Not from npm, Node.js, or any framework
+3. **Pure Automation**: Just bundles common commands together
+4. **Platform-Specific**: `.bat` for Windows, `.sh` for Mac/Linux
+5. **Optional**: You can delete them and run commands manually
+6. **Convenience**: Makes development faster and easier
+7. **Team-Friendly**: Helps everyone start the project consistently
+
+### What They Actually Do:
+
+```
+Check .env exists
+    ↓
+Install dependencies (if needed)
+    ↓
+Start backend (port 3001)
+    ↓
+Wait 3 seconds
+    ↓
+Start frontend (port 3000)
+    ↓
+Both servers running!
+```
+
+### Bottom Line:
+
+The startup scripts are **convenience wrappers** that automate the manual process of starting your development environment. They're not magic - just smart automation that saves time and prevents errors!
+
+---
+
+**END OF STARTUP SCRIPTS EXPLANATION**
