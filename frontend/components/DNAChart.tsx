@@ -121,10 +121,10 @@ export default function DNAChart({
             <div className="flex items-center gap-2 mb-2">
               <span className="text-2xl">{dimension.icon}</span>
               <span className="font-bold text-white">{dimension.dimension}</span>
-            </span>
+            </div>
             <div className="text-3xl font-bold mb-2" style={{ color: dimension.color }}>
               {dimension.value}/100
-            </span>
+            </div>
             <div className="text-sm text-gray-300 max-w-xs">
               {dimension.description}
             </div>
@@ -211,7 +211,7 @@ export default function DNAChart({
                 <div className="flex-1">
                   <div className="font-semibold text-white text-sm">
                     {dimension.dimension}
-                  </span>
+                  </div>
                   <div 
                     className="text-2xl font-bold"
                     style={{ color: dimension.color }}

@@ -56,7 +56,7 @@ export const PerformanceComparisonChart: React.FC<PerformanceComparisonChartProp
                 {entry.value.toFixed(1)}
                 {entry.name === 'ROI' ? 'x' : '%'}
               </span>
-            </span>
+            </div>
           ))}
         </div>
       );

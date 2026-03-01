@@ -38,7 +38,7 @@ export default function AnalyticsChart({ data }: AnalyticsChartProps) {
               {metric.icon} {metric.label}
             </button>
           ))}
-        </h2>
+        </div>
       </div>
 
       {/* Bar Chart */}

@@ -44,7 +44,7 @@ export default function FilePreview({ file, onRemove }: FilePreviewProps) {
                 <span className="font-medium">Type:</span>
                 {file.type.split('/')[1]?.toUpperCase() || 'Unknown'}
               </span>
-            </span>
+            </div>
           </div>
         </div>
 
@@ -66,7 +66,7 @@ export default function FilePreview({ file, onRemove }: FilePreviewProps) {
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        </div>
+        </button>
       </div>
     </div>
   )

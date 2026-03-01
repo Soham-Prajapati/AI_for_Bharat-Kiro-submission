@@ -87,7 +87,7 @@ export default function MetricCard({
             {icon}
           </span>
         )}
-      </h3>
+      </div>
 
       <div className="mb-3">
         <div

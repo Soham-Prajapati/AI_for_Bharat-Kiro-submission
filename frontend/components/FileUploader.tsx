@@ -47,7 +47,7 @@ export default function FileUploader({ onFileSelect, selectedFile }: FileUploade
             Drop your file here
           </p>
           <p className="text-gray-400">Release to upload</p>
-        </p>
+        </div>
       ) : isDragReject ? (
         <div className="text-center">
           <div className="text-6xl mb-4">❌</div>
@@ -85,7 +85,7 @@ export default function FileUploader({ onFileSelect, selectedFile }: FileUploade
             <span className="px-3 py-1 bg-gray-700 rounded-full">MOV</span>
             <span className="px-3 py-1 bg-gray-700 rounded-full">MP3</span>
             <span className="px-3 py-1 bg-gray-700 rounded-full">WAV</span>
-          </span>
+          </div>
         </div>
       )}
     </div>

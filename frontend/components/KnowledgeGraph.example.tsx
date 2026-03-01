@@ -101,19 +101,19 @@ export default function KnowledgeGraphExample() {
               <div>
                 <p className="text-sm text-gray-400 mb-1">Label</p>
                 <p className="text-lg font-semibold text-white">{selectedNode.label}</p>
-              </p>
+              </div>
               <div>
                 <p className="text-sm text-gray-400 mb-1">Type</p>
                 <p className="text-lg font-semibold text-white capitalize">{selectedNode.type}</p>
-              </p>
+              </div>
               <div>
                 <p className="text-sm text-gray-400 mb-1">ID</p>
                 <p className="text-lg font-mono text-white">{selectedNode.id}</p>
-              </p>
+              </div>
               <div>
                 <p className="text-sm text-gray-400 mb-1">Weight</p>
                 <p className="text-lg font-semibold text-white">{selectedNode.weight}</p>
-              </p>
+              </div>
             </div>
             
             {selectedNode.metadata && (
@@ -122,7 +122,7 @@ export default function KnowledgeGraphExample() {
                 <pre className="bg-gray-900 p-4 rounded-lg text-xs text-gray-300 overflow-auto">
                   {JSON.stringify(selectedNode.metadata, null, 2)}
                 </pre>
-              </p>
+              </div>
             )}
           </div>
         )}
@@ -200,7 +200,7 @@ export default function Page() {
               <div className="text-3xl mb-2">{feature.icon}</div>
               <h3 className="text-lg font-semibold text-white mb-1">{feature.title}</h3>
               <p className="text-sm text-gray-400">{feature.desc}</p>
-            </p>
+            </div>
           ))}
         </div>
       </div>

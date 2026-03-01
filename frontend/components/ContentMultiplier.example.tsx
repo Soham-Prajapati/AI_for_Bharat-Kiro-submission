@@ -75,7 +75,7 @@ export default function ContentMultiplierExample() {
   onExport={(items) => console.log(items)}
 />`}
               </pre>
-            </h2>
+            </div>
 
             <div>
               <h3 className="text-lg font-semibold text-purple-400 mb-2">Features</h3>
@@ -90,7 +90,7 @@ export default function ContentMultiplierExample() {
                 <li>Dark theme optimized</li>
                 <li>Responsive design</li>
               </ul>
-            </ul>
+            </div>
 
             <div>
               <h3 className="text-lg font-semibold text-purple-400 mb-2">Props</h3>
@@ -99,7 +99,7 @@ export default function ContentMultiplierExample() {
                 <li><code className="text-pink-400">transcript</code> (optional): Video transcript text</li>
                 <li><code className="text-pink-400">onExport</code> (optional): Callback when items are exported</li>
               </ul>
-            </ul>
+            </div>
 
             <div>
               <h3 className="text-lg font-semibold text-purple-400 mb-2">API Integration</h3>
@@ -113,7 +113,7 @@ export default function ContentMultiplierExample() {
   platforms: ['youtube', 'instagram', 'tiktok', 'linkedin', 'twitter', 'facebook']
 })`}
               </pre>
-            </h3>
+            </div>
           </div>
         </div>
       </div>

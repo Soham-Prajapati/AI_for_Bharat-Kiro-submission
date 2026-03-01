@@ -54,7 +54,7 @@ export default function PlatformCard({ data, index }: PlatformCardProps) {
               <span className={trendColor}>
                 {data.trend === 'up' ? 'Growing' : data.trend === 'down' ? 'Declining' : 'Stable'}
               </span>
-            </h3>
+            </div>
           </div>
         </div>
       </div>
@@ -63,20 +63,20 @@ export default function PlatformCard({ data, index }: PlatformCardProps) {
       <div className="mb-4">
         <p className="text-gray-400 text-sm mb-1">Followers</p>
         <p className="text-3xl font-bold text-white">{formatNumber(data.followers)}</p>
-      </p>
+      </div>
 
       {/* Engagement Rate */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
           <p className="text-gray-400 text-sm">Engagement Rate</p>
           <p className="text-white font-semibold">{(data.engagement * 100).toFixed(1)}%</p>
-        </p>
+        </div>
         <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
           <div
             className="h-full rounded-full"
             style={{ backgroundColor: color }}
           />
-        </p>
+        </div>
       </div>
 
       {/* Top Post */}
@@ -87,13 +87,13 @@ export default function PlatformCard({ data, index }: PlatformCardProps) {
           <div className="flex items-center gap-1">
             <Eye className="w-3 h-3" />
             <span>{formatNumber(data.topPost.views)}</span>
-          </span>
+          </div>
           <div className="flex items-center gap-1">
             <Heart className="w-3 h-3" />
             <span>{formatNumber(data.topPost.likes)}</span>
-          </span>
-        </p>
-      </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

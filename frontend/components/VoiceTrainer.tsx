@@ -353,7 +353,7 @@ export default function VoiceTrainer({
         <p className="text-gray-600">
           Record {minSamples}-{maxSamples} voice samples to train your AI voice model
         </p>
-      </h2>
+      </div>
 
       {/* Permission Status */}
       {permissionGranted === false && (
@@ -368,7 +368,7 @@ export default function VoiceTrainer({
           >
             Request Permission
           </button>
-        </p>
+        </div>
       )}
 
       {/* Recording Controls */}
@@ -413,7 +413,7 @@ export default function VoiceTrainer({
           <div className="flex justify-between text-sm text-gray-600 mb-1">
             <span>Samples: {samples.length} / {maxSamples}</span>
             <span>{Math.round((samples.length / maxSamples) * 100)}%</span>
-          </span>
+          </div>
           <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
               className="h-full bg-blue-600 transition-all duration-300"
@@ -448,7 +448,7 @@ export default function VoiceTrainer({
                     preload="metadata"
                   />
                   <span className="text-sm text-gray-500">{sample.duration}s</span>
-                </span>
+                </div>
                 <button
                   onClick={() => deleteSample(sample.id)}
                   disabled={isRecording || isProcessing}
@@ -458,7 +458,7 @@ export default function VoiceTrainer({
                 </button>
               </div>
             ))}
-          </h3>
+          </div>
         </div>
       )}
 
@@ -490,7 +490,7 @@ export default function VoiceTrainer({
                 Estimated completion: {trainingProgress.estimatedTime}
               </p>
             )}
-          </p>
+          </div>
         )}
       </div>
 
@@ -501,7 +501,7 @@ export default function VoiceTrainer({
           <p className="text-red-600 text-sm mt-1">
             An error occurred. Please try again or check your microphone settings.
           </p>
-        </p>
+        </div>
       )}
     </div>
   );

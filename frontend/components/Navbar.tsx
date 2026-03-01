@@ -29,7 +29,7 @@ export default function Navbar() {
             <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               ContentAI
             </span>
-          </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
@@ -45,7 +45,7 @@ export default function Navbar() {
               >
                 <span className="mr-2">{item.icon}</span>
                 {item.name}
-              </Link>
+              </div>
             ))}
           </div>
 
@@ -58,7 +58,7 @@ export default function Navbar() {
               <span className="text-xl">👤</span>
               <span className="text-sm text-gray-300">Account</span>
             </button>
-          </button>
+          </div>
 
           {/* Mobile menu button */}
           <button
@@ -67,7 +67,7 @@ export default function Navbar() {
           >
             <span className="text-2xl">{isMenuOpen ? '✕' : '☰'}</span>
           </button>
-        </button>
+        </nav>
       </nav>
 
       {/* Mobile Navigation */}
@@ -87,7 +87,7 @@ export default function Navbar() {
               >
                 <span className="mr-2">{item.icon}</span>
                 {item.name}
-              </Link>
+              </div>
             ))}
             <div className="pt-3 border-t border-gray-800 space-y-1">
               <button className="w-full text-left px-4 py-3 rounded-lg text-sm text-gray-300 hover:bg-gray-800">
@@ -98,8 +98,8 @@ export default function Navbar() {
                 <span className="mr-2">👤</span>
                 Account
               </button>
-            </button>
-          </button>
+            </div>
+          </div>
         </div>
       )}
     </nav>

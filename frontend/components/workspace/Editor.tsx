@@ -158,7 +158,7 @@ export default function Editor({
           <div className="flex items-center gap-4">
             <span>{content.split(/\s+/).filter(Boolean).length} words</span>
             <span>{content.length} characters</span>
-          </span>
+          </div>
           {isFocused && (
             <span className="text-green-600 dark:text-green-400">● Editing</span>
           )}

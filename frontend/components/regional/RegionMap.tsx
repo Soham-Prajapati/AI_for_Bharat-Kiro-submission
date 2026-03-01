@@ -106,7 +106,7 @@ export default function RegionMap({ selectedRegion, onRegionSelect }: RegionMapP
             {hoveredRegion === region.type && (
               <div className="absolute -top-2 -right-2 w-4 h-4 bg-white rounded-full animate-ping"></div>
             )}
-          </button>
+          </div>
         </button>
       ))}
 
@@ -132,7 +132,7 @@ export default function RegionMap({ selectedRegion, onRegionSelect }: RegionMapP
             <div key={region.type} className="flex items-center gap-2">
               <div className={`w-3 h-3 rounded-full bg-gradient-to-br ${region.color}`}></div>
               <span className="text-xs text-white">{region.name}</span>
-            </span>
+            </div>
           ))}
         </div>
       </div>

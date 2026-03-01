@@ -100,7 +100,7 @@ export default function TrendChart({
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
             <p>No data available</p>
-          </p>
+          </div>
         </div>
       </div>
     );
@@ -125,7 +125,7 @@ export default function TrendChart({
                 </linearGradient>
               )
             ))}
-          </defs>
+          </LineChart>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           <XAxis
             dataKey="date"
@@ -159,8 +159,8 @@ export default function TrendChart({
               fill={s.gradient ? `url(#gradient-${s.key})` : undefined}
             />
           ))}
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+        </ResponsiveContainer>
+      </div>
+    </number>
   );
 }

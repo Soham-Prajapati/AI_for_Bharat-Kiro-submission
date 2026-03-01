@@ -103,7 +103,7 @@ export default function CreateListingModal({ userId, onClose, onCreate }: Create
             >
               <X className="w-6 h-6" />
             </button>
-          </h2>
+          </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
@@ -121,7 +121,7 @@ export default function CreateListingModal({ userId, onClose, onCreate }: Create
                 maxLength={100}
               />
               <p className="text-xs text-gray-500 mt-1">{title.length}/100 characters</p>
-            </p>
+            </div>
 
             {/* Description */}
             <div>
@@ -137,7 +137,7 @@ export default function CreateListingModal({ userId, onClose, onCreate }: Create
                 maxLength={500}
               />
               <p className="text-xs text-gray-500 mt-1">{description.length}/500 characters</p>
-            </p>
+            </div>
 
             {/* Type */}
             <div>
@@ -159,11 +159,11 @@ export default function CreateListingModal({ userId, onClose, onCreate }: Create
                     <div className="text-center">
                       <div className="text-2xl mb-1">{listingType.icon}</div>
                       <div className="text-xs font-medium text-white">{listingType.label}</div>
-                    </button>
+                    </div>
                   </button>
                 ))}
               </div>
-            </form>
+            </div>
 
             {/* Price */}
             <div>
@@ -231,7 +231,7 @@ export default function CreateListingModal({ userId, onClose, onCreate }: Create
               <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                 <p className="text-red-400 text-sm">{error}</p>
-              </p>
+              </div>
             )}
 
             {/* Action Buttons */}

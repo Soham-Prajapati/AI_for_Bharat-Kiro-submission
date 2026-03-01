@@ -29,7 +29,7 @@ export default function Footer() {
               <li><Link href="/analytics" className="hover:text-text-primary transition-colors">Analytics</Link></li>
               <li><Link href="/marketplace" className="hover:text-text-primary transition-colors">Marketplace</Link></li>
             </ul>
-          </ul>
+          </div>
 
           {/* Features */}
           <div>
@@ -40,7 +40,7 @@ export default function Footer() {
               <li>Creator DNA Analysis</li>
               <li>Viral Score Predictor</li>
             </ul>
-          </ul>
+          </div>
 
           {/* Team */}
           <div>
@@ -50,15 +50,15 @@ export default function Footer() {
               <li><Link href="/community" className="hover:text-text-primary transition-colors">Community</Link></li>
               <li><Link href="/membership" className="hover:text-text-primary transition-colors">Pricing</Link></li>
             </ul>
-          </ul>
+          </div>
         </div>
 
         {/* Bottom */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/[0.05]">
           <p className="text-text-tertiary text-xs">© 2026 ContentAI. Built for AI for Bharat.</p>
           <p className="text-text-tertiary text-xs">Powered by AWS Bedrock · Claude 3 · AWS Transcribe</p>
-        </p>
-      </footer>
+        </div>
+      </div>
     </footer>
   )
 }

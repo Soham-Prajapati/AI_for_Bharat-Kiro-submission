@@ -1,6 +1,5 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import apiClient from '@/services/api'
 import { MultiplyGenerateResponse, Platform } from '@/types/api'
@@ -13,7 +12,7 @@ type ContentType = 'all' | 'clips' | 'quotes' | 'audiograms' | 'blogs' | 'newsle
 type ViewMode = 'grid' | 'tree' | 'list'
 type SortBy = 'type' | 'platform' | 'duration' | 'recent'
 
-interface ContentItem {
+export interface ContentItem {
   id: string
   type: 'clip' | 'quote' | 'audiogram' | 'blog' | 'newsletter'
   title: string
@@ -275,11 +274,8 @@ export default function ContentMultiplierV2({
   }
 
   return (
-    <motion.div
+    <div
       className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700 overflow-hidden"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 p-6 border-b border-gray-700">
@@ -292,7 +288,7 @@ export default function ContentMultiplierV2({
             <p className="text-gray-300 text-sm">
               Transform 1 video into 100+ pieces of optimized content
             </p>
-          </h2>
+          </div>
           <div className="text-right">
             <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
               {contentData.length}
@@ -305,16 +301,15 @@ export default function ContentMultiplierV2({
       {/* Stats Bar */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-6 bg-gray-800/30">
         {treeNodes.map(node => (
-          <motion.div
+          <div
             key={node.id}
             className="bg-gray-700/50 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-700/70 transition-colors"
-            whileHover={{ scale: 1.05 }}
             onClick={() => selectByType(node.type)}
           >
             <div className="text-3xl mb-2">{getTypeIcon(node.type.slice(0, -1))}</div>
             <div className="text-2xl font-bold text-white">{node.count}</div>
             <div className="text-xs text-gray-400 mt-1">{node.label}</div>
-          </motion.div>
+          </div>
         ))}
       </div>
 
@@ -366,7 +361,7 @@ export default function ContentMultiplierV2({
           {/* View Mode */}
           <div className="flex gap-2">
             {(['grid', 'tree', 'list'] as ViewMode[]).map(mode => (
-              <motion.button
+              <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
                 className={`px-4 py-3 rounded-lg font-semibold capitalize ${
@@ -374,24 +369,18 @@ export default function ContentMultiplierV2({
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
                     : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700'
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 {mode}
-              </motion.button>
+              </button>
             ))}
           </div>
         </div>
       </div>
 
       {/* Bulk Actions Bar */}
-      <AnimatePresence>
-        {selectedItems.size > 0 && (
-          <motion.div
+{selectedItems.size > 0 && (
+          <div
             className="p-4 bg-purple-900/30 border-b border-purple-700/50"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -413,60 +402,50 @@ export default function ContentMultiplierV2({
               </div>
               
               <div className="flex items-center gap-2">
-                <motion.button
+                <button
                   onClick={() => handleBulkExport('json')}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg flex items-center gap-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
                   Export JSON
-                </motion.button>
+                </button>
                 
-                <motion.button
+                <button
                   onClick={() => handleBulkExport('csv')}
                   className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg flex items-center gap-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   Export CSV
-                </motion.button>
+                </button>
                 
-                <motion.button
+                <button
                   onClick={handleBulkSchedule}
                   className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg flex items-center gap-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   Schedule
-                </motion.button>
+                </button>
                 
-                <motion.button
+                <button
                   onClick={handleBulkDelete}
                   className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg flex items-center gap-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                   Delete
-                </motion.button>
+                </button>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
-
-      {/* Content Display */}
+{/* Content Display */}
       <div className="flex">
         {/* Main Content Area */}
         <div className={`flex-1 ${previewItem ? 'lg:w-2/3' : 'w-full'}`}>
@@ -507,23 +486,20 @@ export default function ContentMultiplierV2({
 
           {/* Empty State */}
           {filteredContent.length === 0 && (
-            <motion.div
+            <div
               className="text-center py-20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
             >
               <div className="text-6xl mb-4">🔍</div>
               <div className="text-2xl text-gray-300 font-semibold mb-2">No content found</div>
               <div className="text-sm text-gray-500">
                 Try adjusting your filters or search query
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
 
         {/* Preview Panel */}
-        <AnimatePresence>
-          {previewItem && (
+{previewItem && (
             <PreviewPanel
               item={previewItem}
               onClose={() => setPreviewItem(null)}
@@ -531,9 +507,8 @@ export default function ContentMultiplierV2({
               getTypeColor={getTypeColor}
             />
           )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
+</div>
+    </div>
   )
 }
 
@@ -568,18 +543,12 @@ function GridView({
       onScroll={onScroll}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <AnimatePresence>
-          {content.map((item, index) => (
-            <motion.div
+{content.map((item, index) => (
+            <div
               key={item.id}
               className={`bg-gray-800/50 rounded-lg border-2 overflow-hidden cursor-pointer transition-all ${
                 selectedItems.has(item.id) ? 'border-purple-500 ring-2 ring-purple-500/50' : 'border-gray-700 hover:border-gray-600'
               }`}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ delay: index * 0.02, duration: 0.2 }}
-              whileHover={{ scale: 1.03, y: -5 }}
             >
               {/* Thumbnail */}
               <div 
@@ -649,10 +618,9 @@ function GridView({
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           ))}
-        </AnimatePresence>
-      </div>
+</div>
       
       {/* Showing indicator */}
       <div className="text-center text-sm text-gray-400 mt-6">
@@ -689,11 +657,9 @@ function TreeView({
     <div className="p-6 overflow-y-auto max-h-[600px]">
       <div className="space-y-3">
         {nodes.map(node => (
-          <motion.div
+          <div
             key={node.id}
             className="bg-gray-800/30 rounded-xl overflow-hidden border border-gray-700"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
           >
             {/* Node Header */}
             <div 
@@ -701,27 +667,25 @@ function TreeView({
               onClick={() => onToggleNode(node.id)}
             >
               <div className="flex items-center gap-4">
-                <motion.div
-                  animate={{ rotate: node.expanded ? 90 : 0 }}
-                  transition={{ duration: 0.2 }}
+                <div
                 >
                   <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </motion.div>
+                </div>
                 
                 <div className="text-3xl">{getTypeIcon(node.type.slice(0, -1))}</div>
                 
                 <div>
                   <h3 className="text-lg font-bold text-white">{node.label}</h3>
                   <p className="text-sm text-gray-400">{node.count} items</p>
-                </p>
+                </div>
               </div>
 
               <div className="flex items-center gap-3">
                 <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
                   {node.count}
-                </h3>
+                </div>
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
@@ -743,28 +707,19 @@ function TreeView({
             </div>
 
             {/* Node Children */}
-            <AnimatePresence>
-              {node.expanded && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+{node.expanded && (
+                <div
                   className="overflow-hidden"
                 >
                   <div className="p-4 space-y-2 bg-gray-900/30">
                     {node.children.map((item, index) => (
-                      <motion.div
+                      <div
                         key={item.id}
                         className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-all ${
                           selectedItems.has(item.id)
                             ? 'bg-purple-500/20 border border-purple-500'
                             : 'bg-gray-800/50 border border-gray-700 hover:bg-gray-800/70'
                         }`}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.02 }}
-                        whileHover={{ x: 5 }}
                       >
                         {/* Checkbox */}
                         <div 
@@ -816,13 +771,12 @@ function TreeView({
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
                         </button>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               )}
-            </AnimatePresence>
-          </motion.div>
+</div>
         ))}
       </div>
     </div>
@@ -865,16 +819,13 @@ function ListView({
         {/* Table Body */}
         <div className="divide-y divide-gray-700">
           {content.map((item, index) => (
-            <motion.div
+            <div
               key={item.id}
               className={`grid grid-cols-12 gap-4 p-4 items-center transition-colors ${
                 selectedItems.has(item.id)
                   ? 'bg-purple-500/10'
                   : 'hover:bg-gray-800/50'
               }`}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.02 }}
             >
               {/* Checkbox */}
               <div className="col-span-1">
@@ -952,7 +903,7 @@ function ListView({
                   </svg>
                 </button>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
@@ -978,12 +929,8 @@ function PreviewPanel({
   getTypeColor
 }: PreviewPanelProps) {
   return (
-    <motion.div
+    <div
       className="w-full lg:w-1/3 border-l border-gray-700 bg-gray-800/30"
-      initial={{ x: 300, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 300, opacity: 0 }}
-      transition={{ type: 'spring', damping: 25 }}
     >
       <div className="h-full flex flex-col">
         {/* Header */}
@@ -1012,23 +959,23 @@ function PreviewPanel({
               <label className="text-xs text-gray-400 uppercase tracking-wider">Type</label>
               <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                 <span className="text-white font-semibold capitalize">{item.type}</span>
-              </span>
-            </label>
+              </div>
+            </div>
 
             <div>
               <label className="text-xs text-gray-400 uppercase tracking-wider">Title</label>
               <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                 <span className="text-white">{item.title}</span>
-              </span>
-            </label>
+              </div>
+            </div>
 
             {item.platform && (
               <div>
                 <label className="text-xs text-gray-400 uppercase tracking-wider">Platform</label>
                 <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                   <span className="text-white capitalize">{item.platform}</span>
-                </span>
-              </label>
+                </div>
+              </div>
             )}
 
             {item.duration && (
@@ -1036,8 +983,8 @@ function PreviewPanel({
                 <label className="text-xs text-gray-400 uppercase tracking-wider">Duration</label>
                 <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                   <span className="text-white">{item.duration} seconds</span>
-                </span>
-              </label>
+                </div>
+              </div>
             )}
 
             {item.text && (
@@ -1045,8 +992,8 @@ function PreviewPanel({
                 <label className="text-xs text-gray-400 uppercase tracking-wider">Content</label>
                 <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                   <p className="text-white text-sm leading-relaxed">{item.text}</p>
-                </p>
-              </label>
+                </div>
+              </div>
             )}
 
             {item.url && (
@@ -1061,7 +1008,7 @@ function PreviewPanel({
                   >
                     {item.url}
                   </a>
-                </label>
+                </div>
               </div>
             )}
 
@@ -1077,7 +1024,7 @@ function PreviewPanel({
                       #{tag}
                     </span>
                   ))}
-                </label>
+                </div>
               </div>
             )}
 
@@ -1087,47 +1034,41 @@ function PreviewPanel({
                 <span className="text-white text-sm">
                   {new Date(item.createdAt).toLocaleString()}
                 </span>
-              </label>
+              </div>
             </div>
           </div>
 
           {/* Actions */}
           <div className="mt-6 space-y-3">
-            <motion.button
+            <button
               className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg flex items-center justify-center gap-2"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
               Download
-            </motion.button>
+            </button>
 
-            <motion.button
+            <button
               className="w-full px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg flex items-center justify-center gap-2"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
               </svg>
               Share
-            </motion.button>
+            </button>
 
-            <motion.button
+            <button
               className="w-full px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg flex items-center justify-center gap-2"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
               Edit
-            </motion.button>
+            </button>
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

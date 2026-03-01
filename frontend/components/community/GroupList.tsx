@@ -70,7 +70,7 @@ export default function GroupList({
         <div>
           <h2 className="text-2xl font-bold text-white mb-1">Groups</h2>
           <p className="text-gray-400">Discover and join communities</p>
-        </p>
+        </div>
         {onCreateGroup && (
           <button
             onClick={onCreateGroup}
@@ -100,7 +100,7 @@ export default function GroupList({
               Create Group
             </button>
           )}
-        </p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {groups.map((group) => {
@@ -133,7 +133,7 @@ export default function GroupList({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
                       <span className="text-xs text-gray-300 font-medium">Private</span>
-                    </span>
+                    </div>
                   )}
                 </div>
 
@@ -197,7 +197,7 @@ export default function GroupList({
               </article>
             );
           })}
-        </h3>
+        </div>
       )}
     </div>
   );

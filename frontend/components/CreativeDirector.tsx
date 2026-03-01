@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import apiClient from '@/services/api'
 import { useAppContext } from '@/context/AppContext'
 import {
@@ -130,17 +129,14 @@ function ScoreCard({ label, score, icon, animated = true, delay = 0 }: ScoreCard
   }, [score, animated])
 
   return (
-    <motion.div
+    <div
       className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           {icon && <span className="text-2xl">{icon}</span>}
           <h3 className="text-sm font-medium text-gray-400">{label}</h3>
-        </h3>
+        </div>
       </div>
 
       <div className="flex items-end gap-3">
@@ -151,18 +147,15 @@ function ScoreCard({ label, score, icon, animated = true, delay = 0 }: ScoreCard
       </div>
 
       <div className="mt-4 h-2 bg-gray-700 rounded-full overflow-hidden">
-        <motion.div
+        <div
           className={`h-full ${getScoreBgColor(score)} rounded-full`}
-          initial={{ width: 0 }}
-          animate={{ width: `${displayScore}%` }}
-          transition={{ duration: 1.5, delay, ease: 'easeOut' }}
         />
       </div>
 
       <div className="mt-2 text-xs text-gray-500 text-right">
         {getScoreLabel(displayScore)}
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -177,11 +170,8 @@ interface FeedbackItemProps {
 
 function FeedbackItem({ feedback, index }: FeedbackItemProps) {
   return (
-    <motion.div
+    <div
       className="bg-gray-800/30 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-all"
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.1 }}
     >
       <div className="flex items-start gap-3">
         <span className="text-2xl flex-shrink-0">{getRatingIcon(feedback.rating)}</span>
@@ -195,11 +185,11 @@ function FeedbackItem({ feedback, index }: FeedbackItemProps) {
             >
               {feedback.rating}
             </span>
-          </span>
+          </div>
           <p className="text-sm text-gray-400 leading-relaxed">{feedback.comment}</p>
-        </p>
+        </div>
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -216,23 +206,20 @@ function ImprovementList({ improvements }: ImprovementListProps) {
     return (
       <div className="text-center py-8 text-gray-500">
         <p>No improvements needed - your content is excellent!</p>
-      </p>
+      </div>
     )
   }
 
   return (
     <div className="space-y-3">
       {improvements.map((improvement, index) => (
-        <motion.div
+        <div
           key={index}
           className="flex items-start gap-3 bg-blue-900/20 border border-blue-800/30 rounded-lg p-4 hover:bg-blue-900/30 transition-all"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: index * 0.1 }}
         >
           <span className="text-blue-400 flex-shrink-0 mt-0.5">💡</span>
           <p className="text-sm text-gray-300 leading-relaxed">{improvement}</p>
-        </motion.div>
+        </div>
       ))}
     </div>
   )
@@ -299,7 +286,7 @@ function OverallScoreGauge({ score, animated = true }: OverallScoreGaugeProps) {
             strokeLinecap="round"
           />
 
-          <motion.path
+          <path
             d="M 20 90 A 80 80 0 0 1 180 90"
             fill="none"
             stroke="url(#scoreGradient)"
@@ -307,15 +294,9 @@ function OverallScoreGauge({ score, animated = true }: OverallScoreGaugeProps) {
             strokeLinecap="round"
             strokeDasharray="251.2"
             strokeDashoffset={251.2 - (displayScore / 100) * 251.2}
-            initial={{ strokeDashoffset: 251.2 }}
-            animate={{ strokeDashoffset: 251.2 - (displayScore / 100) * 251.2 }}
-            transition={{ duration: animated ? 2 : 0, ease: 'easeOut' }}
           />
 
-          <motion.g
-            initial={{ rotate: -90 }}
-            animate={{ rotate: rotation }}
-            transition={{ duration: animated ? 2 : 0, ease: 'easeOut' }}
+          <g
             style={{ transformOrigin: '100px 90px' }}
           >
             <line
@@ -328,18 +309,15 @@ function OverallScoreGauge({ score, animated = true }: OverallScoreGaugeProps) {
               strokeLinecap="round"
             />
             <circle cx="100" cy="90" r="6" fill={`var(--${scoreColor})`} />
-          </motion.g>
+          </g>
         </svg>
 
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
-          <motion.div
+          <div
             className={`text-5xl font-bold ${getScoreColor(score)}`}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.5, type: 'spring' }}
           >
             {displayScore}
-          </motion.div>
+          </div>
           <div className="text-sm text-gray-400 mt-1">{scoreLabel}</div>
         </div>
       </div>
@@ -354,19 +332,14 @@ function OverallScoreGauge({ score, animated = true }: OverallScoreGaugeProps) {
 function LoadingState() {
   return (
     <div className="flex flex-col items-center justify-center py-16">
-      <motion.div
+      <div
         className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
       />
-      <motion.p
+      <p
         className="mt-6 text-gray-400"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
       >
         Analyzing your content...
-      </motion.p>
+      </p>
     </div>
   )
 }
@@ -382,10 +355,8 @@ interface ErrorStateProps {
 
 function ErrorState({ error, onRetry }: ErrorStateProps) {
   return (
-    <motion.div
+    <div
       className="bg-red-900/20 border border-red-800/30 rounded-xl p-8 text-center"
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
     >
       <div className="text-4xl mb-4">⚠️</div>
       <h3 className="text-xl font-semibold text-red-400 mb-2">Analysis Failed</h3>
@@ -398,7 +369,7 @@ function ErrorState({ error, onRetry }: ErrorStateProps) {
           Try Again
         </button>
       )}
-    </motion.div>
+    </div>
   )
 }
 
@@ -482,10 +453,8 @@ export default function CreativeDirector({
       <div className="max-w-7xl mx-auto p-6 space-y-8">
         {/* Header */}
         {showHeader && (
-          <motion.div
+          <div
             className="text-center space-y-2"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
           >
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
               Creative Director
@@ -493,15 +462,12 @@ export default function CreativeDirector({
             <p className="text-gray-400">
               Get professional feedback on your content structure and engagement
             </p>
-          </motion.div>
+          </div>
         )}
 
         {/* Content Input */}
-        <motion.div
+        <div
           className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
         >
           <label htmlFor="content-input" className="block text-sm font-medium text-gray-300 mb-3">
             Your Content
@@ -526,11 +492,10 @@ export default function CreativeDirector({
               {analysisState.isLoading ? 'Analyzing...' : 'Analyze Content'}
             </button>
           </div>
-        </motion.div>
+        </div>
 
         {/* Loading State */}
-        <AnimatePresence mode="wait">
-          {analysisState.isLoading && <LoadingState />}
+{analysisState.isLoading && <LoadingState />}
 
           {/* Error State */}
           {analysisState.error && (
@@ -539,23 +504,18 @@ export default function CreativeDirector({
 
           {/* Results */}
           {analysisState.result && (
-            <motion.div
+            <div
               className="space-y-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
             >
               {/* Overall Score */}
-              <motion.div
+              <div
                 className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
               >
                 <h2 className="text-2xl font-bold text-white mb-4 text-center">
                   Overall Score
                 </h2>
                 <OverallScoreGauge score={analysisState.result.score.overall} />
-              </motion.div>
+              </div>
 
               {/* Score Breakdown */}
               <div>
@@ -589,11 +549,8 @@ export default function CreativeDirector({
               </div>
 
               {/* Detailed Feedback */}
-              <motion.div
+              <div
                 className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
               >
                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                   <span>📋</span>
@@ -603,26 +560,22 @@ export default function CreativeDirector({
                   {analysisState.result.feedback.map((feedback, index) => (
                     <FeedbackItem key={index} feedback={feedback} index={index} />
                   ))}
-                </span>
-              </motion.div>
+                </div>
+              </div>
 
               {/* Improvements */}
-              <motion.div
+              <div
                 className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
               >
                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                   <span>🚀</span>
                   <span>Improvement Suggestions</span>
                 </h2>
                 <ImprovementList improvements={analysisState.result.improvements} />
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           )}
-        </AnimatePresence>
-      </div>
+</div>
     </div>
   )
 }

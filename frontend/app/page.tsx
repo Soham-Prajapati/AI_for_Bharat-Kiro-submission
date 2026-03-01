@@ -30,11 +30,11 @@ export default function Home() {
             <a href="#try" className="hover:text-text-primary transition-colors">Features</a>
             <a href="#try" className="hover:text-text-primary transition-colors">Try It</a>
             <a href="/membership" className="hover:text-text-primary transition-colors">Pricing</a>
-          </a>
+          </div>
           <a href="/upload" className="bg-gradient-to-br from-brand-500 to-brand-600 text-white font-semibold text-sm px-5 py-2 rounded-lg hover:shadow-[0_0_25px_rgba(99,102,241,0.3)] transition-all">
             Get Started
           </a>
-        </nav>
+        </div>
       </nav>
 
       {/* Cinematic sections */}
