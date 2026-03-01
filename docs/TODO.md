@@ -440,7 +440,7 @@ export const api = {
   - **WebSocket:** `/ws/workspace/:id` for real-time sync
   - **Test:** Create workspace, join, edit, verify sync
 
-- [/] **3.1d: Test collaboration (Lakshmi)**
+- [x] **3.1d: Test collaboration (Lakshmi)** ✅
   - **What:** Test concurrent editing, conflict resolution
   - **Where:** `src/__tests__/workspace.test.ts`
   - **Test:** 10 concurrent users, verify data integrity
