@@ -190,13 +190,6 @@ describe('ViralAnalyzer - Pattern Accuracy', () => {
     }
   ];
 
-  describe('Pattern Extraction', () => {
-    test('should extract hook patterns from viral content', () => {
-      // Test implementation
-    });
-  });
-});
-
   // Additional viral video samples for comprehensive testing
   const extendedViralDataset = [
     {
