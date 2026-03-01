@@ -586,3 +586,5 @@ export class PlatformIntegrationService {
     ];
   }
 }
+
+export const platformIntegrationService = new PlatformIntegrationService();

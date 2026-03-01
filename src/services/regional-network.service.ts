@@ -222,7 +222,7 @@ export class RegionalNetworkService {
     const potentialMatches = await this.getPotentialMatches(creator);
 
     // Calculate match scores
-    const matches = potentialMatches.map(match => 
+    const matches = potentialMatches.map(match =>
       this.calculateMatch(creator, match)
     );
 
@@ -349,7 +349,7 @@ export class RegionalNetworkService {
     }
 
     // Language match (25 points)
-    const commonLanguages = creator1.languages.filter(lang => 
+    const commonLanguages = creator1.languages.filter(lang =>
       creator2.languages.includes(lang)
     );
     if (commonLanguages.length > 0) {
@@ -377,7 +377,7 @@ export class RegionalNetworkService {
     }
 
     // Platform overlap (10 points)
-    const commonPlatforms = creator1.platforms.filter(p => 
+    const commonPlatforms = creator1.platforms.filter(p =>
       creator2.platforms.includes(p)
     );
     if (commonPlatforms.length > 0) {
@@ -666,3 +666,5 @@ export class RegionalNetworkService {
     return requests;
   }
 }
+
+export const regionalNetworkService = new RegionalNetworkService();

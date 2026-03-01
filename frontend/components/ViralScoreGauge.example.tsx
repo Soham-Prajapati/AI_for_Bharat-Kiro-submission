@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViralScoreGauge } from './ViralScoreGauge';
+import ViralScoreGauge from './ViralScoreGauge';
 
 /**
  * Example usage of the ViralScoreGauge component
@@ -8,13 +8,13 @@ export const ViralScoreGaugeExample: React.FC = () => {
   // Example 1: High viral potential
   const highScoreExample = {
     score: 85,
-    factors: {
-      hook: 0.92,
-      pacing: 0.78,
-      emotion: 0.88,
-      trending: 0.82,
-    },
-    suggestions: [
+    factors: [
+      { name: 'hook', impact: 0.92, description: 'Hook is strong' },
+      { name: 'pacing', impact: 0.78, description: 'Pacing is good' },
+      { name: 'emotion', impact: 0.88, description: 'Emotion is high' },
+      { name: 'trending', impact: 0.82, description: 'Trending potential' },
+    ],
+    recommendations: [
       'Consider adding a stronger call-to-action at the end',
       'The pacing could be slightly faster in the middle section',
     ],
@@ -23,13 +23,13 @@ export const ViralScoreGaugeExample: React.FC = () => {
   // Example 2: Medium viral potential
   const mediumScoreExample = {
     score: 58,
-    factors: {
-      hook: 0.65,
-      pacing: 0.72,
-      emotion: 0.45,
-      trending: 0.51,
-    },
-    suggestions: [
+    factors: [
+      { name: 'hook', impact: 0.65, description: '' },
+      { name: 'pacing', impact: 0.72, description: '' },
+      { name: 'emotion', impact: 0.45, description: '' },
+      { name: 'trending', impact: 0.51, description: '' },
+    ],
+    recommendations: [
       'Strengthen the opening hook to grab attention faster',
       'Add more emotional peaks throughout the content',
       'Incorporate trending topics or hashtags',
@@ -40,13 +40,13 @@ export const ViralScoreGaugeExample: React.FC = () => {
   // Example 3: Low viral potential
   const lowScoreExample = {
     score: 28,
-    factors: {
-      hook: 0.35,
-      pacing: 0.28,
-      emotion: 0.22,
-      trending: 0.25,
-    },
-    suggestions: [
+    factors: [
+      { name: 'hook', impact: 0.35, description: '' },
+      { name: 'pacing', impact: 0.28, description: '' },
+      { name: 'emotion', impact: 0.22, description: '' },
+      { name: 'trending', impact: 0.25, description: '' },
+    ],
+    recommendations: [
       'Completely rework the opening - it needs a stronger hook',
       'Add emotional storytelling elements',
       'Research and incorporate trending topics',
@@ -67,21 +67,21 @@ export const ViralScoreGaugeExample: React.FC = () => {
             <h2 className="text-2xl font-semibold text-gray-300 mb-4">
               High Viral Potential
             </h2>
-            <ViralScoreGauge {...highScoreExample} />
+            <ViralScoreGauge data={highScoreExample} />
           </div>
 
           <div>
             <h2 className="text-2xl font-semibold text-gray-300 mb-4">
               Medium Viral Potential
             </h2>
-            <ViralScoreGauge {...mediumScoreExample} />
+            <ViralScoreGauge data={mediumScoreExample} />
           </div>
 
           <div>
             <h2 className="text-2xl font-semibold text-gray-300 mb-4">
               Low Viral Potential
             </h2>
-            <ViralScoreGauge {...lowScoreExample} />
+            <ViralScoreGauge data={lowScoreExample} />
           </div>
         </div>
       </div>

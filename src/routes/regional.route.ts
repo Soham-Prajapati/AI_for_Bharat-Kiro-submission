@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { CacheService } from '../services/cache.service';
+import { ValidationError } from '../types/errors';
+import { regionalNetworkService, RegionType, LanguageType } from '../services/regional-network.service';
 
 const router = Router();
 const cache = new CacheService();
@@ -15,34 +17,35 @@ router.get('/creators', asyncHandler(async (req: Request, res: Response) => {
     return res.json(JSON.parse(cached as string));
   }
 
-  // TODO: Replace with real regional-network.service.ts
-  const mockCreators = {
+  // Uses the actual regional network service
+  const creators = await regionalNetworkService.getCreatorsByRegion(
+    (region as RegionType) || 'north',
+    language ? { language: language as LanguageType } : undefined
+  );
+
+  const response = {
     region,
     language,
-    creators: [
-      { id: 'c1', name: 'Creator 1', region: 'North', language: 'hi', followers: 50000 },
-      { id: 'c2', name: 'Creator 2', region: 'South', language: 'ta', followers: 75000 }
-    ],
-    source: 'mock'
+    creators
   };
 
-  await cache.set(cacheKey, JSON.stringify(mockCreators), 600);
-  res.json(mockCreators);
+  await cache.set(cacheKey, JSON.stringify(response), 600);
+  res.json(response);
 }));
 
 // POST /api/regional/collab - Request collaboration
 router.post('/collab', asyncHandler(async (req: Request, res: Response) => {
   const { fromUserId, toUserId, message } = req.body;
 
-  // TODO: Replace with real regional-network.service.ts
-  res.json({
-    collabId: `collab_${Date.now()}`,
+  // Uses the actual regional network service
+  const collabRequest = await regionalNetworkService.createCollaborationRequest(
     fromUserId,
     toUserId,
-    status: 'pending',
-    createdAt: new Date().toISOString(),
-    source: 'mock'
-  });
+    message || 'Would love to collaborate!',
+    req.body.collabType || 'video'
+  );
+
+  res.json(collabRequest);
 }));
 
 export default router;

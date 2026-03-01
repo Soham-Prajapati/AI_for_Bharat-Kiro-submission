@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
+import { marketplaceService } from '../services/marketplace.service';
 
 const router = Router();
 
@@ -21,20 +22,20 @@ router.post('/list', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError(`type must be one of: ${validTypes.join(', ')}`);
   }
 
-  // TODO: Replace with real marketplace.service.ts
-  const listing = {
-    id: `listing-${Date.now()}`,
+  // Uses the actual marketplace service
+  const newListing = await marketplaceService.createListing({
+    sellerId: userId,
     title,
     description,
+    category: type,
     price,
-    type,
-    userId,
-    fileUrl,
-    status: 'active',
-    createdAt: new Date().toISOString()
-  };
+    currency: req.body.currency || 'USD',
+    license: req.body.license || 'personal',
+    tags: req.body.tags || [],
+    fileUrl
+  });
 
-  res.json({ success: true, listing });
+  res.json({ success: true, listing: newListing });
 }));
 
 // POST /api/marketplace/purchase - Purchase listing
@@ -45,35 +46,30 @@ router.post('/purchase', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('listingId and userId are required');
   }
 
-  // TODO: Integrate with Stripe/Razorpay when ready
-  const transaction = {
-    id: `txn-${Date.now()}`,
+  // Uses the actual marketplace service
+  const transaction = await marketplaceService.purchaseListing({
     listingId,
-    userId,
-    amount: 99.99,
-    status: 'completed',
+    buyerId: userId,
     paymentMethod: paymentMethod || 'mock',
-    purchasedAt: new Date().toISOString()
-  };
+    paymentToken: req.body.paymentToken || 'mock-token'
+  });
 
-  res.json({ success: true, transaction, downloadUrl: 'https://mock-download.com/file' });
+  res.json({ success: true, transaction, downloadUrl: transaction.downloadUrl || 'https://mock-download.com/file' });
 }));
 
 // GET /api/marketplace/listings - Get all listings
 router.get('/listings', asyncHandler(async (req: Request, res: Response) => {
   const { type, search, limit = 20 } = req.query;
 
-  // TODO: Replace with real database query
-  const mockListings = Array.from({ length: Number(limit) }, (_, i) => ({
-    id: `listing-${i}`,
-    title: `${type || 'Content'} Template ${i}`,
-    price: 9.99 + i,
-    type: type || 'template',
-    rating: 4.5,
-    sales: Math.floor(Math.random() * 100)
-  }));
+  // Uses the actual marketplace service
+  const listingsResponse = await marketplaceService.searchListings(
+    req.query.search as string | undefined,
+    { category: type as any },
+    1,
+    Number(limit)
+  );
 
-  res.json({ listings: mockListings, total: mockListings.length });
+  res.json({ listings: listingsResponse.listings, total: listingsResponse.total });
 }));
 
 export default router;

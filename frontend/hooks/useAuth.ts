@@ -11,12 +11,12 @@ export function useAuth() {
       actions.clearError();
 
       const response = await apiClient.auth.login({ email, password });
-      
+
       const user: User = {
-        id: response.user.id,
-        name: response.user.name,
-        email: response.user.email,
-        avatar: response.user.avatar,
+        id: response.userId,
+        name: response.name || 'User',
+        email: response.email,
+        avatar: undefined,
         subscription: 'free',
         preferences: {
           emailNotifications: true,
@@ -24,9 +24,9 @@ export function useAuth() {
           autoSave: true,
         },
       };
-      
+
       actions.setUser(user);
-      
+
       return { success: true };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Login failed';
@@ -43,12 +43,12 @@ export function useAuth() {
       actions.clearError();
 
       const response = await apiClient.auth.register({ name, email, password });
-      
+
       const user: User = {
-        id: response.user.id,
-        name: response.user.name,
-        email: response.user.email,
-        avatar: response.user.avatar,
+        id: response.userId,
+        name: response.name || 'User',
+        email: response.email,
+        avatar: undefined,
         subscription: 'free',
         preferences: {
           emailNotifications: true,
@@ -56,9 +56,9 @@ export function useAuth() {
           autoSave: true,
         },
       };
-      
+
       actions.setUser(user);
-      
+
       return { success: true };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Registration failed';
@@ -93,7 +93,7 @@ export function useAuth() {
 
       // Update local state immediately for better UX
       actions.setUser({ ...state.user, ...updates });
-      
+
       return { success: true };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Update failed';

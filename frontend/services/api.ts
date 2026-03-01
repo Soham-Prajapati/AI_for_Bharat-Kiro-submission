@@ -255,7 +255,7 @@ class ApiClient {
   // CORE REQUEST METHOD
   // --------------------------------------------------------------------------
 
-  private async request<T>(endpoint: string, config: RequestConfig): Promise<T> {
+  public async request<T>(endpoint: string, config: RequestConfig): Promise<T> {
     let lastError: ApiError | null = null;
     const maxRetries = config.retries ?? MAX_RETRIES;
     const retryDelay = config.retryDelay ?? RETRY_DELAY;

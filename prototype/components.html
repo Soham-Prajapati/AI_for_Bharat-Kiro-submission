@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QALAA | Component Showcase</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Outfit:wght@700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#030712', brand: { 400: '#818CF8', 500: '#6366F1', 600: '#4F46E5' }, cyan: '#22D3EE'
+                    },
+                    fontFamily: { display: ['Outfit', 'sans-serif'], body: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-glass: rgba(255, 255, 255, 0.04);
+            --bg-glass-hover: rgba(255, 255, 255, 0.07);
+            --border-glass: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+        }
+
+        body {
+            background-color: #030712;
+            color: #F9FAFB;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: var(--bg-glass-hover);
+            border-color: var(--border-hover);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366F1, #4F46E5);
+            color: #FFFFFF;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #9CA3AF;
+            border: 1px solid var(--border-glass);
+            padding: 12px 24px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-glass);
+            color: #FFF;
+        }
+
+        .input-glass {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #F9FAFB;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-glass:focus {
+            border-color: #6366F1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+    </style>
+</head>
+
+<body class="antialiased p-12">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="font-display font-black text-4xl mb-2 text-brand-400">DESIGN SYSTEM</h1>
+        <p class="text-gray-400 mb-12 font-mono">QALAA v1.0 / Luminous Glass Components</p>
+
+        <!-- Colors -->
+        <h2 class="font-display text-2xl font-bold mb-6 border-b border-white/10 pb-2">1. Color Palette</h2>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-16">
+            <div class="p-4 rounded-xl bg-void border border-white/20">
+                <div class="text-sm font-mono text-gray-400 mb-2">Void</div>
+                <div class="font-bold">#030712</div>
+            </div>
+            <div class="p-4 rounded-xl bg-brand-500">
+                <div class="text-sm font-mono text-white/70 mb-2">Primary</div>
+                <div class="font-bold text-white">#6366F1</div>
+            </div>
+            <div class="p-4 rounded-xl bg-cyan-400">
+                <div class="text-sm font-mono text-black/70 mb-2">Accent</div>
+                <div class="font-bold text-black">#22D3EE</div>
+            </div>
+            <div class="p-4 rounded-xl bg-green-500">
+                <div class="text-sm font-mono text-white/70 mb-2">Success</div>
+                <div class="font-bold text-white">#10B981</div>
+            </div>
+            <div class="p-4 rounded-xl bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.06)]">
+                <div class="text-sm font-mono text-gray-400 mb-2">Glass Surface</div>
+                <div class="font-bold">alpha 0.04</div>
+            </div>
+        </div>
+
+        <!-- Typography -->
+        <h2 class="font-display text-2xl font-bold mb-6 border-b border-white/10 pb-2">2. Typography</h2>
+        <div class="glass-card p-8 mb-16 space-y-6">
+            <div>
+                <div class="text-gray-500 font-mono text-xs mb-1">Display (Outfit 800)</div>
+                <h1 class="font-display text-4xl font-extrabold tracking-tight">The quick brown fox jumps.</h1>
+            </div>
+            <div>
+                <div class="text-gray-500 font-mono text-xs mb-1">Heading (Outfit 700)</div>
+                <h2 class="font-display text-2xl font-bold">The quick brown fox jumps.</h2>
+            </div>
+            <div>
+                <div class="text-gray-500 font-mono text-xs mb-1">Body (Inter 400)</div>
+                <p class="font-body text-gray-300">The quick brown fox jumps over the lazy dog. Creators need power, not
+                    complexity.</p>
+            </div>
+            <div>
+                <div class="text-gray-500 font-mono text-xs mb-1">Mono (JetBrains Mono)</div>
+                <p class="font-mono text-brand-400 text-sm">const status = 'processing';</p>
+            </div>
+        </div>
+
+        <!-- UI Components -->
+        <h2 class="font-display text-2xl font-bold mb-6 border-b border-white/10 pb-2">3. Components</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Buttons -->
+            <div class="glass-card p-8">
+                <h3 class="font-display text-lg mb-6 text-gray-400">Buttons</h3>
+                <div class="flex flex-wrap gap-4">
+                    <button class="btn-primary">Primary Action</button>
+                    <button class="btn-ghost">Secondary</button>
+                    <button
+                        class="bg-red-500 text-white font-semibold py-3 px-6 rounded-xl hover:bg-red-600 transition-colors">Destructive</button>
+                </div>
+            </div>
+
+            <!-- Inputs -->
+            <div class="glass-card p-8">
+                <h3 class="font-display text-lg mb-6 text-gray-400">Form Elements</h3>
+                <div class="space-y-4">
+                    <input type="text" class="input-glass w-full" placeholder="Enter video URL...">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" checked
+                            class="w-5 h-5 rounded border-gray-600 text-brand-500 focus:ring-brand-500 bg-void">
+                        <span class="text-sm text-gray-300">Preserve Creator DNA</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags/Badges -->
+            <div class="glass-card p-8 md:col-span-2 flex gap-4 items-center">
+                <h3 class="font-display text-lg text-gray-400 mr-4">Status Tags</h3>
+                <span
+                    class="bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest">Processing</span>
+                <span
+                    class="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest">Published</span>
+                <span
+                    class="bg-gray-500/10 border border-gray-500/20 text-gray-400 px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest">Draft</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

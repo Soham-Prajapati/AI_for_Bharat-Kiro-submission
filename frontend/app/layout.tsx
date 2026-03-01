@@ -3,11 +3,11 @@ import './globals.css'
 import { ToastProvider } from '@/context/ToastContext'
 import { AppProvider } from '@/context/AppContext'
 import ToastContainer from '@/components/ToastContainer'
-import ConditionalSidebar from '@/components/ConditionalSidebar'
+import ConditionalLayout from '@/components/ConditionalLayout'
 
 export const metadata: Metadata = {
-  title: 'ContentAI — 1 Video. 6 Platforms. 60 Seconds.',
-  description: 'AI-powered content intelligence for Indian creators. Powered by AWS Bedrock.',
+  title: 'KLA — 1 Video. 6 Platforms. 60 Seconds.',
+  description: 'KLA is India\'s AI-powered content engine. Upload one video, get platform-perfect content for 6 networks in 9 Indian languages in 60 seconds.',
 }
 
 export default function RootLayout({
@@ -25,12 +25,9 @@ export default function RootLayout({
       <body className="antialiased bg-bg-base text-text-primary font-sans">
         <AppProvider>
           <ToastProvider>
-            <div className="flex h-screen overflow-hidden">
-              <ConditionalSidebar />
-              <main id="main-scroll" className="flex-1 overflow-y-auto">
-                {children}
-              </main>
-            </div>
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
             <ToastContainer />
           </ToastProvider>
         </AppProvider>

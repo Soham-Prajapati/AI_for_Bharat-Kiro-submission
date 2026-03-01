@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QALAA | Neomorphism Theme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            background: #e0e5ec;
+            font-family: 'Inter', sans-serif;
+            color: #4a5568;
+        }
+
+        .neo-card {
+            background: #e0e5ec;
+            border-radius: 20px;
+            box-shadow: 9px 9px 16px rgb(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .neo-inset {
+            background: #e0e5ec;
+            border-radius: 12px;
+            box-shadow: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.5), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .neo-btn {
+            background: #e0e5ec;
+            border-radius: 12px;
+            box-shadow: 6px 6px 10px rgba(163, 177, 198, 0.6), -6px -6px 10px rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
+            font-weight: 600;
+            color: #6366f1;
+        }
+
+        .neo-btn:active {
+            box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+            color: #4f46e5;
+        }
+
+        .neo-toggle {
+            width: 60px;
+            height: 30px;
+            border-radius: 15px;
+            background: #e0e5ec;
+            box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .neo-toggle::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e0e5ec;
+            top: 3px;
+            left: 3px;
+            box-shadow: 2px 2px 5px rgba(163, 177, 198, 0.6), -2px -2px 5px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s;
+        }
+
+        .neo-toggle.active::after {
+            transform: translateX(30px);
+            background: #6366f1;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="neo-card w-full max-w-5xl p-12">
+
+        <header class="flex justify-between items-center mb-16">
+            <h1 class="text-3xl font-black tracking-widest text-[#6366f1]">QALAA</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold">Pro Mode</span>
+                <div class="neo-toggle active" onclick="this.classList.toggle('active')"></div>
+            </div>
+        </header>
+
+        <main class="text-center max-w-3xl mx-auto">
+            <span
+                class="neo-card px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest text-[#6366f1] mb-8 inline-block">Neomorphism
+                (Soft UI)</span>
+            <h2 class="text-5xl font-black mb-6 leading-tight text-gray-700">Soft Extrusions.<br>Zero Borders.</h2>
+            <p class="text-lg mb-12 text-gray-500 font-medium">The UI elements are formed entirely by light and shadow,
+                mimicking physical extrusion from a uniform matte surface.</p>
+
+            <div class="flex gap-6 justify-center">
+                <button class="neo-btn px-10 py-4">Generate Content</button>
+            </div>
+        </main>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
+            <div class="neo-card p-8 text-center">
+                <div class="neo-inset w-16 h-16 mx-auto rounded-full mb-4 flex items-center justify-center text-xl">🚀
+                </div>
+                <h3 class="font-bold mb-2">Automated</h3>
+            </div>
+            <div class="neo-card p-8 text-center">
+                <div class="neo-inset w-16 h-16 mx-auto rounded-full mb-4 flex items-center justify-center text-xl">🧠
+                </div>
+                <h3 class="font-bold mb-2">Intelligent</h3>
+            </div>
+            <div class="neo-card p-8 text-center">
+                <div class="neo-inset w-16 h-16 mx-auto rounded-full mb-4 flex items-center justify-center text-xl">🛡️
+                </div>
+                <h3 class="font-bold mb-2">Secure</h3>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

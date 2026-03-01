@@ -25,7 +25,7 @@ export default function Sidebar() {
             <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">
               C
             </div>
-            <span className="text-base font-semibold text-text-primary">ContentAI</span>
+            <span className="text-base font-semibold text-text-primary font-display tracking-tight">KLA</span>
           </Link>
         )}
         <button

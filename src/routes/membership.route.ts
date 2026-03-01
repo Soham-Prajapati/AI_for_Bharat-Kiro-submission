@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { CacheService } from '../services/cache.service';
 import { ValidationError } from '../types/errors';
+import { membershipService } from '../services/membership.service';
 
 const router = Router();
 const cache = new CacheService();
@@ -14,20 +15,10 @@ router.post('/subscribe', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('userId and tier required');
   }
 
-  // TODO: Replace with real membership.service.ts and Stripe integration
-  const mockSubscription = {
-    subscriptionId: `sub_${Date.now()}`,
-    userId,
-    tier,
-    status: 'active',
-    startDate: new Date().toISOString(),
-    nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-    amount: tier === 'pro' ? 999 : tier === 'enterprise' ? 4999 : 0,
-    currency: 'INR',
-    source: 'mock'
-  };
+  // Uses the actual membership service and Stripe integration
+  const subscription = await membershipService.subscribe(userId, tier, req.body.paymentMethodId);
 
-  res.json(mockSubscription);
+  res.json(subscription);
 }));
 
 // POST /api/membership/cancel - Cancel subscription
@@ -38,16 +29,10 @@ router.post('/cancel', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('subscriptionId required');
   }
 
-  // TODO: Replace with real membership.service.ts and Stripe integration
-  const mockCancellation = {
-    subscriptionId,
-    status: 'cancelled',
-    cancelledAt: new Date().toISOString(),
-    refund: false,
-    source: 'mock'
-  };
+  // Uses the actual membership service and Stripe integration
+  const cancellation = await membershipService.cancelSubscription(subscriptionId, req.body.immediate);
 
-  res.json(mockCancellation);
+  res.json(cancellation);
 }));
 
 // GET /api/membership/status/:userId - Get subscription status
@@ -60,18 +45,22 @@ router.get('/status/:userId', asyncHandler(async (req: Request, res: Response) =
     return res.json(JSON.parse(cached as string));
   }
 
-  // TODO: Replace with real membership.service.ts
-  const mockStatus = {
+  // Uses the actual membership service
+  const userSubscription = await membershipService.getUserSubscription(userId);
+  const userUsage = await membershipService.getUsage(userId);
+  const tierAccess = await membershipService.getContentAccess(userId);
+
+  const status = {
     userId,
-    tier: 'free',
-    status: 'active',
-    features: ['basic_generation', 'single_platform'],
-    limits: { videosPerMonth: 10, platforms: 1 },
-    source: 'mock'
+    tier: tierAccess.tier,
+    status: userSubscription?.status || 'inactive',
+    features: userSubscription ? ['basic_generation', 'single_platform'] : [],
+    limits: userUsage.limits,
+    usage: userUsage.percentUsed
   };
 
-  await cache.set(cacheKey, JSON.stringify(mockStatus), 300); // 5 min cache
-  res.json(mockStatus);
+  await cache.set(cacheKey, JSON.stringify(status), 300); // 5 min cache
+  res.json(status);
 }));
 
 export default router;
