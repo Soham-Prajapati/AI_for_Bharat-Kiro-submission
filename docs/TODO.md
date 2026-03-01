@@ -620,7 +620,7 @@ export const api = {
   - **Where:** `src/routes/marketplace.route.ts`
   - **Test:** List item, purchase, verify transaction
 
-- [ ] **4.1d: Test payment flow (Lakshmi)**
+- [/] **4.1d: Test payment flow (Lakshmi)**
   - **What:** End-to-end payment testing
   - **Where:** `src/__tests__/marketplace.test.ts`
   - **Test:** Sandbox payments, refunds, disputes
