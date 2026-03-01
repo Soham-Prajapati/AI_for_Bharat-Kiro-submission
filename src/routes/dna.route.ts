@@ -6,7 +6,9 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
-import { dnaAnalysisService } from '../services/dna-analysis.service';
+import { DNAAnalysisService } from '../services/dna-analysis.service';
+
+const dnaAnalysisService = new DNAAnalysisService();
 
 const router = Router();
 
@@ -21,7 +23,7 @@ router.post('/analyze', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('userId and videoIds[] (non-empty array) required');
   }
 
-  const profile = await dnaAnalysisService.analyze({ userId, videoIds });
+  const profile = await dnaAnalysisService.analyzeCreatorDNA({ userId, videoIds });
 
   res.json({
     success: true,

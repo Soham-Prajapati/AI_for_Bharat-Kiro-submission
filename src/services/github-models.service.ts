@@ -17,12 +17,16 @@ export class GitHubModelsService {
 
   constructor() {
     this.apiKey = process.env.GITHUB_TOKEN || '';
+  }
+
+  private ensureApiKey() {
     if (!this.apiKey) {
       throw new Error('GITHUB_TOKEN not found in environment variables');
     }
   }
 
   async generate(prompt: string, options: GenerateOptions = {}): Promise<string> {
+    this.ensureApiKey();
     const {
       model = 'gpt-4o',
       temperature = 0.7,
