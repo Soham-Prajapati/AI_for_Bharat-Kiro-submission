@@ -458,6 +458,81 @@ export interface MultiplyGenerateResponse {
 }
 
 // ============================================================================
+// MULTIPLY V2 TYPES
+// ============================================================================
+
+export interface MultiplyV2GenerateRequest {
+  videoId: string;
+  transcript: string;
+  duration: number;
+  platforms: ('youtube' | 'instagram' | 'tiktok' | 'twitter' | 'linkedin' | 'facebook' | 'pinterest' | 'reddit')[];
+  contentTypes: ('short' | 'reel' | 'story' | 'post' | 'thread' | 'carousel' | 'infographic' | 'quote' | 'audiogram' | 'blog')[];
+  variations: number;
+  includeScheduling?: boolean;
+  targetAudience?: string;
+  brandVoice?: 'professional' | 'casual' | 'humorous' | 'inspirational' | 'educational';
+}
+
+export interface ContentPiece {
+  pieceId: string;
+  type: string;
+  platform: string;
+  title?: string;
+  content: string;
+  hashtags?: string[];
+  media?: {
+    type: 'image' | 'video' | 'audio';
+    url: string;
+    thumbnail?: string;
+    duration?: number;
+  };
+  scheduledTime?: string;
+  estimatedEngagement: number;
+  priority: 'high' | 'medium' | 'low';
+  variation: number;
+}
+
+export interface ContentCalendarEntry {
+  date: string;
+  dayOfWeek: string;
+  pieces: ContentPiece[];
+  theme?: string;
+  notes?: string;
+}
+
+export interface MultiplyV2Analytics {
+  piecesByPlatform: Record<string, number>;
+  piecesByType: Record<string, number>;
+  estimatedReach: number;
+  estimatedEngagement: number;
+  contentDiversity: number;
+}
+
+export interface MultiplyV2GenerateResponse {
+  multiplyId: string;
+  videoId: string;
+  totalPieces: number;
+  pieces: ContentPiece[];
+  contentCalendar: ContentCalendarEntry[];
+  analytics: MultiplyV2Analytics;
+  recommendations: string[];
+  generatedAt: string;
+}
+
+export interface MultiplyV2StatusResponse {
+  jobId: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  progress?: number;
+  result?: MultiplyV2GenerateResponse;
+  error?: string;
+}
+
+export interface MultiplyV2ResultsResponse {
+  success: boolean;
+  result: MultiplyV2GenerateResponse;
+}
+
+// ============================================================================
 // WORKSPACE TYPES
 // ============================================================================
 
@@ -909,5 +984,118 @@ export interface ExportAnalyticsResponse {
   downloadUrl: string;
   format: 'csv' | 'pdf';
   expiresAt: string;
+}
+
+// ============================================================================
+// SAFETY & MODERATION TYPES
+// ============================================================================
+
+export type ContentType = 'text' | 'image' | 'video' | 'audio';
+export type ViolationCategory = 'explicit' | 'violence' | 'hate_speech' | 'harassment' | 'spam' | 'misinformation' | 'copyright' | 'privacy' | 'dangerous';
+export type ViolationSeverity = 'low' | 'medium' | 'high' | 'critical';
+export type SafetyStrictness = 'low' | 'medium' | 'high';
+
+export interface SafetyCheckRequest {
+  contentId: string;
+  contentType: ContentType;
+  content?: string;
+  url?: string;
+  platforms?: string[];
+  strictness?: SafetyStrictness;
+}
+
+export interface ViolationLocation {
+  start?: number;
+  end?: number;
+  timestamp?: number;
+  boundingBox?: {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  };
+}
+
+export interface Violation {
+  violationId: string;
+  category: ViolationCategory;
+  severity: ViolationSeverity;
+  confidence: number;
+  description: string;
+  location?: ViolationLocation;
+  platformViolations?: string[];
+}
+
+export interface ModerationLabel {
+  label: string;
+  confidence: number;
+  parentLabel?: string;
+}
+
+export interface PlatformCompliance {
+  compliant: boolean;
+  violations: string[];
+  warnings: string[];
+}
+
+export interface SafetyCheckResult {
+  checkId: string;
+  contentId: string;
+  safe: boolean;
+  overallScore: number;
+  violations: Violation[];
+  warnings: string[];
+  suggestions: string[];
+  platformCompliance: Record<string, PlatformCompliance>;
+  moderationLabels?: ModerationLabel[];
+  checkedAt: string;
+}
+
+export interface SafetyCheckResponse {
+  success: boolean;
+  result: SafetyCheckResult;
+}
+
+export interface SafetyHistoryResponse {
+  success: boolean;
+  contentId: string;
+  checks: SafetyCheckResult[];
+  total: number;
+}
+
+export interface ApproveContentRequest {
+  checkId: string;
+  contentId: string;
+  approvedBy: string;
+  notes?: string;
+}
+
+export interface ApproveContentResponse {
+  success: boolean;
+  checkId: string;
+  contentId: string;
+  status: 'approved';
+  approvedBy: string;
+  approvedAt: string;
+  message: string;
+}
+
+export interface RejectContentRequest {
+  checkId: string;
+  contentId: string;
+  rejectedBy: string;
+  reason: string;
+  notes?: string;
+}
+
+export interface RejectContentResponse {
+  success: boolean;
+  checkId: string;
+  contentId: string;
+  status: 'rejected';
+  rejectedBy: string;
+  rejectedAt: string;
+  reason: string;
+  message: string;
 }
 
