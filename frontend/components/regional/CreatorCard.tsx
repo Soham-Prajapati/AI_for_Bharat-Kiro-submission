@@ -53,7 +53,7 @@ export default function CreatorCard({
           {creator.lookingForCollabs && (
             <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-gray-900 flex items-center justify-center">
               <span className="text-xs">✓</span>
-            </div>
+            </span>
           )}
         </div>
 
@@ -70,14 +70,14 @@ export default function CreatorCard({
                 <span className="text-gray-400 text-sm capitalize">
                   {creator.region} India
                 </span>
-              </div>
+              </span>
             </div>
             
             {/* Audience Size Badge */}
             <div className="bg-purple-500/20 px-3 py-1 rounded-full border border-purple-500/30 flex-shrink-0">
               <div className="text-purple-300 font-semibold text-sm">
                 {formatAudience(creator.audienceSize)}
-              </div>
+              </span>
             </div>
           </div>
 

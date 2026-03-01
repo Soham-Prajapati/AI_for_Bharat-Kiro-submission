@@ -292,7 +292,7 @@ export default function ContentMultiplierV2({
             <p className="text-gray-300 text-sm">
               Transform 1 video into 100+ pieces of optimized content
             </p>
-          </div>
+          </h2>
           <div className="text-right">
             <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
               {contentData.length}
@@ -715,13 +715,13 @@ function TreeView({
                 <div>
                   <h3 className="text-lg font-bold text-white">{node.label}</h3>
                   <p className="text-sm text-gray-400">{node.count} items</p>
-                </div>
+                </p>
               </div>
 
               <div className="flex items-center gap-3">
                 <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
                   {node.count}
-                </div>
+                </h3>
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
@@ -1012,23 +1012,23 @@ function PreviewPanel({
               <label className="text-xs text-gray-400 uppercase tracking-wider">Type</label>
               <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                 <span className="text-white font-semibold capitalize">{item.type}</span>
-              </div>
-            </div>
+              </span>
+            </label>
 
             <div>
               <label className="text-xs text-gray-400 uppercase tracking-wider">Title</label>
               <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                 <span className="text-white">{item.title}</span>
-              </div>
-            </div>
+              </span>
+            </label>
 
             {item.platform && (
               <div>
                 <label className="text-xs text-gray-400 uppercase tracking-wider">Platform</label>
                 <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                   <span className="text-white capitalize">{item.platform}</span>
-                </div>
-              </div>
+                </span>
+              </label>
             )}
 
             {item.duration && (
@@ -1036,8 +1036,8 @@ function PreviewPanel({
                 <label className="text-xs text-gray-400 uppercase tracking-wider">Duration</label>
                 <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                   <span className="text-white">{item.duration} seconds</span>
-                </div>
-              </div>
+                </span>
+              </label>
             )}
 
             {item.text && (
@@ -1045,8 +1045,8 @@ function PreviewPanel({
                 <label className="text-xs text-gray-400 uppercase tracking-wider">Content</label>
                 <div className="mt-1 px-3 py-2 bg-gray-700/50 rounded-lg">
                   <p className="text-white text-sm leading-relaxed">{item.text}</p>
-                </div>
-              </div>
+                </p>
+              </label>
             )}
 
             {item.url && (
@@ -1061,7 +1061,7 @@ function PreviewPanel({
                   >
                     {item.url}
                   </a>
-                </div>
+                </label>
               </div>
             )}
 
@@ -1077,7 +1077,7 @@ function PreviewPanel({
                       #{tag}
                     </span>
                   ))}
-                </div>
+                </label>
               </div>
             )}
 
@@ -1087,7 +1087,7 @@ function PreviewPanel({
                 <span className="text-white text-sm">
                   {new Date(item.createdAt).toLocaleString()}
                 </span>
-              </div>
+              </label>
             </div>
           </div>
 

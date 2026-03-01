@@ -100,7 +100,7 @@ export default function TrendChart({
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
             <p>No data available</p>
-          </div>
+          </p>
         </div>
       </div>
     );

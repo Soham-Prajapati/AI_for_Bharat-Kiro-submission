@@ -94,14 +94,14 @@ export function NoHeaderExample() {
         <div className="bg-gray-800 p-4 rounded-lg">
           <h3 className="text-lg font-semibold mb-2">Your Dashboard</h3>
           <p className="text-gray-400">Other content here...</p>
-        </div>
+        </p>
         <div>
           <CreativeDirector
             contentId="example-embedded"
             showHeader={false}
             className="max-w-2xl"
           />
-        </div>
+        </h2>
       </div>
     </div>
   )
@@ -149,15 +149,15 @@ export function SubComponentsExample() {
           <ScoreCard label="Pacing" score={78} icon="⚡" delay={0.1} />
           <ScoreCard label="Engagement" score={92} icon="🎯" delay={0.2} />
           <ScoreCard label="Clarity" score={88} icon="💎" delay={0.3} />
-        </div>
-      </div>
+        </h3>
+      </h2>
 
       {/* Overall Score Gauge */}
       <div>
         <h3 className="text-xl font-semibold mb-4">Overall Score Gauge</h3>
         <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
           <OverallScoreGauge score={86} />
-        </div>
+        </h3>
       </div>
 
       {/* Feedback Items */}
@@ -167,7 +167,7 @@ export function SubComponentsExample() {
           {mockFeedback.map((feedback, index) => (
             <FeedbackItem key={index} feedback={feedback} index={index} />
           ))}
-        </div>
+        </h3>
       </div>
 
       {/* Improvement List */}
@@ -175,7 +175,7 @@ export function SubComponentsExample() {
         <h3 className="text-xl font-semibold mb-4">Improvement List</h3>
         <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
           <ImprovementList improvements={mockImprovements} />
-        </div>
+        </h3>
       </div>
     </div>
   )
@@ -222,7 +222,7 @@ export function AppContextExample() {
         See source code for integration example with AppContext
       </p>
       <CreativeDirector contentId="example-context" />
-    </div>
+    </h2>
   )
 }
 
@@ -278,7 +278,7 @@ export function MultipleAnalysesExample() {
                 </span>
               </div>
             ))}
-          </div>
+          </h3>
         </div>
       )}
     </div>
@@ -304,7 +304,7 @@ export function ComparisonExample() {
             showHeader={false}
             onAnalysisComplete={setVersion1}
           />
-        </div>
+        </h2>
         <div>
           <h3 className="text-lg font-semibold mb-4">Version B</h3>
           <CreativeDirector
@@ -323,14 +323,14 @@ export function ComparisonExample() {
               <p className="text-3xl font-bold text-blue-400">
                 {version1.score.overall}
               </p>
-            </div>
+            </p>
             <div>
               <p className="text-sm text-gray-400 mb-2">Version B</p>
               <p className="text-3xl font-bold text-green-400">
                 {version2.score.overall}
               </p>
-            </div>
-          </div>
+            </p>
+          </h3>
           <div className="mt-4 text-center">
             {version2.score.overall > version1.score.overall ? (
               <p className="text-green-400">Version B performs better! 🎉</p>

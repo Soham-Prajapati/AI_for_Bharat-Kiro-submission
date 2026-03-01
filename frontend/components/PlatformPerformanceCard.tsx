@@ -110,7 +110,7 @@ export default function PlatformPerformanceCard({
                 <span className={isPositive ? 'text-green-400' : 'text-red-400'}>
                   {isPositive ? '↑' : '↓'} {Math.abs(change).toFixed(1)}%
                 </span>
-              </div>
+              </h3>
             )}
           </div>
         </div>
@@ -172,7 +172,7 @@ function MetricItem({
           {icon}
         </span>
         <span>{label}</span>
-      </div>
+      </span>
       <div className="text-sm font-bold text-white">{value}</div>
     </div>
   );

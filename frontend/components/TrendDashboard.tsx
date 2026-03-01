@@ -641,7 +641,7 @@ function TrendCard({ trend, index }: TrendCardProps) {
             >
               {statusIcon} {getStatusLabel(trend.status)}
             </span>
-          </div>
+          </h3>
         </div>
         
         <div
@@ -731,7 +731,7 @@ function TimelineChart({ trend }: TimelineChartProps) {
               <span className="text-white font-semibold">
                 {formatNumber(entry.value)}
               </span>
-            </div>
+            </span>
           ))}
         </div>
       )
@@ -811,7 +811,7 @@ function PlatformHeatmap({ trend }: PlatformHeatmapProps) {
           <div className="w-24 text-sm text-gray-300 flex items-center gap-2">
             <span>{getPlatformIcon(item.platform)}</span>
             <span>{item.platform}</span>
-          </div>
+          </span>
           
           <div className="flex-1 h-8 bg-gray-700/30 rounded-lg overflow-hidden relative">
             <div
@@ -823,7 +823,7 @@ function PlatformHeatmap({ trend }: PlatformHeatmapProps) {
               <span className="text-xs font-bold text-white">
                 {item.intensity}%
               </span>
-            </div>
+            </span>
           </div>
         </div>
       ))}
@@ -879,7 +879,7 @@ export default function TrendDashboard({
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">Total Trends</span>
             <span className="text-2xl">📊</span>
-          </div>
+          </span>
           <div className="text-3xl font-bold text-white">{data.trends.length}</div>
         </div>
 
@@ -889,7 +889,7 @@ export default function TrendDashboard({
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">Rising</span>
             <span className="text-2xl">📈</span>
-          </div>
+          </span>
           <div className="text-3xl font-bold text-green-400">{risingCount}</div>
         </div>
 
@@ -899,7 +899,7 @@ export default function TrendDashboard({
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">At Peak</span>
             <span className="text-2xl">🔥</span>
-          </div>
+          </span>
           <div className="text-3xl font-bold text-amber-400">{peakCount}</div>
         </div>
 
@@ -909,7 +909,7 @@ export default function TrendDashboard({
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">Declining</span>
             <span className="text-2xl">📉</span>
-          </div>
+          </span>
           <div className="text-3xl font-bold text-red-400">{decliningCount}</div>
         </div>
       </div>
@@ -942,7 +942,7 @@ export default function TrendDashboard({
             className="cursor-pointer"
           >
             <TrendCard trend={trend} index={index} />
-          </div>
+          </span>
         ))}
       </div>
 
@@ -985,7 +985,7 @@ export default function TrendDashboard({
                 >
                   ×
                 </button>
-              </div>
+              </span>
 
               {/* Timeline Chart */}
               {showTimeline && (
@@ -1046,8 +1046,8 @@ export default function TrendDashboard({
                   </div>
                 </div>
               )}
-            </div>
-          </div>
+            </span>
+          </span>
         </div>
       )}
 
@@ -1091,7 +1091,7 @@ export default function TrendDashboard({
                   </div>
                 </div>
               ))}
-          </div>
+          </h3>
         </div>
       )}
     </div>

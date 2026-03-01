@@ -72,7 +72,7 @@ export default function VersionHistory({
             <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
               Changes will be saved automatically
             </p>
-          </div>
+          </p>
         ) : (
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {history.map((entry, index) => {

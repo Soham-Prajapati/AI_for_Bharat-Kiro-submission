@@ -88,7 +88,7 @@ export default function RegionalNetworkPage() {
           <p className="text-gray-400 mt-2">
             Connect with creators across India • Collaborate locally • Grow together
           </p>
-        </div>
+        </header>
       </header>
 
       {/* Main Content */}
@@ -118,7 +118,7 @@ export default function RegionalNetworkPage() {
           >
             Find Matches
           </button>
-        </div>
+        </main>
 
         {/* Explore Tab */}
         {activeTab === 'explore' && (
@@ -196,7 +196,7 @@ export default function RegionalNetworkPage() {
                     />
                   </svg>
                   <p>Select a region on the map to discover creators</p>
-                </div>
+                </p>
               )}
             </div>
           </div>
@@ -269,7 +269,7 @@ export default function RegionalNetworkPage() {
                   />
                 </svg>
                 <p>No matches found. Complete your profile to get better matches!</p>
-              </div>
+              </p>
             )}
           </div>
         )}

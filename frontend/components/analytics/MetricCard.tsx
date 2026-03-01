@@ -53,7 +53,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
           {subtitle && (
             <p className="mt-1 text-xs text-gray-500">{subtitle}</p>
           )}
-        </div>
+        </h3>
         {icon && (
           <div className="rounded-lg bg-white/5 p-3 text-2xl">{icon}</div>
         )}
@@ -65,7 +65,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
             {getTrendIcon()} {Math.abs(change)}%
           </span>
           <span className="text-xs text-gray-500">vs last period</span>
-        </div>
+        </span>
       )}
     </div>
   );

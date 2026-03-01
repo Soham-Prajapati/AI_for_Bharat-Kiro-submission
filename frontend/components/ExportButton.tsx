@@ -117,9 +117,9 @@ export default function ExportButton({ data }: ExportButtonProps) {
               >
                 <span className="text-2xl">{format.icon}</span>
                 <span className="font-medium">{format.label}</span>
-              </div>
+              </span>
             ))}
-          </div>
+          </span>
         )}
       
 

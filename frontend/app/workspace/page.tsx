@@ -441,7 +441,7 @@ Happy collaborating!`
                       <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
                         Start a conversation
                       </p>
-                    </div>
+                    </p>
                   ) : (
                     comments.map((comment) => (
                       <CommentThread

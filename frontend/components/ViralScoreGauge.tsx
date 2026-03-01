@@ -213,7 +213,7 @@ export default function ViralScoreGauge({
         <span>50</span>
         <span>75</span>
         <span>100</span>
-      </div>
+      </span>
 
       {/* Viral Factors */}
       {showFactors && data.factors.length > 0 && (
@@ -249,8 +249,8 @@ export default function ViralScoreGauge({
                 </div>
               </div>
             ))}
-          </div>
-        </div>
+          </h3>
+        </span>
       )}
 
       {/* Recommendations */}
@@ -268,10 +268,10 @@ export default function ViralScoreGauge({
               >
                 <span className="text-blue-400 mt-0.5">→</span>
                 <span className="text-sm text-gray-300">{recommendation}</span>
-              </div>
+              </span>
             ))}
-          </div>
-        </div>
+          </span>
+        </span>
       )}
     </div>
   )

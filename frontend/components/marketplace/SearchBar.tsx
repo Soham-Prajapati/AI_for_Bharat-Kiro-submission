@@ -102,7 +102,7 @@ export default function SearchBar({
                   min="0"
                   className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500"
                 />
-              </div>
+              </label>
               
               <div className="flex-1">
                 <label className="block text-sm text-gray-400 mb-2">Max Price</label>
@@ -113,13 +113,13 @@ export default function SearchBar({
                   min="0"
                   className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500"
                 />
-              </div>
-            </div>
+              </label>
+            </h3>
 
             <div className="flex items-center justify-between text-sm text-gray-400">
               <span>${priceRange[0]}</span>
               <span>${priceRange[1]}</span>
-            </div>
+            </span>
 
             <button
               onClick={() => {
@@ -131,8 +131,8 @@ export default function SearchBar({
             >
               Reset Filters
             </button>
-          </div>
-        </div>
+          </span>
+        </button>
       )}
     </div>
   );

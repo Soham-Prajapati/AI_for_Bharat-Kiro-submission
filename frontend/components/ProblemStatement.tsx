@@ -58,7 +58,7 @@ export default function ProblemStatement() {
         <p ref={subRef} className="mt-6 text-lg text-text-tertiary opacity-0">
           Different formats. Different tones. Different hashtags. Different languages. Every. Single. Time.
         </p>
-      </div>
+      </section>
     </section>
   )
 }

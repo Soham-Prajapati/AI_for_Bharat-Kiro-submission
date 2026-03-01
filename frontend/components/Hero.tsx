@@ -83,7 +83,7 @@ export default function Hero() {
         <div className="orb orb-1" />
         <div className="orb orb-2" />
         <div className="orb orb-3" />
-      </div>
+      </section>
 
       {/* Parallax depth layers */}
       <div className="absolute inset-0 z-0 pointer-events-none">

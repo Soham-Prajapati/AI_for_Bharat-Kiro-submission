@@ -96,7 +96,7 @@ export default function CulturalSettingsExample() {
                 <p className="text-sm text-gray-300 line-clamp-3">
                   {sample.content}
                 </p>
-              </div>
+              </button>
             ))}
           </div>
         </div>

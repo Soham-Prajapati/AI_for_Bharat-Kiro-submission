@@ -92,7 +92,7 @@ const ToastExample: React.FC = () => {
         >
           Show All Toast Types
         </button>
-      </div>
+      </p>
 
       {/* Example 2 & 3 */}
       <div className="border rounded-lg p-4">
@@ -126,8 +126,8 @@ const ToastExample: React.FC = () => {
           >
             {uploading ? 'Uploading...' : 'Upload (Helper)'}
           </button>
-        </div>
-      </div>
+        </p>
+      </h2>
 
       {/* Example 4 */}
       <div className="border rounded-lg p-4">
@@ -139,7 +139,7 @@ const ToastExample: React.FC = () => {
         >
           Show 10s Toast
         </button>
-      </div>
+      </p>
 
       {/* Example 5 */}
       <div className="border rounded-lg p-4">
@@ -151,8 +151,8 @@ const ToastExample: React.FC = () => {
         >
           Show Persistent Toast
         </button>
-      </div>
-    </div>
+      </p>
+    </h1>
   );
 };
 

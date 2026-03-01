@@ -231,7 +231,7 @@ export default function ContentMultiplier({
           ) : (
             'Generate 50+ Content Pieces'
           )}
-        </div>
+        </button>
       )}
 
       {/* Error Message */}
@@ -302,7 +302,7 @@ export default function ContentMultiplier({
                 }`}
               >
                 Grid
-              </div>
+              </button>
               <button
                 onClick={() => setViewMode('tree')}
                 className={`px-4 py-2 rounded-lg font-semibold ${
@@ -312,7 +312,7 @@ export default function ContentMultiplier({
                 }`}
               >
                 Tree
-              </div>
+              </button>
             </div>
           </div>
 
@@ -340,13 +340,13 @@ export default function ContentMultiplier({
                 className="px-4 py-1 bg-purple-600 text-white text-sm font-semibold rounded disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Export Selected
-              </div>
+              </button>
               <button
                 onClick={handleExportAll}
                 className="px-4 py-1 bg-pink-600 text-white text-sm font-semibold rounded"
               >
                 Export All
-              </div>
+              </button>
             </div>
           </div>
 
@@ -507,7 +507,7 @@ function ContentTree({
               <div>
                 <h3 className="text-lg font-bold text-white capitalize">{type}s</h3>
                 <p className="text-sm text-gray-400">{items.length} items</p>
-              </div>
+              </p>
             </div>
             <div className="space-y-2">
               {items.map((item, index) => (
@@ -530,7 +530,7 @@ function ContentTree({
                     ) : (
                       <div className="w-5 h-5 border-2 border-gray-500 rounded" />
                     )}
-                  </div>
+                  </h3>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-white">{item.title}</div>
                     {item.platform && (

@@ -235,7 +235,7 @@ export default function WatermarkEditor({
         <p className="text-gray-400">
           Add your logo to protect your content and build brand recognition
         </p>
-      </div>
+      </h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Panel - Controls */}
@@ -276,13 +276,13 @@ export default function WatermarkEditor({
                     className="w-20 h-20 object-contain mx-auto rounded"
                   />
                   <p className="text-sm text-gray-400">Click to change logo</p>
-                </div>
+                </p>
               ) : (
                 <div className="space-y-2">
                   <div className="text-4xl">📷</div>
                   <p className="text-sm text-gray-300">Drop logo here or click to upload</p>
                   <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
-                </div>
+                </p>
               )}
             </div>
           </div>
@@ -309,7 +309,7 @@ export default function WatermarkEditor({
                     {POSITION_PRESETS[position].label}
                   </button>
                 ))}
-            </div>
+            </h3>
 
             {settings.position === 'custom' && (
               <div className="mt-3 p-3 bg-blue-900/20 border border-blue-800/30 rounded-lg">
@@ -341,8 +341,8 @@ export default function WatermarkEditor({
                 <span className="text-gray-400">0%</span>
                 <span className="text-white font-semibold">{settings.opacity}%</span>
                 <span className="text-gray-400">100%</span>
-              </div>
-            </div>
+              </span>
+            </h3>
           </div>
 
           {/* Size Control */}
@@ -366,8 +366,8 @@ export default function WatermarkEditor({
                 <span className="text-gray-400">Small</span>
                 <span className="text-white font-semibold">{settings.size}%</span>
                 <span className="text-gray-400">Large</span>
-              </div>
-            </div>
+              </span>
+            </h3>
           </div>
 
           {/* Rotation Control */}
@@ -391,8 +391,8 @@ export default function WatermarkEditor({
                 <span className="text-gray-400">-180°</span>
                 <span className="text-white font-semibold">{settings.rotation}°</span>
                 <span className="text-gray-400">180°</span>
-              </div>
-            </div>
+              </span>
+            </h3>
           </div>
         </div>
 
@@ -436,7 +436,7 @@ export default function WatermarkEditor({
                       className="hidden"
                     />
                   </label>
-                </div>
+                </p>
               )}
 
               {/* Watermark Overlay */}
@@ -476,7 +476,7 @@ export default function WatermarkEditor({
                     }}
                     className="max-w-none"
                   />
-                </div>
+                </span>
               )}
             </div>
 

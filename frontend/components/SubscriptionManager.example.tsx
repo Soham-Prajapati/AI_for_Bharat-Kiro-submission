@@ -50,7 +50,7 @@ export function SubscriptionManagerExample() {
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         <p className="ml-4 text-gray-600">Loading subscription information...</p>
-      </div>
+      </p>
     );
   }
 
@@ -64,7 +64,7 @@ export function SubscriptionManagerExample() {
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
             </svg>
             <p className="text-red-800">{error}</p>
-          </div>
+          </p>
           <button
             onClick={clearError}
             className="text-red-600 hover:text-red-800 font-bold"
@@ -85,7 +85,7 @@ export function SubscriptionManagerExample() {
           >
             {loading ? 'Refreshing...' : 'Refresh'}
           </button>
-        </div>
+        </h2>
 
         {subscription ? (
           <div className="space-y-3">
@@ -97,20 +97,20 @@ export function SubscriptionManagerExample() {
                   Active
                 </span>
               )}
-            </div>
+            </span>
             <div className="flex items-center">
               <span className="text-gray-600 w-32">Status:</span>
               <span className="capitalize">{subscription.status}</span>
-            </div>
+            </span>
             <div className="flex items-center">
               <span className="text-gray-600 w-32">Start Date:</span>
               <span>{new Date(subscription.startDate).toLocaleDateString()}</span>
-            </div>
+            </span>
             {subscription.endDate && (
               <div className="flex items-center">
                 <span className="text-gray-600 w-32">End Date:</span>
                 <span>{new Date(subscription.endDate).toLocaleDateString()}</span>
-              </div>
+              </span>
             )}
             {isSubscribed && (
               <div className="pt-4 border-t">
@@ -121,7 +121,7 @@ export function SubscriptionManagerExample() {
                 >
                   Cancel Subscription
                 </button>
-              </div>
+              </span>
             )}
           </div>
         ) : (
@@ -162,7 +162,7 @@ export function SubscriptionManagerExample() {
                     ${plan.price}
                   </span>
                   <span className="text-gray-600">/month</span>
-                </div>
+                </span>
 
                 <ul className="space-y-2 mb-6">
                   {plan.features.map((feature, idx) => (
@@ -201,7 +201,7 @@ export function SubscriptionManagerExample() {
                         • {plan.limits.storage}GB storage
                       </p>
                     )}
-                  </div>
+                  </p>
                 )}
 
                 {!isCurrentPlan && (
@@ -221,10 +221,10 @@ export function SubscriptionManagerExample() {
                       : 'Subscribe'}
                   </button>
                 )}
-              </div>
+              </span>
             );
           })}
-        </div>
+        </h2>
       </div>
     </div>
   );

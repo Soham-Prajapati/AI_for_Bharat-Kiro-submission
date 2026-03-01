@@ -73,13 +73,13 @@ export default function ListingCard({ listing, index, onPurchase }: ListingCardP
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
             <span>{listing.rating.toFixed(1)}</span>
-          </div>
+          </span>
         )}
         {listing.sales !== undefined && (
           <div className="flex items-center gap-1">
             <Download className="w-4 h-4" />
             <span>{listing.sales}</span>
-          </div>
+          </span>
         )}
       </div>
 

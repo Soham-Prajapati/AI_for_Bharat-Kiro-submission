@@ -310,11 +310,11 @@ export default function CommunityPage() {
                   <div>
                     <div className="font-bold">0</div>
                     <div className="text-xs text-gray-500">Posts</div>
-                  </div>
+                  </p>
                   <div>
                     <div className="font-bold">0</div>
                     <div className="text-xs text-gray-500">Followers</div>
-                  </div>
+                  </h3>
                   <div>
                     <div className="font-bold">0</div>
                     <div className="text-xs text-gray-500">Following</div>
@@ -336,7 +336,7 @@ export default function CommunityPage() {
                   Groups
                 </button>
               </nav>
-            </div>
+            </aside>
           </aside>
 
           {/* CENTER - Feed */}
@@ -399,14 +399,14 @@ export default function CommunityPage() {
                   {isPosting ? 'Posting...' : 'Post'}
                 </button>
               </div>
-            </div>
+            </main>
 
             {/* Feed Posts */}
             {feedState.loading && feedState.posts.length === 0 ? (
               <div className="bg-white rounded-lg shadow p-12 text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
                 <p className="mt-4 text-gray-500">Loading feed...</p>
-              </div>
+              </p>
             ) : feedState.error ? (
               <div className="bg-white rounded-lg shadow p-12 text-center">
                 <p className="text-red-600">{feedState.error}</p>
@@ -416,11 +416,11 @@ export default function CommunityPage() {
                 >
                   Retry
                 </button>
-              </div>
+              </p>
             ) : feedState.posts.length === 0 ? (
               <div className="bg-white rounded-lg shadow p-12 text-center">
                 <p className="text-gray-500">No posts yet. Be the first to post!</p>
-              </div>
+              </p>
             ) : (
               <div className="space-y-6">
                 {feedState.posts.map((post, index) => (
@@ -539,7 +539,7 @@ export default function CommunityPage() {
               {groupsLoading ? (
                 <div className="text-center py-4">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                </div>
+                </h3>
               ) : groups.length === 0 ? (
                 <p className="text-sm text-gray-500">No groups yet</p>
               ) : (
@@ -555,9 +555,9 @@ export default function CommunityPage() {
                       </button>
                     </div>
                   ))}
-                </div>
+                </p>
               )}
-            </div>
+            </aside>
 
             {/* Trending */}
             <div className="bg-white rounded-lg shadow p-6 sticky top-6">
@@ -566,7 +566,7 @@ export default function CommunityPage() {
                 <div className="pb-3 border-b">
                   <div className="text-sm text-gray-500">#ContentCreation</div>
                   <div className="text-xs text-gray-400">1.2K posts</div>
-                </div>
+                </h3>
                 <div className="pb-3 border-b">
                   <div className="text-sm text-gray-500">#VideoMarketing</div>
                   <div className="text-xs text-gray-400">856 posts</div>

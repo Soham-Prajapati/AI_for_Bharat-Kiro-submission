@@ -122,19 +122,19 @@ export function DashboardExample() {
               Total Content
             </h3>
             <p className="text-4xl font-bold text-purple-400">120</p>
-          </div>
+          </p>
           <div className="bg-gray-800 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-white mb-2">
               Published
             </h3>
             <p className="text-4xl font-bold text-green-400">85</p>
-          </div>
+          </p>
           <div className="bg-gray-800 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-white mb-2">
               Scheduled
             </h3>
             <p className="text-4xl font-bold text-blue-400">35</p>
-          </div>
+          </p>
         </div>
       )}
 
@@ -346,7 +346,7 @@ export function FullPageExample() {
               Settings
             </button>
           </div>
-        </div>
+        </nav>
       </nav>
 
       {/* Main Content */}
@@ -361,7 +361,7 @@ export function FullPageExample() {
       <footer className="bg-gray-800 border-t border-gray-700 p-4 mt-12">
         <div className="container mx-auto text-center text-gray-400 text-sm">
           © 2026 Content Intelligence Platform
-        </div>
+        </footer>
       </footer>
     </div>
   )
