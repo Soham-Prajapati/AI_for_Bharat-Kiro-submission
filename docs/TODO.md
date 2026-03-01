@@ -713,7 +713,7 @@ export const api = {
   - **Where:** `src/routes/membership.route.ts`
   - **Test:** Full subscription lifecycle
 
-- [ ] **4.4d: Test billing (Lakshmi)**
+- [/] **4.4d: Test billing (Lakshmi)**
   - **What:** Test recurring billing, failed payments
   - **Where:** `src/__tests__/membership.test.ts`
   - **Test:** Sandbox billing scenarios
