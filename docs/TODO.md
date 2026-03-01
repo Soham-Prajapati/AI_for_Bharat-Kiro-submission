@@ -829,7 +829,7 @@ export const api = {
   - **Test:** Start session, track progress
   - **Implemented:** Full service + 8 endpoints + Pomodoro + gamification + tests
 
-- [ ] **5.1d: Test usability (Lakshmi)**
+- [/] **5.1d: Test usability (Lakshmi)**
   - **What:** Usability testing with ADHD users
   - **Where:** `src/__tests__/adhd.test.ts`
   - **Metric:** >80% user satisfaction
