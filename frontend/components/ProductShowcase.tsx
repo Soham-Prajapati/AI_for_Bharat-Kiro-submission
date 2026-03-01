@@ -131,8 +131,8 @@ export default function ProductShowcase() {
                   <div className="mt-4 flex gap-1.5 justify-center flex-wrap">
                     <span className="text-xs px-2 py-0.5 rounded-md bg-white/5 border border-white/[0.08] text-text-tertiary">🎬 cooking_tutorial.mp4</span>
                     <span className="text-xs px-2 py-0.5 rounded-md bg-white/5 border border-white/[0.08] text-accent-success">Uploading… 67%</span>
-                  </span>
-                </p>
+                  </div>
+                </div>
               </div>
 
               {/* Processing */}
@@ -154,7 +154,7 @@ export default function ProductShowcase() {
                     <div className="z-10 font-display">
                       <span className="text-3xl font-black">{procPercent}</span>
                       <span className="text-lg text-text-tertiary">%</span>
-                    </span>
+                    </div>
                   </div>
                 </div>
                 <div className="flex-1 flex flex-col gap-2.5 justify-center">
@@ -165,7 +165,7 @@ export default function ProductShowcase() {
                       'text-text-tertiary opacity-40'
                     }`}>
                       {stepIcons[procSteps[i]]} {label}
-                    </span>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -198,10 +198,10 @@ export default function ProductShowcase() {
                   <div className={`h-full rounded-full bg-brand-400 transition-all duration-500 ${i <= activeSlide ? 'w-full' : 'w-0'}`} />
                 </div>
               ))}
-            </p>
-          </h3>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
     </section>
   )
 }

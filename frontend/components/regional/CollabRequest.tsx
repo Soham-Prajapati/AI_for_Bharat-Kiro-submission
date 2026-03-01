@@ -71,7 +71,7 @@ export default function CollabRequest({ creator, onClose, onSend }: CollabReques
                 <h3 className="text-white font-semibold text-lg">{creator.name}</h3>
                 <p className="text-gray-400 text-sm">{creator.niche} • {creator.audienceSize.toLocaleString()} followers</p>
                 <p className="text-gray-500 text-xs mt-1">{creator.bio}</p>
-              </p>
+              </div>
             </div>
           </div>
 
@@ -156,8 +156,8 @@ export default function CollabRequest({ creator, onClose, onSend }: CollabReques
                   <li>• Keep it friendly and professional</li>
                   <li>• Include your availability</li>
                 </ul>
-              </ul>
-            </span>
+              </div>
+            </div>
           </div>
         </div>
 

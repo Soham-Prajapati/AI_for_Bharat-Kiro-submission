@@ -173,7 +173,7 @@ const PlatformIntegrations: React.FC = () => {
         >
           <h1 className="text-4xl font-bold text-white mb-2">Platform Integrations</h1>
           <p className="text-gray-400">Connect and manage your social media accounts</p>
-        </p>
+        </div>
 
         {/* Platform Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -279,8 +279,8 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
             <div className="flex items-center gap-2 mt-1">
               <div className={`w-2 h-2 rounded-full ${getStatusColor()}`} />
               <span className="text-sm text-gray-400">{getStatusText()}</span>
-            </span>
-          </h3>
+            </div>
+          </div>
         </div>
 
         {/* Settings Button */}
@@ -316,19 +316,19 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-400">Username</span>
             <span className="text-sm text-white font-medium">{platform.account.username}</span>
-          </span>
+          </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-400">Followers</span>
             <span className="text-sm text-white font-medium">
               {formatNumber(platform.account.followers)}
             </span>
-          </span>
+          </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-400">Last Sync</span>
             <span className="text-sm text-white font-medium">
               {formatLastSync(platform.account.lastSync)}
             </span>
-          </span>
+          </div>
         </div>
       )}
 
@@ -338,7 +338,7 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
           className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg"
         >
           <p className="text-sm text-red-400">Connection failed. Please try again.</p>
-        </p>
+        </div>
       )}
 
       {/* Actions */}
@@ -376,7 +376,7 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
               ) : (
                 'Sync Now'
               )}
-            </span>
+            </button>
             <button
               onClick={() => onDisconnect(platform.id)}
               className="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm font-semibold rounded-lg transition-all"
@@ -416,7 +416,7 @@ const PlatformCard: React.FC<PlatformCardProps> = ({
             ) : (
               'Connect'
             )}
-          </div>
+          </button>
         )}
       </div>
     </div>
@@ -460,7 +460,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               {platformConfig.icon}
             </div>
             <h2 className="text-xl font-bold text-white">{platformConfig.name} Settings</h2>
-          </h2>
+          </div>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors"
@@ -484,7 +484,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             <div>
               <p className="text-white font-medium">Auto Post</p>
               <p className="text-sm text-gray-400">Automatically publish content</p>
-            </p>
+            </div>
             <button
               onClick={() => onChange({ ...settings, autoPost: !settings.autoPost })}
               className={`relative w-12 h-6 rounded-full transition-colors ${
@@ -502,7 +502,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             <div>
               <p className="text-white font-medium">Notifications</p>
               <p className="text-sm text-gray-400">Receive platform updates</p>
-            </p>
+            </div>
             <button
               onClick={() => onChange({ ...settings, notifications: !settings.notifications })}
               className={`relative w-12 h-6 rounded-full transition-colors ${
@@ -539,7 +539,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   {freq.charAt(0).toUpperCase() + freq.slice(1)}
                 </button>
               ))}
-            </p>
+            </div>
           </div>
         </div>
 

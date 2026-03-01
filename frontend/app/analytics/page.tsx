@@ -27,7 +27,7 @@ export default function AnalyticsPage() {
           <div>
             <h1 className="text-h1 text-text-primary mb-2">Analytics</h1>
             <p className="text-text-secondary">Track your content performance across platforms</p>
-          </p>
+          </div>
           
           {/* Time Range Selector */}
           <div className="flex gap-2 bg-bg-elevated border border-border-subtle rounded-lg p-1">
@@ -44,7 +44,7 @@ export default function AnalyticsPage() {
                 {range}
               </button>
             ))}
-          </h1>
+          </div>
         </div>
       </div>
 
@@ -67,7 +67,7 @@ export default function AnalyticsPage() {
       <div className="bg-bg-elevated border border-border-subtle rounded-lg mb-8">
         <div className="p-6 border-b border-border-subtle">
           <h2 className="text-h3 text-text-primary">Platform Performance</h2>
-        </h2>
+        </div>
         
         <div className="divide-y divide-border-subtle">
           {platformData.map((platform, index) => (
@@ -103,7 +103,7 @@ export default function AnalyticsPage() {
           <div className="text-center">
             <div className="text-4xl mb-2">📊</div>
             <div className="text-text-secondary">Chart visualization coming soon</div>
-          </h2>
+          </div>
         </div>
       </div>
     </div>

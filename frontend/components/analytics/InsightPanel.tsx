@@ -61,7 +61,7 @@ export const InsightPanel: React.FC<InsightPanelProps> = ({
       <div className="mb-4 flex items-center gap-2">
         <span className="text-xl">🤖</span>
         <h3 className="text-lg font-semibold text-white">{title}</h3>
-      </h3>
+      </div>
 
       <div className="space-y-3">
         {insights.map((insight, index) => {
@@ -101,7 +101,7 @@ export const InsightPanel: React.FC<InsightPanelProps> = ({
             </div>
           );
         })}
-      </span>
+      </div>
     </div>
   );
 };

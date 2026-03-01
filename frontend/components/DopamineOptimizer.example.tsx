@@ -57,7 +57,7 @@ export function APIIntegrationExample() {
           >
             {loading ? 'Analyzing...' : 'Analyze Content'}
           </button>
-        </h2>
+        </div>
         {data && <DopamineOptimizer data={data} />}
       </div>
     </div>

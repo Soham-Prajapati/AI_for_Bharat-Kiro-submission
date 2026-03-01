@@ -88,14 +88,14 @@ export default function ProfileCard({
           {user.bio && (
             <p className="text-gray-300 text-sm leading-relaxed">{user.bio}</p>
           )}
-        </p>
+        </div>
 
         {/* Stats */}
         <div className="flex gap-6 mb-4 pb-4 border-b border-gray-700/50">
           <div className="text-center">
             <div className="text-xl font-bold text-white">{formatCount(followerCount)}</div>
             <div className="text-xs text-gray-400">Followers</div>
-          </p>
+          </div>
           <div className="text-center">
             <div className="text-xl font-bold text-white">{formatCount(user.followingCount)}</div>
             <div className="text-xs text-gray-400">Following</div>

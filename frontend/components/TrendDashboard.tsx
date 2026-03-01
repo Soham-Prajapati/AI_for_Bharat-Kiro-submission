@@ -641,7 +641,7 @@ function TrendCard({ trend, index }: TrendCardProps) {
             >
               {statusIcon} {getStatusLabel(trend.status)}
             </span>
-          </h3>
+          </div>
         </div>
         
         <div
@@ -731,7 +731,7 @@ function TimelineChart({ trend }: TimelineChartProps) {
               <span className="text-white font-semibold">
                 {formatNumber(entry.value)}
               </span>
-            </span>
+            </div>
           ))}
         </div>
       )
@@ -751,7 +751,7 @@ function TimelineChart({ trend }: TimelineChartProps) {
               <stop offset="5%" stopColor={statusColor} stopOpacity={0.3} />
               <stop offset="95%" stopColor={statusColor} stopOpacity={0} />
             </linearGradient>
-          </defs>
+          </AreaChart>
           
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           
@@ -786,9 +786,9 @@ function TimelineChart({ trend }: TimelineChartProps) {
             dot={{ fill: '#8b5cf6', r: 4 }}
             name="Mentions"
           />
-        </AreaChart>
-      </ResponsiveContainer>
-    </div>
+        </ResponsiveContainer>
+      </div>
+    </Platform>
   )
 }
 
@@ -811,7 +811,7 @@ function PlatformHeatmap({ trend }: PlatformHeatmapProps) {
           <div className="w-24 text-sm text-gray-300 flex items-center gap-2">
             <span>{getPlatformIcon(item.platform)}</span>
             <span>{item.platform}</span>
-          </span>
+          </div>
           
           <div className="flex-1 h-8 bg-gray-700/30 rounded-lg overflow-hidden relative">
             <div
@@ -823,7 +823,7 @@ function PlatformHeatmap({ trend }: PlatformHeatmapProps) {
               <span className="text-xs font-bold text-white">
                 {item.intensity}%
               </span>
-            </span>
+            </div>
           </div>
         </div>
       ))}
@@ -879,7 +879,7 @@ export default function TrendDashboard({
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">Total Trends</span>
             <span className="text-2xl">📊</span>
-          </span>
+          </div>
           <div className="text-3xl font-bold text-white">{data.trends.length}</div>
         </div>
 
@@ -889,7 +889,7 @@ export default function TrendDashboard({
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">Rising</span>
             <span className="text-2xl">📈</span>
-          </span>
+          </div>
           <div className="text-3xl font-bold text-green-400">{risingCount}</div>
         </div>
 
@@ -899,7 +899,7 @@ export default function TrendDashboard({
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">At Peak</span>
             <span className="text-2xl">🔥</span>
-          </span>
+          </div>
           <div className="text-3xl font-bold text-amber-400">{peakCount}</div>
         </div>
 
@@ -909,7 +909,7 @@ export default function TrendDashboard({
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">Declining</span>
             <span className="text-2xl">📉</span>
-          </span>
+          </div>
           <div className="text-3xl font-bold text-red-400">{decliningCount}</div>
         </div>
       </div>
@@ -942,7 +942,7 @@ export default function TrendDashboard({
             className="cursor-pointer"
           >
             <TrendCard trend={trend} index={index} />
-          </span>
+          </div>
         ))}
       </div>
 
@@ -985,7 +985,7 @@ export default function TrendDashboard({
                 >
                   ×
                 </button>
-              </span>
+              </div>
 
               {/* Timeline Chart */}
               {showTimeline && (
@@ -1046,8 +1046,8 @@ export default function TrendDashboard({
                   </div>
                 </div>
               )}
-            </span>
-          </span>
+            </div>
+          </div>
         </div>
       )}
 
@@ -1091,7 +1091,7 @@ export default function TrendDashboard({
                   </div>
                 </div>
               ))}
-          </h3>
+          </div>
         </div>
       )}
     </div>

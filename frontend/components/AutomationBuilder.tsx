@@ -311,7 +311,7 @@ export default function AutomationBuilder({
                     placeholder="e.g., Auto-post to Instagram"
                     className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 focus:outline-none"
                   />
-                </h2>
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Description
@@ -344,7 +344,7 @@ export default function AutomationBuilder({
                     Change Trigger
                   </button>
                 )}
-              </h2>
+              </div>
 
               {!selectedTrigger ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -381,13 +381,13 @@ export default function AutomationBuilder({
                   >
                     + Add Condition
                   </button>
-                </h2>
+                </div>
 
                 {conditions.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     <div className="text-4xl mb-2">🎯</div>
                     <p>No conditions set. This automation will run for all triggers.</p>
-                  </p>
+                  </div>
                 ) : (
                   <div className="space-y-3">
                     {conditions.map((condition, index) => (
@@ -420,18 +420,15 @@ export default function AutomationBuilder({
                   >
                     + Add Action
                   </button>
-                </h2>
+                </div>
 
                 {actions.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     <div className="text-4xl mb-2">🚀</div>
                     <p>Add at least one action to complete your automation</p>
-                  </p>
+                  </div>
                 ) : (
-                  <Reorder.Group
-                    axis="y"
-                    values={actions}
-                    onReorder={setActions}
+                  <div
                     className="space-y-3"
                   >
                     {actions.map((action, index) => (
@@ -443,7 +440,7 @@ export default function AutomationBuilder({
                         onRemove={() => removeAction(action.id)}
                       />
                     ))}
-                  </Reorder.Group>
+                  </div>
                 )}
               </div>
             )}
@@ -462,7 +459,7 @@ export default function AutomationBuilder({
                   conditions={conditions}
                   actions={actions}
                 />
-              </h2>
+              </div>
             )}
 
             {/* Action Buttons */}
@@ -536,7 +533,7 @@ function TriggerCard({ trigger, index, onSelect }: TriggerCardProps) {
       <div className="text-4xl mb-3">{trigger.icon}</div>
       <h3 className="text-lg font-bold text-white mb-2">{trigger.label}</h3>
       <p className="text-sm text-white/80">{trigger.description}</p>
-    </p>
+    </div>
   )
 }
 
@@ -575,9 +572,9 @@ function SelectedTrigger({ trigger, onRemove }: SelectedTriggerProps) {
               {trigger.type === 'upload' && 'Triggers on any new upload'}
               {trigger.type === 'platform_post' && 'Configure platform settings...'}
               {trigger.type === 'content_generated' && 'Triggers when AI generates content'}
-            </p>
-          </h3>
-        </h3>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -653,10 +650,8 @@ function ActionRow({ action, index, onUpdate, onRemove }: ActionRowProps) {
   if (!actionOption) return null
 
   return (
-    <Reorder.Item
-      value={action}
-      id={action.id}
-      className="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-move"
+    <div
+      className="bg-gray-700/50 rounded-lg p-4 border border-gray-600"
     >
       <div className="flex items-start gap-4">
         <div className="flex items-center gap-3 flex-1">
@@ -665,7 +660,7 @@ function ActionRow({ action, index, onUpdate, onRemove }: ActionRowProps) {
             <div className="flex items-center gap-2 mb-2">
               <h4 className="text-white font-semibold">{actionOption.label}</h4>
               <span className="text-xs text-gray-400">#{index + 1}</span>
-            </span>
+            </div>
             <p className="text-sm text-gray-400 mb-3">{actionOption.description}</p>
             
             {/* Action-specific configuration */}
@@ -736,7 +731,7 @@ function ActionRow({ action, index, onUpdate, onRemove }: ActionRowProps) {
                   onChange={(e) => onUpdate({ ...action.config, workflowId: e.target.value })}
                 />
               )}
-            </p>
+            </div>
           </div>
         </div>
         <button
@@ -746,7 +741,7 @@ function ActionRow({ action, index, onUpdate, onRemove }: ActionRowProps) {
           ✕
         </button>
       </div>
-    </Reorder.Item>
+    </div>
   )
 }
 
@@ -876,7 +871,7 @@ function ActionSelectorModal({ onSelect, onClose }: ActionSelectorModalProps) {
           >
             ✕
           </button>
-        </h3>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {ACTION_OPTIONS.map((action, index) => (
@@ -888,7 +883,7 @@ function ActionSelectorModal({ onSelect, onClose }: ActionSelectorModalProps) {
               <div className="text-4xl mb-3">{action.icon}</div>
               <h4 className="text-lg font-bold text-white mb-2">{action.label}</h4>
               <p className="text-sm text-white/80">{action.description}</p>
-            </p>
+            </div>
           ))}
         </div>
       </div>
@@ -941,7 +936,7 @@ function AutomationList({ automations, onEdit }: AutomationListProps) {
               {status.charAt(0).toUpperCase() + status.slice(1)}
             </button>
           ))}
-        </span>
+        </div>
       </div>
 
       {/* Automation Cards */}
@@ -952,7 +947,7 @@ function AutomationList({ automations, onEdit }: AutomationListProps) {
           <div className="text-6xl mb-4">🤖</div>
           <h3 className="text-xl font-bold text-white mb-2">No Automations Found</h3>
           <p className="text-gray-400">Create your first automation to get started</p>
-        </p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {filteredAutomations.map((automation, index) => (
@@ -995,7 +990,7 @@ function AutomationCard({ automation, index, onEdit, getStatusColor }: Automatio
             <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(automation.status)}`}>
               {automation.status}
             </span>
-          </h3>
+          </div>
           {automation.description && (
             <p className="text-sm text-gray-400 mb-3">{automation.description}</p>
           )}
@@ -1013,37 +1008,37 @@ function AutomationCard({ automation, index, onEdit, getStatusColor }: Automatio
         <div className={`bg-gradient-to-br ${triggerOption?.color} px-3 py-2 rounded-lg flex items-center gap-2`}>
           <span className="text-xl">{triggerOption?.icon}</span>
           <span className="text-white text-sm font-semibold">{triggerOption?.label}</span>
-        </span>
+        </div>
         <span className="text-gray-400">→</span>
         {automation.conditions.length > 0 && (
           <>
             <div className="bg-blue-900/30 border border-blue-500/30 px-3 py-2 rounded-lg">
               <span className="text-blue-400 text-sm">{automation.conditions.length} conditions</span>
-            </span>
+            </div>
             <span className="text-gray-400">→</span>
           </>
         )}
         <div className="bg-purple-900/30 border border-purple-500/30 px-3 py-2 rounded-lg">
           <span className="text-purple-400 text-sm">{automation.actions.length} actions</span>
-        </span>
-      </span>
+        </div>
+      </div>
 
       {/* Stats */}
       <div className="flex items-center gap-6 text-sm text-gray-400">
         <div className="flex items-center gap-2">
           <span>🔄</span>
           <span>Runs: {automation.runCount}</span>
-        </span>
+        </div>
         {automation.lastRun && (
           <div className="flex items-center gap-2">
             <span>⏱️</span>
             <span>Last: {new Date(automation.lastRun).toLocaleDateString()}</span>
-          </span>
+          </div>
         )}
         <div className="flex items-center gap-2">
           <span>📅</span>
           <span>Created: {new Date(automation.createdAt).toLocaleDateString()}</span>
-        </span>
+        </div>
       </div>
     </div>
   )

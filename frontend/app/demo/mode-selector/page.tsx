@@ -32,7 +32,7 @@ export default function ModeSelectorDemo() {
               <p className="text-2xl font-bold text-purple-400">
                 {selectedMode ? selectedMode.toUpperCase() : 'None'}
               </p>
-            </p>
+            </div>
             <div>
               <p className="text-gray-400 text-sm mb-1">Mode Description:</p>
               <p className="text-white">
@@ -40,8 +40,8 @@ export default function ModeSelectorDemo() {
                 {selectedMode === 'hybrid' && 'AI-assisted workflow (Recommended)'}
                 {selectedMode === 'human-first' && 'Minimal AI with full creative control'}
               </p>
-            </p>
-          </h2>
+            </div>
+          </div>
         </div>
 
         {/* Component Demo */}
@@ -95,7 +95,7 @@ function MyComponent() {
                 <li>✓ Responsive grid layout</li>
                 <li>✓ Hover effects and transitions</li>
               </ul>
-            </ul>
+            </div>
             <div>
               <h3 className="text-pink-400 font-semibold mb-2">Functionality</h3>
               <ul className="space-y-2 text-gray-300 text-sm">
@@ -105,8 +105,8 @@ function MyComponent() {
                 <li>✓ Keyboard navigation</li>
                 <li>✓ ARIA labels for accessibility</li>
               </ul>
-            </ul>
-          </h2>
+            </div>
+          </div>
         </div>
 
         {/* Quick Actions */}

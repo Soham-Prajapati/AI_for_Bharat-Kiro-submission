@@ -251,8 +251,8 @@ export default function CulturalSettings({
                   <div className="text-3xl mb-2">{info.flag}</div>
                   <div className="text-sm font-semibold text-white">
                     {info.name}
-                  </button>
-                </div>
+                  </div>
+                </button>
               )
             })}
           </div>
@@ -303,7 +303,7 @@ export default function CulturalSettings({
             className="p-4 bg-red-900/20 border border-red-800/30 rounded-lg"
           >
             <p className="text-red-400">⚠️ {error}</p>
-          </p>
+          </div>
         )}
       
 
@@ -334,8 +334,8 @@ export default function CulturalSettings({
                   <span className="text-lg font-bold text-green-400">
                     {Math.round(adaptation.confidence * 100)}%
                   </span>
-                </span>
-              </span>
+                </div>
+              </div>
 
               <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
                 <p className="text-white text-lg leading-relaxed">
@@ -389,7 +389,7 @@ export default function CulturalSettings({
                           <span className="text-green-400 font-semibold">
                             {change.adapted}
                           </span>
-                        </span>
+                        </div>
                       </div>
                     </div>
                   ))}

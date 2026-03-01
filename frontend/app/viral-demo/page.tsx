@@ -137,7 +137,7 @@ export default function ViralDemoPage() {
             className="mb-8 p-4 bg-red-900/20 border border-red-800/30 rounded-lg"
           >
             <p className="text-red-400">⚠️ {error}</p>
-          </p>
+          </div>
         )}
 
         {/* Loading State */}

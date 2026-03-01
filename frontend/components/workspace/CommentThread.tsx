@@ -126,7 +126,7 @@ export default function CommentThread({
                 ) : (
                   <span>{reply.user.name.charAt(0).toUpperCase()}</span>
                 )}
-              </span>
+              </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-medium text-gray-900 dark:text-gray-100">
@@ -135,9 +135,9 @@ export default function CommentThread({
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     {formatDate(reply.createdAt)}
                   </span>
-                </span>
+                </div>
                 <p className="text-sm text-gray-700 dark:text-gray-300">{reply.content}</p>
-              </p>
+              </div>
             </div>
           ))}
         </div>

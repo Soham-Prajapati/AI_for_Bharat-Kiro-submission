@@ -177,7 +177,7 @@ export default function ViralScoreGauge({
             />
 
             {/* Needle */}
-            <div g
+            <g
               style={{ transformOrigin: '100px 90px' }}
             >
               <line
@@ -190,7 +190,7 @@ export default function ViralScoreGauge({
                 strokeLinecap="round"
               />
               <circle cx="100" cy="90" r="6" fill={scoreColor} />
-            </div>
+            </g>
           </svg>
 
           {/* Score Display */}
@@ -213,7 +213,7 @@ export default function ViralScoreGauge({
         <span>50</span>
         <span>75</span>
         <span>100</span>
-      </span>
+      </div>
 
       {/* Viral Factors */}
       {showFactors && data.factors.length > 0 && (
@@ -249,8 +249,8 @@ export default function ViralScoreGauge({
                 </div>
               </div>
             ))}
-          </h3>
-        </span>
+          </div>
+        </div>
       )}
 
       {/* Recommendations */}
@@ -268,10 +268,10 @@ export default function ViralScoreGauge({
               >
                 <span className="text-blue-400 mt-0.5">→</span>
                 <span className="text-sm text-gray-300">{recommendation}</span>
-              </span>
+              </div>
             ))}
-          </span>
-        </span>
+          </div>
+        </div>
       )}
     </div>
   )

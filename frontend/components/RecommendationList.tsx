@@ -68,12 +68,12 @@ export default function RecommendationList({ recommendations }: RecommendationLi
                     )}
                   </div>
                   <p className="text-gray-200 text-sm leading-relaxed">{rec.message}</p>
-                </p>
+                </div>
               </div>
             </div>
           );
         })}
-      </h2>
+      </div>
     </div>
   );
 }

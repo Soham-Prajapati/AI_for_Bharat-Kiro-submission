@@ -70,7 +70,7 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
             >
               <X className="w-6 h-6" />
             </button>
-          </h2>
+          </div>
 
           {/* Content */}
           <div className="p-6">
@@ -81,7 +81,7 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                 <p className="text-gray-400">
                   Your download will start shortly. Check your purchase history for details.
                 </p>
-              </h3>
+              </div>
             ) : (
               <>
                 {/* Order Summary */}
@@ -95,7 +95,7 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                       {listing.type === 'thumbnail' && '🖼️'}
                       {listing.type === 'music' && '🎵'}
                       {listing.type === 'effect' && '✨'}
-                    </h3>
+                    </div>
                     
                     <div className="flex-1">
                       <h4 className="font-bold text-white mb-1">{listing.title}</h4>
@@ -109,15 +109,15 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                     <div className="flex justify-between text-gray-400">
                       <span>Price</span>
                       <span>${listing.price.toFixed(2)}</span>
-                    </span>
+                    </div>
                     <div className="flex justify-between text-gray-400">
                       <span>Processing Fee</span>
                       <span>$0.00</span>
-                    </span>
+                    </div>
                     <div className="flex justify-between text-xl font-bold text-white pt-2 border-t border-gray-700">
                       <span>Total</span>
                       <span>${listing.price.toFixed(2)}</span>
-                    </span>
+                    </div>
                   </div>
                 </div>
 
@@ -137,7 +137,7 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                       <div className="text-center">
                         <CreditCard className="w-6 h-6 mx-auto mb-2 text-purple-400" />
                         <div className="text-sm font-medium text-white">Stripe</div>
-                      </button>
+                      </div>
                     </button>
 
                     <button
@@ -151,7 +151,7 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                       <div className="text-center">
                         <CreditCard className="w-6 h-6 mx-auto mb-2 text-blue-400" />
                         <div className="text-sm font-medium text-white">Razorpay</div>
-                      </button>
+                      </div>
                     </button>
 
                     <button
@@ -165,7 +165,7 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                       <div className="text-center">
                         <CreditCard className="w-6 h-6 mx-auto mb-2 text-yellow-400" />
                         <div className="text-sm font-medium text-white">PayPal</div>
-                      </button>
+                      </div>
                     </button>
                   </div>
 
@@ -181,7 +181,7 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                         maxLength={19}
                         className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
                       />
-                    </label>
+                    </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -194,7 +194,7 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                           maxLength={5}
                           className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
                         />
-                      </label>
+                      </div>
 
                       <div>
                         <label className="block text-sm text-gray-400 mb-2">CVV</label>
@@ -206,8 +206,8 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                           maxLength={4}
                           className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
                         />
-                      </label>
-                    </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -216,7 +216,7 @@ export default function CheckoutModal({ listing, userId, onClose, onComplete }: 
                   <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                     <p className="text-red-400 text-sm">{error}</p>
-                  </p>
+                  </div>
                 )}
 
                 {/* Security Notice */}

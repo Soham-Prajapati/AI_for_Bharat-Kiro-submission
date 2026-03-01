@@ -93,7 +93,7 @@ const Toast: React.FC<{ toast: ToastType }> = ({ toast }) => {
       {/* Message */}
       <div className="flex-1 pt-0.5">
         <p className="text-sm font-medium">{toast.message}</p>
-      </p>
+      </div>
 
       {/* Close Button */}
       <button

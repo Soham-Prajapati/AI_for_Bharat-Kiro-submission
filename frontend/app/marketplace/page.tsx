@@ -96,7 +96,7 @@ export default function MarketplacePage() {
               <div className="flex items-center gap-3">
                 <ShoppingBag className="w-8 h-8 text-purple-400" />
                 <h1 className="text-3xl sm:text-4xl font-bold">Marketplace</h1>
-              </h1>
+              </div>
               
               {/* View Mode Tabs */}
               <div className="flex gap-2">
@@ -179,7 +179,7 @@ export default function MarketplacePage() {
                 <p className="text-gray-500 text-sm mt-2">
                   Try adjusting your filters or search query
                 </p>
-              </p>
+              </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredListings.map((listing, index) => (

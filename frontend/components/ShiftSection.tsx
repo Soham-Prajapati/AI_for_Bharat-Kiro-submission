@@ -59,11 +59,11 @@ export default function ShiftSection() {
         >
           <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">{count}</span>
           <span className="text-text-primary">s</span>
-        </span>
+        </div>
         <p ref={subRef} className="text-[1.3rem] text-text-tertiary max-w-[500px] mx-auto mt-6 opacity-0">
           What if all of that took sixty seconds?
         </p>
-      </section>
+      </div>
     </section>
   )
 }

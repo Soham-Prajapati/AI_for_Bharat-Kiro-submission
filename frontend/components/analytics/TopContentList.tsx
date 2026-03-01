@@ -43,7 +43,7 @@ export const TopContentList: React.FC<TopContentListProps> = ({
         <span className="text-sm text-gray-400">
           {content.length} total posts
         </span>
-      </h3>
+      </div>
 
       <div className="space-y-3">
         {displayContent.map((item, index) => (
@@ -93,19 +93,19 @@ export const TopContentList: React.FC<TopContentListProps> = ({
                   <div className="flex items-center gap-1">
                     <span>👁️</span>
                     <span>{formatNumber(item.views)} views</span>
-                  </span>
+                  </div>
                   <div className="flex items-center gap-1">
                     <span>❤️</span>
                     <span>{formatNumber(item.likes)} likes</span>
-                  </span>
+                  </div>
                   <div className="flex items-center gap-1">
                     <span>🔄</span>
                     <span>{formatNumber(item.shares)} shares</span>
-                  </span>
+                  </div>
                   <div className="flex items-center gap-1">
                     <span>📊</span>
                     <span>{item.engagement}% engagement</span>
-                  </span>
+                  </div>
                 </div>
 
                 <div className="mt-2 text-xs text-gray-500">

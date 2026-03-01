@@ -97,7 +97,7 @@ function InsightCard({ insight, index }: { insight: Insight; index: number }) {
                   >
                     <div className="bg-gray-900/50 rounded-lg p-3 mb-3">
                       <p className="text-gray-400 text-sm">{insight.details}</p>
-                    </p>
+                    </div>
                   </div>
                 )}
               
@@ -145,7 +145,7 @@ export default function InsightPanel({
           {[1, 2, 3].map((i) => (
             <div key={i} className="animate-pulse bg-gray-700/30 rounded-xl h-32"></div>
           ))}
-        </h2>
+        </div>
       </div>
     );
   }
@@ -193,7 +193,7 @@ export default function InsightPanel({
         <div className="text-center py-12 text-gray-500">
           <div className="text-4xl mb-2">🔍</div>
           <p>No insights available</p>
-        </p>
+        </div>
       ) : (
         <div className="space-y-4">
           

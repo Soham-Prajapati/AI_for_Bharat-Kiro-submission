@@ -62,7 +62,7 @@ export default function HowItWorks() {
       <div className="absolute top-0 left-0 w-full pt-16 pb-8 z-10 pointer-events-none px-8">
         <p className="text-text-tertiary text-xs uppercase tracking-[0.2em] mb-3">How It Works</p>
         <h2 className="font-display text-[clamp(1.5rem,3vw,2rem)] font-extrabold">Three Steps. Sixty Seconds.</h2>
-      </h2>
+      </div>
 
       <div ref={trackRef} className="flex items-center gap-8 pl-8 pr-32 h-screen" style={{ width: `${100 + steps.length * 40}vw` }}>
         <div className="w-[40vw] shrink-0" />
@@ -77,14 +77,14 @@ export default function HowItWorks() {
               <div className="font-display text-5xl font-extrabold text-text-tertiary mb-4 opacity-20">{step.num}</div>
               <h3 className="font-display text-xl font-bold mb-3">{step.title}</h3>
               <p className="text-text-secondary text-sm leading-relaxed">{step.desc}</p>
-            </p>
+            </div>
             <div className="flex items-center gap-3 mt-6">
               <span className="text-xs px-2.5 py-1 rounded-md bg-accent-success/10 text-accent-success font-medium font-mono">{step.time}</span>
               <span className="text-xs px-2.5 py-1 rounded-md bg-accent-orange/10 text-accent-orange font-medium font-mono">{step.tech}</span>
-            </span>
-          </p>
+            </div>
+          </div>
         ))}
-      </section>
+      </div>
     </section>
   )
 }

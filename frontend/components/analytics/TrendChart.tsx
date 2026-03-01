@@ -48,7 +48,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({
               <span className="font-semibold text-white">
                 {entry.value.toLocaleString()}
               </span>
-            </span>
+            </div>
           ))}
         </div>
       );

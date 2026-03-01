@@ -64,7 +64,7 @@ export default function SubscriptionCard({
               <span className="text-gray-400">/{tier.period}</span>
             </>
           )}
-        </p>
+        </div>
       </div>
 
       <ul className="space-y-4 mb-8">

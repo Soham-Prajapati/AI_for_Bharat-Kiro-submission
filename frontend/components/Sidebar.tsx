@@ -37,7 +37,7 @@ export default function Sidebar() {
             <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
-      </aside>
+      </div>
 
       {/* Navigation */}
       <nav className="p-2 space-y-0.5">
@@ -66,7 +66,7 @@ export default function Sidebar() {
         <button className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-bg-overlay transition-colors w-full text-left">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
             U
-          </button>
+          </div>
           {!collapsed && (
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium text-text-primary truncate">User</div>

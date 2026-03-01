@@ -115,9 +115,9 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
           <div className="flex items-center gap-2 mb-2">
             <DollarSign className="w-5 h-5 text-green-300" />
             <p className="text-green-300 text-sm">Total Revenue</p>
-          </p>
+          </div>
           <p className="text-3xl font-bold text-white">${totalRevenue.toFixed(2)}</p>
-        </p>
+        </div>
 
         <div
           className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 rounded-xl p-6 border border-blue-500/30"
@@ -125,9 +125,9 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="w-5 h-5 text-blue-300" />
             <p className="text-blue-300 text-sm">Total Sales</p>
-          </p>
+          </div>
           <p className="text-3xl font-bold text-white">{totalSales}</p>
-        </p>
+        </div>
 
         <div
           className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 rounded-xl p-6 border border-purple-500/30"
@@ -135,9 +135,9 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
           <div className="flex items-center gap-2 mb-2">
             <Package className="w-5 h-5 text-purple-300" />
             <p className="text-purple-300 text-sm">Active Listings</p>
-          </p>
+          </div>
           <p className="text-3xl font-bold text-white">{listings.length}</p>
-        </p>
+        </div>
 
         <div
           className="bg-gradient-to-br from-yellow-500/20 to-yellow-600/10 rounded-xl p-6 border border-yellow-500/30"
@@ -145,9 +145,9 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="w-5 h-5 text-yellow-300" />
             <p className="text-yellow-300 text-sm">Avg Rating</p>
-          </p>
+          </div>
           <p className="text-3xl font-bold text-white">{avgRating.toFixed(1)}</p>
-        </p>
+        </div>
       </div>
 
       {/* Create Listing Button */}
@@ -176,7 +176,7 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
             <Plus className="w-5 h-5" />
             Create Listing
           </button>
-        </p>
+        </div>
       ) : (
         <div className="space-y-4">
           {listings.map((listing, index) => (
@@ -200,7 +200,7 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
                     <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/30">
                       {listing.type}
                     </span>
-                  </h3>
+                  </div>
 
                   <p className="text-gray-400 text-sm mb-4">{listing.description}</p>
 
@@ -208,24 +208,24 @@ export default function SellerDashboard({ userId }: SellerDashboardProps) {
                     <div>
                       <span className="text-gray-500">Price:</span>
                       <span className="text-white font-bold ml-2">${listing.price.toFixed(2)}</span>
-                    </span>
+                    </div>
                     <div>
                       <span className="text-gray-500">Sales:</span>
                       <span className="text-white font-bold ml-2">{listing.sales || 0}</span>
-                    </span>
+                    </div>
                     <div>
                       <span className="text-gray-500">Revenue:</span>
                       <span className="text-white font-bold ml-2">
                         ${((listing.sales || 0) * listing.price).toFixed(2)}
                       </span>
-                    </span>
+                    </div>
                     {listing.rating && (
                       <div>
                         <span className="text-gray-500">Rating:</span>
                         <span className="text-white font-bold ml-2">{listing.rating.toFixed(1)} ⭐</span>
-                      </span>
+                      </div>
                     )}
-                  </p>
+                  </div>
                 </div>
 
                 <div className="flex gap-2">

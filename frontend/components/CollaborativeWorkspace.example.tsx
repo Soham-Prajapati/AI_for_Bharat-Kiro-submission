@@ -190,7 +190,7 @@ export function CollaborativeWorkspace({
         <div className="workspace-info">
           <h2>{workspace?.name || 'Loading...'}</h2>
           <span className="version">v{version}</span>
-        </span>
+        </div>
 
         {/* Connection Status */}
         <div className="connection-status">
@@ -224,7 +224,7 @@ export function CollaborativeWorkspace({
               Reconnect
             </button>
           )}
-        </h2>
+        </div>
 
         {/* Active Users */}
         <div className="active-users">
@@ -240,9 +240,9 @@ export function CollaborativeWorkspace({
                 title={user.name}
               >
                 {user.name[0].toUpperCase()}
-              </span>
+              </div>
             ))}
-          </span>
+          </div>
         </div>
       </div>
 
@@ -321,7 +321,7 @@ export function CollaborativeWorkspace({
                   </div>
                 );
               })}
-          </span>
+          </div>
 
           {/* Remote selections overlay */}
           <div className="selections-overlay">

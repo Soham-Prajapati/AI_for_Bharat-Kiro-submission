@@ -21,7 +21,7 @@ export default function Navigation() {
           <div className="flex items-center gap-8">
             <Link href="/" className="text-xl font-bold text-white">
               Content Intelligence
-            </Link>
+            </div>
             
             <div className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
@@ -39,19 +39,19 @@ export default function Navigation() {
                     }`}>
                       <Icon className="w-4 h-4" />
                       <span className="text-sm font-medium">{item.label}</span>
-                    </span>
+                    </div>
                     
                     {isActive && (
                       <div
                         className="absolute inset-0 bg-blue-500/10 rounded-lg border border-blue-500/30"
                       />
                     )}
-                  </Link>
+                  </div>
                 );
               })}
             </div>
           </div>
-        </div>
+        </nav>
       </div>
       
       {/* Mobile Navigation */}
@@ -71,7 +71,7 @@ export default function Navigation() {
               >
                 <Icon className="w-5 h-5" />
                 <span className="text-xs">{item.label}</span>
-              </Link>
+              </div>
             );
           })}
         </div>

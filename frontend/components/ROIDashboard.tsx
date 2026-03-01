@@ -222,7 +222,7 @@ function CustomTooltip({ active, payload, label }: any) {
             <span className="text-white font-semibold">
               {formatCurrency(entry.value)}
             </span>
-          </span>
+          </div>
         ))}
       </div>
     )
@@ -330,7 +330,7 @@ export default function ROIDashboard({
                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
                     <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
-                </defs>
+                </LineChart>
                 
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 
@@ -383,8 +383,8 @@ export default function ROIDashboard({
                   name="Total Savings"
                   strokeDasharray="5 5"
                 />
-              </LineChart>
-            </ResponsiveContainer>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       )}
@@ -401,7 +401,7 @@ export default function ROIDashboard({
               <div>
                 <h3 className="text-xl font-bold text-white">Manual Approach</h3>
                 <p className="text-gray-400 text-sm">Traditional video analysis</p>
-              </p>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -410,21 +410,21 @@ export default function ROIDashboard({
                 <span className="text-2xl font-bold text-red-400">
                   {formatCurrency(data.costPerVideo.manual)}
                 </span>
-              </span>
+              </div>
 
               <div className="flex justify-between items-center p-4 bg-gray-800/30 rounded-lg border border-gray-700">
                 <span className="text-gray-300">Time per video</span>
                 <span className="text-2xl font-bold text-red-400">
                   {data.timePerVideo.manual} hrs
                 </span>
-              </span>
+              </div>
 
               <div className="flex justify-between items-center p-4 bg-gray-800/30 rounded-lg border border-gray-700">
                 <span className="text-gray-300">Total cost (100 videos)</span>
                 <span className="text-2xl font-bold text-red-400">
                   {formatCurrency(data.costPerVideo.manual * data.metrics.videosProcessed)}
                 </span>
-              </span>
+              </div>
             </div>
 
             <div className="mt-6 p-4 bg-red-900/20 border border-red-800/30 rounded-lg">
@@ -443,7 +443,7 @@ export default function ROIDashboard({
               <div>
                 <h3 className="text-xl font-bold text-white">AI Approach</h3>
                 <p className="text-gray-400 text-sm">Automated video analysis</p>
-              </p>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -452,21 +452,21 @@ export default function ROIDashboard({
                 <span className="text-2xl font-bold text-green-400">
                   {formatCurrency(data.costPerVideo.ai)}
                 </span>
-              </span>
+              </div>
 
               <div className="flex justify-between items-center p-4 bg-gray-800/30 rounded-lg border border-gray-700">
                 <span className="text-gray-300">Time per video</span>
                 <span className="text-2xl font-bold text-green-400">
                   {data.timePerVideo.ai} hrs
                 </span>
-              </span>
+              </div>
 
               <div className="flex justify-between items-center p-4 bg-gray-800/30 rounded-lg border border-gray-700">
                 <span className="text-gray-300">Total cost (100 videos)</span>
                 <span className="text-2xl font-bold text-green-400">
                   {formatCurrency(data.costPerVideo.ai * data.metrics.videosProcessed)}
                 </span>
-              </span>
+              </div>
             </div>
 
             <div className="mt-6 p-4 bg-green-900/20 border border-green-800/30 rounded-lg">

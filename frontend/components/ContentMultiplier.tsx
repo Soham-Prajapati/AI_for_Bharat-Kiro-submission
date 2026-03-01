@@ -507,7 +507,7 @@ function ContentTree({
               <div>
                 <h3 className="text-lg font-bold text-white capitalize">{type}s</h3>
                 <p className="text-sm text-gray-400">{items.length} items</p>
-              </p>
+              </div>
             </div>
             <div className="space-y-2">
               {items.map((item, index) => (
@@ -530,7 +530,7 @@ function ContentTree({
                     ) : (
                       <div className="w-5 h-5 border-2 border-gray-500 rounded" />
                     )}
-                  </h3>
+                  </div>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-white">{item.title}</div>
                     {item.platform && (

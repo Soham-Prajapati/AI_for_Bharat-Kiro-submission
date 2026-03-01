@@ -54,7 +54,7 @@ export default function TryItDemo() {
           <h2 className="font-display text-[clamp(1.5rem,4vw,2.5rem)] font-extrabold">
             Try It <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">Yourself</span>
           </h2>
-        </p>
+        </div>
 
         <div className="glass rounded-2xl p-6 mb-6">
           <div className="flex gap-3 items-center">
@@ -93,7 +93,7 @@ export default function TryItDemo() {
             ))}
           </div>
         )}
-      </section>
+      </div>
     </section>
   )
 }

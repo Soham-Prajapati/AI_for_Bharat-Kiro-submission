@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -223,7 +221,7 @@ export default function SafetyDashboard({
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Safety & Moderation</h1>
           <p className="text-gray-600 mt-1">Content safety analysis and compliance monitoring</p>
-        </p>
+        </div>
         <button
           onClick={() => setHistoryView(!historyView)}
           className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
@@ -233,43 +231,29 @@ export default function SafetyDashboard({
       </div>
 
       {/* Traffic Light System */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200"
       >
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Safety Status</h2>
             <p className="text-gray-600">Overall content safety score</p>
-          </p>
+          </div>
 
           {/* Traffic Light */}
           <div className="flex flex-col items-center space-y-3">
             <div className="relative">
               <div className="w-24 h-72 bg-gray-900 rounded-full p-4 flex flex-col justify-around items-center shadow-xl">
                 {/* Red Light */}
-                <motion.div
-                  animate={{
-                    backgroundColor: trafficLightStatus === 'red' ? '#ef4444' : '#1f2937',
-                    boxShadow: trafficLightStatus === 'red' ? '0 0 20px #ef4444' : 'none',
-                  }}
+                <div
                   className="w-16 h-16 rounded-full"
                 />
                 {/* Yellow Light */}
-                <motion.div
-                  animate={{
-                    backgroundColor: trafficLightStatus === 'yellow' ? '#f59e0b' : '#1f2937',
-                    boxShadow: trafficLightStatus === 'yellow' ? '0 0 20px #f59e0b' : 'none',
-                  }}
+                <div
                   className="w-16 h-16 rounded-full"
                 />
                 {/* Green Light */}
-                <motion.div
-                  animate={{
-                    backgroundColor: trafficLightStatus === 'green' ? '#10b981' : '#1f2937',
-                    boxShadow: trafficLightStatus === 'green' ? '0 0 20px #10b981' : 'none',
-                  }}
+                <div
                   className="w-16 h-16 rounded-full"
                 />
               </div>
@@ -280,13 +264,10 @@ export default function SafetyDashboard({
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Real-time Safety Score Visualization */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
+      <div
         className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200"
       >
         <h3 className="text-xl font-bold text-gray-900 mb-4">Safety Metrics</h3>
@@ -296,10 +277,7 @@ export default function SafetyDashboard({
             <div className="text-sm text-blue-600 font-medium mb-1">Overall Score</div>
             <div className="text-3xl font-bold text-blue-900">{safetyData.overallScore}</div>
             <div className="mt-2 bg-blue-200 rounded-full h-2 overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${safetyData.overallScore}%` }}
-                transition={{ duration: 1, ease: 'easeOut' }}
+              <div
                 className="h-full bg-blue-600"
               />
             </div>
@@ -331,25 +309,17 @@ export default function SafetyDashboard({
             <div className="text-xs text-green-600 mt-1">Platforms approved</div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Violation Alerts */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+      <div
         className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200"
       >
         <h3 className="text-xl font-bold text-gray-900 mb-4">Violation Alerts</h3>
         <div className="space-y-3">
-          <AnimatePresence>
-            {safetyData.violations.map((violation, index) => (
-              <motion.div
+{safetyData.violations.map((violation, index) => (
+              <div
                 key={violation.violationId}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ delay: index * 0.1 }}
                 className={`border rounded-xl p-4 cursor-pointer hover:shadow-md transition-shadow ${getSeverityColor(violation.severity)}`}
                 onClick={() => setSelectedViolation(violation)}
               >
@@ -362,7 +332,7 @@ export default function SafetyDashboard({
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium uppercase ${getSeverityColor(violation.severity)}`}>
                           {violation.severity}
                         </span>
-                      </span>
+                      </div>
                       <p className="text-sm mb-2">{violation.description}</p>
                       <div className="flex items-center space-x-4 text-xs">
                         <span className="flex items-center space-x-1">
@@ -375,18 +345,16 @@ export default function SafetyDashboard({
                             <span>{violation.platformViolations.join(', ')}</span>
                           </span>
                         )}
-                      </span>
-                    </p>
+                      </div>
+                    </div>
                   </div>
                   <div className="text-xs text-gray-500">
                     {formatTimestamp(violation.timestamp)}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </AnimatePresence>
-
-          {safetyData.violations.length === 0 && (
+{safetyData.violations.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               <div className="text-4xl mb-2">✅</div>
               <div className="font-medium">No violations detected</div>
@@ -394,21 +362,17 @@ export default function SafetyDashboard({
             </div>
           )}
         </div>
-      </motion.div>
+      </div>
 
       {/* Platform Guidelines Compliance Checker */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+      <div
         className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200"
       >
         <h3 className="text-xl font-bold text-gray-900 mb-4">Platform Compliance</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Object.entries(safetyData.platformCompliance).map(([platform, compliance]) => (
-            <motion.div
+            <div
               key={platform}
-              whileHover={{ scale: 1.02 }}
               className={`border rounded-xl p-4 ${
                 compliance.compliant
                   ? 'bg-green-50 border-green-200'
@@ -420,7 +384,7 @@ export default function SafetyDashboard({
                 <span className="text-2xl">
                   {compliance.compliant ? '✅' : '❌'}
                 </span>
-              </span>
+              </div>
               
               {compliance.violations.length > 0 && (
                 <div className="mb-2">
@@ -449,77 +413,63 @@ export default function SafetyDashboard({
                   All guidelines met ✓
                 </div>
               )}
-            </motion.div>
+            </div>
           ))}
-        </h3>
-      </motion.div>
+        </div>
+      </div>
 
       {/* Content Moderation Results */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
+      <div
         className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200"
       >
         <h3 className="text-xl font-bold text-gray-900 mb-4">Moderation Labels</h3>
         <div className="flex flex-wrap gap-2">
           {safetyData.moderationLabels && safetyData.moderationLabels.length > 0 ? (
             safetyData.moderationLabels.map((label, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05 }}
                 className="bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200 rounded-full px-4 py-2"
               >
                 <div className="flex items-center space-x-2">
                   <span className="font-medium text-purple-900">{label.label}</span>
                   <span className="text-xs text-purple-600">{label.confidence}%</span>
-                </span>
+                </div>
                 {label.parentLabel && (
                   <div className="text-xs text-purple-600 mt-0.5">
                     Category: {label.parentLabel}
-                  </span>
+                  </div>
                 )}
-              </motion.div>
+              </div>
             ))
           ) : (
             <div className="text-gray-500 text-sm">No moderation labels detected</div>
           )}
-        </h3>
-      </motion.div>
+        </div>
+      </div>
 
       {/* Suggestions */}
       {safetyData.suggestions.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+        <div
           className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-lg p-6 border border-blue-200"
         >
           <h3 className="text-xl font-bold text-gray-900 mb-4">💡 Suggestions</h3>
           <ul className="space-y-2">
             {safetyData.suggestions.map((suggestion, index) => (
-              <motion.li
+              <li
                 key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
                 className="flex items-start space-x-2"
               >
                 <span className="text-blue-600 font-bold">•</span>
                 <span className="text-gray-700">{suggestion}</span>
-              </motion.li>
+              </li>
             ))}
           </ul>
-        </motion.div>
+        </div>
       )}
 
       {/* Violation History Timeline */}
       {historyView && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
           className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200"
         >
           <h3 className="text-xl font-bold text-gray-900 mb-6">Violation History</h3>
@@ -530,11 +480,8 @@ export default function SafetyDashboard({
             {/* Timeline items */}
             <div className="space-y-6">
               {safetyData.violations.map((violation, index) => (
-                <motion.div
+                <div
                   key={violation.violationId}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
                   className="relative pl-16"
                 >
                   {/* Timeline dot */}
@@ -554,35 +501,30 @@ export default function SafetyDashboard({
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium uppercase ${getSeverityColor(violation.severity)}`}>
                           {violation.severity}
                         </span>
-                      </span>
+                      </div>
                       <span className="text-xs text-gray-500">{formatTimestamp(violation.timestamp)}</span>
-                    </span>
+                    </div>
                     <p className="text-sm text-gray-700">{violation.description}</p>
                     {violation.location?.timestamp && (
                       <div className="text-xs text-gray-500 mt-2">
                         📍 Timestamp: {violation.location.timestamp}s
-                      </p>
+                      </div>
                     )}
-                  </span>
-                </motion.div>
+                  </div>
+                </div>
               ))}
-            </h3>
-          </h3>
-        </motion.div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Quick Action Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
+      <div
         className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200"
       >
         <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h3>
         <div className="flex flex-wrap gap-3">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => onApprove?.(safetyData.checkId)}
             disabled={!safetyData.safe}
             className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all ${
@@ -593,54 +535,41 @@ export default function SafetyDashboard({
           >
             <span className="text-xl">✅</span>
             <span>Approve Content</span>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => onReject?.(safetyData.checkId)}
             className="flex items-center space-x-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium transition-all shadow-lg shadow-red-200"
           >
             <span className="text-xl">❌</span>
             <span>Reject Content</span>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setShowFlagModal(true)}
             className="flex items-center space-x-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-medium transition-all shadow-lg shadow-yellow-200"
           >
             <span className="text-xl">🚩</span>
             <span>Flag for Review</span>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setSafetyData(mockSafetyCheck)}
             className="flex items-center space-x-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition-all shadow-lg shadow-blue-200"
           >
             <span className="text-xl">🔄</span>
             <span>Re-check Content</span>
-          </motion.button>
-        </h3>
-      </motion.div>
+          </button>
+        </div>
+      </div>
 
       {/* Flag Modal */}
-      <AnimatePresence>
-        {showFlagModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+{showFlagModal && (
+          <div
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
             onClick={() => setShowFlagModal(false)}
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+            <div
               className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full"
               onClick={(e) => e.stopPropagation()}
             >
@@ -677,26 +606,17 @@ export default function SafetyDashboard({
                 >
                   Cancel
                 </button>
-              </h3>
-            </motion.div>
-          </motion.div>
+              </div>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
-
-      {/* Violation Detail Modal */}
-      <AnimatePresence>
-        {selectedViolation && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+{/* Violation Detail Modal */}
+{selectedViolation && (
+          <div
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
             onClick={() => setSelectedViolation(null)}
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+            <div
               className="bg-white rounded-2xl shadow-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
@@ -710,34 +630,32 @@ export default function SafetyDashboard({
                     <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium uppercase mt-1 ${getSeverityColor(selectedViolation.severity)}`}>
                       {selectedViolation.severity}
                     </span>
-                  </span>
-                </span>
+                  </div>
+                </div>
                 <button
                   onClick={() => setSelectedViolation(null)}
                   className="text-gray-400 hover:text-gray-600 text-2xl"
                 >
                   ×
                 </button>
-              </span>
+              </div>
 
               <div className="space-y-4">
                 <div>
                   <h4 className="font-bold text-gray-900 mb-2">Description</h4>
                   <p className="text-gray-700">{selectedViolation.description}</p>
-                </p>
+                </div>
 
                 <div>
                   <h4 className="font-bold text-gray-900 mb-2">Confidence</h4>
                   <div className="flex items-center space-x-3">
                     <div className="flex-1 bg-gray-200 rounded-full h-3 overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${selectedViolation.confidence}%` }}
+                      <div
                         className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
                       />
-                    </li>
+                    </div>
                     <span className="font-bold text-gray-900">{selectedViolation.confidence}%</span>
-                  </span>
+                  </div>
                 </div>
 
                 {selectedViolation.platformViolations && selectedViolation.platformViolations.length > 0 && (
@@ -752,7 +670,7 @@ export default function SafetyDashboard({
                           {platform}
                         </span>
                       ))}
-                    </li>
+                    </div>
                   </div>
                 )}
 
@@ -773,12 +691,11 @@ export default function SafetyDashboard({
                 <div>
                   <h4 className="font-bold text-gray-900 mb-2">Detected</h4>
                   <p className="text-gray-600 text-sm">{formatTimestamp(selectedViolation.timestamp)}</p>
-                </p>
-              </span>
-            </motion.div>
-          </motion.div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
-    </div>
+</div>
   );
 }

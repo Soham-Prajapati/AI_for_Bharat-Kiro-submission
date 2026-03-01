@@ -140,7 +140,7 @@ export default function MyPage() {
                 Basic usage with default settings. No callbacks or auto-refresh.
               </p>
               <SafetyDashboard contentId="content_basic" />
-            </h2>
+            </div>
           )}
 
           {activeTab === 'autoRefresh' && (
@@ -179,7 +179,7 @@ export default function MyPage() {
             <p className="text-gray-600 text-sm">
               Visual indicator showing content safety status at a glance with green, yellow, and red lights.
             </p>
-          </h3>
+          </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-3xl mb-3">🚨</div>
@@ -187,7 +187,7 @@ export default function MyPage() {
             <p className="text-gray-600 text-sm">
               Detailed alerts with severity levels, confidence scores, and platform-specific impacts.
             </p>
-          </h3>
+          </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-3xl mb-3">📊</div>
@@ -195,7 +195,7 @@ export default function MyPage() {
             <p className="text-gray-600 text-sm">
               Live safety score visualization with animated progress bars and key metrics.
             </p>
-          </h3>
+          </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-3xl mb-3">✅</div>
@@ -203,7 +203,7 @@ export default function MyPage() {
             <p className="text-gray-600 text-sm">
               Check content against guidelines for YouTube, Instagram, TikTok, and more.
             </p>
-          </h3>
+          </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-3xl mb-3">📜</div>
@@ -211,7 +211,7 @@ export default function MyPage() {
             <p className="text-gray-600 text-sm">
               Timeline view of all violations with timestamps and detailed information.
             </p>
-          </h3>
+          </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="text-3xl mb-3">⚡</div>
@@ -219,7 +219,7 @@ export default function MyPage() {
             <p className="text-gray-600 text-sm">
               Approve, reject, flag, or re-check content with one-click actions.
             </p>
-          </h3>
+          </div>
         </div>
 
         {/* Integration Guide */}
@@ -229,24 +229,24 @@ export default function MyPage() {
             <div className="flex items-start space-x-2">
               <span className="font-bold text-blue-600">1.</span>
               <span>Import the SafetyDashboard component into your page</span>
-            </span>
+            </div>
             <div className="flex items-start space-x-2">
               <span className="font-bold text-blue-600">2.</span>
               <span>Pass the contentId prop to identify the content being checked</span>
-            </span>
+            </div>
             <div className="flex items-start space-x-2">
               <span className="font-bold text-blue-600">3.</span>
               <span>Add callback functions for approve, reject, and flag actions</span>
-            </span>
+            </div>
             <div className="flex items-start space-x-2">
               <span className="font-bold text-blue-600">4.</span>
               <span>Enable autoRefresh for real-time monitoring (optional)</span>
-            </span>
+            </div>
             <div className="flex items-start space-x-2">
               <span className="font-bold text-blue-600">5.</span>
               <span>Connect to your backend API to fetch real safety data</span>
-            </span>
-          </h2>
+            </div>
+          </div>
         </div>
 
         {/* API Integration Example */}

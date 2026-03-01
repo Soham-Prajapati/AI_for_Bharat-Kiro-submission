@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -144,10 +142,7 @@ export default function LanguageSelector({
     return (
       <div className="space-y-6">
         {/* Header */}
-        <motion.div
-          initial={animated ? { opacity: 0, y: -20 } : {}}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+        <div
         >
           <h2 className="text-3xl font-bold text-white mb-2">
             🌐 Language Selection
@@ -155,14 +150,11 @@ export default function LanguageSelector({
           <p className="text-gray-400">
             Choose your preferred language for content translation and localization
           </p>
-        </motion.div>
+        </div>
 
         {/* Language Grid */}
-        <motion.div
+        <div
           className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6"
-          initial={animated ? { opacity: 0, y: 20 } : {}}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <h3 className="text-xl font-semibold text-white mb-4">
             Select Language
@@ -174,7 +166,7 @@ export default function LanguageSelector({
               const isHovered = hoveredLanguage === language.code
 
               return (
-                <motion.button
+                <button
                   key={language.code}
                   onClick={() => handleLanguageSelect(language)}
                   onMouseEnter={() => setHoveredLanguage(language.code)}
@@ -186,24 +178,16 @@ export default function LanguageSelector({
                       : 'bg-gray-800/50 border-gray-700 hover:border-purple-500'
                     }
                   `}
-                  initial={animated ? { opacity: 0, scale: 0.9 } : {}}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: 0.2 + index * 0.05 }}
-                  whileHover={{ scale: 1.05, y: -4 }}
-                  whileTap={{ scale: 0.95 }}
                   aria-label={`Select ${language.name}`}
                   aria-pressed={isSelected}
                 >
                   {/* Selection indicator */}
                   {isSelected && (
-                    <motion.div
+                    <div
                       className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                     >
                       <span className="text-white text-xs">✓</span>
-                    </motion.div>
+                    </div>
                   )}
 
                   {/* Flag */}
@@ -221,28 +205,20 @@ export default function LanguageSelector({
 
                   {/* Hover effect */}
                   {isHovered && !isSelected && (
-                    <motion.div
+                    <div
                       className="absolute inset-0 bg-purple-500/10 rounded-lg"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
                     />
                   )}
-                </motion.button>
+                </button>
               )
             })}
           </div>
-        </motion.div>
+        </div>
 
         {/* Preview Section */}
-        <AnimatePresence>
-          {showPreview && (
-            <motion.div
+{showPreview && (
+            <div
               className="bg-gradient-to-br from-purple-900/20 to-gray-800/50 backdrop-blur-sm rounded-xl border border-purple-800/30 p-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-semibold text-white">
@@ -251,7 +227,7 @@ export default function LanguageSelector({
                 <div className="flex items-center gap-2">
                   <span className="text-3xl">{selectedLang.flag}</span>
                   <span className="text-sm text-gray-400">{selectedLang.name}</span>
-                </span>
+                </div>
               </div>
 
               <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
@@ -259,43 +235,35 @@ export default function LanguageSelector({
                   <span className="text-xs text-gray-500 uppercase tracking-wider">
                     Native Script
                   </span>
-                </span>
-                <motion.p
+                </div>
+                <p
                   key={selected}
                   className="text-2xl text-white font-medium leading-relaxed"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4 }}
                 >
                   {selectedLang.sampleText}
-                </motion.p>
+                </p>
               </div>
 
               <div className="mt-4 flex items-center gap-4 text-sm text-gray-400">
                 <div className="flex items-center gap-2">
                   <span>📝</span>
                   <span>Script: {selectedLang.nativeName}</span>
-                </span>
+                </div>
                 <div className="flex items-center gap-2">
                   <span>🗣️</span>
                   <span>Code: {selectedLang.code.toUpperCase()}</span>
-                </span>
+                </div>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
-
-        {/* Info Footer */}
-        <motion.div
+{/* Info Footer */}
+        <div
           className="text-center text-sm text-gray-400"
-          initial={animated ? { opacity: 0 } : {}}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
         >
           <p>
             💡 Content will be translated and culturally adapted for the selected language
           </p>
-        </motion.div>
+        </div>
       </div>
     )
   }
@@ -307,11 +275,9 @@ export default function LanguageSelector({
   return (
     <div className="relative">
       {/* Dropdown Button */}
-      <motion.button
+      <button
         onClick={toggleDropdown}
         className="flex items-center gap-3 px-4 py-3 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg hover:border-purple-500 transition-all"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
         aria-label="Select language"
         aria-expanded={isDropdownOpen}
         aria-haspopup="listbox"
@@ -320,43 +286,33 @@ export default function LanguageSelector({
         <div className="flex-1 text-left">
           <div className="text-sm font-semibold text-white">{selectedLang.name}</div>
           <div className="text-xs text-gray-400">{selectedLang.nativeName}</div>
-        </span>
-        <motion.span
+        </div>
+        <span
           className="text-gray-400"
-          animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
         >
           ▼
-        </motion.span>
-      </motion.button>
+        </span>
+      </button>
 
       {/* Dropdown Menu */}
-      <AnimatePresence>
-        {isDropdownOpen && (
+{isDropdownOpen && (
           <>
             {/* Backdrop */}
-            <motion.div
+            <div
               className="fixed inset-0 z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
               onClick={() => setIsDropdownOpen(false)}
             />
 
             {/* Dropdown Content */}
-            <motion.div
+            <div
               className="absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl z-50 max-h-96 overflow-y-auto"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
               role="listbox"
             >
               {INDIAN_LANGUAGES.map((language, index) => {
                 const isSelected = selected === language.code
 
                 return (
-                  <motion.button
+                  <button
                     key={language.code}
                     onClick={() => handleLanguageSelect(language)}
                     className={`
@@ -367,9 +323,6 @@ export default function LanguageSelector({
                       }
                       ${index !== INDIAN_LANGUAGES.length - 1 ? 'border-b border-gray-700' : ''}
                     `}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.03 }}
                     role="option"
                     aria-selected={isSelected}
                   >
@@ -377,46 +330,36 @@ export default function LanguageSelector({
                     <div className="flex-1 text-left">
                       <div className="text-sm font-semibold text-white">
                         {language.name}
-                      </span>
+                      </div>
                       <div className="text-xs text-gray-400">
                         {language.nativeName}
                       </div>
-                    </span>
+                    </div>
                     {isSelected && (
                       <span className="text-green-400 text-lg">✓</span>
                     )}
-                  </motion.button>
+                  </button>
                 )
               })}
-            </motion.div>
+            </div>
           </>
         )}
-      </AnimatePresence>
-
-      {/* Preview Section for Dropdown */}
-      <AnimatePresence>
-        {showPreview && !isDropdownOpen && (
-          <motion.div
+{/* Preview Section for Dropdown */}
+{showPreview && !isDropdownOpen && (
+          <div
             className="mt-4 bg-gray-800/50 backdrop-blur-sm rounded-lg border border-gray-700 p-4"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
           >
             <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">
               Preview
             </div>
-            <motion.p
+            <p
               key={selected}
               className="text-lg text-white"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
             >
               {selectedLang.sampleText}
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
         )}
-      </AnimatePresence>
-    </div>
+</div>
   )
 }

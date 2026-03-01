@@ -173,7 +173,7 @@ export function BasicVoiceTrainerExample() {
                       <p className="text-sm text-gray-400">
                         Play back samples and remove any you don't like
                       </p>
-                    </li>
+                    </div>
                   </li>
                   <li className="flex gap-3">
                     <span className="flex-shrink-0 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
@@ -184,7 +184,7 @@ export function BasicVoiceTrainerExample() {
                       <p className="text-sm text-gray-400">
                         AI analyzes your voice and creates a custom model
                       </p>
-                    </li>
+                    </div>
                   </li>
                   <li className="flex gap-3">
                     <span className="flex-shrink-0 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
@@ -195,7 +195,7 @@ export function BasicVoiceTrainerExample() {
                       <p className="text-sm text-gray-400">
                         Use your voice model to create AI-generated audio
                       </p>
-                    </li>
+                    </div>
                   </li>
                 </ol>
               </div>
@@ -211,7 +211,7 @@ export function BasicVoiceTrainerExample() {
                   <li>• Use a good quality microphone</li>
                   <li>• Record different types of sentences</li>
                 </ul>
-              </ul>
+              </div>
             </div>
 
             {/* Right Column - Trainer */}
@@ -271,7 +271,7 @@ export function BasicVoiceTrainerExample() {
                       </svg>
                       View Dashboard
                     </button>
-                  </li>
+                  </div>
                 </div>
               )}
             </div>
