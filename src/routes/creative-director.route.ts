@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
+import { creativeDirectorService } from '../services/creative-director.service';
 
 const router = Router();
 
@@ -12,28 +13,15 @@ router.post('/analyze', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('contentId and content required');
   }
 
-  // TODO: Replace with real creative-director.service.ts
-  const mockFeedback = {
+  // Uses the actual creative director service
+  const analysisResult = await creativeDirectorService.analyzeContent({
     contentId,
-    score: {
-      structure: 8.5,
-      pacing: 7.2,
-      engagement: 9.1,
-      clarity: 8.8,
-      overall: 8.4
-    },
-    feedback: [
-      { aspect: 'hook', rating: 'excellent', comment: 'Strong opening grabs attention' },
-      { aspect: 'pacing', rating: 'good', comment: 'Consider shortening middle section' }
-    ],
-    improvements: [
-      'Add more visual elements in the first 30 seconds',
-      'Include a clear call-to-action at the end'
-    ],
-    source: 'mock'
-  };
+    transcript: content,
+    title: req.body.title || 'Untitled',
+    platform: req.body.platform || 'youtube'
+  });
 
-  res.json(mockFeedback);
+  res.json(analysisResult);
 }));
 
 export default router;

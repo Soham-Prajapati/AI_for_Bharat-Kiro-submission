@@ -85,7 +85,7 @@ export default function PlatformPerformanceCard({
       className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-5 hover:border-gray-600 transition-all ${
         onClick ? 'cursor-pointer' : ''
       } ${className}`}
-      whileHover={onClick ? { y: -4, scale: 1.02 } : {}}
+
       onClick={onClick}
       role={onClick ? 'button' : 'article'}
       aria-label={`${platformName} performance card`}

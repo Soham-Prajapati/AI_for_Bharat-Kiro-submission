@@ -449,14 +449,19 @@ export default function WatermarkEditor({
                     transform: 'translate(-50%, -50%)',
                     opacity: settings.opacity / 100,
                   }}
-                  drag
-                  dragMomentum={false}
-                  onDragStart={handleDragStart}
-                  onDrag={(event, info) => {
+                  draggable={true}
+                  onDragStart={(e) => {
+                    // Required for Firefox
+                    e.dataTransfer.effectAllowed = 'move';
+                    // Need a blank image or something otherwise it clones the whole div
+                    handleDragStart();
+                  }}
+                  onDrag={(event) => {
                     if (!previewContainerRef.current) return;
+                    if (event.clientX === 0 && event.clientY === 0) return; // ignore final drop event
                     const rect = previewContainerRef.current.getBoundingClientRect();
-                    const x = ((info.point.x - rect.left) / rect.width) * 100;
-                    const y = ((info.point.y - rect.top) / rect.height) * 100;
+                    const x = ((event.clientX - rect.left) / rect.width) * 100;
+                    const y = ((event.clientY - rect.top) / rect.height) * 100;
                     setSettings((prev) => ({
                       ...prev,
                       customPosition: {

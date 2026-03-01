@@ -1,605 +1,364 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>ContentAI — 1 Video. 6 Platforms. 60 Seconds.</title>
-    <meta name="description" content="AI-powered content intelligence for Indian creators. Powered by AWS Bedrock.">
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QALAA | The Invisible Engine Behind Top Creators</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS for rapid layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#030712',
+                        deep: '#0A0E1A',
+                        brand: {
+                            400: '#818CF8',
+                            500: '#6366F1',
+                            600: '#4F46E5',
+                        },
+                        cyan: '#22D3EE',
+                    },
+                    fontFamily: {
+                        display: ['Outfit', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
 
-<body>
-    <div class="cursor" id="cursor"></div>
-    <div class="ambient">
-        <div class="orb o1"></div>
-        <div class="orb o2"></div>
-        <div class="orb o3"></div>
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --bg-glass: rgba(255, 255, 255, 0.04);
+            --bg-glass-hover: rgba(255, 255, 255, 0.07);
+            --border-glass: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+        }
+
+        body {
+            background-color: #030712;
+            color: #F9FAFB;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            cursor: none; /* Custom Cursor */
+        }
+
+        /* Custom Cursor */
+        #cursor, #cursor-follower {
+            position: fixed;
+            top: 0; left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+        #cursor {
+            width: 8px; height: 8px;
+            background: #6366F1;
+        }
+        #cursor-follower {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+        }
+
+        a:hover ~ #cursor-follower, button:hover ~ #cursor-follower {
+            width: 60px; height: 60px;
+            background: rgba(99, 102, 241, 0.1);
+            backdrop-filter: blur(2px);
+        }
+
+        /* Ambient Aurora Backgrounds */
+        .aurora {
+            position: absolute;
+            width: 60vw;
+            height: 60vw;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: -1;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+        .aurora-1 { background: radial-gradient(circle, #6366F1, transparent 70%); top: -10%; left: -10%; }
+        .aurora-2 { background: radial-gradient(circle, #22D3EE, transparent 70%); bottom: 20%; right: -10%; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(5%, 10%) scale(1.1); }
+        }
+
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            background: var(--bg-glass-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+
+        /* Neo-Brutal Glow Button */
+        .btn-primary {
+            background: linear-gradient(135deg, #6366F1, #4F46E5);
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            padding: 14px 28px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Typography */
+        .text-hero { font-family: 'Outfit', sans-serif; letter-spacing: -0.03em; line-height: 1.1; }
+        .text-display { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
+        
+        /* Specific GSAP Hiding for initial state */
+        .reveal-text, .reveal-card, .reveal-element { opacity: 0; }
+        .pin-container { height: 300vh; position: relative; }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <!-- Background Atmospherics -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="aurora aurora-1"></div>
+        <div class="aurora aurora-2"></div>
     </div>
 
-    <!-- NAV -->
-    <nav>
-        <div class="nav-in">
-            <div class="logo">ContentAI</div>
-            <ul class="nav-links">
-                <li><a href="#showcase">Product</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#try">Try It</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#cta" class="nav-cta">Get Started</a></li>
-            </ul>
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-void/80 backdrop-blur-xl border-b border-white/5 py-4">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="text-2xl font-display font-black tracking-widest text-white">QALAA</div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
+                <a href="#features" class="hover:text-white transition-colors delay-75">Engine</a>
+                <a href="#dna" class="hover:text-white transition-colors delay-75">Creator DNA</a>
+                <a href="#pricing" class="hover:text-white transition-colors delay-75">Pricing</a>
+            </div>
+            <button class="btn-primary text-sm py-2 px-6">Login</button>
         </div>
     </nav>
 
-    <!-- ████ HERO ████ -->
-    <section id="hero" class="full">
-        <div class="hero-depth">
-            <div class="depth-layer dl-1" data-speed="0.03"></div>
-            <div class="depth-layer dl-2" data-speed="0.05"></div>
-            <div class="depth-layer dl-3" data-speed="0.02"></div>
+    <!-- HERO SECTION -->
+    <main class="relative pt-40 pb-20 px-6 min-h-screen flex flex-col items-center justify-center text-center">
+        <div class="max-w-4xl mx-auto z-10 flex flex-col items-center">
+            <div class="px-4 py-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 text-brand-400 text-xs font-mono uppercase tracking-widest mb-8 reveal-element">
+                AWS Bedrock Powered
+            </div>
+            
+            <h1 class="text-hero text-5xl md:text-7xl lg:text-[100px] font-black mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">
+                <span class="block line-1 reveal-text">1 Video.</span>
+                <span class="block line-2 reveal-text">6 Platforms.</span>
+                <span class="block line-3 text-brand-400 reveal-text">60 Seconds.</span>
+            </h1>
+            
+            <p class="text-lg md:text-2xl text-gray-400 max-w-2xl mb-10 font-light reveal-element">
+                Stop adapting. Start creating. The invisible engine that formats, translates, and deploys your content while preserving your true voice.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 reveal-element">
+                <button class="btn-primary text-lg px-8 py-4">
+                    Start Creating — Free
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
         </div>
-        <div class="ctr">
-            <div class="hero-wrap">
-                <div class="hero-badge">
-                    <div class="dot"></div>AI for Bharat 2026 · Powered by <span class="aws">&nbsp;AWS Bedrock</span>
+
+        <!-- Scroll Triggered Dashboard Reveal -->
+        <div class="mt-24 w-full max-w-5xl rounded-2xl border border-white/10 bg-[#0A0E1A]/60 backdrop-blur-3xl shadow-2xl p-2 relative overflow-hidden reveal-dashboard">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-600/20 to-transparent opacity-50"></div>
+            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=2000&auto=format&fit=crop" class="w-full rounded-xl opacity-80" alt="Dashboard Preview" />
+        </div>
+    </main>
+
+    <!-- HORIZONTAL SCROLL SECTION: HOW IT WORKS -->
+    <section class="py-32 bg-deep relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 mb-16">
+            <h2 class="text-display text-4xl md:text-6xl font-bold text-white mb-4 reveal-text">The QALAA Pipeline</h2>
+        </div>
+        
+        <div class="scroll-container flex gap-8 px-6 pb-20 w-[300vw] h-[60vh] items-center">
+            
+            <!-- Step 1 -->
+            <div class="glass-card w-[80vw] md:w-[40vw] h-full flex flex-col justify-center p-12 step-card flex-shrink-0">
+                <div class="text-brand-400 text-6xl font-mono mb-6">01</div>
+                <h3 class="text-display text-3xl font-bold mb-4">Ingest & Understand</h3>
+                <p class="text-gray-400 text-lg">Drop your raw MP4. Our specialized AWS Bedrock cluster transcribes the audio and maps the semantic domain (Education, Travel, Tech).</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="glass-card w-[80vw] md:w-[40vw] h-full flex flex-col justify-center p-12 step-card flex-shrink-0">
+                <div class="text-brand-400 text-6xl font-mono mb-6">02</div>
+                <h3 class="text-display text-3xl font-bold mb-4">Creator DNA Application</h3>
+                <p class="text-gray-400 text-lg">We don't use generic AI wrappers. QALAA applies your unique dialect, pacing, and vocabulary profile to the generated scripts.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="glass-card w-[80vw] md:w-[40vw] h-full flex flex-col justify-center p-12 step-card flex-shrink-0">
+                <div class="text-brand-400 text-6xl font-mono mb-6">03</div>
+                <h3 class="text-display text-3xl font-bold mb-4">Platform Generation</h3>
+                <p class="text-gray-400 text-lg">Claude 3 Haiku runs in parallel, instantly generating a LinkedIn hook, a TikTok script, a YouTube description, and translating them into 9 languages.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BENTO GRID SECTION: FEATURES -->
+    <section id="features" class="py-32 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-20">
+            <h2 class="text-display text-4xl md:text-6xl font-bold text-white mb-6 reveal-text">Built for Scale. Designed for Speed.</h2>
+            <p class="text-gray-400 text-xl max-w-2xl mx-auto reveal-element">Every feature engineered to eliminate distribution friction.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+            <!-- Large Card -->
+            <div class="glass-card md:col-span-2 relative overflow-hidden group reveal-card">
+                <div class="absolute inset-0 bg-gradient-to-br from-brand-600/10 to-transparent"></div>
+                <div class="relative z-10">
+                    <h3 class="text-display text-2xl font-bold mb-2">9 Languages. 1 Click.</h3>
+                    <p class="text-gray-400">Hindi, Tamil, Telugu, and more. Not just translation — deep cultural localization that maintains the soul of your content.</p>
                 </div>
-                <h1 class="hero-title">
-                    <span class="word">1</span>
-                    <span class="word">Video.</span><br>
-                    <span class="word hl">6</span>
-                    <span class="word hl">Platforms.</span><br>
-                    <span class="word">60</span>
-                    <span class="word">Seconds.</span>
-                </h1>
-                <p class="hero-sub">Upload once. AI generates platform-native content for YouTube, Instagram, LinkedIn,
-                    Twitter, Facebook & TikTok — in 9 Indian languages.</p>
-                <div class="hero-ctas">
-                    <a href="#showcase" class="btn-p">🚀 See It In Action</a>
-                    <a href="#try" class="btn-s">🎯 Try It Yourself</a>
-                </div>
-                <div class="hero-tech">
-                    <span class="tech-b">AWS Bedrock</span>
-                    <span class="tech-b">Claude 3</span>
-                    <span class="tech-b">AWS Transcribe</span>
-                    <span class="tech-b">S3 + DynamoDB</span>
+                <!-- Abstract visual representation -->
+                <div class="absolute -bottom-10 -right-10 text-[200px] opacity-10 font-mono font-black group-hover:scale-110 transition-transform duration-700">A/অ</div>
+            </div>
+
+            <!-- Standard Card -->
+            <div class="glass-card relative overflow-hidden group reveal-card">
+                <h3 class="text-display text-xl font-bold mb-2 text-cyan">Viral Score Predictor</h3>
+                <p class="text-gray-400 text-sm">Know your engagement potential before you hit publish with our proprietary pre-flight analysis.</p>
+                <div class="text-5xl font-mono text-white mt-8 group-hover:text-cyan transition-colors duration-300">89<span class="text-xl text-gray-500">/100</span></div>
+            </div>
+
+            <!-- Standard Card -->
+            <div class="glass-card relative overflow-hidden group reveal-card">
+                <h3 class="text-display text-xl font-bold mb-2">Human-in-the-Loop</h3>
+                <p class="text-gray-400 text-sm">You retain absolute sovereignty. Nothing goes live without your explicit approval.</p>
+            </div>
+
+            <!-- Large Card -->
+            <div class="glass-card md:col-span-2 relative overflow-hidden group reveal-card bg-gradient-to-r from-void to-brand-900/20">
+                <div class="relative z-10 flex h-full flex-col justify-end">
+                    <h3 class="text-display text-2xl font-bold mb-2">Creator DNA™️</h3>
+                    <p class="text-gray-400 max-w-md">Our models train on your past content to match your exact tone. No more sounding like a corporate chatbot.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ████ PROBLEM — Cinematic Text ████ -->
-    <section id="problem" class="full cinema">
-        <div class="ctr">
-            <div class="cinema-text">
-                <span class="line"><span class="line-inner">You create <span class="em">one video</span>.</span></span>
-                <span class="line"><span class="line-inner">Then spend <span class="em-orange">3 hours</span> adapting
-                        it</span></span>
-                <span class="line"><span class="line-inner">for <span class="em-cyan">6 different
-                            platforms</span>.</span></span>
-            </div>
-            <p class="cinema-sub">Different formats. Different tones. Different hashtags. Different languages. Every.
-                Single. Time.</p>
-        </div>
-    </section>
-
-    <!-- ████ THE SHIFT — Big Number ████ -->
-    <section id="shift" class="full cinema">
-        <div class="ctr" style="text-align:center">
-            <div class="big-number"><span class="hl">60</span>s</div>
-            <p class="cinema-sub" style="font-size:1.3rem;max-width:500px;margin:24px auto 0">What if all of that took
-                sixty seconds?</p>
-        </div>
-    </section>
-
-    <!-- ████ PRODUCT SHOWCASE — Pinned Scroll ████ -->
-    <section id="showcase">
-        <div class="showcase-pin" id="pin-wrap">
-            <div class="ctr">
-                <div class="mockup" id="mockup">
-                    <div class="mock-bar">
-                        <div class="dot dot-r"></div>
-                        <div class="dot dot-y"></div>
-                        <div class="dot dot-g"></div>
-                        <div class="mock-url" id="m-url">app.contentai.in/upload</div>
-                    </div>
-                    <div class="mock-screen">
-                        <!-- Upload -->
-                        <div class="slide active" id="s0">
-                            <div class="upl">
-                                <div class="upl-zone">
-                                    <div class="ico">📁</div>
-                                    <h3>Drop your video here</h3>
-                                    <p>MP4, MOV, AVI up to 500MB — or paste a YouTube link</p>
-                                    <div
-                                        style="margin-top:16px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
-                                        <span class="bdg">🎬 cooking_tutorial.mp4</span>
-                                        <span class="bdg" style="color:var(--success)">Uploading… 67%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Process -->
-                        <div class="slide" id="s1">
-                            <div class="proc">
-                                <div class="proc-l">
-                                    <div class="ring-wrap">
-                                        <svg viewBox="0 0 150 150">
-                                            <defs>
-                                                <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                    <stop offset="0%" stop-color="#818CF8" />
-                                                    <stop offset="100%" stop-color="#22D3EE" />
-                                                </linearGradient>
-                                            </defs>
-                                            <circle class="ring-bg" cx="75" cy="75" r="65" />
-                                            <circle class="ring-fill" id="rf" cx="75" cy="75" r="65" />
-                                        </svg>
-                                        <div class="pct"><span id="pn">0</span><small>%</small></div>
-                                    </div>
-                                    <div id="pt"
-                                        style="color:var(--t3);font-size:.82rem;margin-top:14px;font-family:'JetBrains Mono',monospace">
-                                        ~45s remaining</div>
-                                </div>
-                                <div class="proc-r" id="psteps">
-                                    <div class="ps wait" data-s="0">⏳ Uploading & validating</div>
-                                    <div class="ps wait" data-s="1">⏳ Transcribing audio (Hindi)</div>
-                                    <div class="ps wait" data-s="2">⏳ Detecting domain: Food</div>
-                                    <div class="ps wait" data-s="3">⏳ Generating for 6 platforms</div>
-                                    <div class="ps wait" data-s="4">⏳ Translating to 9 languages</div>
-                                    <div class="ps wait" data-s="5">⏳ Viral Score prediction</div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Results -->
-                        <div class="slide" id="s2">
-                            <div class="res">
-                                <div class="rc">
-                                    <div class="pi">📺</div>
-                                    <div class="pn">YouTube</div>
-                                    <div class="rp">"5 मिनट में बनाएं Restaurant Style Paneer | Quick Recipe 🔥"</div>
-                                    <div class="tags"><span class="tg">#PaneerRecipe</span><span
-                                            class="tg">#QuickCooking</span></div>
-                                </div>
-                                <div class="rc">
-                                    <div class="pi">📸</div>
-                                    <div class="pn">Instagram</div>
-                                    <div class="rp">"POV: Your paneer just went from fridge to restaurant-quality in 5
-                                        mins 🧈✨"</div>
-                                    <div class="tags"><span class="tg">#Reels</span><span class="tg">#FoodTok</span>
-                                    </div>
-                                </div>
-                                <div class="rc">
-                                    <div class="pi">💼</div>
-                                    <div class="pn">LinkedIn</div>
-                                    <div class="rp">"What cooking taught me about scaling: The 80/20 rule works in the
-                                        kitchen too."</div>
-                                    <div class="tags"><span class="tg">#ContentStrategy</span></div>
-                                </div>
-                                <div class="rc">
-                                    <div class="pi">🐦</div>
-                                    <div class="pn">Twitter/X</div>
-                                    <div class="rp">"5 min paneer recipe that slaps harder than restaurant food. Thread
-                                        🧵👇"</div>
-                                    <div class="tags"><span class="tg">#FoodTwitter</span></div>
-                                </div>
-                                <div class="rc">
-                                    <div class="pi">📘</div>
-                                    <div class="pn">Facebook</div>
-                                    <div class="rp">"Try this tonight! Restaurant-quality paneer in 5 minutes 😍"</div>
-                                    <div class="tags"><span class="tg">#HomeChef</span></div>
-                                </div>
-                                <div class="rc">
-                                    <div class="pi">🎵</div>
-                                    <div class="pn">TikTok</div>
-                                    <div class="rp">"Wait for the FLIP 🍳 5 min paneer recipe that changed my life"
-                                    </div>
-                                    <div class="tags"><span class="tg">#FoodTikTok</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="show-cap">
-                    <div class="cap active" id="c0">
-                        <h3>Step 1 — Upload Anything</h3>
-                        <p>Drop a video, paste a YouTube link, or import audio.</p>
-                    </div>
-                    <div class="cap" id="c1">
-                        <h3>Step 2 — Watch AI Work Live</h3>
-                        <p>Transcription, domain detection, multi-platform generation — streamed via SSE.</p>
-                    </div>
-                    <div class="cap" id="c2">
-                        <h3>Step 3 — Review & Publish</h3>
-                        <p>Six platforms. Native tone. Edit inline, then ship it.</p>
-                    </div>
-                    <div class="bars">
-                        <div class="bar on" id="b0">
-                            <div class="bar-f"></div>
-                        </div>
-                        <div class="bar" id="b1">
-                            <div class="bar-f"></div>
-                        </div>
-                        <div class="bar" id="b2">
-                            <div class="bar-f"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ████ HOW IT WORKS — Horizontal Scroll ████ -->
-    <section id="how" class="full">
-        <div class="how-track" id="how-track">
-            <div class="hw-card">
-                <div class="hw-num">01</div>
-                <h3>Upload Anything</h3>
-                <p>Drop a video, audio file, or text. Stored on AWS S3, transcribed by Transcribe instantly.</p>
-                <div class="hw-time">~5 seconds</div><span class="hw-aws">S3 + Transcribe</span>
-            </div>
-            <div class="hw-card">
-                <div class="hw-num">02</div>
-                <h3>AI Generates Everything</h3>
-                <p>AWS Bedrock (Claude 3) detects domain, generates platform-native content, SEO, hashtags — all in one
-                    pass.</p>
-                <div class="hw-time">~45 seconds</div><span class="hw-aws">Bedrock + Claude 3</span>
-            </div>
-            <div class="hw-card">
-                <div class="hw-num">03</div>
-                <h3>Review & Publish</h3>
-                <p>Human-in-the-loop. Edit inline, approve what works. Your voice, your control.</p>
-                <div class="hw-time">~10 seconds</div><span class="hw-aws">DynamoDB + Lambda</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- ████ FEATURES — Bento Grid ████ -->
-    <section id="features" style="padding:120px 0">
-        <div class="ctr">
-            <div class="sec-label">✨ Features</div>
-            <h2 class="sec-title">Not another AI tool.<br>A complete <span style="color:var(--brand-l)">content
-                    intelligence</span> platform.</h2>
-            <p class="sec-desc">25 features across 6 phases. Powered by AWS Bedrock.</p>
-            <div class="bento">
-                <div class="bc lg"><span class="em">🌐</span>
-                    <h3>6 Platforms, 1 Upload</h3>
-                    <p>Each platform gets content NATIVE to its format. Instagram ≠ LinkedIn ≠ TikTok.</p>
-                    <div class="badges"><span class="bdg">YouTube</span><span class="bdg">Instagram</span><span
-                            class="bdg">LinkedIn</span><span class="bdg">Twitter/X</span><span
-                            class="bdg">Facebook</span><span class="bdg">TikTok</span></div>
-                </div>
-                <div class="bc"><span class="em">🧠</span>
-                    <h3>Domain Intelligence</h3>
-                    <p>Auto-detects 8 content domains via Bedrock. Education ≠ Food ≠ Travel.</p>
-                    <div class="badges"><span class="bdg">Education</span><span class="bdg">Food</span><span
-                            class="bdg">Travel</span><span class="bdg">Tech</span></div>
-                </div>
-                <div class="bc"><span class="em">🌏</span>
-                    <h3>9 Indian Languages</h3>
-                    <p>Not translation — cultural adaptation. Idioms, references, tone — all localized.</p>
-                    <div class="langs"><span class="lang">हिन्दी</span><span class="lang">தமிழ்</span><span
-                            class="lang">తెలుగు</span><span class="lang">বাংলা</span><span
-                            class="lang">ಕನ್ನಡ</span><span class="lang">मराठी</span></div>
-                </div>
-                <div class="bc"><span class="em">🔥</span>
-                    <h3>Viral Score</h3>
-                    <p>AI-powered engagement prediction before you post.</p>
-                    <div class="vg">
-                        <div class="vg-f" data-t="78"></div>
-                    </div>
-                    <div class="vs-n">78<span style="font-size:1rem;opacity:.5">/100</span></div>
-                </div>
-                <div class="bc lg"><span class="em">🧬</span>
-                    <h3>Creator DNA</h3>
-                    <p>Your unique voice fingerprint. ContentAI learns your style — so every piece sounds like YOU, not
-                        generic AI. Built on Claude 3.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ████ TRY IT ████ -->
-    <section id="try" style="padding:120px 0">
-        <div class="ctr">
-            <div class="sec-label" style="text-align:center;display:block">🎯 Try It Yourself</div>
-            <h2 class="sec-title" style="text-align:center">Paste a YouTube link.<br><span
-                    style="color:var(--brand-l)">See what AI generates.</span></h2>
-            <p class="sec-desc" style="text-align:center;margin-left:auto;margin-right:auto">No signup. No credit card.
-                Just paste and watch.</p>
-            <div class="try-box">
-                <div class="try-row">
-                    <input type="text" class="try-in" id="ti" placeholder="https://youtube.com/watch?v=..." />
-                    <button class="try-go" id="tg" onclick="tryDemo()">Generate →</button>
-                </div>
-                <div class="try-load" id="tl">
-                    <div class="spinner"></div>
-                    <p style="color:var(--t3);font-size:.82rem" id="ts">Analyzing video...</p>
-                </div>
-                <div class="try-res" id="tr">
-                    <p style="font-size:.82rem;color:var(--success);margin-bottom:14px">✅ Generated for 6 platforms in
-                        <strong id="tt">47</strong>s</p>
-                    <div class="trc">
-                        <div class="tp">📺 YouTube Title</div>
-                        <div class="tc">"5 मिनट में बनाएं Restaurant Style Paneer | Quick Recipe 🔥"</div>
-                    </div>
-                    <div class="trc" style="margin-top:10px">
-                        <div class="tp">📸 Instagram Caption</div>
-                        <div class="tc">"POV: Your paneer went from fridge to restaurant-quality in 5 mins 🧈✨ #FoodTok
-                            #PaneerLovers"</div>
-                    </div>
-                    <div class="trc" style="margin-top:10px">
-                        <div class="tp">🐦 Twitter/X</div>
-                        <div class="tc">"5 min paneer recipe that slaps harder than restaurant food. Thread 🧵👇"</div>
-                    </div>
-                    <p style="font-size:.75rem;color:var(--t3);margin-top:14px">📝 Simulated demo. <a href="#cta"
-                            style="color:var(--brand-l)">Sign up</a> for real generation.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ████ STATS ████ -->
-    <section id="stats">
-        <div class="ctr">
-            <div class="stats">
-                <div class="st">
-                    <div class="num" data-c="10000">0</div>
-                    <div class="lbl">Creators Onboarded</div>
-                </div>
-                <div class="st">
-                    <div class="num" data-c="54000">0</div>
-                    <div class="lbl">Content Pieces</div>
-                </div>
-                <div class="st">
-                    <div class="num" data-c="60">0</div>
-                    <div class="lbl">Seconds Avg</div>
-                </div>
-                <div class="st">
-                    <div class="num" data-c="9">0</div>
-                    <div class="lbl">Indian Languages</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ████ PRICING ████ -->
-    <section id="pricing" style="padding:120px 0">
-        <div class="ctr" style="text-align:center">
-            <div class="sec-label">💎 Pricing</div>
-            <h2 class="sec-title">Start free. Scale when ready.</h2>
-            <p class="sec-desc" style="margin-left:auto;margin-right:auto">No credit card. No hidden costs.</p>
-            <div class="pr-grid">
-                <div class="prc">
-                    <div class="tier">Free</div>
-                    <div class="pd">For individual creators</div>
-                    <div class="amt">₹0 <span>/mo</span></div>
-                    <ul>
-                        <li>5 generations/month</li>
-                        <li>3 platforms</li>
-                        <li>English + Hindi</li>
-                        <li>Basic viral score</li>
-                    </ul><a href="#" class="pr-btn gho">Get Started</a>
-                </div>
-                <div class="prc feat">
-                    <div class="tier">Pro</div>
-                    <div class="pd">For serious creators</div>
-                    <div class="amt">₹999 <span>/mo</span></div>
-                    <ul>
-                        <li>Unlimited generations</li>
-                        <li>All 6 platforms</li>
-                        <li>All 9 languages</li>
-                        <li>Creator DNA</li>
-                        <li>Advanced viral prediction</li>
-                        <li>Priority processing</li>
-                    </ul><a href="#" class="pr-btn pri">Start Pro Trial</a>
-                </div>
-                <div class="prc">
-                    <div class="tier">Enterprise</div>
-                    <div class="pd">For agencies & teams</div>
-                    <div class="amt">₹24,999 <span>/mo</span></div>
-                    <ul>
-                        <li>Everything in Pro</li>
-                        <li>API access</li>
-                        <li>Team workspaces</li>
-                        <li>Custom integrations</li>
-                        <li>Dedicated support</li>
-                    </ul><a href="#" class="pr-btn gho">Contact Sales</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ████ FINAL CTA ████ -->
-    <section id="cta" class="full">
-        <div class="cta-glow"></div>
-        <div class="ctr" style="text-align:center">
-            <h2 class="sec-title cta-reveal" style="font-size:clamp(2rem,5vw,3.5rem)">Stop adapting.<br><span
-                    style="color:var(--brand-l)">Start creating.</span></h2>
-            <p style="color:var(--t2);font-size:1.1rem;margin:16px auto 40px;max-width:480px" class="cta-reveal">Join
-                10,000+ Indian creators who got their time back.</p>
-            <div class="hero-ctas cta-reveal"><a href="#" class="btn-p" style="font-size:1.1rem;padding:16px 40px">🚀
-                    Create Free Account</a></div>
+    <!-- CTA SECTION -->
+    <section class="py-40 relative">
+        <div class="absolute inset-0 bg-brand-600/10 backdrop-blur-3xl"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10 px-6">
+            <h2 class="text-hero text-5xl md:text-8xl font-black text-white mb-8 reveal-text">Your Voice. Louder.</h2>
+            <button class="btn-primary text-xl px-12 py-5 reveal-element">Claim Your Early Access</button>
         </div>
     </section>
 
     <!-- FOOTER -->
-    <footer>
-        <div class="ctr">
-            <div class="ft-grid">
-                <div class="ft-brand">
-                    <div class="logo" style="margin-bottom:8px">ContentAI</div>
-                    <p>AI-powered content intelligence for Indian creators. Powered by AWS Bedrock, Transcribe, S3 &
-                        DynamoDB.</p>
-                </div>
-                <div class="ft-col">
-                    <h4>Product</h4><a href="#">Features</a><a href="#">Pricing</a><a href="#">API</a>
-                </div>
-                <div class="ft-col">
-                    <h4>Resources</h4><a href="#">Docs</a><a href="#">Blog</a><a href="#">Tutorials</a>
-                </div>
-                <div class="ft-col">
-                    <h4>Company</h4><a href="#">About</a><a href="#">Team</a><a href="#">Privacy</a>
-                </div>
-            </div>
-            <div class="ft-bot"><span>© 2026 ContentAI · AI for Bharat · AWS</span><span>Made with conviction ✨</span>
-            </div>
+    <footer class="border-t border-white/10 bg-void py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-2xl font-display font-black tracking-widest text-white">QALAA</div>
+            <div class="text-sm text-gray-500 font-mono">© 2026 ContentAI Platforms. Built for India.</div>
         </div>
     </footer>
 
-    <!-- GSAP CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Scripts -->
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // ═══ CUSTOM CURSOR ═══
-        const cur = document.getElementById('cursor');
-        let cx = 0, cy = 0, tx = 0, ty = 0;
-        document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY });
-        (function mv() { cx += (tx - cx) * 0.15; cy += (ty - cy) * 0.15; cur.style.left = cx + 'px'; cur.style.top = cy + 'px'; requestAnimationFrame(mv) })();
-        document.querySelectorAll('a,button,.btn-p,.btn-s,.nav-cta,.try-go,.pr-btn,.hw-card,.bc').forEach(el => {
-            el.addEventListener('mouseenter', () => cur.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
-        });
-        document.addEventListener('mousedown', () => cur.classList.add('click'));
-        document.addEventListener('mouseup', () => cur.classList.remove('click'));
-
-        // ═══ MOUSE PARALLAX on hero ═══
-        document.querySelectorAll('.depth-layer').forEach(l => {
-            const s = parseFloat(l.dataset.speed);
-            document.addEventListener('mousemove', e => {
-                const dx = (e.clientX - window.innerWidth / 2) * s;
-                const dy = (e.clientY - window.innerHeight / 2) * s;
-                l.style.transform = `translate(${dx}px,${dy}px)`;
-            });
+        // Custom Cursor Logic
+        const cursor = document.getElementById('cursor');
+        const follower = document.getElementById('cursor-follower');
+        
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.3 });
         });
 
-        // ═══ HERO ANIMATION TIMELINE ═══
-        const htl = gsap.timeline({ delay: 0.3 });
-        htl.to('.hero-badge', { opacity: 1, duration: 0.6, ease: 'power2.out' })
-            .to('.hero-title .word', { opacity: 1, y: 0, rotateX: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, '-=0.3')
-            .to('.hero-sub', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.3')
-            .to('.hero-ctas', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.2')
-            .to('.hero-tech', { opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.2');
+        // Hero Text Build
+        const heroTl = gsap.timeline();
+        heroTl.fromTo(".line-1", {y: 50, opacity: 0}, {y: 0, opacity: 1, duration: 0.8, ease: "power3.out"}, 0.2)
+              .fromTo(".line-2", {y: 50, opacity: 0}, {y: 0, opacity: 1, duration: 0.8, ease: "power3.out"}, 0.4)
+              .fromTo(".line-3", {y: 50, opacity: 0}, {y: 0, opacity: 1, duration: 0.8, ease: "power3.out"}, 0.6)
+              .fromTo(".reveal-element", {y: 20, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power2.out"}, 0.8)
+              .fromTo(".reveal-dashboard", {y: 100, opacity: 0, scale: 0.9}, {y: 0, opacity: 1, scale: 1, duration: 1.5, ease: "expo.out"}, 1);
 
-        // ═══ PROBLEM — Line-by-line reveal ═══
-        gsap.utils.toArray('#problem .line-inner').forEach((ln, i) => {
-            gsap.to(ln, { y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: ln.parentElement, start: 'top 80%', toggleActions: 'play none none reverse' } });
-        });
-        gsap.to('#problem .cinema-sub', { opacity: 1, duration: 0.6, scrollTrigger: { trigger: '#problem .cinema-sub', start: 'top 85%' } });
-
-        // ═══ SHIFT — Big number scale + unblur ═══
-        gsap.to('.big-number', { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.2, ease: 'power2.out', scrollTrigger: { trigger: '#shift', start: 'top 60%', toggleActions: 'play none none reverse' } });
-        gsap.to('#shift .cinema-sub', { opacity: 1, duration: 0.6, delay: 0.4, scrollTrigger: { trigger: '#shift', start: 'top 50%' } });
-
-        // ═══ PRODUCT SHOWCASE — Pinned + scroll-driven slides ═══
-        const showcase = document.getElementById('showcase');
-        ScrollTrigger.create({ trigger: showcase, start: 'top top', end: 'bottom bottom', pin: '#pin-wrap', pinSpacing: false });
-
-        const sIds = ['s0', 's1', 's2'], cIds = ['c0', 'c1', 'c2'], urls = ['app.contentai.in/upload', 'app.contentai.in/processing', 'app.contentai.in/dashboard'];
-        const bEls = [document.getElementById('b0'), document.getElementById('b1'), document.getElementById('b2')];
-        const urlEl = document.getElementById('m-url');
-        let curS = -1, procRan = false;
-
-        function setSlide(i) {
-            if (i === curS) return; curS = i;
-            sIds.forEach((id, x) => document.getElementById(id).classList.toggle('active', x === i));
-            cIds.forEach((id, x) => document.getElementById(id).classList.toggle('active', x === i));
-            bEls.forEach((b, x) => b.classList.toggle('on', x <= i));
-            urlEl.textContent = urls[i];
-            if (i === 1 && !procRan) procAnim();
-            if (i === 2) staggerCards();
-        }
-
-        // Mockup scale-in
-        gsap.to('.mockup', { scale: 1, opacity: 1, duration: 0.8, ease: 'power2.out', scrollTrigger: { trigger: showcase, start: 'top 80%' } });
-
-        ScrollTrigger.create({
-            trigger: showcase, start: 'top top', end: 'bottom bottom', onUpdate: self => {
-                const p = self.progress, idx = Math.min(2, Math.floor(p * 3)); setSlide(idx);
+        // General Reveal elements
+        gsap.utils.toArray('.reveal-text').forEach(text => {
+            if(!text.classList.contains('line-1') && !text.classList.contains('line-2') && !text.classList.contains('line-3')){
+                gsap.fromTo(text, 
+                    {y: 40, opacity: 0},
+                    {
+                        y: 0, opacity: 1, 
+                        duration: 1, 
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: text,
+                            start: "top 85%",
+                        }
+                    }
+                );
             }
         });
 
-        // ═══ PROCESS ANIMATION ═══
-        function procAnim() {
-            procRan = true;
-            const steps = document.querySelectorAll('#psteps .ps');
-            const rf = document.getElementById('rf');
-            const pn = document.getElementById('pn');
-            const pt = document.getElementById('pt');
-            const circ = 2 * Math.PI * 65;
-            rf.style.strokeDasharray = circ;
-            const data = [{ p: 15, t: '~40s' }, { p: 30, t: '~35s' }, { p: 50, t: '~28s' }, { p: 73, t: '~18s' }, { p: 88, t: '~8s' }, { p: 100, t: 'Done!' }];
-            let si = 0;
-            (function go() {
-                if (si >= data.length) return;
-                const d = data[si];
-                rf.style.strokeDashoffset = circ - (d.p / 100) * circ;
-                pn.textContent = d.p; pt.textContent = d.t;
-                steps.forEach((s, x) => {
-                    const txt = s.textContent.replace(/^[⏳✅🔄]\s*/, '');
-                    if (x < si) { s.className = 'ps done'; s.textContent = '✅ ' + txt }
-                    else if (x === si) { s.className = 'ps on'; s.textContent = '🔄 ' + txt }
-                    else { s.className = 'ps wait'; s.textContent = '⏳ ' + txt }
-                });
-                if (si === data.length - 1) { steps[si].className = 'ps done'; steps[si].textContent = '✅ ' + steps[si].textContent.replace(/^[🔄]\s*/, '') }
-                si++; setTimeout(go, 700);
-            })();
-        }
+        // Bento Cards Stagger
+        gsap.fromTo(".reveal-card", 
+            {y: 50, opacity: 0},
+            {
+                y: 0, opacity: 1, 
+                duration: 0.8, 
+                stagger: 0.15,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: "#features",
+                    start: "top 70%",
+                }
+            }
+        );
 
-        function staggerCards() { document.querySelectorAll('.rc').forEach((c, i) => setTimeout(() => c.classList.add('vis'), i * 120)) }
-
-        // ═══ HOW IT WORKS — Horizontal Scroll ═══
-        const howSection = document.getElementById('how');
-        const howTrack = document.getElementById('how-track');
-        gsap.to(howTrack, { x: () => -(howTrack.scrollWidth - window.innerWidth), ease: 'none', scrollTrigger: { trigger: howSection, start: 'top top', end: () => '+=' + howTrack.scrollWidth, scrub: 1, pin: true, anticipatePin: 1 } });
-
-        // ═══ FEATURES — Clip-path reveal ═══
-        gsap.utils.toArray('.bc').forEach((c, i) => {
-            ScrollTrigger.create({ trigger: c, start: 'top 85%', onEnter: () => c.classList.add('revealed'), once: true });
+        // Horizontal Scroll
+        const scrollContainer = document.querySelector('.scroll-container');
+        gsap.to(scrollContainer, {
+            x: () => -(scrollContainer.scrollWidth - window.innerWidth),
+            ease: "none",
+            scrollTrigger: {
+                trigger: scrollContainer.parentElement,
+                pin: true,
+                start: "center center",
+                end: () => "+=" + scrollContainer.scrollWidth,
+                scrub: 1,
+                invalidateOnRefresh: true
+            }
         });
 
-        // ═══ VIRAL GAUGE ═══
-        document.querySelectorAll('.vg-f').forEach(el => {
-            ScrollTrigger.create({ trigger: el, start: 'top 85%', onEnter: () => { el.style.width = el.dataset.t + '%' }, once: true });
-        });
-
-        // ═══ COUNTERS ═══
-        document.querySelectorAll('[data-c]').forEach(el => {
-            ScrollTrigger.create({
-                trigger: el, start: 'top 85%', onEnter: () => {
-                    const t = parseInt(el.dataset.c); let c = 0; const inc = t / 50;
-                    const tmr = setInterval(() => { c += inc; if (c >= t) { c = t; clearInterval(tmr) } el.textContent = Math.floor(c).toLocaleString() + (t >= 1000 ? '+' : '') }, 20);
-                }, once: true
-            });
-        });
-
-        // ═══ PRICING — Float up ═══
-        gsap.utils.toArray('.prc').forEach((c, i) => {
-            gsap.to(c, { opacity: 1, y: 0, duration: 0.7, delay: i * 0.15, ease: 'power2.out', scrollTrigger: { trigger: c, start: 'top 90%' } });
-        });
-
-        // ═══ CTA — Word reveal ═══
-        gsap.utils.toArray('.cta-reveal').forEach(el => {
-            gsap.from(el, { y: 30, opacity: 0, duration: 0.7, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
-        });
-
-        // ═══ TRY IT DEMO ═══
-        function tryDemo() {
-            const v = document.getElementById('ti').value;
-            if (!v.trim()) { document.getElementById('ti').style.borderColor = '#EF4444'; return }
-            document.getElementById('ti').style.borderColor = '';
-            const ld = document.getElementById('tl'), rs = document.getElementById('tr'), st = document.getElementById('ts');
-            rs.classList.remove('on'); ld.classList.add('on');
-            const msgs = ['Analyzing video...', 'Transcribing audio...', 'Detecting domain...', 'Generating content...', 'Almost done...'];
-            let mi = 0; const mt = setInterval(() => { mi++; if (mi < msgs.length) st.textContent = msgs[mi] }, 600);
-            setTimeout(() => { clearInterval(mt); ld.classList.remove('on'); rs.classList.add('on'); document.getElementById('tt').textContent = Math.floor(Math.random() * 20 + 35) }, 3500);
-        }
-
-        // ═══ SMOOTH SCROLL ═══
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => { e.preventDefault(); const t = document.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }) });
-        });
     </script>
 </body>
-
 </html>

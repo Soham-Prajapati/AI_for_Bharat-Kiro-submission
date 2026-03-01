@@ -3,6 +3,7 @@ import multer from 'multer';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError } from '../types/errors';
 import { S3Service } from '../services/s3.service';
+import { watermarkService } from '../services/watermark.service';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 100 * 1024 * 1024 } });
@@ -24,13 +25,25 @@ router.post('/add', upload.single('file'), asyncHandler(async (req: Request, res
   const key = `watermarked/${Date.now()}-${req.file.originalname}`;
   await s3Service.upload(req.file.buffer, key, req.file.mimetype);
 
-  // TODO: Integrate with watermarking service (FFmpeg or similar)
+  // Uses the actual watermark service
+  const watermarkResult = await watermarkService.applyWatermark({
+    mediaUrl: `https://s3.amazonaws.com/${key}`, // Using a mock URL format based on the uploaded key
+    mediaType: req.file.mimetype.startsWith('video') ? 'video' : 'image', // Basic type inference
+    watermarkType: 'visible',
+    visibleOptions: {
+      logoUrl,
+      position: position as any,
+      opacity: Number(opacity),
+      size: 'medium'
+    }
+  }, 'default-user'); // Hardcoded user ID since there is no auth middleware yet
+
   res.json({
     success: true,
-    watermarkedUrl: `https://mock-watermarked-url.com/${key}`,
+    watermarkedUrl: watermarkResult.watermarkedUrl,
     position,
     opacity,
-    message: 'Watermark added (mock)'
+    message: 'Watermark added'
   });
 }));
 

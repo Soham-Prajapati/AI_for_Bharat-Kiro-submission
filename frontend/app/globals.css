@@ -22,38 +22,18 @@
 body {
   background: var(--void);
   color: #F9FAFB;
-  cursor: none;
+  /* cursor: none is applied only on non-touch via KLACursor component */
+}
+
+/* KLACursor hides native cursor on desktop */
+.kla-cursor-active * {
+  cursor: none !important;
 }
 
 @media (max-width: 768px) {
-  body {
-    cursor: auto;
+  .kla-cursor-active * {
+    cursor: auto !important;
   }
-}
-
-/* ═══ CUSTOM CURSOR ═══ */
-.custom-cursor {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transition: width 0.25s, height 0.25s, border-color 0.25s, background 0.25s, transform 0.25s;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
-}
-
-.custom-cursor.hover {
-  width: 60px;
-  height: 60px;
-  border-color: var(--brand-l);
-  background: rgba(99, 102, 241, 0.08);
-}
-
-.custom-cursor.click {
-  transform: translate(-50%, -50%) scale(0.8);
 }
 
 @media (max-width: 768px) {
@@ -182,5 +162,36 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Radial gradient backgrounds */
+  .bg-gradient-radial {
+    background: radial-gradient(ellipse at center, var(--tw-gradient-stops));
+  }
+
+  /* Perspective for 3D transforms */
+  .perspective-\\[800px\\] {
+    perspective: 800px;
+  }
+  .perspective-\\[1000px\\] {
+    perspective: 1000px;
+  }
+
+  /* Brand gradient text selection */
+  .kla-brand {
+    background: linear-gradient(135deg, #818CF8, #22D3EE);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Noise overlay utility */
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
   }
 }

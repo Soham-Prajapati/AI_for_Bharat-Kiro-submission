@@ -291,15 +291,15 @@ export default function VoiceTrainer({
         setTrainingProgress({
           samplesCollected: samples.length,
           isTraining: false,
-          modelId: response.modelId,
-          estimatedTime: response.estimatedTime,
+          modelId: response.jobId,
+          estimatedTime: response.estimatedTime ? `${response.estimatedTime}s` : undefined,
         });
         
         setRecordingState('idle');
-        toast.success(`Training started! Model ID: ${response.modelId}`);
-        toast.info(`Estimated completion: ${response.estimatedTime}`);
+        toast.success(`Training started! Job ID: ${response.jobId}`);
+        toast.info(`Estimated completion: ${response.estimatedTime}s`);
         
-        onTrainingComplete?.(response.modelId);
+        onTrainingComplete?.(response.jobId);
       } else {
         throw new Error(response.message || 'Training failed');
       }

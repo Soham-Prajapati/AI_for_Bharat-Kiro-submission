@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { CacheService } from '../services/cache.service';
 import { ValidationError } from '../types/errors';
+import { automationService } from '../services/automation.service';
 
 const router = Router();
 const cache = new CacheService();
@@ -14,19 +15,15 @@ router.post('/create', asyncHandler(async (req: Request, res: Response) => {
     throw new ValidationError('userId, name, trigger, and actions required');
   }
 
-  // TODO: Replace with real automation.service.ts
-  const mockAutomation = {
-    automationId: `auto_${Date.now()}`,
+  // Uses the actual automation service
+  const automationConfig = await automationService.createAutomation(
     userId,
     name,
     trigger,
-    actions,
-    status: 'active',
-    createdAt: new Date().toISOString(),
-    source: 'mock'
-  };
+    actions
+  );
 
-  res.json(mockAutomation);
+  res.json(automationConfig);
 }));
 
 // GET /api/automation/list - List user automations
@@ -44,41 +41,24 @@ router.get('/list', asyncHandler(async (req: Request, res: Response) => {
     return res.json(JSON.parse(cached as string));
   }
 
-  // TODO: Replace with real automation.service.ts
-  const mockAutomations = {
-    automations: [
-      {
-        automationId: 'auto_1',
-        name: 'Auto-post to Instagram',
-        trigger: { type: 'schedule', cron: '0 9 * * *' },
-        actions: [{ type: 'post', platform: 'instagram' }],
-        status: 'active'
-      },
-      {
-        automationId: 'auto_2',
-        name: 'Generate weekly summary',
-        trigger: { type: 'schedule', cron: '0 0 * * 0' },
-        actions: [{ type: 'generate', contentType: 'summary' }],
-        status: 'active'
-      }
-    ],
-    source: 'mock'
-  };
+  // Uses the actual automation service
+  const userAutomations = await automationService.getUserAutomations(userId as string);
 
-  await cache.set(cacheKey, JSON.stringify(mockAutomations), 300);
-  res.json(mockAutomations);
+  await cache.set(cacheKey, JSON.stringify(userAutomations), 300);
+  res.json(userAutomations);
 }));
 
 // DELETE /api/automation/:id - Delete automation
 router.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  // TODO: Replace with real automation.service.ts
+  // Uses the actual automation service
+  await automationService.deleteAutomation(id);
+
   res.json({
     automationId: id,
     status: 'deleted',
     deletedAt: new Date().toISOString(),
-    source: 'mock'
   });
 }));
 

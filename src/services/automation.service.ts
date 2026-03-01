@@ -747,3 +747,5 @@ export class AutomationService {
     return { schedules, automations, postSchedules };
   }
 }
+
+export const automationService = new AutomationService();
