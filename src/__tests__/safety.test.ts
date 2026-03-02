@@ -1050,8 +1050,8 @@ describe('Safety & Moderation - Edge Cases', () => {
         contentType: 'text'
       });
 
-    expect(response.status).toBe(200);
-    expect(response.body.safe).toBe(true);
+    // Empty content should be rejected with validation error
+    expect(response.status).toBe(400);
   });
 
   test('should handle very short content', async () => {
