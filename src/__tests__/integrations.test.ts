@@ -335,7 +335,7 @@ describe('Platform Integrations - OAuth Authentication', () => {
 
 describe('Platform Integrations - Content Posting', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('YouTube Content Posting', () => {
@@ -677,7 +677,7 @@ describe('Platform Integrations - Content Posting', () => {
 
 describe('Platform Integrations - Analytics', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('YouTube Analytics', () => {
@@ -890,7 +890,7 @@ describe('Platform Integrations - Analytics', () => {
 
 describe('Platform Integrations - Error Handling', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('Rate Limiting', () => {
@@ -1047,7 +1047,7 @@ describe('Platform Integrations - Error Handling', () => {
 
 describe('Platform Integrations - Connection Management', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('Connect Operations', () => {
@@ -1147,7 +1147,7 @@ describe('Platform Integrations - Connection Management', () => {
 
 describe('Platform Integrations - Platform-Specific Features', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('YouTube Specific Features', () => {
@@ -1537,7 +1537,7 @@ describe('Platform Integrations - Platform-Specific Features', () => {
 
 describe('Platform Integrations - Retry Logic', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it('should retry failed requests with exponential backoff', async () => {
@@ -1611,7 +1611,7 @@ describe('Platform Integrations - Retry Logic', () => {
 
 describe('Platform Integrations - Token Management', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it('should store tokens securely after authentication', async () => {
@@ -1673,7 +1673,7 @@ describe('Platform Integrations - Token Management', () => {
 
 describe('Platform Integrations - Cross-Platform Operations', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it('should post same content to multiple platforms simultaneously', async () => {
@@ -1774,3 +1774,4 @@ describe('Platform Integrations - Coverage Summary', () => {
     expect(platforms).toContain('Facebook');
   });
 });
+
