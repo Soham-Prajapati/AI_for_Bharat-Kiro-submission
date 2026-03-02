@@ -928,6 +928,10 @@ describe('ADHD Navigator Comprehensive Usability Tests', () => {
           .post('/api/adhd/session/start')
           .send({ userId: uniqueUserId, taskName: `Satisfaction task ${i + 1}` });
 
+        expect(startResponse.status).toBe(201);
+        expect(startResponse.body.session).toBeDefined();
+        expect(startResponse.body.session.id).toBeDefined();
+
         if (i < 8) {
           await request(app)
             .post(`/api/adhd/session/${startResponse.body.session.id}/complete`);
@@ -1000,6 +1004,10 @@ describe('ADHD Navigator Comprehensive Usability Tests', () => {
           .post('/api/adhd/session/start')
           .send({ userId: uniqueUserId, taskName: `Success task ${i + 1}` });
 
+        expect(startResponse.status).toBe(201);
+        expect(startResponse.body.session).toBeDefined();
+        expect(startResponse.body.session.id).toBeDefined();
+
         await request(app)
           .post(`/api/adhd/session/${startResponse.body.session.id}/complete`);
       }
@@ -1017,6 +1025,10 @@ describe('ADHD Navigator Comprehensive Usability Tests', () => {
         const startResponse = await request(app)
           .post('/api/adhd/session/start')
           .send({ userId: uniqueUserId, taskName: `Quality task ${i + 1}` });
+
+        expect(startResponse.status).toBe(201);
+        expect(startResponse.body.session).toBeDefined();
+        expect(startResponse.body.session.id).toBeDefined();
 
         if (i < 2) {
           await request(app)
