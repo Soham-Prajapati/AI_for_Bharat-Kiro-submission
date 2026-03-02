@@ -1,0 +1,268 @@
+{
+  "alarms": [
+    {
+      "AlarmName": "ContentIntelligence-HighErrorRate",
+      "AlarmDescription": "Triggers when error rate exceeds 5% of total requests",
+      "MetricName": "HTTPCode_Target_5XX_Count",
+      "Namespace": "AWS/ApplicationELB",
+      "Statistic": "Sum",
+      "Period": 300,
+      "EvaluationPeriods": 2,
+      "Threshold": 50,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-HighAPILatency",
+      "AlarmDescription": "Triggers when API latency exceeds 3 seconds (p95) - Critical Alert",
+      "MetricName": "TargetResponseTime",
+      "Namespace": "AWS/ApplicationELB",
+      "ExtendedStatistic": "p95",
+      "Period": 300,
+      "EvaluationPeriods": 2,
+      "Threshold": 3,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-APILatencyWarning",
+      "AlarmDescription": "Warning when API latency exceeds 2 seconds (target SLA)",
+      "MetricName": "TargetResponseTime",
+      "Namespace": "AWS/ApplicationELB",
+      "ExtendedStatistic": "p95",
+      "Period": 300,
+      "EvaluationPeriods": 3,
+      "Threshold": 2,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-HighCPUUtilization",
+      "AlarmDescription": "Triggers when CPU utilization exceeds 80%",
+      "MetricName": "CPUUtilization",
+      "Namespace": "AWS/ECS",
+      "Statistic": "Average",
+      "Period": 300,
+      "EvaluationPeriods": 2,
+      "Threshold": 80,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-HighMemoryUtilization",
+      "AlarmDescription": "Critical: Memory utilization exceeds 85%",
+      "MetricName": "MemoryUtilization",
+      "Namespace": "AWS/ECS",
+      "Statistic": "Average",
+      "Period": 300,
+      "EvaluationPeriods": 2,
+      "Threshold": 85,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-MemoryUtilizationWarning",
+      "AlarmDescription": "Warning: Memory utilization exceeds 75%",
+      "MetricName": "MemoryUtilization",
+      "Namespace": "AWS/ECS",
+      "Statistic": "Average",
+      "Period": 300,
+      "EvaluationPeriods": 3,
+      "Threshold": 75,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-FailedTranscriptionJobs",
+      "AlarmDescription": "Triggers when transcription jobs fail",
+      "MetricName": "TranscriptionJobFailed",
+      "Namespace": "ContentIntelligence",
+      "Statistic": "Sum",
+      "Period": 300,
+      "EvaluationPeriods": 1,
+      "Threshold": 3,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-BedrockAPIErrors",
+      "AlarmDescription": "Triggers when Bedrock API calls fail",
+      "MetricName": "BedrockAPIError",
+      "Namespace": "ContentIntelligence",
+      "Statistic": "Sum",
+      "Period": 300,
+      "EvaluationPeriods": 2,
+      "Threshold": 10,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-S3UploadFailures",
+      "AlarmDescription": "Triggers when S3 uploads fail",
+      "MetricName": "S3UploadFailed",
+      "Namespace": "ContentIntelligence",
+      "Statistic": "Sum",
+      "Period": 300,
+      "EvaluationPeriods": 1,
+      "Threshold": 5,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-LowHealthCheckSuccess",
+      "AlarmDescription": "Triggers when health check success rate drops below 90%",
+      "MetricName": "HealthyHostCount",
+      "Namespace": "AWS/ApplicationELB",
+      "Statistic": "Average",
+      "Period": 60,
+      "EvaluationPeriods": 2,
+      "Threshold": 1,
+      "ComparisonOperator": "LessThanThreshold",
+      "TreatMissingData": "breaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-HighDiskUtilization",
+      "AlarmDescription": "Triggers when disk utilization exceeds 85%",
+      "MetricName": "EphemeralStorageUtilized",
+      "Namespace": "AWS/ECS",
+      "Statistic": "Average",
+      "Period": 300,
+      "EvaluationPeriods": 1,
+      "Threshold": 85,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-RateLimitExceeded",
+      "AlarmDescription": "Triggers when rate limit is frequently exceeded",
+      "MetricName": "RateLimitExceeded",
+      "Namespace": "ContentIntelligence",
+      "Statistic": "Sum",
+      "Period": 300,
+      "EvaluationPeriods": 1,
+      "Threshold": 100,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-S3UploadSuccessRate",
+      "AlarmDescription": "Triggers when S3 upload success rate drops below 95%",
+      "Metrics": [
+        {
+          "Id": "m1",
+          "MetricStat": {
+            "Metric": {
+              "Namespace": "ContentIntelligence",
+              "MetricName": "S3UploadSuccess"
+            },
+            "Period": 300,
+            "Stat": "Sum"
+          },
+          "ReturnData": false
+        },
+        {
+          "Id": "m2",
+          "MetricStat": {
+            "Metric": {
+              "Namespace": "ContentIntelligence",
+              "MetricName": "S3UploadFailed"
+            },
+            "Period": 300,
+            "Stat": "Sum"
+          },
+          "ReturnData": false
+        },
+        {
+          "Id": "e1",
+          "Expression": "100 * (m1 / (m1 + m2))",
+          "Label": "Success Rate %",
+          "ReturnData": true
+        }
+      ],
+      "EvaluationPeriods": 2,
+      "Threshold": 95,
+      "ComparisonOperator": "LessThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-ErrorRatePercentage",
+      "AlarmDescription": "Critical: Error rate exceeds 5% of total requests",
+      "Metrics": [
+        {
+          "Id": "m1",
+          "MetricStat": {
+            "Metric": {
+              "Namespace": "AWS/ApplicationELB",
+              "MetricName": "HTTPCode_Target_5XX_Count"
+            },
+            "Period": 300,
+            "Stat": "Sum"
+          },
+          "ReturnData": false
+        },
+        {
+          "Id": "m2",
+          "MetricStat": {
+            "Metric": {
+              "Namespace": "AWS/ApplicationELB",
+              "MetricName": "RequestCount"
+            },
+            "Period": 300,
+            "Stat": "Sum"
+          },
+          "ReturnData": false
+        },
+        {
+          "Id": "e1",
+          "Expression": "100 * (m1 / m2)",
+          "Label": "Error Rate %",
+          "ReturnData": true
+        }
+      ],
+      "EvaluationPeriods": 2,
+      "Threshold": 5,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    },
+    {
+      "AlarmName": "ContentIntelligence-ErrorRateWarning",
+      "AlarmDescription": "Warning: Error rate exceeds 1% of total requests (target SLA)",
+      "Metrics": [
+        {
+          "Id": "m1",
+          "MetricStat": {
+            "Metric": {
+              "Namespace": "AWS/ApplicationELB",
+              "MetricName": "HTTPCode_Target_5XX_Count"
+            },
+            "Period": 300,
+            "Stat": "Sum"
+          },
+          "ReturnData": false
+        },
+        {
+          "Id": "m2",
+          "MetricStat": {
+            "Metric": {
+              "Namespace": "AWS/ApplicationELB",
+              "MetricName": "RequestCount"
+            },
+            "Period": 300,
+            "Stat": "Sum"
+          },
+          "ReturnData": false
+        },
+        {
+          "Id": "e1",
+          "Expression": "100 * (m1 / m2)",
+          "Label": "Error Rate %",
+          "ReturnData": true
+        }
+      ],
+      "EvaluationPeriods": 3,
+      "Threshold": 1,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "TreatMissingData": "notBreaching"
+    }
+  ]
+}

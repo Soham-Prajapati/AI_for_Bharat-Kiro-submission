@@ -1,19 +1,25 @@
 {
   "dashboardName": "ContentIntelligencePlatform-Production",
   "dashboardBody": {
+    "start": "-PT3H",
+    "periodOverride": "auto",
     "widgets": [
       {
         "type": "metric",
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 6,
         "properties": {
           "metrics": [
-            ["AWS/ApplicationELB", "TargetResponseTime", { "stat": "Average", "label": "Avg Response Time" }],
+            ["AWS/ApplicationELB", "TargetResponseTime", { "stat": "p50", "label": "p50 Response Time" }],
             ["...", { "stat": "p95", "label": "p95 Response Time" }],
             ["...", { "stat": "p99", "label": "p99 Response Time" }]
           ],
           "view": "timeSeries",
           "stacked": false,
           "region": "us-east-1",
-          "title": "API Response Time",
+          "title": "API Latency (p50, p95, p99)",
           "period": 300,
           "yAxis": {
             "left": {
@@ -24,8 +30,10 @@
           "annotations": {
             "horizontal": [
               {
-                "label": "SLA Threshold",
-                "value": 3
+                "label": "SLA Threshold (2s)",
+                "value": 2,
+                "fill": "above",
+                "color": "#d62728"
               }
             ]
           }
@@ -33,29 +41,53 @@
       },
       {
         "type": "metric",
+        "x": 12,
+        "y": 0,
+        "width": 12,
+        "height": 6,
         "properties": {
           "metrics": [
             ["AWS/ApplicationELB", "HTTPCode_Target_4XX_Count", { "stat": "Sum", "label": "4xx Errors" }],
-            [".", "HTTPCode_Target_5XX_Count", { "stat": "Sum", "label": "5xx Errors" }]
+            [".", "HTTPCode_Target_5XX_Count", { "stat": "Sum", "label": "5xx Errors" }],
+            [".", "RequestCount", { "stat": "Sum", "label": "Total Requests", "yAxis": "right" }]
           ],
           "view": "timeSeries",
           "stacked": false,
           "region": "us-east-1",
-          "title": "API Error Rate",
+          "title": "API Error Rate & Request Volume",
           "period": 300,
           "yAxis": {
             "left": {
-              "label": "Count",
+              "label": "Error Count",
+              "showUnits": false
+            },
+            "right": {
+              "label": "Request Count",
               "showUnits": false
             }
+          },
+          "annotations": {
+            "horizontal": [
+              {
+                "label": "Error Threshold",
+                "value": 50,
+                "fill": "above",
+                "color": "#ff7f0e"
+              }
+            ]
           }
         }
       },
       {
         "type": "metric",
+        "x": 0,
+        "y": 6,
+        "width": 8,
+        "height": 6,
         "properties": {
           "metrics": [
-            ["AWS/ECS", "CPUUtilization", { "stat": "Average" }]
+            ["AWS/ECS", "CPUUtilization", { "stat": "Average" }],
+            ["...", { "stat": "Maximum", "label": "Max CPU" }]
           ],
           "view": "timeSeries",
           "stacked": false,
@@ -84,9 +116,14 @@
       },
       {
         "type": "metric",
+        "x": 8,
+        "y": 6,
+        "width": 8,
+        "height": 6,
         "properties": {
           "metrics": [
-            ["AWS/ECS", "MemoryUtilization", { "stat": "Average" }]
+            ["AWS/ECS", "MemoryUtilization", { "stat": "Average" }],
+            ["...", { "stat": "Maximum", "label": "Max Memory" }]
           ],
           "view": "timeSeries",
           "stacked": false,
@@ -115,34 +152,179 @@
       },
       {
         "type": "metric",
+        "x": 16,
+        "y": 6,
+        "width": 8,
+        "height": 6,
         "properties": {
           "metrics": [
-            ["AWS/ApplicationELB", "RequestCount", { "stat": "Sum" }]
+            ["AWS/ApplicationELB", "HealthyHostCount", { "stat": "Average", "label": "Healthy Hosts" }],
+            [".", "UnHealthyHostCount", { "stat": "Average", "label": "Unhealthy Hosts" }]
           ],
           "view": "timeSeries",
           "stacked": false,
           "region": "us-east-1",
-          "title": "Request Count",
+          "title": "Target Health Status",
+          "period": 60
+        }
+      },
+      {
+        "type": "metric",
+        "x": 0,
+        "y": 12,
+        "width": 12,
+        "height": 6,
+        "properties": {
+          "metrics": [
+            ["AWS/S3", "NumberOfObjects", { "stat": "Average", "label": "Total Objects" }],
+            ["ContentIntelligence", "S3UploadSuccess", { "stat": "Sum", "label": "Successful Uploads" }],
+            [".", "S3UploadFailed", { "stat": "Sum", "label": "Failed Uploads" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "S3 Upload Metrics",
+          "period": 300
+        }
+      },
+      {
+        "type": "metric",
+        "x": 12,
+        "y": 12,
+        "width": 12,
+        "height": 6,
+        "properties": {
+          "metrics": [
+            ["ContentIntelligence", "TranscriptionJobStarted", { "stat": "Sum", "label": "Jobs Started" }],
+            [".", "TranscriptionJobCompleted", { "stat": "Sum", "label": "Jobs Completed" }],
+            [".", "TranscriptionJobFailed", { "stat": "Sum", "label": "Jobs Failed" }],
+            [".", "TranscriptionDuration", { "stat": "Average", "label": "Avg Duration (ms)", "yAxis": "right" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "Transcription Job Metrics",
           "period": 300,
           "yAxis": {
             "left": {
-              "label": "Count",
-              "showUnits": false
+              "label": "Count"
+            },
+            "right": {
+              "label": "Duration (ms)"
             }
           }
         }
       },
       {
         "type": "metric",
+        "x": 0,
+        "y": 18,
+        "width": 12,
+        "height": 6,
         "properties": {
           "metrics": [
-            ["AWS/S3", "BucketSizeBytes", { "stat": "Average" }],
-            [".", "NumberOfObjects", { "stat": "Average" }]
+            ["ContentIntelligence", "BedrockAPICall", { "stat": "Sum", "label": "API Calls" }],
+            [".", "BedrockAPIError", { "stat": "Sum", "label": "API Errors" }],
+            [".", "BedrockAPILatency", { "stat": "Average", "label": "Avg Latency (ms)", "yAxis": "right" }],
+            ["...", { "stat": "p95", "label": "p95 Latency (ms)", "yAxis": "right" }]
           ],
-          "view": "singleValue",
+          "view": "timeSeries",
+          "stacked": false,
           "region": "us-east-1",
-          "title": "S3 Storage Metrics",
-          "period": 86400
+          "title": "Bedrock API Metrics",
+          "period": 300,
+          "yAxis": {
+            "left": {
+              "label": "Count"
+            },
+            "right": {
+              "label": "Latency (ms)"
+            }
+          }
+        }
+      },
+      {
+        "type": "metric",
+        "x": 12,
+        "y": 18,
+        "width": 12,
+        "height": 6,
+        "properties": {
+          "metrics": [
+            ["ContentIntelligence", "VideoProcessed", { "stat": "Sum", "label": "Videos Processed" }],
+            [".", "ContentGenerated", { "stat": "Sum", "label": "Content Generated" }],
+            [".", "ViralScoreCalculated", { "stat": "Sum", "label": "Viral Scores" }],
+            [".", "ROICalculated", { "stat": "Sum", "label": "ROI Calculations" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "Business Metrics",
+          "period": 3600
+        }
+      },
+      {
+        "type": "metric",
+        "x": 0,
+        "y": 24,
+        "width": 8,
+        "height": 6,
+        "properties": {
+          "metrics": [
+            ["ContentIntelligence", "EndpointLatency", { "stat": "Average", "dimensions": { "Endpoint": "/api/upload" }, "label": "Upload" }],
+            ["...", { "dimensions": { "Endpoint": "/api/process" }, "label": "Process" }],
+            ["...", { "dimensions": { "Endpoint": "/api/generate" }, "label": "Generate" }],
+            ["...", { "dimensions": { "Endpoint": "/api/viral" }, "label": "Viral" }],
+            ["...", { "dimensions": { "Endpoint": "/api/analytics" }, "label": "Analytics" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "Endpoint Latency by Route",
+          "period": 300,
+          "yAxis": {
+            "left": {
+              "label": "Milliseconds"
+            }
+          }
+        }
+      },
+      {
+        "type": "metric",
+        "x": 8,
+        "y": 24,
+        "width": 8,
+        "height": 6,
+        "properties": {
+          "metrics": [
+            ["ContentIntelligence", "RateLimitExceeded", { "stat": "Sum", "label": "Rate Limit Hits" }],
+            [".", "CacheHit", { "stat": "Sum", "label": "Cache Hits" }],
+            [".", "CacheMiss", { "stat": "Sum", "label": "Cache Misses" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "Rate Limiting & Caching",
+          "period": 300
+        }
+      },
+      {
+        "type": "metric",
+        "x": 16,
+        "y": 24,
+        "width": 8,
+        "height": 6,
+        "properties": {
+          "metrics": [
+            ["ContentIntelligence", "WebSocketConnections", { "stat": "Average", "label": "Active Connections" }],
+            [".", "WebSocketMessages", { "stat": "Sum", "label": "Messages Sent" }],
+            [".", "WebSocketErrors", { "stat": "Sum", "label": "Connection Errors" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "WebSocket Metrics",
+          "period": 300
         }
       },
       {

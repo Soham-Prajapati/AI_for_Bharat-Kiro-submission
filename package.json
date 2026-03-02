@@ -10,7 +10,14 @@
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js",
     "demo": "ts-node src/demo.ts",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "load-test": "node -e \"console.log('Use: npm run load-test:all, load-test:upload, load-test:generation, load-test:ratelimit, or load-test:stress')\"",
+    "load-test:all": "k6 run --env BASE_URL=http://localhost:3000 load-tests/scenarios/upload-load.js && k6 run --env BASE_URL=http://localhost:3000 load-tests/scenarios/content-generation-load.js && k6 run --env BASE_URL=http://localhost:3000 load-tests/scenarios/rate-limit-test.js && k6 run --env BASE_URL=http://localhost:3000 load-tests/scenarios/stress-test.js",
+    "load-test:upload": "k6 run --env BASE_URL=http://localhost:3000 load-tests/scenarios/upload-load.js",
+    "load-test:generation": "k6 run --env BASE_URL=http://localhost:3000 load-tests/scenarios/content-generation-load.js",
+    "load-test:ratelimit": "k6 run --env BASE_URL=http://localhost:3000 load-tests/scenarios/rate-limit-test.js",
+    "load-test:stress": "k6 run --env BASE_URL=http://localhost:3000 load-tests/scenarios/stress-test.js",
+    "load-test:report": "node scripts/generate-load-test-report.js local"
   },
   "keywords": [
     "ai",
