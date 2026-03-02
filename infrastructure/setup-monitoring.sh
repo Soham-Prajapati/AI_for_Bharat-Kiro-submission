@@ -70,33 +70,74 @@ jq -c '.alarms[]' "$ALARMS_FILE" | while read -r alarm; do
   # Replace ACCOUNT_ID placeholder with actual account ID
   alarm=$(echo "$alarm" | sed "s/ACCOUNT_ID/$AWS_ACCOUNT_ID/g")
   
-  # Extract alarm properties
-  ALARM_DESC=$(echo "$alarm" | jq -r '.AlarmDescription')
-  METRIC_NAME=$(echo "$alarm" | jq -r '.MetricName')
-  NAMESPACE=$(echo "$alarm" | jq -r '.Namespace')
-  STATISTIC=$(echo "$alarm" | jq -r '.Statistic')
-  PERIOD=$(echo "$alarm" | jq -r '.Period')
-  EVAL_PERIODS=$(echo "$alarm" | jq -r '.EvaluationPeriods')
-  THRESHOLD=$(echo "$alarm" | jq -r '.Threshold')
-  COMPARISON=$(echo "$alarm" | jq -r '.ComparisonOperator')
-  TREAT_MISSING=$(echo "$alarm" | jq -r '.TreatMissingData')
-  
   echo "  Creating alarm: $ALARM_NAME"
   
-  # Build alarm command
-  aws cloudwatch put-metric-alarm \
-    --alarm-name "$ALARM_NAME" \
-    --alarm-description "$ALARM_DESC" \
-    --metric-name "$METRIC_NAME" \
-    --namespace "$NAMESPACE" \
-    --statistic "$STATISTIC" \
-    --period "$PERIOD" \
-    --evaluation-periods "$EVAL_PERIODS" \
-    --threshold "$THRESHOLD" \
-    --comparison-operator "$COMPARISON" \
-    --treat-missing-data "$TREAT_MISSING" \
-    --alarm-actions "$SNS_TOPIC_ARN" \
-    --region "$AWS_REGION"
+  # Check if alarm uses Metrics (for math expressions) or single MetricName
+  if echo "$alarm" | jq -e '.Metrics' > /dev/null 2>&1; then
+    # Alarm with metric math expression
+    ALARM_DESC=$(echo "$alarm" | jq -r '.AlarmDescription')
+    EVAL_PERIODS=$(echo "$alarm" | jq -r '.EvaluationPeriods')
+    THRESHOLD=$(echo "$alarm" | jq -r '.Threshold')
+    COMPARISON=$(echo "$alarm" | jq -r '.ComparisonOperator')
+    TREAT_MISSING=$(echo "$alarm" | jq -r '.TreatMissingData')
+    METRICS=$(echo "$alarm" | jq -c '.Metrics')
+    
+    aws cloudwatch put-metric-alarm \
+      --alarm-name "$ALARM_NAME" \
+      --alarm-description "$ALARM_DESC" \
+      --evaluation-periods "$EVAL_PERIODS" \
+      --threshold "$THRESHOLD" \
+      --comparison-operator "$COMPARISON" \
+      --treat-missing-data "$TREAT_MISSING" \
+      --metrics "$METRICS" \
+      --alarm-actions "$SNS_TOPIC_ARN" \
+      --region "$AWS_REGION"
+  else
+    # Standard alarm with single metric
+    ALARM_DESC=$(echo "$alarm" | jq -r '.AlarmDescription')
+    METRIC_NAME=$(echo "$alarm" | jq -r '.MetricName')
+    NAMESPACE=$(echo "$alarm" | jq -r '.Namespace')
+    PERIOD=$(echo "$alarm" | jq -r '.Period')
+    EVAL_PERIODS=$(echo "$alarm" | jq -r '.EvaluationPeriods')
+    THRESHOLD=$(echo "$alarm" | jq -r '.Threshold')
+    COMPARISON=$(echo "$alarm" | jq -r '.ComparisonOperator')
+    TREAT_MISSING=$(echo "$alarm" | jq -r '.TreatMissingData')
+    
+    # Check if using ExtendedStatistic (p95, p99) or regular Statistic
+    if echo "$alarm" | jq -e '.ExtendedStatistic' > /dev/null 2>&1; then
+      EXT_STATISTIC=$(echo "$alarm" | jq -r '.ExtendedStatistic')
+      
+      aws cloudwatch put-metric-alarm \
+        --alarm-name "$ALARM_NAME" \
+        --alarm-description "$ALARM_DESC" \
+        --metric-name "$METRIC_NAME" \
+        --namespace "$NAMESPACE" \
+        --extended-statistic "$EXT_STATISTIC" \
+        --period "$PERIOD" \
+        --evaluation-periods "$EVAL_PERIODS" \
+        --threshold "$THRESHOLD" \
+        --comparison-operator "$COMPARISON" \
+        --treat-missing-data "$TREAT_MISSING" \
+        --alarm-actions "$SNS_TOPIC_ARN" \
+        --region "$AWS_REGION"
+    else
+      STATISTIC=$(echo "$alarm" | jq -r '.Statistic')
+      
+      aws cloudwatch put-metric-alarm \
+        --alarm-name "$ALARM_NAME" \
+        --alarm-description "$ALARM_DESC" \
+        --metric-name "$METRIC_NAME" \
+        --namespace "$NAMESPACE" \
+        --statistic "$STATISTIC" \
+        --period "$PERIOD" \
+        --evaluation-periods "$EVAL_PERIODS" \
+        --threshold "$THRESHOLD" \
+        --comparison-operator "$COMPARISON" \
+        --treat-missing-data "$TREAT_MISSING" \
+        --alarm-actions "$SNS_TOPIC_ARN" \
+        --region "$AWS_REGION"
+    fi
+  fi
   
   echo "  ✅ Alarm created: $ALARM_NAME"
 done
