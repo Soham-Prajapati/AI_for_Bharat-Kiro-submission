@@ -31,31 +31,31 @@ export default function IterationE() {
     {
       num: '01',
       title: 'Domain Intelligence',
-      body: 'KLA auto-detects 8 content domains from your video — education, food, travel, tech, finance, lifestyle, fitness, and entertainment. Each domain unlocks specialized output templates.',
+      body: 'कLA auto-detects 8 content domains from your video — education, food, travel, tech, finance, lifestyle, fitness, and entertainment. Each domain unlocks specialized output templates.',
       visual: '🧠',
     },
     {
       num: '02',
       title: 'Creator DNA Profiling',
-      body: 'Your voice fingerprint. KLA learns sentence rhythm, vocabulary set, tone markers, and cultural touchpoints from 5 past videos. Every output is filtered through your DNA.',
+      body: 'Your voice fingerprint. कLA learns sentence rhythm, vocabulary set, tone markers, and cultural touchpoints from 5 past videos. Every output is filtered through your DNA.',
       visual: '🧬',
     },
     {
       num: '03',
       title: 'Platform-Native Output',
-      body: '6 platforms, 6 completely different algorithms. KLA generates YouTube\'s long-form description, Instagram\'s punchy caption, LinkedIn\'s professional framing, all simultaneously.',
+      body: '6 platforms, 6 completely different algorithms. कLA generates YouTube\'s long-form description, Instagram\'s punchy caption, LinkedIn\'s professional framing, all simultaneously.',
       visual: '🎯',
     },
     {
       num: '04',
       title: 'Cultural Intelligence',
-      body: 'Not translation. Adaptation. A cooking video in Tamil for Chennai has different cultural context than Hindi for Delhi. KLA knows the difference.',
+      body: 'Not translation. Adaptation. A cooking video in Tamil for Chennai has different cultural context than Hindi for Delhi. कLA knows the difference.',
       visual: '🌏',
     },
     {
       num: '05',
       title: 'Viral Score Prediction',
-      body: 'Before you publish, KLA gives your content a viral likelihood score (0–100) based on engagement patterns from similar content. High score? Push it immediately.',
+      body: 'Before you publish, कLA gives your content a viral likelihood score (0–100) based on engagement patterns from similar content. High score? Push it immediately.',
       visual: '🔥',
     },
   ]
@@ -197,7 +197,7 @@ export default function IterationE() {
           {/* Section label */}
           <div className="e-hero-meta flex items-center gap-4 mb-12">
             <div className="w-8 h-px bg-brand-500" />
-            <span className="font-mono text-[10px] text-brand-400 tracking-[0.4em] uppercase">KLA — Content Protocol v2.6</span>
+            <span className="font-mono text-[10px] text-brand-400 tracking-[0.4em] uppercase">कLA — Content Protocol v2.6</span>
           </div>
 
           {/* Giant headline */}
@@ -234,7 +234,7 @@ export default function IterationE() {
             <Link href="/upload"
               className="group flex items-center gap-2 bg-gradient-to-br from-brand-500 to-brand-600 text-white font-bold px-8 py-3.5 rounded-full hover:shadow-[0_0_40px_rgba(99,102,241,0.35)] transition-all hover:-translate-y-0.5"
             >
-              Deploy KLA
+              Deploy कLA
               <ArrowRightSVG className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link href="/demo" className="flex items-center gap-2 border border-white/10 text-white/50 font-medium px-8 py-3.5 rounded-full hover:bg-white/[0.05] hover:text-white transition-all">
@@ -350,16 +350,16 @@ export default function IterationE() {
       </section>
 
       {/* ══════════ PLATFORMS ══════════ */}
-      <PlatformShowcase />
+      <PlatformShowcase theme="noir" />
 
       {/* ══════════ INDIA COVERAGE ══════════ */}
-      <IndiaCoverage />
+      <IndiaCoverage theme="noir" />
 
       {/* ══════════ TESTIMONIALS ══════════ */}
-      <TestimonialsSection variant="darker" />
+      <TestimonialsSection theme="noir" />
 
       {/* ══════════ PRICING ══════════ */}
-      <PricingStripSection />
+      <PricingStripSection theme="noir" />
 
       {/* ══════════ CTA ══════════ */}
       <section className="relative py-40 px-6 overflow-hidden border-t border-white/[0.05]">
@@ -376,13 +376,13 @@ export default function IterationE() {
             </div>
             <div className="space-y-5">
               <p className="text-white/40 text-lg leading-relaxed">
-                Stop formatting. Stop translating. Stop adapting. KLA does all of it in under 60 seconds so you can focus on what you do best: creating.
+                Stop formatting. Stop translating. Stop adapting. कLA does all of it in under 60 seconds so you can focus on what you do best: creating.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/upload"
                   className="flex items-center justify-center gap-2 bg-gradient-to-br from-brand-500 to-brand-600 text-white font-bold px-8 py-4 rounded-xl hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] transition-all hover:-translate-y-0.5"
                 >
-                  Deploy KLA Free
+                  Deploy कLA Free
                 </Link>
                 <Link href="/membership"
                   className="flex items-center justify-center gap-2 border border-white/10 text-white/50 font-medium px-8 py-4 rounded-xl hover:bg-white/[0.05] hover:text-white transition-all"
@@ -407,7 +407,7 @@ export default function IterationE() {
           </div>
           <div className="font-mono text-[10px] text-white/15 flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-            © 2026 KLA · Made in India 🇮🇳
+            © 2026 कLA · Made in India 🇮🇳
           </div>
         </div>
       </footer>

@@ -266,9 +266,9 @@ Happy collaborating!`
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="h-screen flex flex-col bg-[#030712] transition-colors">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-3 transition-colors">
+      <header className="bg-[#0A0E1A] border-b border-white/[0.07] px-6 py-3 transition-colors">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4 flex-1">
             {isEditingName ? (
@@ -278,18 +278,18 @@ Happy collaborating!`
                 onChange={(e) => setDocumentName(e.target.value)}
                 onBlur={() => setIsEditingName(false)}
                 onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
-                className="text-xl font-semibold bg-transparent border-b-2 border-blue-500 focus:outline-none text-gray-900 dark:text-gray-100"
+                className="text-xl font-bold bg-transparent border-b-2 border-brand-500 focus:outline-none text-white"
                 autoFocus
               />
             ) : (
               <h1
-                className="text-xl font-semibold text-gray-900 dark:text-gray-100 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="text-xl font-bold text-white cursor-pointer hover:text-brand-300 transition-colors font-display"
                 onClick={() => setIsEditingName(true)}
               >
                 {documentName}
               </h1>
             )}
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-xs font-mono text-white/30">
               Last edited {new Date().toLocaleTimeString()}
             </span>
           </div>
@@ -297,7 +297,7 @@ Happy collaborating!`
           <div className="flex items-center gap-4">
             <UserPresence activeUsers={activeUsers} />
 
-            <div className="flex items-center gap-2 border-l border-gray-300 dark:border-gray-600 pl-4">
+            <div className="flex items-center gap-2 border-l border-white/[0.07] pl-4">
               <button
                 onClick={() => {
                   setShowComments(!showComments);
@@ -305,19 +305,14 @@ Happy collaborating!`
                 }}
                 className={`p-2 rounded-lg transition-colors ${
                   showComments
-                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                    ? 'bg-brand-500/20 text-brand-400'
+                    : 'hover:bg-white/[0.05] text-white/50 hover:text-white'
                 }`}
                 title="Comments"
                 aria-label="Toggle comments"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                 </svg>
               </button>
 
@@ -328,51 +323,19 @@ Happy collaborating!`
                 }}
                 className={`p-2 rounded-lg transition-colors ${
                   showHistory
-                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                    ? 'bg-brand-500/20 text-brand-400'
+                    : 'hover:bg-white/[0.05] text-white/50 hover:text-white'
                 }`}
                 title="Version History"
                 aria-label="Toggle version history"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </button>
 
               <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-700 dark:text-gray-300"
-                title={isDarkMode ? 'Light mode' : 'Dark mode'}
-                aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-              >
-                {isDarkMode ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                    />
-                  </svg>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                    />
-                  </svg>
-                )}
-              </button>
-
-              <button
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                className="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-lg transition-colors font-semibold text-sm"
                 aria-label="Share document"
               >
                 Share
@@ -396,26 +359,24 @@ Happy collaborating!`
 
         {/* Sidebar */}
         {(showComments || showHistory) && (
-          <aside className="w-80 border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden transition-colors">
+          <aside className="w-80 border-l border-white/[0.07] bg-[#0A0E1A] overflow-hidden transition-colors">
             {showComments && (
               <div className="h-full flex flex-col">
-                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div className="p-4 border-b border-white/[0.07]">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                      Comments
-                    </h2>
+                    <h2 className="text-base font-bold text-white font-display">Comments</h2>
                     <button
                       onClick={handleAddComment}
-                      className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+                      className="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded-lg transition-colors"
                     >
                       + Add
                     </button>
                   </div>
-                  <div className="flex gap-2 text-sm">
-                    <button className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg font-medium">
+                  <div className="flex gap-2 text-xs">
+                    <button className="px-3 py-1 bg-brand-500/10 text-brand-400 rounded-lg font-mono font-semibold">
                       All ({comments.length})
                     </button>
-                    <button className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                    <button className="px-3 py-1 text-white/40 hover:bg-white/[0.05] hover:text-white rounded-lg transition-colors font-mono">
                       Open ({comments.filter((c) => !c.resolved).length})
                     </button>
                   </div>
@@ -424,23 +385,9 @@ Happy collaborating!`
                 <div className="flex-1 overflow-y-auto p-4">
                   {comments.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
-                      <svg
-                        className="w-16 h-16 text-gray-400 dark:text-gray-600 mb-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                        />
-                      </svg>
-                      <p className="text-gray-600 dark:text-gray-400">No comments yet</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                        Start a conversation
-                      </p>
+                      <div className="text-4xl mb-4 opacity-20">💬</div>
+                      <p className="text-white/40 text-sm">No comments yet</p>
+                      <p className="text-xs text-white/20 mt-1">Start a conversation</p>
                     </div>
                   ) : (
                     comments.map((comment) => (

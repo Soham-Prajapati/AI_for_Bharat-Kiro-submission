@@ -135,7 +135,7 @@ export default function IterationA() {
       {/* ══════════ NAV ══════════ */}
       <nav className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
         <div className="max-w-[1200px] mx-auto px-6 py-5 flex items-center justify-between pointer-events-auto">
-          <div className="font-display font-black text-2xl tracking-[-1px] text-white">KLA</div>
+          <div className="font-display font-black text-2xl tracking-[-1px]"><span className="text-orange-500">क</span><span className="text-white">LA</span></div>
           <div className="hidden md:flex items-center gap-8">
             {['Product', 'Features', 'Pricing'].map(item => (
               <a key={item} href="#" className="text-white/40 hover:text-white text-sm transition-colors font-medium">{item}</a>
@@ -172,7 +172,7 @@ export default function IterationA() {
 
           {/* Sub */}
           <p ref={heroSubRef} className="text-[1.1rem] md:text-xl text-white/50 max-w-[600px] mx-auto leading-relaxed mb-10">
-            KLA's AI engine turns one upload into platform-perfect content across YouTube, Instagram, LinkedIn & more — in 9 Indian languages, in under a minute.
+            कLA's AI engine turns one upload into platform-perfect content across YouTube, Instagram, LinkedIn & more — in 9 Indian languages, in under a minute.
           </p>
 
           {/* CTAs */}
@@ -220,7 +220,7 @@ export default function IterationA() {
           <div className="text-center mb-20">
             <p className="font-mono text-xs text-brand-400 tracking-[0.3em] uppercase mb-4">The Engine</p>
             <h2 className="font-display font-black text-[clamp(2.5rem,5vw,4.5rem)] text-white tracking-[-2px]">
-              What KLA does<br />
+              What कLA does<br />
               <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">while you sleep</span>
             </h2>
           </div>
@@ -298,12 +298,12 @@ export default function IterationA() {
             <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">Reach everyone.</span>
           </h2>
           <p className="text-white/40 text-lg mb-12">
-            Join 50,000+ Indian creators already using KLA to multiply their reach.
+            Join 50,000+ Indian creators already using कLA to multiply their reach.
           </p>
           <Link href="/upload"
             className="inline-flex items-center gap-3 bg-white text-bg-base font-black text-lg px-10 py-5 rounded-2xl hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] transition-all hover:-translate-y-1"
           >
-            Launch KLA Free
+            Launch कLA Free
           </Link>
         </div>
         <div className="absolute inset-0 bg-gradient-radial from-brand-500/10 to-transparent pointer-events-none" />
@@ -312,13 +312,13 @@ export default function IterationA() {
       {/* ══════════ FOOTER ══════════ */}
       <footer className="border-t border-white/[0.06] py-10 px-6">
         <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-white/30 text-sm">
-          <span className="font-display font-bold text-xl text-white">KLA</span>
+          <span className="font-display font-bold text-xl"><span className="text-orange-500">क</span><span className="text-white">LA</span></span>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white/60 transition-colors">Product</a>
             <a href="/membership" className="hover:text-white/60 transition-colors">Pricing</a>
             <a href="/dashboard" className="hover:text-white/60 transition-colors">Dashboard</a>
           </div>
-          <span>© 2026 KLA. Built for Bharat.</span>
+          <span>© 2026 कLA. Built for Bharat.</span>
         </div>
       </footer>
     </div>

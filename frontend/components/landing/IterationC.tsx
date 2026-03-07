@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger)
 const WebGLScene = dynamic(() => import('./WebGLScene'), { ssr: false })
 
 const STEPS = [
-  { n: '01', title: 'Drop Your Video', body: 'Any format. Any length. KLA accepts video, audio, or plain text.' },
+  { n: '01', title: 'Drop Your Video', body: 'Any format. Any length. कLA accepts video, audio, or plain text.' },
   { n: '02', title: 'AI Understands It', body: 'Domain detection, transcription, and semantic analysis happen in parallel.' },
   { n: '03', title: 'Platform Content Generated', body: 'Captions, scripts, hashtags, and thumbnails — tailored to each algorithm.' },
   { n: '04', title: 'Review & Publish', body: 'Every output waits for your approval. One click sends it everywhere.' },
@@ -122,8 +122,8 @@ export default function IterationC() {
       {/* ══════════ NAV ══════════ */}
       <nav className="fixed top-0 left-0 right-0 z-50">
         <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="font-display font-black text-2xl tracking-[-1px] text-white">
-            K<span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">L</span>A
+          <div className="font-display font-black text-2xl tracking-[-1px]">
+            <span className="text-orange-500">क</span><span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">L</span><span className="text-white">A</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             {['Product', 'How It Works', 'Pricing'].map(item => (
@@ -174,7 +174,7 @@ export default function IterationC() {
 
           {/* Sub */}
           <p className="hero-sub text-white/50 text-lg md:text-xl max-w-[540px] mx-auto leading-relaxed mb-10" style={{ opacity: 0 }}>
-            Upload one video. KLA generates platform-perfect content for 6 networks in 9 Indian languages — in 60 seconds.
+            Upload one video. कLA generates platform-perfect content for 6 networks in 9 Indian languages — in 60 seconds.
           </p>
 
           {/* CTAs */}
@@ -325,7 +325,7 @@ export default function IterationC() {
             Your voice.<br />
             <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">Just louder.</span>
           </h2>
-          <p className="text-white/40 text-lg mb-10">Join 50,000+ Indian creators multiplying their reach with KLA.</p>
+          <p className="text-white/40 text-lg mb-10">Join 50,000+ Indian creators multiplying their reach with कLA.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/upload"
               className="bg-gradient-to-br from-brand-500 to-brand-600 text-white font-bold text-base px-10 py-4 rounded-2xl hover:shadow-[0_0_50px_rgba(99,102,241,0.35)] transition-all hover:-translate-y-0.5"
@@ -342,29 +342,29 @@ export default function IterationC() {
       </section>
 
       {/* ══════════ PLATFORM SHOWCASE ══════════ */}
-      <PlatformShowcase />
+      <PlatformShowcase theme="cyan" />
 
       {/* ══════════ INDIA COVERAGE ══════════ */}
-      <IndiaCoverage />
+      <IndiaCoverage theme="cyan" />
 
       {/* ══════════ TESTIMONIALS ══════════ */}
-      <TestimonialsSection variant="darker" />
+      <TestimonialsSection theme="cyan" />
 
       {/* ══════════ PRICING ══════════ */}
-      <PricingStripSection />
+      <PricingStripSection theme="cyan" />
 
       {/* ══════════ FOOTER ══════════ */}
       <footer className="border-t border-white/[0.06] py-10 px-6">
         <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="font-display font-black text-2xl tracking-[-1px]">
-            K<span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">L</span>A
+            <span className="text-orange-500">क</span><span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">L</span><span className="text-white">A</span>
           </div>
           <div className="flex gap-6 text-sm text-white/30">
             <a href="#" className="hover:text-white/60 transition-colors">Product</a>
             <a href="/membership" className="hover:text-white/60 transition-colors">Pricing</a>
             <a href="/dashboard" className="hover:text-white/60 transition-colors">Dashboard</a>
           </div>
-          <div className="text-white/20 text-xs font-mono">© 2026 KLA · Built for Bharat</div>
+          <div className="text-white/20 text-xs font-mono">© 2026 कLA · Built for Bharat</div>
         </div>
       </footer>
     </div>

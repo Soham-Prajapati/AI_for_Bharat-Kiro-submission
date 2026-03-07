@@ -8,7 +8,7 @@ import { TestimonialsSection, PlatformShowcase, IndiaCoverage, PricingStripSecti
 
 gsap.registerPlugin(ScrollTrigger)
 
-const MARQUEE_ITEMS = ['1 VIDEO', '6 PLATFORMS', '60 SECONDS', '9 LANGUAGES', 'CREATOR DNA', 'VIRAL SCORE', 'KLA ENGINE']
+const MARQUEE_ITEMS = ['1 VIDEO', '6 PLATFORMS', '60 SECONDS', '9 LANGUAGES', 'CREATOR DNA', 'VIRAL SCORE', 'कLA ENGINE']
 
 const PLATFORMS = ['YouTube', 'Instagram', 'LinkedIn', 'Twitter', 'Facebook', 'TikTok']
 
@@ -148,7 +148,7 @@ export default function IterationB() {
         {/* Bottom info row */}
         <div className="max-w-[1400px] mx-auto w-full px-6 pb-16 flex flex-col md:flex-row justify-between items-end gap-8">
           <p className="text-white/40 text-base max-w-xs leading-relaxed">
-            KLA transforms a single video into 54 platform-ready content pieces across 6 networks & 9 languages.
+            कLA transforms a single video into 54 platform-ready content pieces across 6 networks & 9 languages.
           </p>
           <div className="flex items-center gap-6">
             <div className="text-center">
@@ -168,7 +168,7 @@ export default function IterationB() {
         {/* Right-side vertical text */}
         <div className="absolute right-6 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-center gap-3">
           <div className="w-px h-20 bg-white/10" />
-          <span className="font-mono text-[10px] text-white/20 tracking-[0.4em] uppercase rotate-90 whitespace-nowrap">KLA — 2026</span>
+          <span className="font-mono text-[10px] text-white/20 tracking-[0.4em] uppercase rotate-90 whitespace-nowrap">कLA — 2026</span>
           <div className="w-px h-20 bg-white/10" />
         </div>
       </section>
@@ -223,7 +223,7 @@ export default function IterationB() {
           </div>
           <div className="reveal-b">
             <p className="text-black/70 text-lg leading-relaxed mb-8">
-              KLA learns your unique style from past content. Every AI-generated post sounds exactly like you wrote it — not a generic template.
+              कLA learns your unique style from past content. Every AI-generated post sounds exactly like you wrote it — not a generic template.
             </p>
             <Link href="/upload" className="inline-flex items-center gap-2 bg-black text-white font-bold px-8 py-4 rounded-full hover:bg-white/90 hover:text-black transition-all">
               Activate DNA Profile
@@ -260,27 +260,27 @@ export default function IterationB() {
           <Link href="/upload"
             className="inline-flex items-center gap-3 border-2 border-white text-white font-black text-xl px-12 py-5 rounded-full hover:bg-white hover:text-black transition-all duration-300"
           >
-            Launch KLA Free
+            Launch कLA Free
           </Link>
         </div>
       </section>
 
       {/* ══════════ PLATFORM SHOWCASE ══════════ */}
-      <PlatformShowcase />
+      <PlatformShowcase theme="orange" />
 
       {/* ══════════ INDIA COVERAGE ══════════ */}
-      <IndiaCoverage />
+      <IndiaCoverage theme="orange" />
 
       {/* ══════════ TESTIMONIALS ══════════ */}
-      <TestimonialsSection variant="orange" />
+      <TestimonialsSection theme="orange" />
 
       {/* ══════════ PRICING ══════════ */}
-      <PricingStripSection />
+      <PricingStripSection theme="orange" />
 
       {/* ══════════ FOOTER ══════════ */}
       <footer className="border-t border-white/[0.06] py-10 px-6">
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-white/30 text-sm">
-          <span className="font-display font-black text-3xl text-white tracking-[-1px]">KLA</span>
+          <span className="font-display font-black text-3xl tracking-[-1px]"><span className="text-orange-500">क</span><span className="text-white">LA</span></span>
           <div className="font-mono text-xs tracking-[0.2em]">India's Content Multiplication Engine · © 2026</div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white/60 transition-colors">Pricing</a>

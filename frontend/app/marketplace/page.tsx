@@ -86,123 +86,96 @@ export default function MarketplacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-[#030712] text-white">
       {/* Header */}
-      <div className="border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <ShoppingBag className="w-8 h-8 text-purple-400" />
-                <h1 className="text-3xl sm:text-4xl font-bold">Marketplace</h1>
+      <div className="border-b border-white/[0.07] bg-[#030712]/80 backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                <span className="text-[10px] font-mono font-semibold text-amber-400 uppercase tracking-widest">Creator Marketplace</span>
               </div>
-              
-              {/* View Mode Tabs */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setViewMode('browse')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    viewMode === 'browse'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                  }`}
-                >
-                  Browse
-                </button>
-                <button
-                  onClick={() => setViewMode('purchases')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    viewMode === 'purchases'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                  }`}
-                >
-                  My Purchases
-                </button>
-                <button
-                  onClick={() => setViewMode('seller')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    viewMode === 'seller'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                  }`}
-                >
-                  Sell
-                </button>
-              </div>
+              <h1 className="text-2xl font-black font-display text-white">Marketplace</h1>
             </div>
-            <p className="text-gray-400 text-sm sm:text-base">
-              Buy and sell content templates, scripts, and assets
-            </p>
+            
+            {/* View Mode Tabs */}
+            <div className="flex gap-1 bg-white/[0.04] border border-white/[0.07] rounded-xl p-1">
+              {(['browse', 'purchases', 'seller'] as const).map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => setViewMode(mode)}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-mono font-semibold capitalize transition-all duration-200 ${
+                    viewMode === mode
+                      ? 'bg-brand-600 text-white shadow-lg shadow-brand-500/20'
+                      : 'text-white/40 hover:text-white/70'
+                  }`}
+                >
+                  {mode === 'purchases' ? 'My Purchases' : mode.charAt(0).toUpperCase() + mode.slice(1)}
+                </button>
+              ))}
+            </div>
           </div>
+          <p className="mt-1 text-white/40 text-xs font-mono">
+            Buy and sell content templates, scripts &amp; assets
+          </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Browse View */}
-        {viewMode === 'browse' && (
-          <>
-            {/* Search and Filters */}
-            <SearchBar
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              selectedType={selectedType}
-              onTypeChange={setSelectedType}
-              priceRange={priceRange}
-              onPriceRangeChange={setPriceRange}
-            />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-4">
+          {/* Browse View */}
+          {viewMode === 'browse' && (
+            <>
+              {/* Search and Filters */}
+              <SearchBar
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                selectedType={selectedType}
+                onTypeChange={setSelectedType}
+                priceRange={priceRange}
+                onPriceRangeChange={setPriceRange}
+              />
 
-            {/* Stats */}
-            <div
-              className="mb-6 flex items-center gap-4 text-sm text-gray-400"
-            >
-              <span>
-                Showing {filteredListings.length} of {listings.length} items
-              </span>
-              {searchQuery && (
-                <span className="text-purple-400">
-                  Search: "{searchQuery}"
-                </span>
+              {/* Stats */}
+              <div className="mb-6 flex items-center gap-4 text-xs font-mono text-white/30">
+                <span>Showing {filteredListings.length} of {listings.length} items</span>
+                {searchQuery && <span className="text-brand-400">Search: &ldquo;{searchQuery}&rdquo;</span>}
+              </div>
+
+              {/* Listings Grid */}
+              {loading ? (
+                <div className="flex items-center justify-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500"></div>
+                </div>
+              ) : filteredListings.length === 0 ? (
+                <div className="text-center py-20">
+                  <div className="text-5xl mb-4">🛍️</div>
+                  <p className="text-white/40 text-base">No listings found</p>
+                  <p className="text-white/20 text-sm mt-2">Try adjusting your filters or search query</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredListings.map((listing, index) => (
+                    <ListingCard
+                      key={listing.id ?? `listing-${index}`}
+                      listing={listing}
+                      index={index}
+                      onPurchase={handlePurchase}
+                    />
+                  ))}
+                </div>
               )}
-            </div>
-
-            {/* Listings Grid */}
-            {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
-              </div>
-            ) : filteredListings.length === 0 ? (
-              <div className="text-center py-20">
-                <ShoppingBag className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400 text-lg">No listings found</p>
-                <p className="text-gray-500 text-sm mt-2">
-                  Try adjusting your filters or search query
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredListings.map((listing, index) => (
-                  <ListingCard
-                    key={listing.id}
-                    listing={listing}
-                    index={index}
-                    onPurchase={handlePurchase}
-                  />
-                ))}
-              </div>
-            )}
-          </>
-        )}
+            </>
+          )}
 
         {/* Purchase History View */}
-        {viewMode === 'purchases' && (
-          <PurchaseHistory userId={userId} />
-        )}
+          {viewMode === 'purchases' && (
+            <PurchaseHistory userId={userId} />
+          )}
 
-        {/* Seller Dashboard View */}
-        {viewMode === 'seller' && (
-          <SellerDashboard userId={userId} />
+          {/* Seller Dashboard View */}
+          {viewMode === 'seller' && (
+            <SellerDashboard userId={userId} />
         )}
       </div>
 
