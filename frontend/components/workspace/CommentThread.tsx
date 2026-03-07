@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Comment } from '@/types/workspace';
 
 interface CommentThreadProps {
@@ -21,6 +21,11 @@ export default function CommentThread({
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const handleSubmitReply = () => {
     if (replyContent.trim()) {
@@ -31,6 +36,10 @@ export default function CommentThread({
   };
 
   const formatDate = (date: Date) => {
+    if (!isHydrated) {
+      return '...';
+    }
+
     const now = new Date();
     const diff = now.getTime() - new Date(date).getTime();
     const minutes = Math.floor(diff / 60000);
