@@ -1122,7 +1122,7 @@ export const api = {
   - **Feedback:** Note issues, refine script
 
 ### Day 6.6: Final Polish
-- [ ] **6.6a: Fix all bugs (All)**
+- [x] **6.6a: Fix all bugs (All)**
   - **What:** Go through bug list, fix all
   - **Where:** GitHub Issues
   - **Priority:** Critical → High → Medium

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { X, Upload, AlertCircle } from 'lucide-react';
 import { CreateListingRequest, ListingType } from '@/types/api';
+import apiClient from '@/services/api';
 
 interface CreateListingModalProps {
   userId: string;
@@ -68,8 +69,12 @@ export default function CreateListingModal({ userId, onClose, onCreate }: Create
     try {
       setUploading(true);
 
-      // TODO: Upload file to S3 and get URL
-      const fileUrl = `https://example.com/files/${file.name}`;
+      // Upload file to S3 and get URL
+      const uploadResponse = await apiClient.upload.file(file, undefined, userId);
+      
+      if (!uploadResponse.url) {
+        throw new Error('Failed to get file URL from upload');
+      }
 
       const listingData: CreateListingRequest = {
         userId,
@@ -77,7 +82,7 @@ export default function CreateListingModal({ userId, onClose, onCreate }: Create
         description: description.trim() || undefined,
         price: parseFloat(price),
         type,
-        fileUrl,
+        fileUrl: uploadResponse.url,
       };
 
       onCreate(listingData);

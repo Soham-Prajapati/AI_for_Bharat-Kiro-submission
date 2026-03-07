@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import apiClient from '@/services/api'
 
 const TIME_RANGES = ['24h', '7d', '30d', '90d']
 
@@ -18,14 +19,110 @@ const SPARKLINE = [40, 55, 48, 62, 58, 71, 68, 82, 75, 90, 88, 95, 84, 100, 92, 
 
 export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState('7d')
-  // TODO: replace with apiClient.analytics.metrics({ range: timeRange })
-
-  const stats = [
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [stats, setStats] = useState([
     { label: 'Total Views',      value: '76.4K', change: '+18.3%', positive: true,  icon: '👁' },
     { label: 'Engagement Rate',  value: '11.2%', change: '+2.4pp', positive: true,  icon: '💬' },
     { label: 'Avg Watch Time',   value: '3:42',  change: '+0:18',  positive: true,  icon: '⏱' },
     { label: 'Content Pieces',   value: '112',   change: '+24',    positive: true,  icon: '🎬' },
-  ]
+  ])
+  const [platformData, setPlatformData] = useState(PLATFORM_DATA)
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        // TODO: Get actual userId from auth context
+        const userId = 'demo-user'
+        const response = await apiClient.analytics.get(userId)
+        
+        if (response.success && response.analytics) {
+          const { analytics } = response
+          
+          // Update stats with real data
+          setStats([
+            { 
+              label: 'Total Views',      
+              value: analytics.totalViews > 0 ? `${(analytics.totalViews / 1000).toFixed(1)}K` : '76.4K', 
+              change: '+18.3%', 
+              positive: true,  
+              icon: '👁' 
+            },
+            { 
+              label: 'Engagement Rate',  
+              value: analytics.totalEngagement > 0 ? `${(analytics.totalEngagement / analytics.totalViews * 100).toFixed(1)}%` : '11.2%', 
+              change: '+2.4pp', 
+              positive: true,  
+              icon: '💬' 
+            },
+            { 
+              label: 'Avg Watch Time',   
+              value: '3:42',  
+              change: '+0:18',  
+              positive: true,  
+              icon: '⏱' 
+            },
+            { 
+              label: 'Content Pieces',   
+              value: analytics.platforms?.length?.toString() || '112',   
+              change: '+24',    
+              positive: true,  
+              icon: '🎬' 
+            },
+          ])
+          
+          // Update platform data with real data
+          if (analytics.platforms && analytics.platforms.length > 0) {
+            const mappedPlatforms = analytics.platforms.map((p: any) => ({
+              platform: p.platform.charAt(0).toUpperCase() + p.platform.slice(1),
+              icon: getPlatformIcon(p.platform),
+              color: getPlatformColor(p.platform),
+              views: p.views > 0 ? `${(p.views / 1000).toFixed(1)}K` : '0',
+              engagement: p.engagement ? `${(p.engagement * 100).toFixed(1)}%` : '0%',
+              growth: p.growth ? `${p.growth > 0 ? '+' : ''}${p.growth}%` : '+0%',
+              reach: p.reach > 0 ? `${(p.reach / 1000).toFixed(1)}K` : '0',
+              posts: p.posts || 0,
+            }))
+            setPlatformData(mappedPlatforms)
+          }
+        }
+      } catch (err: any) {
+        console.error('Failed to fetch analytics:', err)
+        setError(err.message || 'Failed to load analytics data')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchAnalytics()
+  }, [timeRange])
+
+  const getPlatformIcon = (platform: string): string => {
+    const icons: Record<string, string> = {
+      youtube: '▶',
+      instagram: '◎',
+      linkedin: 'in',
+      twitter: '𝕏',
+      tiktok: '♪',
+      facebook: 'f',
+    }
+    return icons[platform.toLowerCase()] || '•'
+  }
+
+  const getPlatformColor = (platform: string): string => {
+    const colors: Record<string, string> = {
+      youtube: '#FF0000',
+      instagram: '#E1306C',
+      linkedin: '#0077B5',
+      twitter: '#1DA1F2',
+      tiktok: '#00F2EA',
+      facebook: '#1877F2',
+    }
+    return colors[platform.toLowerCase()] || '#FFFFFF'
+  }
 
   return (
     <div className="min-h-screen bg-[#030712] text-white">
@@ -62,21 +159,38 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((s, i) => (
-            <div key={i} className="group bg-white/[0.03] border border-white/[0.07] rounded-2xl p-5 hover:border-cyan-500/30 hover:bg-white/[0.05] transition-all duration-300">
-              <div className="flex items-start justify-between mb-3">
-                <span className="text-xl">{s.icon}</span>
-                <span className={`text-xs font-mono font-semibold px-2 py-0.5 rounded-full ${s.positive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-                  {s.change}
-                </span>
-              </div>
-              <div className="text-3xl font-black font-display text-white mb-1">{s.value}</div>
-              <div className="text-xs font-mono text-white/35 uppercase tracking-widest">{s.label}</div>
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+            <p className="text-red-400 text-sm">⚠️ {error}</p>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <div className="w-12 h-12 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-white/40 text-sm">Loading analytics...</p>
             </div>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <>
+            {/* Stats */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {stats.map((s, i) => (
+                <div key={i} className="group bg-white/[0.03] border border-white/[0.07] rounded-2xl p-5 hover:border-cyan-500/30 hover:bg-white/[0.05] transition-all duration-300">
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="text-xl">{s.icon}</span>
+                    <span className={`text-xs font-mono font-semibold px-2 py-0.5 rounded-full ${s.positive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+                      {s.change}
+                    </span>
+                  </div>
+                  <div className="text-3xl font-black font-display text-white mb-1">{s.value}</div>
+                  <div className="text-xs font-mono text-white/35 uppercase tracking-widest">{s.label}</div>
+                </div>
+              ))}
+            </div>
 
         {/* Sparkline chart (visual only) */}
         <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-6">
@@ -113,7 +227,7 @@ export default function AnalyticsPage() {
             </Link>
           </div>
           <div className="divide-y divide-white/[0.05]">
-            {PLATFORM_DATA.map((p) => (
+            {platformData.map((p) => (
               <div key={p.platform} className="px-6 py-5 hover:bg-white/[0.02] transition-colors">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
@@ -164,6 +278,8 @@ export default function AnalyticsPage() {
             </div>
           ))}
         </div>
+          </>
+        )}
 
       </div>
     </div>

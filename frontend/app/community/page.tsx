@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useToast } from '@/context/ToastContext';
+import { useAuth } from '@/hooks/useAuth';
 import apiClient from '@/services/api';
 import { Post, UserProfile, Group, Comment } from '@/types/api';
 import Image from 'next/image';
@@ -34,7 +35,8 @@ interface OptimisticUpdate {
 
 export default function CommunityPage() {
   const { addToast } = useToast();
-  const [currentUserId] = useState('user-123'); // TODO: Get from auth context
+  const { user } = useAuth();
+  const currentUserId = user?.id || 'guest';
   
   // State management
   const [feedState, setFeedState] = useState<FeedState>({
