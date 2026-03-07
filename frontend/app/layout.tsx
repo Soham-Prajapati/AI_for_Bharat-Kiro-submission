@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { ToastProvider } from '@/context/ToastContext'
 import { AppProvider } from '@/context/AppContext'
+import { DesignProvider } from '@/context/DesignContext'
 import ToastContainer from '@/components/ToastContainer'
 import ConditionalLayout from '@/components/ConditionalLayout'
+import DesignSwitcherPanel from '@/components/DesignSwitcherPanel'
 
 export const metadata: Metadata = {
   title: 'KLA — 1 Video. 6 Platforms. 60 Seconds.',
@@ -24,12 +26,15 @@ export default function RootLayout({
       </head>
       <body className="antialiased bg-bg-base text-text-primary font-sans">
         <AppProvider>
-          <ToastProvider>
-            <ConditionalLayout>
-              {children}
-            </ConditionalLayout>
-            <ToastContainer />
-          </ToastProvider>
+          <DesignProvider>
+            <ToastProvider>
+              <ConditionalLayout>
+                {children}
+              </ConditionalLayout>
+              <ToastContainer />
+              <DesignSwitcherPanel />
+            </ToastProvider>
+          </DesignProvider>
         </AppProvider>
       </body>
     </html>

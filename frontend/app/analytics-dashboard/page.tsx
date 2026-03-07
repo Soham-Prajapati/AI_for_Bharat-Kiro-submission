@@ -130,35 +130,35 @@ export default function AnalyticsDashboard() {
   const avgROI = (data.comparisonData.reduce((sum, p) => sum + p.roi, 0) / data.comparisonData.length).toFixed(1);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black">
+    <div className="min-h-screen bg-[#030712] text-white">
       {/* Header */}
-      <div className="border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm">
+      <div className="border-b border-white/[0.07] bg-[#0A0E1A]/80 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <div
-                className="text-3xl font-bold text-white"
-              >
+              <span className="inline-flex items-center gap-2 text-[10px] font-mono font-semibold text-brand-400 uppercase tracking-widest mb-2">
+                <span className="w-1.5 h-1.5 bg-brand-400 rounded-full"></span>
+                Analytics
+              </span>
+              <div className="text-3xl font-black font-display text-white">
                 Analytics Dashboard
               </div>
-              <div
-                className="mt-1 text-sm text-gray-400"
-              >
+              <div className="mt-1 text-sm text-white/40">
                 Comprehensive insights across all your platforms
               </div>
             </div>
             
             <div className="flex flex-wrap items-center gap-3">
               {/* Time Range Selector */}
-              <div className="flex rounded-lg border border-gray-700 bg-gray-900/50 p-1">
+              <div className="flex rounded-xl border border-white/[0.07] bg-[#111827] p-1">
                 {(['7d', '30d', '90d'] as const).map((range) => (
                   <button
                     key={range}
                     onClick={() => setTimeRange(range)}
-                    className={`rounded-md px-3 py-1 text-sm font-medium transition-all ${
+                    className={`rounded-lg px-3 py-1.5 text-xs font-mono font-semibold transition-all ${
                       timeRange === range
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-400 hover:text-white'
+                        ? 'bg-brand-600 text-white'
+                        : 'text-white/40 hover:text-white hover:bg-white/[0.05]'
                     }`}
                   >
                     {range === '7d' ? '7 Days' : range === '30d' ? '30 Days' : '90 Days'}
@@ -167,15 +167,15 @@ export default function AnalyticsDashboard() {
               </div>
 
               {/* Chart Type Toggle */}
-              <div className="flex rounded-lg border border-gray-700 bg-gray-900/50 p-1">
+              <div className="flex rounded-xl border border-white/[0.07] bg-[#111827] p-1">
                 {(['line', 'area'] as const).map((type) => (
                   <button
                     key={type}
                     onClick={() => setChartType(type)}
-                    className={`rounded-md px-3 py-1 text-sm font-medium capitalize transition-all ${
+                    className={`rounded-lg px-3 py-1.5 text-xs font-mono font-semibold capitalize transition-all ${
                       chartType === type
-                        ? 'bg-purple-600 text-white'
-                        : 'text-gray-400 hover:text-white'
+                        ? 'bg-brand-600 text-white'
+                        : 'text-white/40 hover:text-white hover:bg-white/[0.05]'
                     }`}
                   >
                     {type}
@@ -251,7 +251,7 @@ export default function AnalyticsDashboard() {
 
         {/* Platform Performance Cards */}
         <div className="mb-8">
-          <h2 className="mb-4 text-xl font-semibold text-white">
+          <h2 className="mb-4 text-xl font-bold font-display text-white">
             Platform Performance
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -19,9 +19,25 @@ import { useEffect, useRef } from 'react'
  * - Uses requestAnimationFrame for jank-free tracking
  * - z-index: 999999 — nothing will ever cover it
  */
-export default function KLACursor() {
+export default function KLACursor({ accentColor = '#818CF8' }: { accentColor?: string }) {
   const dotRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
+  const accentRef = useRef(accentColor)
+  const isDarkRef = useRef(true)
+
+  // Keep accent ref in sync so RAF loop sees updates without remounting
+  useEffect(() => { accentRef.current = accentColor }, [accentColor])
+
+  // Track dark/light mode changes
+  useEffect(() => {
+    const check = () => {
+      isDarkRef.current = document.documentElement.classList.contains('dark')
+    }
+    check()
+    const observer = new MutationObserver(check)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const dot = dotRef.current
@@ -96,15 +112,16 @@ export default function KLACursor() {
         ring.style.width = '44px'
         ring.style.height = '44px'
         ring.style.transform = `translate(${ringX - 22}px, ${ringY - 22}px)`
-        ring.style.borderColor = 'rgba(99, 102, 241, 0.9)'
-        ring.style.background = 'rgba(99, 102, 241, 0.08)'
-        dot.style.background = '#818CF8'
+        ring.style.borderColor = accentRef.current + 'dd'
+        ring.style.background = accentRef.current + '14'
+        dot.style.background = accentRef.current
       } else {
+        const dark = isDarkRef.current
         ring.style.width = '40px'
         ring.style.height = '40px'
-        ring.style.borderColor = 'rgba(255, 255, 255, 0.35)'
+        ring.style.borderColor = dark ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.25)'
         ring.style.background = 'transparent'
-        dot.style.background = '#ffffff'
+        dot.style.background = dark ? '#ffffff' : '#1f2937'
       }
     }
 
@@ -132,7 +149,7 @@ export default function KLACursor() {
           width: '40px',
           height: '40px',
           borderRadius: '50%',
-          border: '1.5px solid rgba(255,255,255,0.35)',
+          border: '1.5px solid rgba(0,0,0,0.25)',
           pointerEvents: 'none',
           zIndex: 999999,
           transition: 'width 0.2s ease, height 0.2s ease, border-color 0.2s ease, background 0.2s ease',
@@ -149,7 +166,7 @@ export default function KLACursor() {
           width: '8px',
           height: '8px',
           borderRadius: '50%',
-          background: '#ffffff',
+          background: '#1f2937',
           pointerEvents: 'none',
           zIndex: 999999,
           willChange: 'transform',

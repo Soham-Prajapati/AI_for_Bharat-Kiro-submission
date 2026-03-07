@@ -1,115 +1,205 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
+
+interface ContentItem {
+  id: number | string
+  title: string
+  platform: string
+  status: 'published' | 'draft' | 'scheduled'
+  date: string
+  engagement: string
+}
+
+const MOCK_CONTENT: ContentItem[] = [
+  { id: 1, title: 'Product Launch Video', platform: 'YouTube', status: 'published', date: '2 hours ago', engagement: '2.4K' },
+  { id: 2, title: 'Instagram Reel — Behind the Scenes', platform: 'Instagram', status: 'draft', date: '5 hours ago', engagement: '—' },
+  { id: 3, title: 'LinkedIn Post — Industry Insights', platform: 'LinkedIn', status: 'scheduled', date: 'Tomorrow 9AM', engagement: '—' },
+  { id: 4, title: 'Twitter Thread — Product Tips', platform: 'Twitter', status: 'published', date: '1 day ago', engagement: '1.8K' },
+  { id: 5, title: 'How to 10x Your Reach in Hindi', platform: 'YouTube', status: 'published', date: '2 days ago', engagement: '8.1K' },
+]
+
+const PLATFORM_COLORS: Record<string, string> = {
+  YouTube: 'text-red-400',
+  Instagram: 'text-pink-400',
+  LinkedIn: 'text-sky-400',
+  Twitter: 'text-blue-400',
+  TikTok: 'text-cyan-400',
+  Facebook: 'text-indigo-400',
+}
+
+function StatCard({ label, value, change, positive, icon }: {
+  label: string; value: string; change: string; positive: boolean; icon: string
+}) {
+  return (
+    <div className="group relative bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6 hover:border-brand-500/30 hover:bg-white/[0.05] transition-all duration-300">
+      <div className="flex items-start justify-between mb-4">
+        <span className="text-2xl">{icon}</span>
+        <span className={`text-xs font-mono font-semibold px-2 py-1 rounded-full ${positive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+          {change}
+        </span>
+      </div>
+      <div className="text-3xl font-black font-display text-white mb-1">{value}</div>
+      <div className="text-xs font-mono text-white/40 uppercase tracking-widest">{label}</div>
+      <div className="absolute bottom-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-brand-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+    </div>
+  )
+}
 
 export default function DashboardPage() {
-  const stats = [
-    { label: 'Total Content', value: '127', change: '+12%', positive: true },
-    { label: 'This Month', value: '24', change: '+8%', positive: true },
-    { label: 'Avg. Engagement', value: '4.2K', change: '+15%', positive: true },
-    { label: 'Time Saved', value: '48h', change: '+22%', positive: true },
-  ]
+  // TODO: replace with real API — apiClient.analytics.getDashboard()
+  const [content] = useState<ContentItem[]>(MOCK_CONTENT)
 
-  const recentContent = [
-    { id: 1, title: 'Product Launch Video', platform: 'YouTube', status: 'published', date: '2 hours ago', engagement: '2.4K' },
-    { id: 2, title: 'Instagram Reel - Behind the Scenes', platform: 'Instagram', status: 'draft', date: '5 hours ago', engagement: '-' },
-    { id: 3, title: 'LinkedIn Post - Industry Insights', platform: 'LinkedIn', status: 'scheduled', date: 'Tomorrow 9AM', engagement: '-' },
-    { id: 4, title: 'Twitter Thread - Product Tips', platform: 'Twitter', status: 'published', date: '1 day ago', engagement: '1.8K' },
+  const statCards = [
+    { label: 'Total Content',  value: '127',  change: '+12%', positive: true, icon: '🎬' },
+    { label: 'This Month',     value: '24',   change: '+8%',  positive: true, icon: '📅' },
+    { label: 'Avg Engagement', value: '4.2K', change: '+15%', positive: true, icon: '📈' },
+    { label: 'Hours Saved',    value: '48h',  change: '+22%', positive: true, icon: '⚡' },
   ]
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-h1 text-text-primary mb-2">Dashboard</h1>
-        <p className="text-text-secondary">Welcome back! Here's your content overview.</p>
-      </div>
+    <div className="min-h-screen bg-[#030712] text-white">
+      <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {stats.map((stat, index) => (
-          <div key={index} className="bg-bg-elevated border border-border-subtle rounded-lg p-6 hover:border-border-DEFAULT transition-colors">
-            <div className="text-sm text-text-tertiary mb-2">{stat.label}</div>
-            <div className="flex items-end justify-between">
-              <div className="text-3xl font-bold text-text-primary">{stat.value}</div>
-              <div className={`text-sm font-medium ${stat.positive ? 'text-green-500' : 'text-red-500'}`}>
-                {stat.change}
-              </div>
+        {/* Header */}
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
+              <span className="text-[10px] font-mono font-semibold text-brand-400 uppercase tracking-widest">Live Dashboard</span>
             </div>
+            <h1 className="text-4xl font-black font-display text-white leading-none">
+              Welcome back,{' '}
+              <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">Creator</span>
+            </h1>
+            <p className="mt-2 text-white/40 text-sm">Your content intelligence overview — updated in real time.</p>
           </div>
-        ))}
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <Link 
-          href="/upload" 
-          className="bg-brand-600 hover:bg-brand-700 text-white rounded-lg p-6 transition-colors group"
-        >
-          <div className="text-2xl mb-3">⬆️</div>
-          <div className="font-semibold mb-1">Upload Content</div>
-          <div className="text-sm text-brand-100">Transform your video or audio</div>
-        </Link>
-        
-        <Link 
-          href="/analytics" 
-          className="bg-bg-elevated border border-border-subtle hover:border-border-DEFAULT rounded-lg p-6 transition-colors group"
-        >
-          <div className="text-2xl mb-3">📈</div>
-          <div className="font-semibold text-text-primary mb-1">View Analytics</div>
-          <div className="text-sm text-text-secondary">Track your performance</div>
-        </Link>
-        
-        <Link 
-          href="/marketplace" 
-          className="bg-bg-elevated border border-border-subtle hover:border-border-DEFAULT rounded-lg p-6 transition-colors group"
-        >
-          <div className="text-2xl mb-3">🛍️</div>
-          <div className="font-semibold text-text-primary mb-1">Marketplace</div>
-          <div className="text-sm text-text-secondary">Browse templates</div>
-        </Link>
-      </div>
-
-      {/* Recent Content */}
-      <div className="bg-bg-elevated border border-border-subtle rounded-lg">
-        <div className="flex items-center justify-between p-6 border-b border-border-subtle">
-          <h2 className="text-h3 text-text-primary">Recent Content</h2>
-          <Link href="/analytics" className="text-sm text-brand-600 hover:text-brand-500 transition-colors font-medium">
-            View all →
+          <Link
+            href="/upload"
+            className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold transition-all duration-200 shadow-lg shadow-brand-500/20"
+          >
+            <span>＋</span>
+            <span>New Upload</span>
           </Link>
         </div>
-        
-        <div className="divide-y divide-border-subtle">
-          {recentContent.map((item) => (
-            <div key={item.id} className="p-6 hover:bg-bg-overlay transition-colors cursor-pointer">
-              <div className="flex items-center justify-between">
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {statCards.map((s, i) => <StatCard key={i} {...s} />)}
+        </div>
+
+        {/* Quick Actions */}
+        <div>
+          <h2 className="text-xs font-mono font-semibold text-white/30 uppercase tracking-widest mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link
+              href="/upload"
+              className="group relative overflow-hidden bg-gradient-to-br from-brand-600/30 to-brand-800/20 border border-brand-500/30 rounded-2xl p-6 hover:border-brand-400/50 transition-all duration-300"
+            >
+              <div className="text-3xl mb-3">⬆️</div>
+              <div className="font-bold text-white mb-1 font-display">Upload Content</div>
+              <div className="text-sm text-white/50">Transform video or audio into 10+ formats</div>
+              <div className="mt-4 text-xs font-mono text-brand-400 group-hover:translate-x-1 transition-transform">Upload now →</div>
+            </Link>
+            <Link
+              href="/analytics"
+              className="group bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6 hover:border-cyan-500/30 hover:bg-white/[0.05] transition-all duration-300"
+            >
+              <div className="text-3xl mb-3">📊</div>
+              <div className="font-bold text-white mb-1 font-display">Analytics</div>
+              <div className="text-sm text-white/50">Track performance across all platforms</div>
+              <div className="mt-4 text-xs font-mono text-cyan-400 group-hover:translate-x-1 transition-transform">View analytics →</div>
+            </Link>
+            <Link
+              href="/marketplace"
+              className="group bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6 hover:border-amber-500/30 hover:bg-white/[0.05] transition-all duration-300"
+            >
+              <div className="text-3xl mb-3">🛍️</div>
+              <div className="font-bold text-white mb-1 font-display">Marketplace</div>
+              <div className="text-sm text-white/50">Browse AI templates &amp; content packs</div>
+              <div className="mt-4 text-xs font-mono text-amber-400 group-hover:translate-x-1 transition-transform">Explore →</div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Secondary Actions */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            { href: '/community',        label: 'Community',        icon: '🤝', color: 'text-purple-400' },
+            { href: '/workspace',        label: 'Workspace',        icon: '🗂️', color: 'text-indigo-400' },
+            { href: '/regional-network', label: 'Regional Network', icon: '🗺️', color: 'text-emerald-400' },
+            { href: '/membership',       label: 'Membership',       icon: '👑', color: 'text-amber-400' },
+          ].map((action) => (
+            <Link
+              key={action.href}
+              href={action.href}
+              className="flex items-center gap-3 bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 hover:bg-white/[0.04] hover:border-white/[0.12] transition-all duration-200"
+            >
+              <span className="text-xl">{action.icon}</span>
+              <span className={`text-sm font-semibold ${action.color}`}>{action.label}</span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Recent Content */}
+        <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.07]">
+            <h2 className="font-bold text-white font-display">Recent Content</h2>
+            <Link href="/workspace" className="text-xs font-mono text-brand-400 hover:text-brand-300 transition-colors">
+              View all →
+            </Link>
+          </div>
+          <div className="divide-y divide-white/[0.05]">
+            {content.map((item) => (
+              <div key={item.id} className="flex items-center justify-between px-6 py-4 hover:bg-white/[0.03] transition-colors cursor-pointer group">
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-text-primary mb-1 truncate">{item.title}</div>
-                  <div className="flex items-center gap-3 text-sm text-text-tertiary">
-                    <span>{item.platform}</span>
-                    <span>•</span>
+                  <div className="font-medium text-white text-sm truncate group-hover:text-brand-300 transition-colors">{item.title}</div>
+                  <div className="flex items-center gap-2 mt-1 text-xs text-white/30">
+                    <span className={PLATFORM_COLORS[item.platform] ?? 'text-white/40'}>{item.platform}</span>
+                    <span>·</span>
                     <span>{item.date}</span>
-                    {item.engagement !== '-' && (
+                    {item.engagement !== '—' && (
                       <>
-                        <span>•</span>
-                        <span>{item.engagement} views</span>
+                        <span>·</span>
+                        <span className="text-emerald-400">{item.engagement} views</span>
                       </>
                     )}
                   </div>
                 </div>
-                <div className="ml-4">
-                  <span className={`px-3 py-1 rounded-md text-xs font-medium ${
-                    item.status === 'published' ? 'bg-green-500/10 text-green-500' :
-                    item.status === 'draft' ? 'bg-yellow-500/10 text-yellow-500' :
-                    'bg-blue-500/10 text-blue-500'
-                  }`}>
-                    {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-                  </span>
-                </div>
+                <span className={`ml-4 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wide ${
+                  item.status === 'published' ? 'bg-emerald-500/10 text-emerald-400' :
+                  item.status === 'draft'     ? 'bg-amber-500/10  text-amber-400'   :
+                                               'bg-sky-500/10    text-sky-400'
+                }`}>
+                  {item.status}
+                </span>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
+        {/* Platform Presence */}
+        <div>
+          <h2 className="text-xs font-mono font-semibold text-white/30 uppercase tracking-widest mb-4">Platform Presence</h2>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+            {[
+              { name: 'YouTube',   followers: '42.8K', color: '#FF0000', icon: '▶' },
+              { name: 'Instagram', followers: '18.3K', color: '#E1306C', icon: '◎' },
+              { name: 'LinkedIn',  followers: '9.1K',  color: '#0077B5', icon: 'in' },
+              { name: 'Twitter',   followers: '6.7K',  color: '#1DA1F2', icon: '𝕏' },
+              { name: 'TikTok',    followers: '31.2K', color: '#00F2EA', icon: '♪' },
+              { name: 'Facebook',  followers: '7.4K',  color: '#1877F2', icon: 'f' },
+            ].map((p) => (
+              <div key={p.name} className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 text-center hover:border-white/[0.12] transition-colors">
+                <div className="text-lg font-bold mb-1" style={{ color: p.color }}>{p.icon}</div>
+                <div className="text-[10px] font-mono text-white/30 mb-1">{p.name}</div>
+                <div className="text-sm font-bold text-white">{p.followers}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   )

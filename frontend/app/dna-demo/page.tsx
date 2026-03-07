@@ -150,16 +150,18 @@ export default function DNADemoPage() {
   const [selectedProfile, setSelectedProfile] = useState(0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black p-8">
+    <div className="min-h-screen bg-[#030712] text-white p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div
-          className="text-center mb-12"
-        >
-          <h1 className="text-5xl font-bold text-white mb-4">
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center gap-2 text-[10px] font-mono font-semibold text-brand-400 uppercase tracking-widest mb-4">
+            <span className="w-1.5 h-1.5 bg-brand-400 rounded-full animate-pulse"></span>
+            Creator Intelligence
+          </span>
+          <h1 className="text-5xl font-black font-display text-white mb-4">
             Creator DNA Visualization
           </h1>
-          <p className="text-xl text-gray-400">
+          <p className="text-lg text-white/40">
             Explore personality dimensions across different creator profiles
           </p>
         </div>
@@ -172,10 +174,10 @@ export default function DNADemoPage() {
             <div
               key={profile.creatorId}
               onClick={() => setSelectedProfile(index)}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+              className={`px-6 py-3 rounded-xl font-bold text-sm transition-all cursor-pointer ${
                 selectedProfile === index
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  ? 'bg-brand-600 text-white shadow-lg shadow-brand-900/40'
+                  : 'bg-white/[0.05] border border-white/[0.07] text-white/60 hover:bg-white/[0.08] hover:text-white'
               }`}
             >
               {profile.creatorName}
@@ -193,14 +195,14 @@ export default function DNADemoPage() {
 
         {/* Info Section */}
         <div
-          className="mt-12 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700 p-8"
+          className="mt-12 bg-white/[0.03] border border-white/[0.07] rounded-2xl p-8"
         >
-          <h3 className="text-2xl font-bold text-white mb-4">
+          <h3 className="text-2xl font-bold font-display text-white mb-4">
             About Creator DNA
           </h3>
-          <div className="grid md:grid-cols-2 gap-6 text-gray-300">
+          <div className="grid md:grid-cols-2 gap-6 text-white/50">
             <div>
-              <h4 className="font-semibold text-purple-400 mb-2">What is it?</h4>
+              <h4 className="font-semibold text-brand-400 mb-2">What is it?</h4>
               <p className="text-sm leading-relaxed">
                 Creator DNA is a personality profiling system that analyzes content 
                 across five key dimensions to understand a creator's unique style 
@@ -208,7 +210,7 @@ export default function DNADemoPage() {
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-pink-400 mb-2">How to use it?</h4>
+              <h4 className="font-semibold text-cyan-400 mb-2">How to use it?</h4>
               <p className="text-sm leading-relaxed">
                 Hover over the radar chart or dimension cards to see detailed 
                 information. Switch between different creator profiles to compare 

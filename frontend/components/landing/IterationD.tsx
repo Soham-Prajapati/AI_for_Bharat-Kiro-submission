@@ -19,7 +19,7 @@ const WebGLScene = dynamic(() => import('./WebGLScene'), { ssr: false })
  * Inspired by: lusion.co immersive narrative, Lando Norris scroll-storytelling,
  *              Pioneer immersive world, Resn WebGL surrealist playground.
  *
- * Concept: One long scroll tells the full KLA story as a cinematic journey.
+ * Concept: One long scroll tells the full कLA story as a cinematic journey.
  * - Pinned hero with parallax depth layers
  * - Scroll-driven stat counter panel (numbers tick as you scroll)
  * - Full-bleed image-style platform cards with parallax offsets
@@ -120,7 +120,7 @@ export default function IterationD() {
     return () => { ctx.revert(); lenis?.destroy() }
   }, [])
 
-  const TICKER_ITEMS = ['1 VIDEO', '6 PLATFORMS', '9 LANGUAGES', '60 SECONDS', 'CREATOR DNA', 'VIRAL SCORE', 'KLA ENGINE', 'BHARAT FIRST']
+  const TICKER_ITEMS = ['1 VIDEO', '6 PLATFORMS', '9 LANGUAGES', '60 SECONDS', 'CREATOR DNA', 'VIRAL SCORE', 'कLA ENGINE', 'BHARAT FIRST']
 
   return (
     <div ref={containerRef} className="bg-bg-base text-white overflow-hidden">
@@ -140,7 +140,7 @@ export default function IterationD() {
             ))}
           </div>
           <Link href="/upload" className="bg-gradient-to-br from-brand-500 to-brand-600 text-white text-sm font-bold px-5 py-2.5 rounded-full hover:shadow-[0_0_25px_rgba(99,102,241,0.4)] transition-all hover:-translate-y-0.5">
-            Try KLA Free
+            Try कLA Free
           </Link>
         </div>
       </nav>
@@ -210,18 +210,19 @@ export default function IterationD() {
             </Link>
           </div>
 
-          {/* Floating platform logos below CTA */}
-          <div className="flex items-center justify-center gap-3 mt-12 flex-wrap">
-            <span className="text-white/20 text-xs font-mono mr-2">Works with</span>
-            {PLATFORM_CONFIG.map((p, i) => (
-              <div key={i}
-                className={`w-9 h-9 rounded-xl ${p.bg} border ${p.border} flex items-center justify-center hover:scale-110 transition-transform`}
-                style={{ animation: `float-d ${3 + i * 0.3}s ease-in-out infinite` }}
-                title={p.name}
-              >
-                <p.Icon className={`w-4 h-4 ${p.text}`} />
-              </div>
-            ))}
+          {/* Platform logos — centered 2-row, soft glow on hover, no animation */}
+          <div className="flex flex-col items-center gap-3 mt-12">
+            <span className="text-white/20 text-xs font-mono tracking-[0.2em] uppercase">Works with</span>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              {PLATFORM_CONFIG.map((p, i) => (
+                <div key={i}
+                  className={`w-10 h-10 rounded-xl ${p.bg} border ${p.border} flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_16px_rgba(255,255,255,0.08)] hover:scale-105 hover:border-white/20`}
+                  title={p.name}
+                >
+                  <p.Icon className={`w-5 h-5 ${p.text}`} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -303,20 +304,20 @@ export default function IterationD() {
                 {
                   step: '01', icon: '📥',
                   title: 'Drop Your Content',
-                  body: 'Video, audio, or text. Any format, any duration. Drag and drop into KLA.',
+                  body: 'Video, audio, or text. Any format, any duration. Drag and drop into कLA.',
                   detail: 'Supports MP4, MOV, MP3, WAV, YouTube links, and plain text scripts.'
                 },
                 {
                   step: '02', icon: '⚡',
                   title: 'AI Engine Fires',
                   body: 'Transcription → domain detection → platform generation → cultural translation. All in parallel.',
-                  detail: 'Powered by AWS Bedrock (Claude 3), AWS Transcribe, and KLA\'s own cultural intelligence layer.'
+                  detail: 'Powered by AWS Bedrock (Claude 3), AWS Transcribe, and कLA\'s own cultural intelligence layer.'
                 },
                 {
                   step: '03', icon: '🚀',
                   title: 'Review & Deploy',
                   body: 'Every output waits for your nod. Edit inline, then publish in one click.',
-                  detail: 'Full human control. KLA never auto-posts without your explicit approval.'
+                  detail: 'Full human control. कLA never auto-posts without your explicit approval.'
                 }
               ].map((s, i) => (
                 <div key={i} className="d-platform-card relative bg-white/[0.025] border border-white/[0.07] rounded-3xl p-8 hover:border-brand-500/30 hover:bg-white/[0.04] transition-all duration-500 group">
@@ -342,7 +343,7 @@ export default function IterationD() {
       <IndiaCoverage />
 
       {/* ══════════ TESTIMONIALS ══════════ */}
-      <TestimonialsSection variant="darker" />
+      <TestimonialsSection theme="indigo" />
 
       {/* ══════════ PRICING STRIP ══════════ */}
       <PricingStripSection />
@@ -361,12 +362,12 @@ export default function IterationD() {
             </span>
           </h2>
           <p className="text-white/40 text-xl mb-12">
-            Join 50,000+ Indian creators scaling with KLA.
+            Join 50,000+ Indian creators scaling with कLA.
           </p>
           <Link href="/upload"
             className="inline-flex items-center gap-3 bg-white text-bg-base font-black text-xl px-12 py-5 rounded-2xl hover:shadow-[0_0_70px_rgba(255,255,255,0.25)] transition-all hover:-translate-y-1"
           >
-            Launch KLA Free
+            Launch कLA Free
             <ArrowRightSVG className="w-5 h-5" />
           </Link>
           <p className="text-white/20 text-sm mt-6 font-mono">No credit card · First 10 videos free · Cancel anytime</p>
@@ -399,7 +400,7 @@ export default function IterationD() {
             ))}
           </div>
           <div className="border-t border-white/[0.06] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-white/20 text-xs font-mono">
-            <span>© 2026 KLA Technologies. Built for AI for Bharat.</span>
+            <span>© 2026 कLA Technologies. Built for AI for Bharat.</span>
             <span>Powered by AWS Bedrock · Made in India 🇮🇳</span>
           </div>
         </div>

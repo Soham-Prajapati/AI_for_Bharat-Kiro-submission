@@ -9,7 +9,9 @@ interface ListingCardProps {
   onPurchase: (listing: Listing) => void;
 }
 
-const typeColors = {
+type ListingType = 'template' | 'script' | 'thumbnail' | 'music' | 'effect';
+
+const typeColors: Record<ListingType, string> = {
   template: 'from-blue-500/20 to-blue-600/10 border-blue-500/30',
   script: 'from-green-500/20 to-green-600/10 border-green-500/30',
   thumbnail: 'from-purple-500/20 to-purple-600/10 border-purple-500/30',
@@ -17,7 +19,7 @@ const typeColors = {
   effect: 'from-orange-500/20 to-orange-600/10 border-orange-500/30',
 };
 
-const typeIcons = {
+const typeIcons: Record<ListingType, string> = {
   template: '📄',
   script: '📝',
   thumbnail: '🖼️',
@@ -26,9 +28,13 @@ const typeIcons = {
 };
 
 export default function ListingCard({ listing, index, onPurchase }: ListingCardProps) {
+  const safeType = (listing.type as ListingType) in typeColors
+    ? (listing.type as ListingType)
+    : 'template';
+
   return (
     <div
-      className={`bg-gradient-to-br ${typeColors[listing.type]} rounded-xl p-6 border hover:scale-105 transition-transform cursor-pointer`}
+      className={`bg-gradient-to-br ${typeColors[safeType]} rounded-xl p-6 border hover:scale-105 transition-transform cursor-pointer`}
     >
       {/* Preview Image */}
       <div className="relative mb-4 rounded-lg overflow-hidden bg-gray-800 h-48 flex items-center justify-center">
@@ -39,12 +45,12 @@ export default function ListingCard({ listing, index, onPurchase }: ListingCardP
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="text-6xl">{typeIcons[listing.type]}</div>
+          <div className="text-6xl">{typeIcons[safeType]}</div>
         )}
         
         {/* Type Badge */}
         <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium">
-          {listing.type.charAt(0).toUpperCase() + listing.type.slice(1)}
+          {safeType.charAt(0).toUpperCase() + safeType.slice(1)}
         </div>
 
         {/* Status Badge */}
