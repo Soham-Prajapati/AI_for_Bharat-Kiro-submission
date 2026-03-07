@@ -1,0 +1,67 @@
+{
+  "environments": {
+    "local": {
+      "baseUrl": "http://localhost:3000",
+      "description": "Local development environment"
+    },
+    "staging": {
+      "baseUrl": "https://staging.content-intelligence.example.com",
+      "description": "Staging environment for pre-production testing"
+    },
+    "production": {
+      "baseUrl": "https://api.content-intelligence.example.com",
+      "description": "Production environment (use with caution!)"
+    }
+  },
+  "scenarios": {
+    "upload": {
+      "name": "File Upload Load Test",
+      "file": "scenarios/upload-load.js",
+      "description": "Tests 100 concurrent users uploading files",
+      "duration": "7m",
+      "maxVUs": 100
+    },
+    "generation": {
+      "name": "Content Generation Load Test",
+      "file": "scenarios/content-generation-load.js",
+      "description": "Tests 50 concurrent content generation requests",
+      "duration": "7m",
+      "maxVUs": 50
+    },
+    "ratelimit": {
+      "name": "Rate Limiting Test",
+      "file": "scenarios/rate-limit-test.js",
+      "description": "Tests API rate limiting under aggressive load",
+      "duration": "2.5m",
+      "maxVUs": 150
+    },
+    "stress": {
+      "name": "Stress Test",
+      "file": "scenarios/stress-test.js",
+      "description": "Pushes system to breaking point",
+      "duration": "10m",
+      "maxVUs": 400
+    }
+  },
+  "thresholds": {
+    "responseTime": {
+      "p95": 2000,
+      "p99": 5000
+    },
+    "errorRate": {
+      "normal": 0.01,
+      "stress": 0.05
+    },
+    "throughput": {
+      "minimum": 100
+    },
+    "successRate": {
+      "minimum": 0.99
+    }
+  },
+  "reporting": {
+    "outputDir": "load-tests/results",
+    "reportFile": "docs/LOAD_TEST_RESULTS.md",
+    "formats": ["json", "markdown"]
+  }
+}

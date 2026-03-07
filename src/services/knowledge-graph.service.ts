@@ -1,270 +1,260 @@
 /**
  * Knowledge Graph Service
  * 
- * Maps relationships between content, topics, creators
- * - Extract entities (people, places, topics, concepts)
- * - Build graph database (DynamoDB-based for AWS compatibility)
- * - Find related content and suggest connections
- * - Discover content clusters and communities
- * - Recommend collaboration opportunities
+ * Builds and manages a knowledge graph for content relationships,
+ * entity extraction, and intelligent recommendations.
  */
 
-import { GitHubModelsService } from './github-models.service';
-
 export interface GraphNode {
-  nodeId: string;
-  type: 'content' | 'topic' | 'creator' | 'entity';
+  id: string;
+  type: 'content' | 'creator' | 'topic' | 'concept' | 'person' | 'place';
   label: string;
   properties: Record<string, any>;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface GraphEdge {
-  edgeId: string;
-  sourceId: string;
-  targetId: string;
-  relationship: string;
+  id: string;
+  source: string;
+  target: string;
+  type: 'created_by' | 'about' | 'mentions' | 'related_to' | 'similar_to';
   weight: number;
-  properties: Record<string, any>;
-  createdAt: string;
+  properties?: Record<string, any>;
 }
 
-export interface Entity {
-  name: string;
-  type: 'person' | 'place' | 'organization' | 'concept' | 'product' | 'event';
-  mentions: number;
-  confidence: number;
+export interface KnowledgeGraph {
+  nodes: Map<string, GraphNode>;
+  edges: Map<string, GraphEdge>;
+  adjacencyList: Map<string, Set<string>>;
 }
 
-export interface ContentRecommendation {
+export interface EntityExtractionResult {
+  people: string[];
+  places: string[];
+  topics: string[];
+  concepts: string[];
+}
+
+export interface RelatedContent {
   contentId: string;
-  title: string;
+  score: number;
   reason: string;
-  relevanceScore: number;
-  sharedTopics: string[];
-  sharedEntities: string[];
 }
 
-export interface GraphCluster {
-  clusterId: string;
-  name: string;
-  nodes: GraphNode[];
-  centralTopic: string;
-  size: number;
-  density: number;
+export interface ConnectionSuggestion {
+  creatorId: string;
+  targetCreatorId: string;
+  sharedTopics: string[];
+  score: number;
 }
 
 export class KnowledgeGraphService {
-  private githubModels: GitHubModelsService;
-  private graph: Map<string, GraphNode>;
-  private edges: Map<string, GraphEdge>;
+  private graph: KnowledgeGraph;
 
   constructor() {
-    this.githubModels = new GitHubModelsService();
-    this.graph = new Map();
-    this.edges = new Map();
+    this.graph = {
+      nodes: new Map(),
+      edges: new Map(),
+      adjacencyList: new Map(),
+    };
   }
 
   /**
-   * Add content to knowledge graph
-   * Extracts entities and creates nodes/edges
+   * Extract entities from content
    */
-  async addContent(
-    contentId: string,
-    title: string,
-    transcript: string,
-    creatorId: string,
-    metadata?: Record<string, any>
-  ): Promise<{ nodes: GraphNode[]; edges: GraphEdge[] }> {
-    // Extract entities from content
-    const entities = await this.extractEntities(transcript);
+  async extractEntities(content: {
+    id: string;
+    title: string;
+    description: string;
+    transcript?: string;
+  }): Promise<EntityExtractionResult> {
+    const text = `${content.title} ${content.description} ${content.transcript || ''}`.toLowerCase();
+    
+    // Simple entity extraction (in production, use NLP/AI)
+    const people = this.extractPeople(text);
+    const places = this.extractPlaces(text);
+    const topics = this.extractTopics(text);
+    const concepts = this.extractConcepts(text);
 
-    // Create content node
-    const contentNode: GraphNode = {
-      nodeId: contentId,
-      type: 'content',
-      label: title,
-      properties: {
-        creatorId,
-        transcript: transcript.substring(0, 500), // Store preview
-        entityCount: entities.length,
-        ...metadata,
-      },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    this.graph.set(contentId, contentNode);
+    return { people, places, topics, concepts };
+  }
 
-    // Create creator node if not exists
-    const creatorNodeId = `creator_${creatorId}`;
-    if (!this.graph.has(creatorNodeId)) {
-      const creatorNode: GraphNode = {
-        nodeId: creatorNodeId,
-        type: 'creator',
-        label: `Creator ${creatorId}`,
-        properties: { creatorId, contentCount: 0 },
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      this.graph.set(creatorNodeId, creatorNode);
+  /**
+   * Add a node to the graph
+   */
+  addNode(node: GraphNode): void {
+    this.graph.nodes.set(node.id, node);
+    if (!this.graph.adjacencyList.has(node.id)) {
+      this.graph.adjacencyList.set(node.id, new Set());
     }
+  }
 
-    // Create edge: creator -> content
-    const creatorEdge = this.createEdge(creatorNodeId, contentId, 'created', 1.0);
-    this.edges.set(creatorEdge.edgeId, creatorEdge);
+  /**
+   * Add an edge to the graph
+   */
+  addEdge(edge: GraphEdge): void {
+    this.graph.edges.set(edge.id, edge);
+    
+    // Update adjacency list
+    if (!this.graph.adjacencyList.has(edge.source)) {
+      this.graph.adjacencyList.set(edge.source, new Set());
+    }
+    this.graph.adjacencyList.get(edge.source)!.add(edge.target);
+  }
 
-    // Create entity nodes and edges
-    const newNodes: GraphNode[] = [contentNode];
-    const newEdges: GraphEdge[] = [creatorEdge];
+  /**
+   * Build knowledge graph from content
+   */
+  async buildGraph(contents: Array<{
+    id: string;
+    title: string;
+    description: string;
+    transcript?: string;
+    creatorId: string;
+    creatorName: string;
+  }>): Promise<void> {
+    for (const content of contents) {
+      // Add content node
+      this.addNode({
+        id: content.id,
+        type: 'content',
+        label: content.title,
+        properties: { description: content.description },
+      });
 
-    for (const entity of entities) {
-      const entityNodeId = this.generateEntityNodeId(entity);
-
-      // Create entity node if not exists
-      if (!this.graph.has(entityNodeId)) {
-        const entityNode: GraphNode = {
-          nodeId: entityNodeId,
-          type: 'entity',
-          label: entity.name,
-          properties: {
-            entityType: entity.type,
-            totalMentions: entity.mentions,
-          },
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        this.graph.set(entityNodeId, entityNode);
-        newNodes.push(entityNode);
-      } else {
-        // Update mention count
-        const existingNode = this.graph.get(entityNodeId)!;
-        existingNode.properties.totalMentions += entity.mentions;
+      // Add creator node
+      const creatorNodeId = `creator-${content.creatorId}`;
+      if (!this.graph.nodes.has(creatorNodeId)) {
+        this.addNode({
+          id: creatorNodeId,
+          type: 'creator',
+          label: content.creatorName,
+          properties: { creatorId: content.creatorId },
+        });
       }
 
-      // Create edge: content -> entity
-      const entityEdge = this.createEdge(
-        contentId,
-        entityNodeId,
-        'mentions',
-        entity.confidence
-      );
-      this.edges.set(entityEdge.edgeId, entityEdge);
-      newEdges.push(entityEdge);
-    }
-
-    return { nodes: newNodes, edges: newEdges };
-  }
-
-  /**
-   * Extract entities from text using AI
-   */
-  private async extractEntities(text: string): Promise<Entity[]> {
-    const prompt = `Extract named entities from the following text. Return a JSON array of entities with name, type (person/place/organization/concept/product/event), mentions count, and confidence (0-1).
-
-Text: ${text.substring(0, 2000)}
-
-Return format:
-[
-  { "name": "Entity Name", "type": "person", "mentions": 3, "confidence": 0.95 }
-]`;
-
-    try {
-      const response = await this.githubModels.generate(prompt, {
-        temperature: 0.3,
-        maxTokens: 1000,
+      // Add created_by edge
+      this.addEdge({
+        id: `${content.id}-created-by-${creatorNodeId}`,
+        source: content.id,
+        target: creatorNodeId,
+        type: 'created_by',
+        weight: 1.0,
       });
 
-      const entities = JSON.parse(response);
-      return entities;
-    } catch (error) {
-      console.error('Entity extraction failed:', error);
-      // Fallback: basic entity extraction
-      return this.extractEntitiesBasic(text);
-    }
-  }
+      // Extract and add entities
+      const entities = await this.extractEntities(content);
 
-  /**
-   * Basic entity extraction (fallback)
-   */
-  private extractEntitiesBasic(text: string): Entity[] {
-    const entities: Entity[] = [];
-    const words = text.split(/\s+/);
-
-    // Simple capitalized word detection
-    const capitalizedWords = words.filter(
-      (w) => w.length > 3 && /^[A-Z][a-z]+/.test(w)
-    );
-
-    const uniqueWords = [...new Set(capitalizedWords)];
-    for (const word of uniqueWords.slice(0, 10)) {
-      entities.push({
-        name: word,
-        type: 'concept',
-        mentions: capitalizedWords.filter((w) => w === word).length,
-        confidence: 0.6,
-      });
-    }
-
-    return entities;
-  }
-
-  /**
-   * Find related content based on shared entities/topics
-   */
-  async findRelatedContent(
-    contentId: string,
-    limit: number = 10
-  ): Promise<ContentRecommendation[]> {
-    const contentNode = this.graph.get(contentId);
-    if (!contentNode) {
-      throw new Error('Content not found in graph');
-    }
-
-    // Get entities connected to this content
-    const contentEntities = this.getConnectedNodes(contentId, 'mentions');
-
-    // Find other content that shares entities
-    const relatedContent = new Map<string, ContentRecommendation>();
-
-    for (const entity of contentEntities) {
-      // Find all content mentioning this entity
-      const relatedNodes = this.getIncomingNodes(entity.nodeId, 'mentions');
-
-      for (const node of relatedNodes) {
-        if (node.nodeId === contentId || node.type !== 'content') continue;
-
-        if (!relatedContent.has(node.nodeId)) {
-          relatedContent.set(node.nodeId, {
-            contentId: node.nodeId,
-            title: node.label,
-            reason: '',
-            relevanceScore: 0,
-            sharedTopics: [],
-            sharedEntities: [],
+      // Add topic nodes and edges
+      for (const topic of entities.topics) {
+        const topicId = `topic-${topic.toLowerCase().replace(/\s+/g, '-')}`;
+        if (!this.graph.nodes.has(topicId)) {
+          this.addNode({
+            id: topicId,
+            type: 'topic',
+            label: topic,
+            properties: {},
           });
         }
+        this.addEdge({
+          id: `${content.id}-about-${topicId}`,
+          source: content.id,
+          target: topicId,
+          type: 'about',
+          weight: 0.8,
+        });
+      }
 
-        const rec = relatedContent.get(node.nodeId)!;
-        rec.sharedEntities.push(entity.label);
-        rec.relevanceScore += 1;
+      // Add person nodes and edges
+      for (const person of entities.people) {
+        const personId = `person-${person.toLowerCase().replace(/\s+/g, '-')}`;
+        if (!this.graph.nodes.has(personId)) {
+          this.addNode({
+            id: personId,
+            type: 'person',
+            label: person,
+            properties: {},
+          });
+        }
+        this.addEdge({
+          id: `${content.id}-mentions-${personId}`,
+          source: content.id,
+          target: personId,
+          type: 'mentions',
+          weight: 0.6,
+        });
+      }
+
+      // Add place nodes and edges
+      for (const place of entities.places) {
+        const placeId = `place-${place.toLowerCase().replace(/\s+/g, '-')}`;
+        if (!this.graph.nodes.has(placeId)) {
+          this.addNode({
+            id: placeId,
+            type: 'place',
+            label: place,
+            properties: {},
+          });
+        }
+        this.addEdge({
+          id: `${content.id}-mentions-${placeId}`,
+          source: content.id,
+          target: placeId,
+          type: 'mentions',
+          weight: 0.6,
+        });
       }
     }
 
-    // Sort by relevance and format
-    const recommendations = Array.from(relatedContent.values())
-      .sort((a, b) => b.relevanceScore - a.relevanceScore)
-      .slice(0, limit)
-      .map((rec) => ({
-        ...rec,
-        reason: `Shares ${rec.sharedEntities.length} entities: ${rec.sharedEntities.slice(0, 3).join(', ')}`,
-      }));
-
-    return recommendations;
+    // Add similarity edges between content
+    this.addSimilarityEdges();
   }
 
   /**
-   * Explore graph starting from a node
+   * Find related content
+   */
+  findRelatedContent(contentId: string, limit: number = 10): RelatedContent[] {
+    const related: RelatedContent[] = [];
+    const visited = new Set<string>();
+    const queue: Array<{ id: string; depth: number; path: string[] }> = [
+      { id: contentId, depth: 0, path: [] },
+    ];
+
+    while (queue.length > 0 && related.length < limit) {
+      const current = queue.shift()!;
+      
+      if (visited.has(current.id)) continue;
+      visited.add(current.id);
+
+      if (current.depth > 0 && current.depth <= 3) {
+        const node = this.graph.nodes.get(current.id);
+        if (node && node.type === 'content') {
+          const score = 1.0 / current.depth;
+          const reason = this.getRelationshipReason(current.path);
+          related.push({ contentId: current.id, score, reason });
+        }
+      }
+
+      // Explore neighbors
+      const neighbors = this.graph.adjacencyList.get(current.id) || new Set();
+      for (const neighborId of neighbors) {
+        if (!visited.has(neighborId) && current.depth < 3) {
+          const edge = Array.from(this.graph.edges.values()).find(
+            e => e.source === current.id && e.target === neighborId
+          );
+          queue.push({
+            id: neighborId,
+            depth: current.depth + 1,
+            path: [...current.path, edge?.type || 'unknown'],
+          });
+        }
+      }
+    }
+
+    return related.sort((a, b) => b.score - a.score).slice(0, limit);
+  }
+
+  /**
+   * Explore graph from a starting node (route compatibility)
    */
   async exploreGraph(
     startNodeId: string,
@@ -274,333 +264,291 @@ Return format:
     const nodes: GraphNode[] = [];
     const edges: GraphEdge[] = [];
 
-    const explore = (nodeId: string, currentDepth: number) => {
+    const traverse = (nodeId: string, currentDepth: number) => {
       if (currentDepth > depth || visited.has(nodeId)) return;
 
       visited.add(nodeId);
-      const node = this.graph.get(nodeId);
-      if (node) nodes.push(node);
+      const node = this.graph.nodes.get(nodeId);
+      if (!node) return;
 
-      // Get connected edges
-      const nodeEdges = Array.from(this.edges.values()).filter(
-        (e) => e.sourceId === nodeId || e.targetId === nodeId
+      nodes.push(node);
+
+      const connectedEdges = Array.from(this.graph.edges.values()).filter(
+        (edge) => edge.source === nodeId || edge.target === nodeId
       );
 
-      for (const edge of nodeEdges) {
+      for (const edge of connectedEdges) {
         edges.push(edge);
-        const nextNodeId = edge.sourceId === nodeId ? edge.targetId : edge.sourceId;
-        explore(nextNodeId, currentDepth + 1);
+        const nextNodeId = edge.source === nodeId ? edge.target : edge.source;
+        traverse(nextNodeId, currentDepth + 1);
       }
     };
 
-    explore(startNodeId, 0);
+    traverse(startNodeId, 0);
     return { nodes, edges };
   }
 
   /**
-   * Find content clusters (communities)
+   * Suggest connections between creators
    */
-  async findClusters(): Promise<GraphCluster[]> {
-    // Simple clustering: group content by shared entities
-    const clusters = new Map<string, Set<string>>();
+  suggestConnections(creatorId: string, limit: number = 5): ConnectionSuggestion[] {
+    const creatorNodeId = `creator-${creatorId}`;
+    const suggestions: ConnectionSuggestion[] = [];
 
-    // For each entity, collect all content mentioning it
-    for (const node of this.graph.values()) {
-      if (node.type === 'entity') {
-        const relatedContent = this.getIncomingNodes(node.nodeId, 'mentions');
-        if (relatedContent.length >= 2) {
-          clusters.set(node.nodeId, new Set(relatedContent.map((n) => n.nodeId)));
+    // Find topics this creator covers
+    const creatorTopics = this.getCreatorTopics(creatorNodeId);
+
+    // Find other creators with similar topics
+    const allCreators = Array.from(this.graph.nodes.values()).filter(
+      n => n.type === 'creator' && n.id !== creatorNodeId
+    );
+
+    for (const otherCreator of allCreators) {
+      const otherTopics = this.getCreatorTopics(otherCreator.id);
+      const sharedTopics = creatorTopics.filter(t => otherTopics.includes(t));
+
+      if (sharedTopics.length > 0) {
+        const score = sharedTopics.length / Math.max(creatorTopics.length, otherTopics.length);
+        suggestions.push({
+          creatorId,
+          targetCreatorId: otherCreator.properties.creatorId,
+          sharedTopics,
+          score,
+        });
+      }
+    }
+
+    return suggestions.sort((a, b) => b.score - a.score).slice(0, limit);
+  }
+
+  /**
+   * Query graph for specific relationships
+   */
+  query(params: {
+    nodeType?: string;
+    edgeType?: string;
+    properties?: Record<string, any>;
+  }): Array<GraphNode | GraphEdge> {
+    const results: Array<GraphNode | GraphEdge> = [];
+
+    if (params.nodeType) {
+      for (const node of this.graph.nodes.values()) {
+        if (node.type === params.nodeType) {
+          if (!params.properties || this.matchesProperties(node.properties, params.properties)) {
+            results.push(node);
+          }
         }
       }
     }
 
-    // Convert to cluster objects
-    const clusterList: GraphCluster[] = [];
-    let clusterId = 1;
-
-    for (const [entityId, contentIds] of clusters.entries()) {
-      const entityNode = this.graph.get(entityId);
-      if (!entityNode) continue;
-
-      const nodes = Array.from(contentIds)
-        .map((id) => this.graph.get(id))
-        .filter((n): n is GraphNode => n !== undefined);
-
-      clusterList.push({
-        clusterId: `cluster_${clusterId++}`,
-        name: `${entityNode.label} Community`,
-        nodes,
-        centralTopic: entityNode.label,
-        size: nodes.length,
-        density: this.calculateClusterDensity(Array.from(contentIds)),
-      });
+    if (params.edgeType) {
+      for (const edge of this.graph.edges.values()) {
+        if (edge.type === params.edgeType) {
+          if (!params.properties || this.matchesProperties(edge.properties || {}, params.properties)) {
+            results.push(edge);
+          }
+        }
+      }
     }
 
-    return clusterList.sort((a, b) => b.size - a.size);
+    return results;
+  }
+
+  /**
+   * Calculate relationship accuracy
+   */
+  calculateAccuracy(groundTruth: Array<{ source: string; target: string; type: string }>): number {
+    let correct = 0;
+    let total = groundTruth.length;
+
+    for (const truth of groundTruth) {
+      const edge = Array.from(this.graph.edges.values()).find(
+        e => e.source === truth.source && e.target === truth.target && e.type === truth.type
+      );
+      if (edge) correct++;
+    }
+
+    return total > 0 ? correct / total : 0;
   }
 
   /**
    * Get graph statistics
    */
-  getStatistics(): {
-    totalNodes: number;
-    totalEdges: number;
+  getStats(): {
+    nodeCount: number;
+    edgeCount: number;
     nodesByType: Record<string, number>;
-    avgDegree: number;
+    edgesByType: Record<string, number>;
   } {
     const nodesByType: Record<string, number> = {};
+    const edgesByType: Record<string, number> = {};
 
-    for (const node of this.graph.values()) {
+    for (const node of this.graph.nodes.values()) {
       nodesByType[node.type] = (nodesByType[node.type] || 0) + 1;
     }
 
-    const degrees = new Map<string, number>();
-    for (const edge of this.edges.values()) {
-      degrees.set(edge.sourceId, (degrees.get(edge.sourceId) || 0) + 1);
-      degrees.set(edge.targetId, (degrees.get(edge.targetId) || 0) + 1);
+    for (const edge of this.graph.edges.values()) {
+      edgesByType[edge.type] = (edgesByType[edge.type] || 0) + 1;
     }
 
-    const avgDegree =
-      Array.from(degrees.values()).reduce((sum, d) => sum + d, 0) / degrees.size || 0;
-
     return {
-      totalNodes: this.graph.size,
-      totalEdges: this.edges.size,
+      nodeCount: this.graph.nodes.size,
+      edgeCount: this.graph.edges.size,
       nodesByType,
-      avgDegree,
+      edgesByType,
     };
   }
 
   /**
-   * Search graph by keyword
+   * Clear the graph
    */
-  searchGraph(keyword: string): GraphNode[] {
-    const lowerKeyword = keyword.toLowerCase();
-    return Array.from(this.graph.values()).filter(
-      (node) =>
-        node.label.toLowerCase().includes(lowerKeyword) ||
-        JSON.stringify(node.properties).toLowerCase().includes(lowerKeyword)
-    );
+  clear(): void {
+    this.graph.nodes.clear();
+    this.graph.edges.clear();
+    this.graph.adjacencyList.clear();
   }
 
-  // ============================================================================
-  // HELPER METHODS
-  // ============================================================================
+  // Private helper methods
 
-  private createEdge(
-    sourceId: string,
-    targetId: string,
-    relationship: string,
-    weight: number
-  ): GraphEdge {
-    return {
-      edgeId: `${sourceId}_${relationship}_${targetId}`,
-      sourceId,
-      targetId,
-      relationship,
-      weight,
-      properties: {},
-      createdAt: new Date().toISOString(),
-    };
-  }
+  private extractPeople(text: string): string[] {
+    const people: string[] = [];
+    const patterns = [
+      /\b(elon musk|jeff bezos|bill gates|mark zuckerberg|steve jobs)\b/gi,
+      /\b(dr\.|mr\.|mrs\.|ms\.)\s+[a-z]+\b/gi,
+    ];
 
-  private generateEntityNodeId(entity: Entity): string {
-    return `entity_${entity.type}_${entity.name.toLowerCase().replace(/\s+/g, '_')}`;
-  }
-
-  private getConnectedNodes(nodeId: string, relationship?: string): GraphNode[] {
-    const edges = Array.from(this.edges.values()).filter(
-      (e) =>
-        e.sourceId === nodeId && (!relationship || e.relationship === relationship)
-    );
-
-    return edges
-      .map((e) => this.graph.get(e.targetId))
-      .filter((n): n is GraphNode => n !== undefined);
-  }
-
-  private getIncomingNodes(nodeId: string, relationship?: string): GraphNode[] {
-    const edges = Array.from(this.edges.values()).filter(
-      (e) =>
-        e.targetId === nodeId && (!relationship || e.relationship === relationship)
-    );
-
-    return edges
-      .map((e) => this.graph.get(e.sourceId))
-      .filter((n): n is GraphNode => n !== undefined);
-  }
-
-  private calculateClusterDensity(nodeIds: string[]): number {
-    if (nodeIds.length < 2) return 0;
-
-    let edgeCount = 0;
-    for (const edge of this.edges.values()) {
-      if (nodeIds.includes(edge.sourceId) && nodeIds.includes(edge.targetId)) {
-        edgeCount++;
+    for (const pattern of patterns) {
+      const matches = text.match(pattern);
+      if (matches) {
+        people.push(...matches.map(m => this.capitalize(m)));
       }
     }
 
-    const maxEdges = (nodeIds.length * (nodeIds.length - 1)) / 2;
-    return maxEdges > 0 ? edgeCount / maxEdges : 0;
+    return [...new Set(people)];
   }
 
-  /**
-   * Get mock graph data for testing
-   */
-  getMockGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
-    const nodes: GraphNode[] = [
-      {
-        nodeId: 'content_001',
-        type: 'content',
-        label: 'How to Make Butter Chicken',
-        properties: { creatorId: 'creator_001', views: 50000 },
-        createdAt: '2026-02-01T10:00:00Z',
-        updatedAt: '2026-02-01T10:00:00Z',
-      },
-      {
-        nodeId: 'content_002',
-        type: 'content',
-        label: 'Indian Cooking Basics',
-        properties: { creatorId: 'creator_001', views: 30000 },
-        createdAt: '2026-02-05T14:00:00Z',
-        updatedAt: '2026-02-05T14:00:00Z',
-      },
-      {
-        nodeId: 'content_003',
-        type: 'content',
-        label: 'Best Restaurants in Delhi',
-        properties: { creatorId: 'creator_002', views: 25000 },
-        createdAt: '2026-02-10T09:00:00Z',
-        updatedAt: '2026-02-10T09:00:00Z',
-      },
-      {
-        nodeId: 'creator_creator_001',
-        type: 'creator',
-        label: 'FoodVlogger',
-        properties: { creatorId: 'creator_001', contentCount: 2 },
-        createdAt: '2026-01-15T08:00:00Z',
-        updatedAt: '2026-02-05T14:00:00Z',
-      },
-      {
-        nodeId: 'creator_creator_002',
-        type: 'creator',
-        label: 'TravelExplorer',
-        properties: { creatorId: 'creator_002', contentCount: 1 },
-        createdAt: '2026-01-20T10:00:00Z',
-        updatedAt: '2026-02-10T09:00:00Z',
-      },
-      {
-        nodeId: 'entity_concept_indian_food',
-        type: 'entity',
-        label: 'Indian Food',
-        properties: { entityType: 'concept', totalMentions: 15 },
-        createdAt: '2026-02-01T10:00:00Z',
-        updatedAt: '2026-02-10T09:00:00Z',
-      },
-      {
-        nodeId: 'entity_place_delhi',
-        type: 'entity',
-        label: 'Delhi',
-        properties: { entityType: 'place', totalMentions: 8 },
-        createdAt: '2026-02-05T14:00:00Z',
-        updatedAt: '2026-02-10T09:00:00Z',
-      },
-      {
-        nodeId: 'entity_concept_cooking',
-        type: 'entity',
-        label: 'Cooking',
-        properties: { entityType: 'concept', totalMentions: 12 },
-        createdAt: '2026-02-01T10:00:00Z',
-        updatedAt: '2026-02-05T14:00:00Z',
-      },
+  private extractPlaces(text: string): string[] {
+    const places: string[] = [];
+    const patterns = [
+      /\b(new york|san francisco|london|paris|tokyo|beijing|silicon valley)\b/gi,
+      /\b(usa|uk|china|japan|germany|france)\b/gi,
     ];
 
-    const edges: GraphEdge[] = [
-      {
-        edgeId: 'creator_creator_001_created_content_001',
-        sourceId: 'creator_creator_001',
-        targetId: 'content_001',
-        relationship: 'created',
-        weight: 1.0,
-        properties: {},
-        createdAt: '2026-02-01T10:00:00Z',
-      },
-      {
-        edgeId: 'creator_creator_001_created_content_002',
-        sourceId: 'creator_creator_001',
-        targetId: 'content_002',
-        relationship: 'created',
-        weight: 1.0,
-        properties: {},
-        createdAt: '2026-02-05T14:00:00Z',
-      },
-      {
-        edgeId: 'creator_creator_002_created_content_003',
-        sourceId: 'creator_creator_002',
-        targetId: 'content_003',
-        relationship: 'created',
-        weight: 1.0,
-        properties: {},
-        createdAt: '2026-02-10T09:00:00Z',
-      },
-      {
-        edgeId: 'content_001_mentions_entity_concept_indian_food',
-        sourceId: 'content_001',
-        targetId: 'entity_concept_indian_food',
-        relationship: 'mentions',
-        weight: 0.95,
-        properties: {},
-        createdAt: '2026-02-01T10:00:00Z',
-      },
-      {
-        edgeId: 'content_001_mentions_entity_concept_cooking',
-        sourceId: 'content_001',
-        targetId: 'entity_concept_cooking',
-        relationship: 'mentions',
-        weight: 0.9,
-        properties: {},
-        createdAt: '2026-02-01T10:00:00Z',
-      },
-      {
-        edgeId: 'content_002_mentions_entity_concept_indian_food',
-        sourceId: 'content_002',
-        targetId: 'entity_concept_indian_food',
-        relationship: 'mentions',
-        weight: 0.92,
-        properties: {},
-        createdAt: '2026-02-05T14:00:00Z',
-      },
-      {
-        edgeId: 'content_002_mentions_entity_concept_cooking',
-        sourceId: 'content_002',
-        targetId: 'entity_concept_cooking',
-        relationship: 'mentions',
-        weight: 0.88,
-        properties: {},
-        createdAt: '2026-02-05T14:00:00Z',
-      },
-      {
-        edgeId: 'content_003_mentions_entity_concept_indian_food',
-        sourceId: 'content_003',
-        targetId: 'entity_concept_indian_food',
-        relationship: 'mentions',
-        weight: 0.85,
-        properties: {},
-        createdAt: '2026-02-10T09:00:00Z',
-      },
-      {
-        edgeId: 'content_003_mentions_entity_place_delhi',
-        sourceId: 'content_003',
-        targetId: 'entity_place_delhi',
-        relationship: 'mentions',
-        weight: 0.93,
-        properties: {},
-        createdAt: '2026-02-10T09:00:00Z',
-      },
+    for (const pattern of patterns) {
+      const matches = text.match(pattern);
+      if (matches) {
+        places.push(...matches.map(m => this.capitalize(m)));
+      }
+    }
+
+    return [...new Set(places)];
+  }
+
+  private extractTopics(text: string): string[] {
+    const topics: string[] = [];
+    const keywords = [
+      'ai', 'machine learning', 'blockchain', 'cryptocurrency', 'web3',
+      'startup', 'entrepreneurship', 'technology', 'innovation', 'business',
+      'marketing', 'design', 'programming', 'data science', 'cloud computing',
     ];
 
-    return { nodes, edges };
+    for (const keyword of keywords) {
+      if (text.includes(keyword.toLowerCase())) {
+        topics.push(this.capitalize(keyword));
+      }
+    }
+
+    return [...new Set(topics)];
+  }
+
+  private extractConcepts(text: string): string[] {
+    const concepts: string[] = [];
+    const patterns = [
+      /\b(growth|scale|revenue|profit|strategy|vision|mission)\b/gi,
+    ];
+
+    for (const pattern of patterns) {
+      const matches = text.match(pattern);
+      if (matches) {
+        concepts.push(...matches.map(m => this.capitalize(m)));
+      }
+    }
+
+    return [...new Set(concepts)];
+  }
+
+  private addSimilarityEdges(): void {
+    const contentNodes = Array.from(this.graph.nodes.values()).filter(n => n.type === 'content');
+
+    for (let i = 0; i < contentNodes.length; i++) {
+      for (let j = i + 1; j < contentNodes.length; j++) {
+        const similarity = this.calculateSimilarity(contentNodes[i], contentNodes[j]);
+        if (similarity > 0.3) {
+          this.addEdge({
+            id: `${contentNodes[i].id}-similar-${contentNodes[j].id}`,
+            source: contentNodes[i].id,
+            target: contentNodes[j].id,
+            type: 'similar_to',
+            weight: similarity,
+          });
+        }
+      }
+    }
+  }
+
+  private calculateSimilarity(node1: GraphNode, node2: GraphNode): number {
+    // Find common neighbors
+    const neighbors1 = this.graph.adjacencyList.get(node1.id) || new Set();
+    const neighbors2 = this.graph.adjacencyList.get(node2.id) || new Set();
+
+    const intersection = new Set([...neighbors1].filter(x => neighbors2.has(x)));
+    const union = new Set([...neighbors1, ...neighbors2]);
+
+    return union.size > 0 ? intersection.size / union.size : 0;
+  }
+
+  private getCreatorTopics(creatorNodeId: string): string[] {
+    const topics: string[] = [];
+
+    // Find all content by this creator
+    for (const edge of this.graph.edges.values()) {
+      if (edge.target === creatorNodeId && edge.type === 'created_by') {
+        const contentId = edge.source;
+        
+        // Find topics for this content
+        for (const topicEdge of this.graph.edges.values()) {
+          if (topicEdge.source === contentId && topicEdge.type === 'about') {
+            const topicNode = this.graph.nodes.get(topicEdge.target);
+            if (topicNode) {
+              topics.push(topicNode.label);
+            }
+          }
+        }
+      }
+    }
+
+    return [...new Set(topics)];
+  }
+
+  private getRelationshipReason(path: string[]): string {
+    if (path.length === 0) return 'direct';
+    return path.join(' → ');
+  }
+
+  private matchesProperties(nodeProps: Record<string, any>, queryProps: Record<string, any>): boolean {
+    for (const [key, value] of Object.entries(queryProps)) {
+      if (nodeProps[key] !== value) return false;
+    }
+    return true;
+  }
+
+  private capitalize(str: string): string {
+    return str.split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
   }
 }
+
+export default KnowledgeGraphService;
 
 export const knowledgeGraphService = new KnowledgeGraphService();
