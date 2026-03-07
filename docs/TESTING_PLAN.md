@@ -62,62 +62,101 @@ This is a **cost-aware, modular testing strategy** for 27 AI services before dem
 
 ---
 
-## 🚀 3-Phase Testing Strategy
+## 🚀 Testing Strategy Options
 
-### PHASE 1: Mock Testing (No Real AI Calls) ⚡
-**Goal:** Test all logic without spending money  
-**Duration:** 2-3 hours  
-**Cost:** $0
+### OPTION 1: Full Jest Testing (Production-Ready) 🧪
+**Best for:** Long-term projects, production apps  
+**Time:** 5+ hours | **Cost:** $14.40
 
-**What to Test:**
+**3-Phase Approach:**
+1. Mock Testing (No AI calls)
+2. Controlled Real AI Testing
+3. Full Integration Testing
+
+### OPTION 2: Hybrid Approach (RECOMMENDED for Hackathon) ⚡
+**Best for:** Quick validation, tight deadlines  
+**Time:** 1-2 hours | **Cost:** $5-10
+
+**What it does:**
+- Creates simple test scripts (no Jest setup needed)
+- Tests each service with minimal input
+- Logs results to console and file
+- Tracks token usage automatically
+- Validates service functionality quickly
+
+**How it works:**
+1. Run test script: `npm run test:services`
+2. Script calls each service with sample data
+3. Logs output, errors, and token usage
+4. Creates test report: `logs/service-test-report.md`
+5. Review report and verify outputs
+
+**Advantages:**
+- ✅ No Jest configuration needed
+- ✅ Fast to implement and run
+- ✅ Easy to understand results
+- ✅ Perfect for demo preparation
+- ✅ Minimal token usage
+
+---
+
+## 🚀 Hybrid Approach Details (RECOMMENDED)
+
+### Quick Test Script Features
+
+**Automated Testing:**
+- Tests all 27 services sequentially
+- Uses minimal test inputs (saves tokens)
+- Catches errors and logs them
+- Tracks token usage per service
+- Generates markdown report
+
+**What Gets Tested:**
 - ✅ Service initialization
-- ✅ Input validation
+- ✅ Basic functionality
 - ✅ Error handling
-- ✅ Prompt formatting
-- ✅ Response parsing
-- ✅ Edge cases
+- ✅ Response format
+- ✅ Token usage
 
-**How to Mock:**
-```typescript
-// Create mock responses for testing
-const mockBedrockResponse = {
-  content: "Mock AI response",
-  usage: { input_tokens: 100, output_tokens: 50 }
-};
-
-// Mock the AI service
-jest.mock('../services/ai-content-generator.service', () => ({
-  generateContent: jest.fn().mockResolvedValue(mockBedrockResponse)
-}));
+**Output:**
+```
+Testing Service: viral-analyzer.service.ts
+✅ Service initialized
+✅ Method called successfully
+✅ Response format valid
+📊 Tokens used: 450 (input: 200, output: 250)
+💰 Cost: $0.0014
+⏱️  Duration: 2.3s
+---
 ```
 
-### PHASE 2: Controlled Real AI Testing 🎯
-**Goal:** Validate AI responses with minimal cost  
-**Duration:** 1-2 hours  
-**Cost:** ~$5-10
+### Test Report Format
 
-**Rules:**
-- ✅ Max 3 test cases per service
-- ✅ Use short inputs only (< 100 words)
-- ✅ Disable regeneration loops
-- ✅ Log all token usage
-- ✅ Test one service at a time
+The script generates `logs/service-test-report.md`:
+```markdown
+# Service Testing Report
+Date: March 1, 2026
 
-**Test Cases per Service:**
-1. **Normal Input** - Expected use case
-2. **Edge Case** - Unusual but valid input
-3. **Invalid Input** - Should handle gracefully
+## Summary
+- Total Services: 27
+- Passed: 25
+- Failed: 2
+- Total Tokens: 12,450
+- Total Cost: $3.74
+- Duration: 8m 32s
 
-### PHASE 3: Full Integration Testing 🔗
-**Goal:** Test complete workflows end-to-end  
-**Duration:** 1 hour  
-**Cost:** ~$3-5
+## Service Results
+### ✅ viral-analyzer.service.ts
+- Status: PASSED
+- Tokens: 450
+- Cost: $0.0014
+- Output: [sample output]
 
-**Test Scenarios:**
-- ✅ Upload → Analysis → Generation (1 test)
-- ✅ Multi-platform generation (1 test)
-- ✅ SEO optimization pipeline (1 test)
-- ✅ Quality validation flow (1 test)
+### ❌ voice-clone.service.ts
+- Status: FAILED
+- Error: Missing API key
+- Fix: Add VOICE_API_KEY to .env
+```
 
 ---
 
