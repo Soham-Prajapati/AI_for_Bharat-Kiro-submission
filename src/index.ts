@@ -39,6 +39,7 @@ import multiplyV2Route from './routes/multiply-v2.route';
 import safetyRoute from './routes/safety.route';
 import vernacularRoute from './routes/vernacular.route';
 import regionalRoute from './routes/regional.route';
+import uploadToResultsRoute from './routes/upload-to-results.route';
 import { workspaceWSServer } from './services/workspace-ws.service';
 import { createServer } from 'http';
 
@@ -88,6 +89,7 @@ if (USE_MOCK_UPLOAD) {
   console.log('⚠️  Using MOCK upload (AWS S3 not configured)');
   console.log('   Files will be saved locally to ./uploads/');
 }
+app.use('/api/upload-to-results', uploadToResultsRoute);
 app.use('/api/process', processRoute);
 app.use('/api/generate', generateRoute);
 app.use('/api/auth', authRoute);

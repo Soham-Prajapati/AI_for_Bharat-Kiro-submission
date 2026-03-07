@@ -9498,3 +9498,97 @@ S3_BUCKET=your_bucket
 - Return mock response for testing
 
 ---
+
+
+---
+
+## 📝 UPLOAD FLOW - Current vs Intended
+
+### Current Flow (Simplified Demo)
+1. User uploads video → Saved locally
+2. Shows progress bar (fake processing)
+3. Redirects to `/workspace`
+4. **No actual content generation happens**
+
+### Intended Flow (Full Implementation)
+1. User uploads video → Saved locally ✅
+2. **Process video** → Extract transcript, analyze content
+3. **Generate content** → Call AI services to create:
+   - YouTube Script
+   - Instagram Reel caption
+   - TikTok Caption
+   - LinkedIn Article
+   - X/Twitter Thread
+   - Hindi Blog Post
+   - Podcast Script
+   - Viral Score
+4. **Show results** → Display all generated content
+5. User can edit, approve, or regenerate
+
+### What Needs to Be Done
+
+**To implement full content generation:**
+
+1. **After upload succeeds**, call the process API:
+```typescript
+// After upload
+const uploadResult = await api.upload.file(...)
+
+// Process the uploaded content
+const processResult = await api.process.start({
+  fileId: uploadResult.fileId,
+  userId: 'demo_user',
+  mode: 'hybrid' // or 'human', 'ai'
+})
+
+// Wait for processing to complete
+const status = await api.process.getStatus(processResult.jobId)
+
+// Generate multi-platform content
+const generated = await api.generate.create({
+  jobId: processResult.jobId,
+  platforms: ['youtube', 'instagram', 'tiktok', 'linkedin', 'twitter']
+})
+
+// Redirect to results page with generated content
+router.push(`/results/${generated.generationId}`)
+```
+
+2. **Create a results page** at `/app/results/[id]/page.tsx` that shows:
+   - All generated content for each platform
+   - Edit/regenerate options
+   - Viral score
+   - Analytics
+
+3. **Or use the workspace** as the results page:
+   - Workspace already exists at `/app/workspace/page.tsx`
+   - Could be enhanced to show generated content
+   - Team collaboration features
+
+### Recommendation for Demo
+
+**For March 4 demo, you have 2 options:**
+
+**Option A: Keep it simple (Current)**
+- Upload works ✅
+- Redirect to workspace ✅
+- Workspace shows "content library" (mock data)
+- **Pros:** Already working, no changes needed
+- **Cons:** Doesn't show actual AI generation
+
+**Option B: Add real AI generation (Better demo)**
+- Upload → Process → Generate → Show results
+- Actually uses your 27 AI services
+- Shows real AI-generated content
+- **Pros:** Impressive demo, shows real capabilities
+- **Cons:** Requires implementing the flow above (~2-3 hours)
+
+### Quick Win for Demo
+
+**Minimal change to make it work:**
+
+After upload, instead of just redirecting, show a **mock results page** with pre-generated content examples. This gives the illusion of AI generation without actually calling the APIs (saves time and tokens for demo).
+
+Then for the actual pitch, you can say: "In production, this would call our 27 AI services to generate real content, but for the demo we're showing pre-generated examples to save time."
+
+---
