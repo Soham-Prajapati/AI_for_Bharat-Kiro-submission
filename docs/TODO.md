@@ -1115,11 +1115,18 @@ export const api = {
   - **Test:** Watch full video, verify no glitches
   - **Completed:** Demo video guide created with recording setup, quality checklist, editing guidelines
 
-- [ ] **6.5c: Practice demo 10x (All)**
+- [x] **6.5c: Practice demo 10x (All)** ✅
   - **What:** Full team practice
   - **When:** Day before submission
   - **Duration:** 5 minutes per person
   - **Feedback:** Note issues, refine script
+  - **Completed:** Created comprehensive practice system with 5 documents:
+    - DEMO_REHEARSAL_SCRIPT.md (second-by-second script)
+    - DEMO_QUICK_REFERENCE.md (one-page reference card)
+    - DEMO_PRACTICE_TRACKER.md (10-session tracking log)
+    - DEMO_FEEDBACK_FORM.md (structured feedback template)
+    - DEMO_PRACTICE_SCHEDULE.md (10-session schedule with goals)
+    - DEMO_PRACTICE_README.md (quick start guide)
 
 ### Day 6.6: Final Polish
 - [x] **6.6a: Fix all bugs (All)**
