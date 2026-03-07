@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import FileUploader from '@/components/FileUploader'
+import api from '@/services/api'
 
 const SUPPORTED_FORMATS = ['MP4', 'MOV', 'AVI', 'MP3', 'WAV', 'M4A', 'WebM']
 const OUTPUT_FORMATS = [
@@ -70,16 +71,20 @@ export default function UploadPage() {
       } else if (selectedFile) {
         setProcessingStep('Uploading to S3…')
         setUploadProgress(20)
-        const formData = new FormData()
-        formData.append('file', selectedFile)
-        formData.append('userId', 'demo_user')
-        const response = await fetch('/api/upload', { method: 'POST', body: formData })
-        const data = await response.json()
-        if (!response.ok) throw new Error(data.message || 'Failed to upload file')
-        setProcessingStep('Analysing content…')
-        setUploadProgress(70)
-        await new Promise(r => setTimeout(r, 700))
-        setUploadProgress(100)
+        
+        // Use the API client's upload.file method
+        try {
+          const result = await api.upload.file(selectedFile, (progress) => {
+            setUploadProgress(20 + (progress * 0.5)) // 20% to 70%
+          }, 'demo_user')
+          
+          setProcessingStep('Analysing content…')
+          setUploadProgress(70)
+          await new Promise(r => setTimeout(r, 700))
+          setUploadProgress(100)
+        } catch (error: any) {
+          throw new Error(error.message || 'Failed to upload file')
+        }
       }
 
       setTimeout(() => router.push('/workspace'), 600)
