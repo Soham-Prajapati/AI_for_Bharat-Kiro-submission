@@ -213,28 +213,28 @@ export const api = {
   - **Test:** Click each mode, verify state updates
 
 ### Day 1.5: Testing Setup
-- [ ] **1.5a: Setup Jest + test structure (Lakshmi)**
+- [x] **1.5a: Setup Jest + test structure (Lakshmi)** ✅
   - **What:** Configure Jest for TypeScript
   - **Where:** `jest.config.js`, `src/__tests__/setup.ts`
   - **How:** Install `@types/jest`, `ts-jest`
   - **Output:** `npm test` runs successfully
   - **Test:** Create sample test, verify it passes
 
-- [ ] **1.5b: Create unit tests for prompts (Lakshmi)**
+- [x] **1.5b: Create unit tests for prompts (Lakshmi)** ✅
   - **What:** Test each prompt function
   - **Where:** `src/__tests__/prompts/*.test.ts`
   - **How:** Mock transcript input, verify output structure
   - **Coverage:** All 8 prompts, >80% code coverage
   - **Test:** `npm test -- prompts`
 
-- [ ] **1.5c: Create integration tests (Lakshmi)**
+- [x] **1.5c: Create integration tests (Lakshmi)** ✅
   - **What:** Test full upload → process → generate flow
   - **Where:** `src/__tests__/integration/e2e.test.ts`
   - **How:** Use `supertest` to call API endpoints
   - **Test:** Upload file → verify S3 → verify Transcribe → verify Bedrock
   - **Duration:** Should complete in <30 seconds
 
-- [ ] **1.5d: Setup CI/CD pipeline (Lakshmi)**
+- [x] **1.5d: Setup CI/CD pipeline (Lakshmi)** ✅
   - **What:** GitHub Actions for auto-deploy
   - **Where:** `.github/workflows/deploy.yml`
   - **How:** On push to `main`, run tests → build → deploy to AWS
@@ -306,7 +306,7 @@ export const api = {
   - **Caching:** Cache results for 1 hour in DynamoDB
   - **Test:** Call twice, verify second call is faster
 
-- [ ] **2.2d: Test analytics accuracy (Lakshmi)**
+- [x] **2.2d: Test analytics accuracy (Lakshmi)** ✅
   - **What:** Verify calculations are correct
   - **Where:** `src/__tests__/analytics.test.ts`
   - **Test:** Mock platform data, verify engagement rate formula
@@ -339,7 +339,7 @@ export const api = {
   - **Output:** Viral score from Nidhi's service
   - **Test:** Sample transcript, verify score in range 0-100
 
-- [ ] **2.3d: Test prediction accuracy (Lakshmi)**
+- [x] **2.3d: Test prediction accuracy (Lakshmi)** ✅
   - **What:** Validate against known viral videos
   - **Where:** `src/__tests__/viral.test.ts`
   - **Dataset:** 50 viral + 50 non-viral videos
@@ -372,7 +372,7 @@ export const api = {
   - **Output:** ROI data from Nidhi's service
   - **Test:** Call with user who processed 50 videos
 
-- [ ] **2.4d: Test ROI calculations (Lakshmi)**
+- [x] **2.4d: Test ROI calculations (Lakshmi)** ✅
   - **What:** Verify math is correct
   - **Where:** `src/__tests__/roi.test.ts`
   - **Test:** Edge cases (1 video, 1000 videos)
@@ -404,7 +404,7 @@ export const api = {
   - **Output:** Adapted content
   - **Test:** Sample content, verify adaptations
 
-- [ ] **2.5d: Test cultural adaptations (Lakshmi)**
+- [/] **2.5d: Test cultural adaptations (Lakshmi)**
   - **What:** Verify accuracy of adaptations
   - **Where:** `src/__tests__/cultural.test.ts`
   - **Test:** 10 idioms, verify correct regional equivalents
@@ -737,7 +737,7 @@ export const api = {
   - **Where:** `src/routes/automation.route.ts`
   - **Test:** Create automation, verify triggers
 
-- [ ] **4.5d: Test automation reliability (Lakshmi)**
+- [x] **4.5d: Test automation reliability (Lakshmi)** ✅
   - **What:** Test scheduled tasks, error handling
   - **Where:** `src/__tests__/automation.test.ts`
   - **Metric:** >99% execution success rate
