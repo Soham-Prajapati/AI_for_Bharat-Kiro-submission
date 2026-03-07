@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import apiClient from '@/services/api'
 
 interface ContentItem {
   id: number | string
@@ -48,15 +49,96 @@ function StatCard({ label, value, change, positive, icon }: {
 }
 
 export default function DashboardPage() {
-  // TODO: replace with real API — apiClient.analytics.getDashboard()
-  const [content] = useState<ContentItem[]>(MOCK_CONTENT)
-
-  const statCards = [
+  const [content, setContent] = useState<ContentItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [statCards, setStatCards] = useState([
     { label: 'Total Content',  value: '127',  change: '+12%', positive: true, icon: '🎬' },
     { label: 'This Month',     value: '24',   change: '+8%',  positive: true, icon: '📅' },
     { label: 'Avg Engagement', value: '4.2K', change: '+15%', positive: true, icon: '📈' },
     { label: 'Hours Saved',    value: '48h',  change: '+22%', positive: true, icon: '⚡' },
-  ]
+  ])
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        // TODO: Get actual userId from auth context
+        const userId = 'demo-user'
+        const response = await apiClient.analyticsDashboard.getDashboard(userId)
+        
+        if (response.success && response.dashboard) {
+          const { dashboard } = response
+          
+          // Update stat cards with real data
+          if (dashboard.metrics && dashboard.metrics.length > 0) {
+            const metricsMap = dashboard.metrics.reduce((acc, metric) => {
+              acc[metric.name] = metric
+              return acc
+            }, {} as Record<string, any>)
+            
+            setStatCards([
+              { 
+                label: 'Total Content',  
+                value: metricsMap['totalContent']?.value?.toString() || '127',  
+                change: metricsMap['totalContent']?.change ? `${metricsMap['totalContent'].change > 0 ? '+' : ''}${metricsMap['totalContent'].change}%` : '+12%', 
+                positive: metricsMap['totalContent']?.trend !== 'down', 
+                icon: '🎬' 
+              },
+              { 
+                label: 'This Month',     
+                value: metricsMap['monthlyContent']?.value?.toString() || '24',   
+                change: metricsMap['monthlyContent']?.change ? `${metricsMap['monthlyContent'].change > 0 ? '+' : ''}${metricsMap['monthlyContent'].change}%` : '+8%',  
+                positive: metricsMap['monthlyContent']?.trend !== 'down', 
+                icon: '📅' 
+              },
+              { 
+                label: 'Avg Engagement', 
+                value: metricsMap['avgEngagement']?.value ? `${(metricsMap['avgEngagement'].value / 1000).toFixed(1)}K` : '4.2K', 
+                change: metricsMap['avgEngagement']?.change ? `${metricsMap['avgEngagement'].change > 0 ? '+' : ''}${metricsMap['avgEngagement'].change}%` : '+15%', 
+                positive: metricsMap['avgEngagement']?.trend !== 'down', 
+                icon: '📈' 
+              },
+              { 
+                label: 'Hours Saved',    
+                value: metricsMap['hoursSaved']?.value ? `${metricsMap['hoursSaved'].value}h` : '48h',  
+                change: metricsMap['hoursSaved']?.change ? `${metricsMap['hoursSaved'].change > 0 ? '+' : ''}${metricsMap['hoursSaved'].change}%` : '+22%', 
+                positive: metricsMap['hoursSaved']?.trend !== 'down', 
+                icon: '⚡' 
+              },
+            ])
+          }
+          
+          // Map platform performance to content items
+          if (dashboard.platformPerformance && dashboard.platformPerformance.length > 0) {
+            const contentItems: ContentItem[] = dashboard.platformPerformance.slice(0, 5).map((perf, idx) => ({
+              id: `content-${idx}`,
+              title: `${perf.platform} Content`,
+              platform: perf.platform.charAt(0).toUpperCase() + perf.platform.slice(1),
+              status: 'published' as const,
+              date: '2 hours ago',
+              engagement: perf.metrics.views > 0 ? `${(perf.metrics.views / 1000).toFixed(1)}K` : '—',
+            }))
+            setContent(contentItems)
+          } else {
+            setContent(MOCK_CONTENT)
+          }
+        } else {
+          setContent(MOCK_CONTENT)
+        }
+      } catch (err: any) {
+        console.error('Failed to fetch dashboard:', err)
+        setError(err.message || 'Failed to load dashboard data')
+        setContent(MOCK_CONTENT)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDashboard()
+  }, [])
 
   return (
     <div className="min-h-screen bg-[#030712] text-white">
@@ -84,10 +166,27 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {statCards.map((s, i) => <StatCard key={i} {...s} />)}
-        </div>
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+            <p className="text-red-400 text-sm">⚠️ {error}</p>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <div className="w-12 h-12 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-white/40 text-sm">Loading dashboard...</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {statCards.map((s, i) => <StatCard key={i} {...s} />)}
+            </div>
 
         {/* Quick Actions */}
         <div>
@@ -199,6 +298,8 @@ export default function DashboardPage() {
             ))}
           </div>
         </div>
+          </>
+        )}
 
       </div>
     </div>

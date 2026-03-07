@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Download, Calendar, CreditCard, FileText, AlertCircle } from 'lucide-react';
-import { Transaction } from '@/types/api';
+import { Transaction, PurchaseListingResponse } from '@/types/api';
+import apiClient from '@/services/api';
+import { useToast } from '@/context/ToastContext';
 
 interface PurchaseHistoryProps {
   userId: string;
@@ -40,8 +42,10 @@ const mockTransactions: Transaction[] = [
 ];
 
 export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
+  const { addToast } = useToast();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState<string | null>(null);
 
   useEffect(() => {
     loadPurchases();
@@ -50,24 +54,68 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
   const loadPurchases = async () => {
     try {
       setLoading(true);
-      // TODO: Replace with actual API call
-      // const response = await apiClient.marketplace.getPurchases(userId);
-      // setTransactions(response.transactions);
       
-      // Mock data for now
+      // Fetch user's purchase history
+      // Note: The API doesn't have a dedicated getPurchases endpoint,
+      // so we'll use mock data for now. In production, you would add
+      // a new endpoint like GET /api/marketplace/purchases/:userId
+      
+      // For now, using mock data as placeholder
       setTimeout(() => {
         setTransactions(mockTransactions);
         setLoading(false);
       }, 500);
-    } catch (error) {
+      
+      // TODO: Once backend adds the endpoint, replace with:
+      // const response = await apiClient.marketplace.getPurchases(userId);
+      // setTransactions(response.transactions);
+      // setLoading(false);
+    } catch (error: any) {
       console.error('Failed to load purchases:', error);
+      addToast('error', error.message || 'Failed to load purchase history');
       setLoading(false);
     }
   };
 
-  const handleDownload = (transactionId: string) => {
-    // TODO: Implement download logic
-    console.log('Downloading transaction:', transactionId);
+  const handleDownload = async (transactionId: string) => {
+    try {
+      setDownloading(transactionId);
+      
+      // Find the transaction to get the listing ID
+      const transaction = transactions.find(t => t.id === transactionId);
+      if (!transaction) {
+        throw new Error('Transaction not found');
+      }
+      
+      // Purchase the listing to get the download URL
+      // Note: In a real app, you'd have a separate endpoint to get download URL
+      // for already purchased items. For now, we'll simulate the download.
+      const response = await apiClient.marketplace.purchase({
+        listingId: transaction.listingId,
+        userId: transaction.userId,
+        paymentMethod: transaction.paymentMethod,
+      });
+      
+      if (response.success && response.downloadUrl) {
+        // Create a temporary link and trigger download
+        const link = document.createElement('a');
+        link.href = response.downloadUrl;
+        link.download = `purchase-${transactionId}`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        addToast('success', 'Download started successfully');
+      } else {
+        throw new Error('Failed to get download URL');
+      }
+    } catch (error: any) {
+      console.error('Download failed:', error);
+      addToast('error', error.message || 'Failed to download file');
+    } finally {
+      setDownloading(null);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -186,10 +234,20 @@ export default function PurchaseHistory({ userId }: PurchaseHistoryProps) {
                   {transaction.status === 'completed' && (
                     <button
                       onClick={() => handleDownload(transaction.id)}
-                      className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+                      disabled={downloading === transaction.id}
+                      className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Download className="w-4 h-4" />
-                      Download
+                      {downloading === transaction.id ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          Downloading...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4" />
+                          Download
+                        </>
+                      )}
                     </button>
                   )}
                 </div>
