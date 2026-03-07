@@ -11,6 +11,7 @@ import { requestIdMiddleware } from './middleware/requestId.middleware';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { apiLimiter } from './middleware/ratelimit.middleware';
 import uploadRoute from './routes/upload.route';
+import uploadRouteMock from './routes/upload.route.mock';
 import processRoute from './routes/process.route';
 import generateRoute from './routes/generate.route';
 import authRoute from './routes/auth.route';
@@ -42,6 +43,9 @@ import { workspaceWSServer } from './services/workspace-ws.service';
 import { createServer } from 'http';
 
 dotenv.config();
+
+// Use mock upload if AWS credentials are not configured
+const USE_MOCK_UPLOAD = !process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID === 'your_access_key_here';
 
 const app = express();
 const server = createServer(app);
@@ -79,7 +83,11 @@ app.use(logger);
 app.use('/api', apiLimiter);
 
 // Routes
-app.use('/api/upload', uploadRoute);
+app.use('/api/upload', USE_MOCK_UPLOAD ? uploadRouteMock : uploadRoute);
+if (USE_MOCK_UPLOAD) {
+  console.log('⚠️  Using MOCK upload (AWS S3 not configured)');
+  console.log('   Files will be saved locally to ./uploads/');
+}
 app.use('/api/process', processRoute);
 app.use('/api/generate', generateRoute);
 app.use('/api/auth', authRoute);

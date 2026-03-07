@@ -9438,3 +9438,63 @@ const service = new ViralAnalyzerService();
 Since all 27 services passed initialization testing, you're ready for the demo! The services are properly structured and will work when called through your API routes. You can skip expensive AI testing and test during the actual demo with real user inputs.
 
 ---
+
+
+---
+
+## 🐛 TROUBLESHOOTING: Upload JSON Parse Error
+
+**Error:** "Unexpected token 'S', 'Server act'... is not valid JSON"
+
+### Quick Fix (Most Likely)
+
+**The backend server is not running!**
+
+```bash
+# Start the backend
+npm run dev
+
+# Wait for: "Server running on port 3001"
+# Then try uploading again
+```
+
+### Detailed Diagnosis
+
+See `diagnose-upload-error.md` for complete troubleshooting steps.
+
+**Common causes:**
+1. Backend not running (most common)
+2. Port 3001 already in use
+3. AWS S3 credentials missing (causes backend crash)
+4. CORS configuration issue
+
+**Quick checks:**
+```bash
+# Check if backend is running
+lsof -i :3001
+
+# Test upload endpoint directly
+curl -X POST http://localhost:3001/api/upload \
+  -F "file=@test.txt" \
+  -F "userId=test"
+```
+
+**Expected:** JSON response  
+**If you get HTML:** Backend has an error
+
+### AWS S3 Workaround
+
+If you don't have AWS credentials set up yet, the S3 upload will fail. You can:
+
+**Option 1:** Add AWS credentials to `.env`
+```
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+S3_BUCKET=your_bucket
+```
+
+**Option 2:** Use local file storage (temporary)
+- Comment out S3 upload in `src/routes/upload.route.ts`
+- Return mock response for testing
+
+---
