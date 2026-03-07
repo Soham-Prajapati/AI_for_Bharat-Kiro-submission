@@ -150,6 +150,7 @@ export default function WorkspacePage() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showComments, setShowComments] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
+  const [lastEditedTime, setLastEditedTime] = useState('--:--:--');
   const [content, setContent] = useState(
     `# Content Intelligence Platform - Collaborative Workspace
 
@@ -192,6 +193,10 @@ Happy collaborating!`
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    setLastEditedTime(new Date().toLocaleTimeString());
+  }, []);
 
   const handleContentChange = (newContent: string) => {
     setContent(newContent);
@@ -290,7 +295,7 @@ Happy collaborating!`
               </h1>
             )}
             <span className="text-xs font-mono text-white/30">
-              Last edited {new Date().toLocaleTimeString()}
+              Last edited {lastEditedTime}
             </span>
           </div>
 
