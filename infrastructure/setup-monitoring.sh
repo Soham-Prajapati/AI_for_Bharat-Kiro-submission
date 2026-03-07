@@ -1,161 +1,245 @@
 #!/bin/bash
 
-# CloudWatch Monitoring Setup Script
-# This script sets up CloudWatch dashboards, alarms, and SNS notifications
+# AWS CloudWatch Monitoring Setup Script
+# This script deploys dashboards, configures alarms, and sets up SNS topics
 
 set -e
 
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
 # Configuration
 AWS_REGION="${AWS_REGION:-us-east-1}"
-SNS_TOPIC_NAME="content-intelligence-alerts"
-EMAIL_ENDPOINT="${ALERT_EMAIL:-admin@example.com}"
-DASHBOARD_FILE="infrastructure/cloudwatch-dashboard.json"
-ALARMS_FILE="infrastructure/cloudwatch-alarms.json"
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+CRITICAL_EMAIL="${CRITICAL_EMAIL:-ops-critical@example.com}"
+WARNING_EMAIL="${WARNING_EMAIL:-ops-warning@example.com}"
 
-echo "🚀 Setting up CloudWatch Monitoring..."
+echo -e "${GREEN}=== AWS CloudWatch Monitoring Setup ===${NC}"
 echo "Region: $AWS_REGION"
-echo "Alert Email: $EMAIL_ENDPOINT"
-
-# Step 1: Create SNS Topic for Alerts
+echo "Account ID: $ACCOUNT_ID"
 echo ""
-echo "📧 Creating SNS topic for alerts..."
-SNS_TOPIC_ARN=$(aws sns create-topic \
-  --name "$SNS_TOPIC_NAME" \
-  --region "$AWS_REGION" \
-  --query 'TopicArn' \
-  --output text)
 
-echo "✅ SNS Topic created: $SNS_TOPIC_ARN"
+# Function to create SNS topic
+create_sns_topic() {
+    local topic_name=$1
+    local email=$2
+    
+    echo -e "${YELLOW}Creating SNS topic: $topic_name${NC}"
+    
+    # Create topic
+    topic_arn=$(aws sns create-topic \
+        --name "$topic_name" \
+        --region "$AWS_REGION" \
+        --query 'TopicArn' \
+        --output text)
+    
+    echo "Topic ARN: $topic_arn"
+    
+    # Subscribe email
+    echo "Subscribing email: $email"
+    aws sns subscribe \
+        --topic-arn "$topic_arn" \
+        --protocol email \
+        --notification-endpoint "$email" \
+        --region "$AWS_REGION"
+    
+    echo -e "${GREEN}✓ SNS topic created. Check $email for confirmation.${NC}"
+    echo ""
+    
+    echo "$topic_arn"
+}
 
-# Step 2: Subscribe email to SNS topic
-echo ""
-echo "📬 Subscribing email to SNS topic..."
-aws sns subscribe \
-  --topic-arn "$SNS_TOPIC_ARN" \
-  --protocol email \
-  --notification-endpoint "$EMAIL_ENDPOINT" \
-  --region "$AWS_REGION"
+# Function to deploy CloudWatch dashboard
+deploy_dashboard() {
+    echo -e "${YELLOW}Deploying CloudWatch Dashboard${NC}"
+    
+    # Read dashboard configuration
+    dashboard_body=$(cat infrastructure/cloudwatch-dashboard.json | jq -c '.dashboardBody')
+    dashboard_name=$(cat infrastructure/cloudwatch-dashboard.json | jq -r '.dashboardName')
+    
+    # Create dashboard
+    aws cloudwatch put-dashboard \
+        --dashboard-name "$dashboard_name" \
+        --dashboard-body "$dashboard_body" \
+        --region "$AWS_REGION"
+    
+    echo -e "${GREEN}✓ Dashboard deployed: $dashboard_name${NC}"
+    echo "View at: https://console.aws.amazon.com/cloudwatch/home?region=$AWS_REGION#dashboards:name=$dashboard_name"
+    echo ""
+}
 
-echo "✅ Email subscription created. Please check your email and confirm the subscription!"
+# Function to create CloudWatch alarms
+create_alarms() {
+    local critical_topic_arn=$1
+    local warning_topic_arn=$2
+    
+    echo -e "${YELLOW}Creating CloudWatch Alarms${NC}"
+    
+    # Read alarms configuration
+    alarms=$(cat infrastructure/cloudwatch-alarms.json | jq -c '.alarms[]')
+    
+    while IFS= read -r alarm; do
+        alarm_name=$(echo "$alarm" | jq -r '.AlarmName')
+        severity=$(echo "$alarm" | jq -r '.Severity')
+        
+        echo "Creating alarm: $alarm_name ($severity)"
+        
+        # Replace ACCOUNT_ID placeholder
+        alarm_json=$(echo "$alarm" | sed "s/ACCOUNT_ID/$ACCOUNT_ID/g")
+        
+        # Replace SNS topic ARN based on severity
+        if [ "$severity" = "CRITICAL" ]; then
+            alarm_json=$(echo "$alarm_json" | jq --arg arn "$critical_topic_arn" '.AlarmActions = [$arn]')
+        else
+            alarm_json=$(echo "$alarm_json" | jq --arg arn "$warning_topic_arn" '.AlarmActions = [$arn]')
+        fi
+        
+        # Remove Severity field (not part of AWS API)
+        alarm_json=$(echo "$alarm_json" | jq 'del(.Severity)')
+        
+        # Create alarm
+        metric_name=$(echo "$alarm_json" | jq -r '.MetricName')
+        namespace=$(echo "$alarm_json" | jq -r '.Namespace')
+        threshold=$(echo "$alarm_json" | jq -r '.Threshold')
+        comparison=$(echo "$alarm_json" | jq -r '.ComparisonOperator')
+        period=$(echo "$alarm_json" | jq -r '.Period')
+        eval_periods=$(echo "$alarm_json" | jq -r '.EvaluationPeriods')
+        description=$(echo "$alarm_json" | jq -r '.AlarmDescription')
+        actions=$(echo "$alarm_json" | jq -r '.AlarmActions[0]')
+        
+        # Check if using ExtendedStatistic or Statistic
+        if echo "$alarm_json" | jq -e '.ExtendedStatistic' > /dev/null; then
+            statistic=$(echo "$alarm_json" | jq -r '.ExtendedStatistic')
+            aws cloudwatch put-metric-alarm \
+                --alarm-name "$alarm_name" \
+                --alarm-description "$description" \
+                --metric-name "$metric_name" \
+                --namespace "$namespace" \
+                --extended-statistic "$statistic" \
+                --period "$period" \
+                --evaluation-periods "$eval_periods" \
+                --threshold "$threshold" \
+                --comparison-operator "$comparison" \
+                --alarm-actions "$actions" \
+                --treat-missing-data notBreaching \
+                --region "$AWS_REGION"
+        else
+            statistic=$(echo "$alarm_json" | jq -r '.Statistic')
+            aws cloudwatch put-metric-alarm \
+                --alarm-name "$alarm_name" \
+                --alarm-description "$description" \
+                --metric-name "$metric_name" \
+                --namespace "$namespace" \
+                --statistic "$statistic" \
+                --period "$period" \
+                --evaluation-periods "$eval_periods" \
+                --threshold "$threshold" \
+                --comparison-operator "$comparison" \
+                --alarm-actions "$actions" \
+                --treat-missing-data notBreaching \
+                --region "$AWS_REGION"
+        fi
+        
+        echo -e "${GREEN}✓ Alarm created: $alarm_name${NC}"
+    done <<< "$alarms"
+    
+    echo ""
+}
 
-# Step 3: Get AWS Account ID
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-echo ""
-echo "📋 AWS Account ID: $AWS_ACCOUNT_ID"
+# Function to test alert triggering
+test_alerts() {
+    echo -e "${YELLOW}Testing Alert System${NC}"
+    echo "This will trigger a test alarm to verify email delivery."
+    echo ""
+    
+    # Create a test alarm with low threshold
+    test_alarm_name="TEST-Alert-$(date +%s)"
+    
+    aws cloudwatch put-metric-alarm \
+        --alarm-name "$test_alarm_name" \
+        --alarm-description "Test alarm - safe to delete" \
+        --metric-name "TestMetric" \
+        --namespace "ContentCreatorPlatform/Test" \
+        --statistic "Average" \
+        --period 60 \
+        --evaluation-periods 1 \
+        --threshold 1 \
+        --comparison-operator "GreaterThanThreshold" \
+        --alarm-actions "$1" \
+        --region "$AWS_REGION"
+    
+    echo "Test alarm created: $test_alarm_name"
+    
+    # Publish test metric to trigger alarm
+    aws cloudwatch put-metric-data \
+        --namespace "ContentCreatorPlatform/Test" \
+        --metric-name "TestMetric" \
+        --value 10 \
+        --region "$AWS_REGION"
+    
+    echo -e "${GREEN}✓ Test metric published${NC}"
+    echo "The alarm should trigger within 1-2 minutes."
+    echo "Check your email for the alert notification."
+    echo ""
+    echo "To delete the test alarm:"
+    echo "  aws cloudwatch delete-alarms --alarm-names $test_alarm_name --region $AWS_REGION"
+    echo ""
+}
 
-# Step 4: Create CloudWatch Dashboard
-echo ""
-echo "📊 Creating CloudWatch Dashboard..."
+# Function to display monitoring URLs
+display_urls() {
+    echo -e "${GREEN}=== Monitoring Setup Complete ===${NC}"
+    echo ""
+    echo "Dashboard URL:"
+    echo "  https://console.aws.amazon.com/cloudwatch/home?region=$AWS_REGION#dashboards:name=ContentCreatorPlatform-Production"
+    echo ""
+    echo "Alarms URL:"
+    echo "  https://console.aws.amazon.com/cloudwatch/home?region=$AWS_REGION#alarmsV2:"
+    echo ""
+    echo "Logs Insights URL:"
+    echo "  https://console.aws.amazon.com/cloudwatch/home?region=$AWS_REGION#logsV2:logs-insights"
+    echo ""
+    echo "SNS Topics:"
+    echo "  Critical: $1"
+    echo "  Warning: $2"
+    echo ""
+    echo -e "${YELLOW}Important: Check your email and confirm SNS subscriptions!${NC}"
+    echo ""
+}
 
-# Read dashboard JSON and create it
-DASHBOARD_NAME=$(jq -r '.dashboardName' "$DASHBOARD_FILE")
-DASHBOARD_BODY=$(jq -c '.dashboardBody' "$DASHBOARD_FILE")
+# Main execution
+main() {
+    echo "Starting monitoring setup..."
+    echo ""
+    
+    # Step 1: Create SNS topics
+    echo -e "${GREEN}Step 1: Creating SNS Topics${NC}"
+    critical_topic_arn=$(create_sns_topic "critical-alerts" "$CRITICAL_EMAIL")
+    warning_topic_arn=$(create_sns_topic "warning-alerts" "$WARNING_EMAIL")
+    
+    # Step 2: Deploy dashboard
+    echo -e "${GREEN}Step 2: Deploying Dashboard${NC}"
+    deploy_dashboard
+    
+    # Step 3: Create alarms
+    echo -e "${GREEN}Step 3: Creating Alarms${NC}"
+    create_alarms "$critical_topic_arn" "$warning_topic_arn"
+    
+    # Step 4: Test alerts (optional)
+    read -p "Do you want to test alert delivery? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        test_alerts "$warning_topic_arn"
+    fi
+    
+    # Display summary
+    display_urls "$critical_topic_arn" "$warning_topic_arn"
+    
+    echo -e "${GREEN}✓ Monitoring setup complete!${NC}"
+}
 
-aws cloudwatch put-dashboard \
-  --dashboard-name "$DASHBOARD_NAME" \
-  --dashboard-body "$DASHBOARD_BODY" \
-  --region "$AWS_REGION"
-
-echo "✅ Dashboard created: $DASHBOARD_NAME"
-echo "   View at: https://console.aws.amazon.com/cloudwatch/home?region=$AWS_REGION#dashboards:name=$DASHBOARD_NAME"
-
-# Step 5: Create CloudWatch Alarms
-echo ""
-echo "🚨 Creating CloudWatch Alarms..."
-
-# Read alarms from JSON and create each one
-jq -c '.alarms[]' "$ALARMS_FILE" | while read -r alarm; do
-  ALARM_NAME=$(echo "$alarm" | jq -r '.AlarmName')
-  
-  # Replace ACCOUNT_ID placeholder with actual account ID
-  alarm=$(echo "$alarm" | sed "s/ACCOUNT_ID/$AWS_ACCOUNT_ID/g")
-  
-  # Extract alarm properties
-  ALARM_DESC=$(echo "$alarm" | jq -r '.AlarmDescription')
-  METRIC_NAME=$(echo "$alarm" | jq -r '.MetricName')
-  NAMESPACE=$(echo "$alarm" | jq -r '.Namespace')
-  STATISTIC=$(echo "$alarm" | jq -r '.Statistic')
-  PERIOD=$(echo "$alarm" | jq -r '.Period')
-  EVAL_PERIODS=$(echo "$alarm" | jq -r '.EvaluationPeriods')
-  THRESHOLD=$(echo "$alarm" | jq -r '.Threshold')
-  COMPARISON=$(echo "$alarm" | jq -r '.ComparisonOperator')
-  TREAT_MISSING=$(echo "$alarm" | jq -r '.TreatMissingData')
-  
-  echo "  Creating alarm: $ALARM_NAME"
-  
-  # Build alarm command
-  aws cloudwatch put-metric-alarm \
-    --alarm-name "$ALARM_NAME" \
-    --alarm-description "$ALARM_DESC" \
-    --metric-name "$METRIC_NAME" \
-    --namespace "$NAMESPACE" \
-    --statistic "$STATISTIC" \
-    --period "$PERIOD" \
-    --evaluation-periods "$EVAL_PERIODS" \
-    --threshold "$THRESHOLD" \
-    --comparison-operator "$COMPARISON" \
-    --treat-missing-data "$TREAT_MISSING" \
-    --alarm-actions "$SNS_TOPIC_ARN" \
-    --region "$AWS_REGION"
-  
-  echo "  ✅ Alarm created: $ALARM_NAME"
-done
-
-# Step 6: Create Log Group (if not exists)
-echo ""
-echo "📝 Creating CloudWatch Log Group..."
-LOG_GROUP_NAME="/aws/ecs/content-intelligence-platform"
-
-aws logs create-log-group \
-  --log-group-name "$LOG_GROUP_NAME" \
-  --region "$AWS_REGION" 2>/dev/null || echo "  Log group already exists"
-
-# Set retention policy (30 days)
-aws logs put-retention-policy \
-  --log-group-name "$LOG_GROUP_NAME" \
-  --retention-in-days 30 \
-  --region "$AWS_REGION"
-
-echo "✅ Log group configured: $LOG_GROUP_NAME (30 day retention)"
-
-# Step 7: Create Metric Filters for Custom Metrics
-echo ""
-echo "📈 Creating Metric Filters..."
-
-# Error rate metric filter
-aws logs put-metric-filter \
-  --log-group-name "$LOG_GROUP_NAME" \
-  --filter-name "ErrorCount" \
-  --filter-pattern "[time, request_id, level = ERROR*, ...]" \
-  --metric-transformations \
-    metricName=ErrorCount,metricNamespace=ContentIntelligence,metricValue=1,defaultValue=0 \
-  --region "$AWS_REGION"
-
-echo "  ✅ Metric filter created: ErrorCount"
-
-# API latency metric filter
-aws logs put-metric-filter \
-  --log-group-name "$LOG_GROUP_NAME" \
-  --filter-name "APILatency" \
-  --filter-pattern "[time, request_id, level, msg, duration]" \
-  --metric-transformations \
-    metricName=APILatency,metricNamespace=ContentIntelligence,metricValue='$duration',unit=Milliseconds \
-  --region "$AWS_REGION"
-
-echo "  ✅ Metric filter created: APILatency"
-
-# Step 8: Summary
-echo ""
-echo "✨ CloudWatch Monitoring Setup Complete!"
-echo ""
-echo "📊 Dashboard: https://console.aws.amazon.com/cloudwatch/home?region=$AWS_REGION#dashboards:name=$DASHBOARD_NAME"
-echo "🚨 Alarms: https://console.aws.amazon.com/cloudwatch/home?region=$AWS_REGION#alarmsV2:"
-echo "📝 Logs: https://console.aws.amazon.com/cloudwatch/home?region=$AWS_REGION#logsV2:log-groups/log-group/$LOG_GROUP_NAME"
-echo ""
-echo "⚠️  IMPORTANT: Check your email ($EMAIL_ENDPOINT) and confirm the SNS subscription!"
-echo ""
-echo "Next steps:"
-echo "  1. Confirm SNS email subscription"
-echo "  2. Test alarms with: aws cloudwatch set-alarm-state --alarm-name ContentIntelligence-HighErrorRate --state-value ALARM --state-reason 'Testing'"
-echo "  3. Deploy application with CloudWatch logging enabled"
-echo "  4. Monitor dashboard for metrics"
+# Run main function
+main
