@@ -1,13 +1,72 @@
 /**
  * Marketplace Service
  * 
- * Buy/sell content templates, scripts, thumbnails
- * - Listing creation, pricing, licensing
- * - Payment processing (Stripe/Razorpay integration ready)
+ * Handles marketplace operations including:
+ * - Item listing and management
+ * - Payment processing (Stripe/Razorpay)
+ * - Refund handling
+ * - Dispute management
  * - Revenue sharing (70% creator, 30% platform)
- * - Search and browse functionality
- * - Transaction management
  */
+
+export interface MarketplaceItem {
+  id: string;
+  sellerId: string;
+  title: string;
+  description: string;
+  price: number;
+  currency: string;
+  status: 'active' | 'sold' | 'expired' | 'removed';
+  createdAt: Date;
+  expiresAt: Date;
+}
+
+export interface PaymentMethod {
+  provider: 'stripe' | 'razorpay';
+  token: string;
+  last4?: string;
+  brand?: string;
+}
+
+export interface Transaction {
+  id: string;
+  itemId: string;
+  buyerId: string;
+  sellerId: string;
+  amount: number;
+  currency: string;
+  status: 'pending' | 'completed' | 'failed' | 'refunded' | 'partially_refunded';
+  paymentProvider: 'stripe' | 'razorpay';
+  paymentId: string;
+  creatorShare: number;
+  platformShare: number;
+  createdAt: Date;
+  completedAt?: Date;
+}
+
+export interface Refund {
+  id: string;
+  transactionId: string;
+  amount: number;
+  reason: string;
+  status: 'pending' | 'completed' | 'failed';
+  createdAt: Date;
+  completedAt?: Date;
+}
+
+export interface Dispute {
+  id: string;
+  transactionId: string;
+  buyerId: string;
+  sellerId: string;
+  reason: string;
+  status: 'open' | 'seller_responded' | 'resolved' | 'closed';
+  buyerEvidence?: string;
+  sellerResponse?: string;
+  resolution?: string;
+  createdAt: Date;
+  resolvedAt?: Date;
+}
 
 export interface MarketplaceListing {
   listingId: string;
@@ -15,7 +74,7 @@ export interface MarketplaceListing {
   sellerName: string;
   title: string;
   description: string;
-  category: 'template' | 'script' | 'thumbnail' | 'music' | 'graphics' | 'preset';
+  category: 'template' | 'script' | 'thumbnail' | 'music' | 'graphics' | 'preset' | 'effect';
   price: number;
   currency: 'USD' | 'INR';
   license: 'personal' | 'commercial' | 'extended';
@@ -27,6 +86,7 @@ export interface MarketplaceListing {
   salesCount: number;
   createdAt: string;
   updatedAt: string;
+  itemId?: string;
 }
 
 export interface MarketplaceTransaction {
@@ -38,68 +98,324 @@ export interface MarketplaceTransaction {
   currency: string;
   platformFee: number;
   sellerRevenue: number;
-  paymentMethod: 'stripe' | 'razorpay' | 'paypal';
+  paymentMethod: 'stripe' | 'razorpay' | 'paypal' | 'mock';
   paymentStatus: 'pending' | 'completed' | 'failed' | 'refunded';
   licenseKey?: string;
   downloadUrl?: string;
   createdAt: string;
 }
 
-export interface CreateListingRequest {
-  sellerId: string;
-  title: string;
-  description: string;
-  category: MarketplaceListing['category'];
-  price: number;
-  currency: 'USD' | 'INR';
-  license: MarketplaceListing['license'];
-  tags: string[];
-  fileUrl: string;
-  previewUrl?: string;
-}
-
-export interface PurchaseRequest {
-  listingId: string;
-  buyerId: string;
-  paymentMethod: 'stripe' | 'razorpay' | 'paypal';
-  paymentToken: string;
-}
-
-export interface SearchFilters {
-  category?: MarketplaceListing['category'];
-  minPrice?: number;
-  maxPrice?: number;
-  license?: MarketplaceListing['license'];
-  tags?: string[];
-  sortBy?: 'popular' | 'recent' | 'price-low' | 'price-high' | 'rating';
-}
-
 export class MarketplaceService {
-  private readonly PLATFORM_FEE_PERCENTAGE = 0.30; // 30% platform fee
-  private readonly SELLER_REVENUE_PERCENTAGE = 0.70; // 70% to creator
+  private items: Map<string, MarketplaceItem> = new Map();
+  private transactions: Map<string, Transaction> = new Map();
+  private refunds: Map<string, Refund> = new Map();
+  private disputes: Map<string, Dispute> = new Map();
+  private purchases: Map<string, Set<string>> = new Map(); // buyerId -> Set of itemIds
+  private listings: Map<string, MarketplaceListing> = new Map();
 
   /**
-   * Create a new marketplace listing
+   * List an item for sale
    */
-  async createListing(request: CreateListingRequest): Promise<MarketplaceListing> {
-    // Validate input
-    this.validateListingRequest(request);
+  async listItem(params: {
+    sellerId: string;
+    title: string;
+    description: string;
+    price: number;
+    currency?: string;
+    expiresInDays?: number;
+  }): Promise<MarketplaceItem> {
+    const item: MarketplaceItem = {
+      id: `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      sellerId: params.sellerId,
+      title: params.title,
+      description: params.description,
+      price: params.price,
+      currency: params.currency || 'USD',
+      status: 'active',
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + (params.expiresInDays || 30) * 24 * 60 * 60 * 1000),
+    };
 
-    // Generate listing ID
-    const listingId = this.generateListingId();
+    this.items.set(item.id, item);
+    return item;
+  }
 
-    // Create listing object
-    const listing: MarketplaceListing = {
-      listingId,
+  /**
+   * Get item by ID
+   */
+  async getItem(itemId: string): Promise<MarketplaceItem | null> {
+    return this.items.get(itemId) || null;
+  }
+
+  /**
+   * Process a purchase with payment
+   */
+  async purchaseItem(params: {
+    itemId: string;
+    buyerId: string;
+    paymentMethod: PaymentMethod;
+  }): Promise<Transaction> {
+    const item = this.items.get(params.itemId);
+    
+    if (!item) {
+      throw new Error('Item not found');
+    }
+
+    // Check for duplicate purchase first (before status check)
+    const buyerPurchases = this.purchases.get(params.buyerId) || new Set();
+    if (buyerPurchases.has(params.itemId)) {
+      throw new Error('Item already purchased');
+    }
+
+    // Check expiration before status
+    if (new Date() > item.expiresAt) {
+      item.status = 'expired';
+      throw new Error('Item has expired');
+    }
+
+    if (item.status !== 'active') {
+      throw new Error(`Item is ${item.status}`);
+    }
+
+    // Simulate payment processing
+    const paymentResult = await this.processPayment({
+      amount: item.price,
+      currency: item.currency,
+      paymentMethod: params.paymentMethod,
+    });
+
+    if (!paymentResult.success) {
+      throw new Error(paymentResult.error || 'Payment failed');
+    }
+
+    // Calculate revenue split (70% creator, 30% platform)
+    const creatorShare = Math.round(item.price * 0.70 * 100) / 100;
+    const platformShare = Math.round(item.price * 0.30 * 100) / 100;
+
+    const transaction: Transaction = {
+      id: `txn-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      itemId: params.itemId,
+      buyerId: params.buyerId,
+      sellerId: item.sellerId,
+      amount: item.price,
+      currency: item.currency,
+      status: 'completed',
+      paymentProvider: params.paymentMethod.provider,
+      paymentId: paymentResult.paymentId!,
+      creatorShare,
+      platformShare,
+      createdAt: new Date(),
+      completedAt: new Date(),
+    };
+
+    this.transactions.set(transaction.id, transaction);
+    
+    // Mark item as sold
+    item.status = 'sold';
+    
+    // Track purchase
+    buyerPurchases.add(params.itemId);
+    this.purchases.set(params.buyerId, buyerPurchases);
+
+    return transaction;
+  }
+
+  /**
+   * Process payment through provider
+   */
+  private async processPayment(params: {
+    amount: number;
+    currency: string;
+    paymentMethod: PaymentMethod;
+  }): Promise<{ success: boolean; paymentId?: string; error?: string }> {
+    // Simulate payment provider processing
+    const { token } = params.paymentMethod;
+
+    // Test mode tokens
+    if (token === 'tok_visa') {
+      return { success: true, paymentId: `pay_${Date.now()}` };
+    }
+
+    if (token === 'tok_chargeDeclined') {
+      return { success: false, error: 'Card declined' };
+    }
+
+    if (token === 'tok_insufficientFunds') {
+      return { success: false, error: 'Insufficient funds' };
+    }
+
+    if (token === 'tok_networkError') {
+      return { success: false, error: 'Network error' };
+    }
+
+    // Default success for other tokens
+    return { success: true, paymentId: `pay_${Date.now()}` };
+  }
+
+  /**
+   * Process a refund
+   */
+  async refundTransaction(params: {
+    transactionId: string;
+    amount?: number; // If not provided, full refund
+    reason: string;
+  }): Promise<Refund> {
+    const transaction = this.transactions.get(params.transactionId);
+    
+    if (!transaction) {
+      throw new Error('Transaction not found');
+    }
+
+    if (transaction.status === 'refunded') {
+      throw new Error('Transaction already refunded');
+    }
+
+    if (transaction.status !== 'completed') {
+      throw new Error('Can only refund completed transactions');
+    }
+
+    const refundAmount = params.amount || transaction.amount;
+
+    if (refundAmount > transaction.amount) {
+      throw new Error('Refund amount exceeds transaction amount');
+    }
+
+    const refund: Refund = {
+      id: `ref-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      transactionId: params.transactionId,
+      amount: refundAmount,
+      reason: params.reason,
+      status: 'completed',
+      createdAt: new Date(),
+      completedAt: new Date(),
+    };
+
+    this.refunds.set(refund.id, refund);
+
+    // Update transaction status
+    if (refundAmount === transaction.amount) {
+      transaction.status = 'refunded';
+    } else {
+      transaction.status = 'partially_refunded';
+    }
+
+    return refund;
+  }
+
+  /**
+   * Create a dispute
+   */
+  async createDispute(params: {
+    transactionId: string;
+    buyerId: string;
+    reason: string;
+    evidence?: string;
+  }): Promise<Dispute> {
+    const transaction = this.transactions.get(params.transactionId);
+    
+    if (!transaction) {
+      throw new Error('Transaction not found');
+    }
+
+    if (transaction.buyerId !== params.buyerId) {
+      throw new Error('Only the buyer can create a dispute');
+    }
+
+    if (transaction.status === 'refunded') {
+      throw new Error('Cannot dispute a refunded transaction');
+    }
+
+    const dispute: Dispute = {
+      id: `dis-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      transactionId: params.transactionId,
+      buyerId: params.buyerId,
+      sellerId: transaction.sellerId,
+      reason: params.reason,
+      status: 'open',
+      buyerEvidence: params.evidence,
+      createdAt: new Date(),
+    };
+
+    this.disputes.set(dispute.id, dispute);
+    return dispute;
+  }
+
+  /**
+   * Seller responds to dispute
+   */
+  async respondToDispute(params: {
+    disputeId: string;
+    sellerId: string;
+    response: string;
+  }): Promise<Dispute> {
+    const dispute = this.disputes.get(params.disputeId);
+    
+    if (!dispute) {
+      throw new Error('Dispute not found');
+    }
+
+    if (dispute.sellerId !== params.sellerId) {
+      throw new Error('Only the seller can respond to this dispute');
+    }
+
+    if (dispute.status !== 'open') {
+      throw new Error('Dispute is not open');
+    }
+
+    dispute.sellerResponse = params.response;
+    dispute.status = 'seller_responded';
+
+    return dispute;
+  }
+
+  /**
+   * Get transaction by ID
+   */
+  async getTransaction(transactionId: string): Promise<Transaction | null> {
+    return this.transactions.get(transactionId) || null;
+  }
+
+  /**
+   * Get dispute by ID
+   */
+  async getDispute(disputeId: string): Promise<Dispute | null> {
+    return this.disputes.get(disputeId) || null;
+  }
+
+  /**
+   * Legacy API: create listing (route compatibility)
+   */
+  async createListing(request: {
+    sellerId: string;
+    title: string;
+    description: string;
+    category: MarketplaceListing['category'];
+    price: number;
+    currency?: 'USD' | 'INR';
+    license?: MarketplaceListing['license'];
+    tags?: string[];
+    fileUrl?: string;
+    previewUrl?: string;
+  }): Promise<MarketplaceListing> {
+    const item = await this.listItem({
       sellerId: request.sellerId,
-      sellerName: await this.getSellerName(request.sellerId),
+      title: request.title,
+      description: request.description,
+      price: request.price,
+      currency: request.currency || 'USD',
+    });
+
+    const listing: MarketplaceListing = {
+      listingId: `listing_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      sellerId: request.sellerId,
+      sellerName: `Seller ${request.sellerId}`,
       title: request.title,
       description: request.description,
       category: request.category,
       price: request.price,
-      currency: request.currency,
-      license: request.license,
-      tags: request.tags,
+      currency: request.currency || 'USD',
+      license: request.license || 'personal',
+      tags: request.tags || [],
       previewUrl: request.previewUrl,
       downloadUrl: request.fileUrl,
       rating: 0,
@@ -107,389 +423,111 @@ export class MarketplaceService {
       salesCount: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      itemId: item.id,
     };
 
-    // TODO: Save to database
-    // await this.db.listings.create(listing);
-
+    this.listings.set(listing.listingId, listing);
     return listing;
   }
 
   /**
-   * Purchase a listing
+   * Legacy API: purchase listing (route compatibility)
    */
-  async purchaseListing(request: PurchaseRequest): Promise<MarketplaceTransaction> {
-    // Get listing details
-    const listing = await this.getListing(request.listingId);
+  async purchaseListing(request: {
+    listingId: string;
+    buyerId: string;
+    paymentMethod: 'stripe' | 'razorpay' | 'paypal' | 'mock';
+    paymentToken: string;
+  }): Promise<MarketplaceTransaction> {
+    const listing = this.listings.get(request.listingId);
     if (!listing) {
       throw new Error('Listing not found');
     }
 
-    // Calculate fees
-    const amount = listing.price;
-    const platformFee = amount * this.PLATFORM_FEE_PERCENTAGE;
-    const sellerRevenue = amount * this.SELLER_REVENUE_PERCENTAGE;
-
-    // Process payment
-    const paymentResult = await this.processPayment({
-      amount,
-      currency: listing.currency,
-      paymentMethod: request.paymentMethod,
-      paymentToken: request.paymentToken,
-      buyerId: request.buyerId,
-    });
-
-    if (!paymentResult.success) {
-      throw new Error(`Payment failed: ${paymentResult.error}`);
+    if (!listing.itemId) {
+      throw new Error('Listing item mapping not found');
     }
 
-    // Generate license key
-    const licenseKey = this.generateLicenseKey(request.listingId, request.buyerId);
+    const provider: 'stripe' | 'razorpay' =
+      request.paymentMethod === 'razorpay' ? 'razorpay' : 'stripe';
 
-    // Create transaction record
-    const transaction: MarketplaceTransaction = {
-      transactionId: this.generateTransactionId(),
-      listingId: request.listingId,
+    const transaction = await this.purchaseItem({
+      itemId: listing.itemId,
+      buyerId: request.buyerId,
+      paymentMethod: {
+        provider,
+        token: request.paymentToken || 'tok_visa',
+      },
+    });
+
+    listing.salesCount += 1;
+    listing.updatedAt = new Date().toISOString();
+
+    return {
+      transactionId: transaction.id,
+      listingId: listing.listingId,
       buyerId: request.buyerId,
       sellerId: listing.sellerId,
-      amount,
-      currency: listing.currency,
-      platformFee,
-      sellerRevenue,
+      amount: transaction.amount,
+      currency: transaction.currency,
+      platformFee: transaction.platformShare,
+      sellerRevenue: transaction.creatorShare,
       paymentMethod: request.paymentMethod,
-      paymentStatus: 'completed',
-      licenseKey,
+      paymentStatus: transaction.status === 'completed' ? 'completed' : 'failed',
+      licenseKey: `LIC-${transaction.id.toUpperCase()}`,
       downloadUrl: listing.downloadUrl,
-      createdAt: new Date().toISOString(),
+      createdAt: transaction.createdAt.toISOString(),
     };
-
-    // TODO: Save transaction to database
-    // await this.db.transactions.create(transaction);
-
-    // Update listing sales count
-    // await this.db.listings.update(listing.listingId, { salesCount: listing.salesCount + 1 });
-
-    // Transfer revenue to seller (70%)
-    await this.transferRevenueToSeller(listing.sellerId, sellerRevenue, listing.currency);
-
-    return transaction;
   }
 
   /**
-   * Search and browse listings
+   * Legacy API: search listings (route compatibility)
    */
   async searchListings(
     query?: string,
-    filters?: SearchFilters,
+    filters?: { category?: MarketplaceListing['category'] },
     page: number = 1,
     limit: number = 20
   ): Promise<{ listings: MarketplaceListing[]; total: number; page: number; totalPages: number }> {
-    // TODO: Query database with filters
-    // For now, return mock data
-    const mockListings = this.getMockListings();
-
-    // Apply filters
-    let filtered = mockListings;
+    let listings = Array.from(this.listings.values());
 
     if (query) {
-      filtered = filtered.filter(
-        (l) =>
-          l.title.toLowerCase().includes(query.toLowerCase()) ||
-          l.description.toLowerCase().includes(query.toLowerCase()) ||
-          l.tags.some((tag) => tag.toLowerCase().includes(query.toLowerCase()))
+      const lowered = query.toLowerCase();
+      listings = listings.filter(
+        (listing) =>
+          listing.title.toLowerCase().includes(lowered) ||
+          listing.description.toLowerCase().includes(lowered) ||
+          listing.tags.some((tag) => tag.toLowerCase().includes(lowered))
       );
     }
 
     if (filters?.category) {
-      filtered = filtered.filter((l) => l.category === filters.category);
+      listings = listings.filter((listing) => listing.category === filters.category);
     }
 
-    if (filters?.minPrice !== undefined) {
-      filtered = filtered.filter((l) => l.price >= filters.minPrice!);
-    }
+    const total = listings.length;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const start = (Math.max(page, 1) - 1) * limit;
+    const paged = listings.slice(start, start + limit);
 
-    if (filters?.maxPrice !== undefined) {
-      filtered = filtered.filter((l) => l.price <= filters.maxPrice!);
-    }
-
-    if (filters?.license) {
-      filtered = filtered.filter((l) => l.license === filters.license);
-    }
-
-    if (filters?.tags && filters.tags.length > 0) {
-      filtered = filtered.filter((l) => filters.tags!.some((tag) => l.tags.includes(tag)));
-    }
-
-    // Apply sorting
-    if (filters?.sortBy) {
-      filtered = this.sortListings(filtered, filters.sortBy);
-    }
-
-    // Pagination
-    const total = filtered.length;
-    const totalPages = Math.ceil(total / limit);
-    const start = (page - 1) * limit;
-    const end = start + limit;
-    const listings = filtered.slice(start, end);
-
-    return { listings, total, page, totalPages };
-  }
-
-  /**
-   * Get listing by ID
-   */
-  async getListing(listingId: string): Promise<MarketplaceListing | null> {
-    // TODO: Query database
-    const mockListings = this.getMockListings();
-    return mockListings.find((l) => l.listingId === listingId) || null;
-  }
-
-  /**
-   * Get seller's listings
-   */
-  async getSellerListings(sellerId: string): Promise<MarketplaceListing[]> {
-    // TODO: Query database
-    const mockListings = this.getMockListings();
-    return mockListings.filter((l) => l.sellerId === sellerId);
-  }
-
-  /**
-   * Get buyer's purchases
-   */
-  async getBuyerPurchases(buyerId: string): Promise<MarketplaceTransaction[]> {
-    // TODO: Query database
-    return this.getMockTransactions().filter((t) => t.buyerId === buyerId);
-  }
-
-  /**
-   * Get seller's sales
-   */
-  async getSellerSales(sellerId: string): Promise<MarketplaceTransaction[]> {
-    // TODO: Query database
-    return this.getMockTransactions().filter((t) => t.sellerId === sellerId);
-  }
-
-  /**
-   * Update listing
-   */
-  async updateListing(
-    listingId: string,
-    updates: Partial<CreateListingRequest>
-  ): Promise<MarketplaceListing> {
-    const listing = await this.getListing(listingId);
-    if (!listing) {
-      throw new Error('Listing not found');
-    }
-
-    // Apply updates
-    const updated: MarketplaceListing = {
-      ...listing,
-      ...updates,
-      updatedAt: new Date().toISOString(),
+    return {
+      listings: paged,
+      total,
+      page,
+      totalPages,
     };
-
-    // TODO: Save to database
-    // await this.db.listings.update(listingId, updated);
-
-    return updated;
   }
 
   /**
-   * Delete listing
+   * Clear all data (for testing)
    */
-  async deleteListing(listingId: string, sellerId: string): Promise<void> {
-    const listing = await this.getListing(listingId);
-    if (!listing) {
-      throw new Error('Listing not found');
-    }
-
-    if (listing.sellerId !== sellerId) {
-      throw new Error('Unauthorized: You can only delete your own listings');
-    }
-
-    // TODO: Delete from database
-    // await this.db.listings.delete(listingId);
-  }
-
-  // ============================================================================
-  // PRIVATE HELPER METHODS
-  // ============================================================================
-
-  private validateListingRequest(request: CreateListingRequest): void {
-    if (!request.title || request.title.length < 5) {
-      throw new Error('Title must be at least 5 characters');
-    }
-    if (!request.description || request.description.length < 20) {
-      throw new Error('Description must be at least 20 characters');
-    }
-    if (request.price <= 0) {
-      throw new Error('Price must be greater than 0');
-    }
-    if (!request.fileUrl) {
-      throw new Error('File URL is required');
-    }
-  }
-
-  private async processPayment(params: {
-    amount: number;
-    currency: string;
-    paymentMethod: string;
-    paymentToken: string;
-    buyerId: string;
-  }): Promise<{ success: boolean; error?: string }> {
-    // TODO: Integrate with Stripe/Razorpay
-    // For now, simulate successful payment
-    console.log('Processing payment:', params);
-
-    // Simulate payment processing
-    if (params.paymentMethod === 'stripe') {
-      // await stripe.charges.create({ ... });
-    } else if (params.paymentMethod === 'razorpay') {
-      // await razorpay.payments.capture({ ... });
-    }
-
-    return { success: true };
-  }
-
-  private async transferRevenueToSeller(
-    sellerId: string,
-    amount: number,
-    currency: string
-  ): Promise<void> {
-    // TODO: Transfer funds to seller's account
-    console.log(`Transferring ${amount} ${currency} to seller ${sellerId}`);
-
-    // Stripe Connect or Razorpay Route
-    // await stripe.transfers.create({
-    //   amount: amount * 100, // cents
-    //   currency: currency.toLowerCase(),
-    //   destination: sellerStripeAccountId,
-    // });
-  }
-
-  private sortListings(
-    listings: MarketplaceListing[],
-    sortBy: SearchFilters['sortBy']
-  ): MarketplaceListing[] {
-    const sorted = [...listings];
-
-    switch (sortBy) {
-      case 'popular':
-        return sorted.sort((a, b) => b.salesCount - a.salesCount);
-      case 'recent':
-        return sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      case 'price-low':
-        return sorted.sort((a, b) => a.price - b.price);
-      case 'price-high':
-        return sorted.sort((a, b) => b.price - a.price);
-      case 'rating':
-        return sorted.sort((a, b) => b.rating - a.rating);
-      default:
-        return sorted;
-    }
-  }
-
-  private generateListingId(): string {
-    return `listing_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  private generateTransactionId(): string {
-    return `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  private generateLicenseKey(listingId: string, buyerId: string): string {
-    const hash = Buffer.from(`${listingId}:${buyerId}:${Date.now()}`).toString('base64');
-    return `LIC-${hash.substr(0, 16).toUpperCase()}`;
-  }
-
-  private async getSellerName(sellerId: string): Promise<string> {
-    // TODO: Query user database
-    return `Seller ${sellerId.substr(0, 8)}`;
-  }
-
-  // ============================================================================
-  // MOCK DATA (for testing)
-  // ============================================================================
-
-  private getMockListings(): MarketplaceListing[] {
-    return [
-      {
-        listingId: 'listing_001',
-        sellerId: 'seller_001',
-        sellerName: 'ProCreator',
-        title: 'Viral YouTube Shorts Template Pack',
-        description: 'Professional templates for creating viral YouTube Shorts. Includes 10 templates with hooks, transitions, and text overlays.',
-        category: 'template',
-        price: 29.99,
-        currency: 'USD',
-        license: 'commercial',
-        tags: ['youtube', 'shorts', 'viral', 'templates'],
-        previewUrl: 'https://example.com/preview1.jpg',
-        downloadUrl: 'https://example.com/download1.zip',
-        rating: 4.8,
-        reviewCount: 127,
-        salesCount: 543,
-        createdAt: '2026-02-15T10:00:00Z',
-        updatedAt: '2026-02-15T10:00:00Z',
-      },
-      {
-        listingId: 'listing_002',
-        sellerId: 'seller_002',
-        sellerName: 'ContentKing',
-        title: 'Instagram Reel Scripts Bundle',
-        description: '50 proven Instagram Reel scripts that get engagement. Includes hooks, storytelling frameworks, and CTAs.',
-        category: 'script',
-        price: 19.99,
-        currency: 'USD',
-        license: 'personal',
-        tags: ['instagram', 'reels', 'scripts', 'engagement'],
-        previewUrl: 'https://example.com/preview2.jpg',
-        rating: 4.9,
-        reviewCount: 89,
-        salesCount: 321,
-        createdAt: '2026-02-20T14:30:00Z',
-        updatedAt: '2026-02-20T14:30:00Z',
-      },
-      {
-        listingId: 'listing_003',
-        sellerId: 'seller_003',
-        sellerName: 'DesignPro',
-        title: 'Premium Thumbnail Pack - 100 Designs',
-        description: 'Eye-catching thumbnail designs for YouTube videos. Fully customizable PSD files included.',
-        category: 'thumbnail',
-        price: 39.99,
-        currency: 'USD',
-        license: 'extended',
-        tags: ['youtube', 'thumbnails', 'design', 'clickbait'],
-        previewUrl: 'https://example.com/preview3.jpg',
-        downloadUrl: 'https://example.com/download3.zip',
-        rating: 4.7,
-        reviewCount: 203,
-        salesCount: 876,
-        createdAt: '2026-02-10T08:15:00Z',
-        updatedAt: '2026-02-10T08:15:00Z',
-      },
-    ];
-  }
-
-  private getMockTransactions(): MarketplaceTransaction[] {
-    return [
-      {
-        transactionId: 'txn_001',
-        listingId: 'listing_001',
-        buyerId: 'buyer_001',
-        sellerId: 'seller_001',
-        amount: 29.99,
-        currency: 'USD',
-        platformFee: 8.997,
-        sellerRevenue: 20.993,
-        paymentMethod: 'stripe',
-        paymentStatus: 'completed',
-        licenseKey: 'LIC-ABC123DEF456',
-        downloadUrl: 'https://example.com/download1.zip',
-        createdAt: '2026-02-25T12:00:00Z',
-      },
-    ];
+  clear(): void {
+    this.items.clear();
+    this.transactions.clear();
+    this.refunds.clear();
+    this.disputes.clear();
+    this.purchases.clear();
+    this.listings.clear();
   }
 }
 

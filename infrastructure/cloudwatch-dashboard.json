@@ -1,0 +1,174 @@
+{
+  "dashboardName": "ContentIntelligencePlatform-Production",
+  "dashboardBody": {
+    "widgets": [
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            ["AWS/ApplicationELB", "TargetResponseTime", { "stat": "Average", "label": "Avg Response Time" }],
+            ["...", { "stat": "p95", "label": "p95 Response Time" }],
+            ["...", { "stat": "p99", "label": "p99 Response Time" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "API Response Time",
+          "period": 300,
+          "yAxis": {
+            "left": {
+              "label": "Seconds",
+              "showUnits": false
+            }
+          },
+          "annotations": {
+            "horizontal": [
+              {
+                "label": "SLA Threshold",
+                "value": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            ["AWS/ApplicationELB", "HTTPCode_Target_4XX_Count", { "stat": "Sum", "label": "4xx Errors" }],
+            [".", "HTTPCode_Target_5XX_Count", { "stat": "Sum", "label": "5xx Errors" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "API Error Rate",
+          "period": 300,
+          "yAxis": {
+            "left": {
+              "label": "Count",
+              "showUnits": false
+            }
+          }
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            ["AWS/ECS", "CPUUtilization", { "stat": "Average" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "CPU Utilization",
+          "period": 300,
+          "yAxis": {
+            "left": {
+              "label": "Percent",
+              "showUnits": false,
+              "min": 0,
+              "max": 100
+            }
+          },
+          "annotations": {
+            "horizontal": [
+              {
+                "label": "Warning",
+                "value": 80,
+                "fill": "above",
+                "color": "#ff7f0e"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            ["AWS/ECS", "MemoryUtilization", { "stat": "Average" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "Memory Utilization",
+          "period": 300,
+          "yAxis": {
+            "left": {
+              "label": "Percent",
+              "showUnits": false,
+              "min": 0,
+              "max": 100
+            }
+          },
+          "annotations": {
+            "horizontal": [
+              {
+                "label": "Warning",
+                "value": 80,
+                "fill": "above",
+                "color": "#ff7f0e"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            ["AWS/ApplicationELB", "RequestCount", { "stat": "Sum" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "Request Count",
+          "period": 300,
+          "yAxis": {
+            "left": {
+              "label": "Count",
+              "showUnits": false
+            }
+          }
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            ["AWS/S3", "BucketSizeBytes", { "stat": "Average" }],
+            [".", "NumberOfObjects", { "stat": "Average" }]
+          ],
+          "view": "singleValue",
+          "region": "us-east-1",
+          "title": "S3 Storage Metrics",
+          "period": 86400
+        }
+      },
+      {
+        "type": "log",
+        "properties": {
+          "query": "SOURCE '/aws/ecs/content-intelligence-platform'\n| fields @timestamp, @message\n| filter @message like /ERROR/\n| sort @timestamp desc\n| limit 20",
+          "region": "us-east-1",
+          "title": "Recent Errors",
+          "stacked": false
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            ["ContentIntelligence", "VideoProcessed", { "stat": "Sum", "label": "Videos Processed" }],
+            [".", "ContentGenerated", { "stat": "Sum", "label": "Content Generated" }],
+            [".", "TranscriptionCompleted", { "stat": "Sum", "label": "Transcriptions" }]
+          ],
+          "view": "timeSeries",
+          "stacked": false,
+          "region": "us-east-1",
+          "title": "Business Metrics",
+          "period": 3600
+        }
+      }
+    ]
+  }
+}
