@@ -35,26 +35,29 @@ export default function WorkspacePage() {
     if (typeof window === 'undefined') return;
     try {
       const raw = localStorage.getItem('kla_drafts');
+      const currentRaw = localStorage.getItem('kla_current_draft');
+
+      // kla_current_draft always holds the most recently saved draft
+      let activeToLoad: Draft | null = null;
+      if (currentRaw) {
+        activeToLoad = JSON.parse(currentRaw);
+      }
+
       if (raw) {
         const parsed: Draft[] = JSON.parse(raw);
         setDrafts(parsed);
-        // Auto-select the most recent draft
-        if (parsed.length > 0) {
-          const latest = parsed[parsed.length - 1];
+        // Use kla_current_draft if available, otherwise newest (index 0)
+        const latest = activeToLoad || parsed[0];
+        if (latest) {
           setSelectedDraft(latest);
           const platformKey = activePlatform.toLowerCase();
           setEditedContent(latest.platforms[platformKey] || '');
         }
-      } else {
-        // Also check kla_current_draft
-        const currentRaw = localStorage.getItem('kla_current_draft');
-        if (currentRaw) {
-          const current: Draft = JSON.parse(currentRaw);
-          setDrafts([current]);
-          setSelectedDraft(current);
-          const platformKey = activePlatform.toLowerCase();
-          setEditedContent(current.platforms[platformKey] || '');
-        }
+      } else if (activeToLoad) {
+        setDrafts([activeToLoad]);
+        setSelectedDraft(activeToLoad);
+        const platformKey = activePlatform.toLowerCase();
+        setEditedContent(activeToLoad.platforms[platformKey] || '');
       }
     } catch {
       // ignore parse errors
