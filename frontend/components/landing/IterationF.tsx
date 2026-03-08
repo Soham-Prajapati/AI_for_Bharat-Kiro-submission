@@ -87,69 +87,33 @@ function calcViralScore(text: string): number {
   return Math.min(score, 99)
 }
 
-// ── India Map SVG ────────────────────────────────────────────────────────
+// ── India Map SVG (real geographic data from GeoJSON) ────────────────────
 function IndiaMap({ isDark }: { isDark: boolean }) {
   const stroke = isDark ? 'rgba(129,140,248,0.6)' : 'rgba(79,70,229,0.45)'
   const fill = isDark ? 'rgba(129,140,248,0.10)' : 'rgba(79,70,229,0.08)'
   const cityColor = isDark ? '#818CF8' : '#4F46E5'
+  // City positions mapped to real GeoJSON coordinate system (viewBox 0 0 400 376)
   const cities = [
-    { name: 'Delhi', x: 247, y: 195, r: 4 },
-    { name: 'Mumbai', x: 195, y: 345, r: 3.5 },
-    { name: 'Chennai', x: 270, y: 440, r: 3 },
-    { name: 'Kolkata', x: 340, y: 300, r: 3 },
-    { name: 'Bengaluru', x: 240, y: 440, r: 3 },
-    { name: 'Hyderabad', x: 255, y: 380, r: 3 },
+    { name: 'Delhi', x: 124, y: 94, r: 4 },
+    { name: 'Mumbai', x: 65, y: 224, r: 3.5 },
+    { name: 'Chennai', x: 166, y: 306, r: 3 },
+    { name: 'Kolkata', x: 277, y: 176, r: 3 },
+    { name: 'Bengaluru', x: 129, y: 307, r: 3 },
+    { name: 'Hyderabad', x: 142, y: 247, r: 3 },
   ]
   return (
-    <svg viewBox="60 30 420 530" fill="none" className="w-full h-full max-w-[300px]">
+    <svg viewBox="-20 -20 440 416" fill="none" className="w-full h-full max-w-[300px]">
       <defs>
         <filter id="map-glow" x="-10%" y="-10%" width="120%" height="120%">
           <feGaussianBlur stdDeviation="4" result="blur" />
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
-      {/* Accurate India outline */}
+      {/* Real India outline from GeoJSON geographic data */}
       <path
-        d="M 220 55 L 230 52 L 248 55 L 260 50 L 272 52 L 285 48
-           L 298 55 L 310 60 L 315 70 L 325 75 L 330 68 L 340 72
-           L 345 65 L 355 70 L 358 80 L 350 88 L 345 95 L 355 100
-           L 365 95 L 375 100 L 380 110 L 370 115 L 360 112 L 348 118
-           L 355 128 L 365 135 L 372 145 L 368 155 L 375 165 L 370 172
-           L 360 170 L 350 175 L 345 185 L 355 195 L 365 205 L 368 215
-           L 360 220 L 350 218 L 340 225 L 345 235 L 355 242 L 360 255
-           L 365 268 L 370 278 L 365 288 L 358 295 L 350 288 L 342 295
-           L 348 305 L 355 315 L 350 325 L 340 320 L 332 328 L 328 340
-           L 320 345 L 312 338 L 305 345 L 308 358 L 300 365 L 295 358
-           L 288 365 L 290 378 L 285 388 L 278 395 L 280 408 L 275 418
-           L 268 425 L 272 438 L 265 448 L 258 455 L 262 468 L 255 478
-           L 248 485 L 240 478 L 235 468 L 228 478 L 220 488 L 212 498
-           L 205 505 L 198 498 L 195 488 L 188 478 L 182 468 L 178 455
-           L 172 448 L 168 438 L 165 425 L 162 415 L 158 405 L 155 395
-           L 150 385 L 145 375 L 140 365 L 135 355 L 130 345 L 125 335
-           L 122 325 L 120 315 L 118 305 L 120 295 L 125 288 L 130 280
-           L 135 270 L 138 260 L 140 250 L 142 240 L 148 232 L 155 225
-           L 158 215 L 160 205 L 162 195 L 155 185 L 150 175 L 148 165
-           L 150 155 L 155 148 L 160 140 L 158 130 L 155 120 L 158 110
-           L 165 105 L 170 98 L 175 90 L 180 85 L 188 82 L 195 78
-           L 200 72 L 208 68 L 215 62 L 220 55 Z"
+        d="M132.2,0.0L146.9,16.0L145.5,27.2L151.0,34.1L150.5,41.1L140.7,39.3L144.6,54.3L158.0,63.0L177.0,72.5L168.3,78.7L163.0,91.5L176.3,96.7L189.2,103.4L207.0,111.0L225.8,112.8L233.7,119.8L244.3,121.1L260.7,124.2L272.1,124.0L273.7,118.6L271.9,109.9L273.0,104.0L281.3,101.2L282.5,111.9L282.7,114.7L295.2,119.8L303.8,117.7L315.3,118.6L326.5,118.2L327.5,109.8L321.9,105.5L332.9,103.8L345.4,93.6L361.2,84.9L372.7,88.3L382.4,82.5L388.8,91.0L384.2,96.7L399.0,98.8L400.0,104.0L395.2,106.5L396.3,114.9L386.5,112.4L368.8,121.8L369.2,129.7L361.7,141.1L361.0,147.8L354.9,159.0L344.2,155.9L343.7,170.1L340.6,174.7L342.0,180.5L335.3,183.7L328.1,162.1L324.3,162.1L322.0,170.9L314.5,163.8L318.8,156.0L324.9,155.2L331.2,143.7L323.3,141.3L310.6,141.5L297.6,139.6L296.4,130.2L289.9,129.5L279.0,123.6L274.2,132.8L284.1,140.1L275.5,145.2L272.5,150.1L280.9,153.8L278.6,162.0L283.3,172.3L285.4,183.5L283.5,188.5L274.2,188.4L257.3,191.2L258.1,201.5L250.8,209.6L231.1,218.7L215.8,234.8L205.5,243.4L191.8,252.4L191.8,258.7L185.0,262.0L172.7,266.9L166.3,267.6L162.2,278.1L165.0,295.8L165.7,307.2L159.9,320.1L159.9,343.3L152.8,344.0L146.6,354.4L150.7,358.9L138.3,362.8L133.6,372.1L128.2,376.0L115.2,363.2L108.9,344.1L103.6,330.3L98.8,323.9L91.5,310.8L88.1,293.7L85.8,285.1L73.3,266.4L67.7,239.9L63.6,222.4L63.6,205.9L61.0,193.1L41.0,201.3L31.4,199.6L13.5,183.1L20.1,178.2L16.1,172.8L0.0,161.2L9.1,152.1L39.2,152.1L36.5,140.4L28.8,133.5L27.3,123.0L18.3,116.8L33.4,102.5L49.3,103.5L63.6,89.2L72.2,75.4L85.5,61.7L85.3,51.9L96.9,44.0L85.9,37.3L81.1,28.0L76.3,16.1L83.0,10.2L103.7,13.5L119.0,11.5L132.2,0.0Z"
         fill={fill} stroke={stroke} strokeWidth="1.8" strokeLinejoin="round" filter="url(#map-glow)"
       />
-      {/* Kashmir region */}
-      <path
-        d="M 220 55 L 215 45 L 210 38 L 218 35 L 228 38 L 235 42 L 248 40
-           L 255 35 L 265 38 L 275 42 L 285 48 L 272 52 L 260 50 L 248 55
-           L 230 52 L 220 55 Z"
-        fill={fill} stroke={stroke} strokeWidth="1.2" strokeLinejoin="round"
-      />
-      {/* North-East India */}
-      <path
-        d="M 375 165 L 385 160 L 395 162 L 405 158 L 412 165 L 418 172
-           L 422 180 L 415 185 L 408 182 L 400 188 L 395 195 L 388 200
-           L 380 195 L 375 188 L 370 180 L 370 172 L 375 165 Z"
-        fill={fill} stroke={stroke} strokeWidth="1.2" strokeLinejoin="round"
-      />
-      {/* Sri Lanka (separate island) */}
-      <ellipse cx="265" cy="520" rx="15" ry="22" fill={fill} stroke={stroke} strokeWidth="0.8" opacity="0.5" />
       {/* City dots */}
       {cities.map((city, i) => (
         <g key={i}>
@@ -434,7 +398,7 @@ export default function IterationF() {
 
             <div className="relative overflow-visible" style={{ minHeight: 'clamp(7rem, 20vw, 16rem)' }}>
               <h1
-                className="font-black leading-[0.9] tracking-tight"
+                className="font-black leading-[1.15] tracking-tight"
                 style={{
                   fontSize: 'clamp(3rem, 9vw, 7rem)',
                   transition: 'opacity 0.5s ease, transform 0.5s ease, filter 0.3s ease',
@@ -442,8 +406,8 @@ export default function IterationF() {
                   transform: fadeState === 'fading-out' ? 'translateY(20px)' : fadeState === 'fading-in' ? 'translateY(0)' : 'translateY(0)',
                   filter: fadeState === 'fading-out' ? 'blur(6px)' : 'blur(0)',
                 }}>
-                <span className={`block ${t.text}`}>{currentHeroLang.line1}</span>
-                <span className="block bg-gradient-to-r from-orange-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+                <span className={`block pb-1 ${t.text}`}>{currentHeroLang.line1}</span>
+                <span className="block pb-1 bg-gradient-to-r from-orange-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
                   {currentHeroLang.line2}
                 </span>
               </h1>

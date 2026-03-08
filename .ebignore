@@ -1,0 +1,39 @@
+# Dependencies will be installed on EB
+node_modules/
+
+# Python venv (must exclude!)
+.venv/
+
+# Source (we deploy compiled dist/)
+src/
+
+# Frontend (separate deployment)
+frontend/
+
+# Dev/test files
+__tests__/
+*.test.ts
+*.test.js
+jest.config.js
+jest.setup.js
+jest.prompts.config.js
+load-tests/
+prototype/
+
+# Docs
+docs/
+*.md
+!README.md
+
+# Build artifacts
+.next/
+.vercel/
+
+# Other
+.git/
+_bmad/
+_bmad-output/
+img/
+infrastructure/
+scripts/
+uploads/
