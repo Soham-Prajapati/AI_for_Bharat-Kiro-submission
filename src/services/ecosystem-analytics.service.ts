@@ -5,6 +5,7 @@
  */
 
 import { GitHubModelsService } from './github-models.service';
+import { safeParseJSON } from '../utils/json';
 
 export interface PlatformStats {
   followers: number;
@@ -374,7 +375,7 @@ Generate recommendations now in JSON array format.`;
         maxTokens: 500
       });
 
-      return JSON.parse(response);
+      return safeParseJSON(response);
     } catch (error) {
       console.error('Failed to generate recommendations:', error);
       

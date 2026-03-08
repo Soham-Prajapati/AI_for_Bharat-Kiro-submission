@@ -5,6 +5,7 @@
  */
 
 import { GitHubModelsService } from './github-models.service';
+import { safeParseJSON } from '../utils/json';
 
 export interface ViralPredictionRequest {
   transcript: string;
@@ -134,7 +135,7 @@ Generate the analysis in JSON format.`;
         maxTokens: 300
       });
 
-      const analysis = JSON.parse(response);
+      const analysis = safeParseJSON(response);
       return Math.min(Math.max(analysis.score, 0), 100);
     } catch (error) {
       console.error('Hook analysis failed:', error);
@@ -247,7 +248,7 @@ Generate the analysis in JSON format.`;
         maxTokens: 300
       });
 
-      const analysis = JSON.parse(response);
+      const analysis = safeParseJSON(response);
       return Math.min(Math.max(analysis.score, 0), 100);
     } catch (error) {
       console.error('Emotion analysis failed:', error);
@@ -316,7 +317,7 @@ Generate the analysis in JSON format.`;
         maxTokens: 300
       });
 
-      const analysis = JSON.parse(response);
+      const analysis = safeParseJSON(response);
       return Math.min(Math.max(analysis.score, 0), 100);
     } catch (error) {
       console.error('Trending analysis failed:', error);

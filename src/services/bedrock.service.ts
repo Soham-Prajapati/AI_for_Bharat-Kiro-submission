@@ -1,5 +1,6 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { AWSError, ValidationError, TimeoutError } from '../types/errors';
+import { BEDROCK_MODELS } from '../config/bedrock-models';
 
 const client = new BedrockRuntimeClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
@@ -21,7 +22,7 @@ export class BedrockService {
       };
 
       const command = new InvokeModelCommand({
-        modelId: 'anthropic.claude-3-haiku-20240307-v1:0',
+        modelId: BEDROCK_MODELS.SONNET_3_5,
         contentType: 'application/json',
         accept: 'application/json',
         body: JSON.stringify(payload)

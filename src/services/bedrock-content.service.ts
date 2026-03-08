@@ -11,24 +11,8 @@
 
 import { InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { getBedrockClient } from '../config/aws';
+import { BEDROCK_MODELS, PLATFORM_MODEL } from '../config/bedrock-models';
 import { Platform, PlatformContent, VideoMetadata } from '../types/upload-to-results';
-
-// Model IDs — cross-region inference profiles required for on-demand throughput
-const SONNET = 'us.anthropic.claude-3-5-sonnet-20241022-v2:0';
-const HAIKU   = 'us.anthropic.claude-3-haiku-20240307-v1:0';
-// Fallback to Claude 3 Sonnet (older, broader availability)
-const SONNET_V1 = 'us.anthropic.claude-3-sonnet-20240229-v1:0';
-
-// Which Bedrock model to use per platform
-const PLATFORM_MODEL: Record<string, string> = {
-  youtube:   SONNET,
-  linkedin:  SONNET,
-  blog:      SONNET,
-  podcast:   SONNET,
-  instagram: HAIKU,
-  tiktok:    HAIKU,
-  twitter:   HAIKU,
-};
 
 // Domain-specific system personas — injected into every platform prompt
 const DOMAIN_SYSTEM: Record<string, string> = {
@@ -58,7 +42,7 @@ export class BedrockContentService {
   async checkAvailability(): Promise<boolean> {
     if (this.isAvailable !== null) return this.isAvailable;
     try {
-      await this.invokeClaude('Reply with the word OK.', HAIKU, 10);
+      await this.invokeClaude('Reply with the word OK.', BEDROCK_MODELS.HAIKU_3, 10);
       this.isAvailable = true;
     } catch {
       this.isAvailable = false;
@@ -151,7 +135,7 @@ export class BedrockContentService {
     context: string,
     systemPersona: string,
   ): Promise<PlatformContent> {
-    const modelId = PLATFORM_MODEL[platform] || HAIKU;
+    const modelId = PLATFORM_MODEL[platform] || BEDROCK_MODELS.HAIKU_3;
 
     const { prompt, maxTokens } = this.buildPrompt(platform, context);
     const raw = await this.invokeClaude(prompt, modelId, maxTokens, systemPersona);
