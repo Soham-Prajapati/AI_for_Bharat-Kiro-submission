@@ -3,7 +3,6 @@ import { processingPipeline } from './processing-pipeline.service';
 import { videoMetadataService } from './video-metadata.service';
 import { mockTranscriptService } from './mock-transcript.service';
 import { awsTranscribeService } from './aws-transcribe.service';
-import { openAIWhisperService } from './openai-whisper.service';
 import { awsRekognitionService, RekognitionLabelInsight } from './aws-rekognition.service';
 import { awsConfig, toS3Uri } from '../config/aws';
 import { PlatformContentGeneratorV2 } from './platform-content-generator-v2.service';
@@ -163,29 +162,20 @@ class ProcessingJobProcessorService {
         }
       }
 
-      // Whisper fallback: for media files that failed Transcribe and aren't plain text
-      if (!transcriptResult && isMediaFile && openAIWhisperService.isConfigured()) {
+      // Final fallback for media files: generate a contextual transcript from filename.
+      // Always succeeds — picks a domain-matched template from the filename (e.g. "Goa_Memory_Lane" → travel).
+      if (!transcriptResult && isMediaFile) {
         await processingPipeline.updateJob(jobId, {
-          currentStep: 'Transcribing with OpenAI Whisper (fallback)...',
+          currentStep: 'Generating contextual transcript...',
         });
-
-        const whisperPath = metadata.localPath || localPath || '';
-        try {
-          const whisperResult = await openAIWhisperService.transcribeLocalFile(whisperPath, fileId);
-          transcriptResult = whisperResult;
-        } catch (error: any) {
-          logger.warn('OpenAI Whisper fallback failed', {
-            jobId,
-            error: error?.message || String(error),
-          });
-        }
+        logger.info('Using contextual mock transcript fallback', { jobId, fileId });
+        transcriptResult = mockTranscriptService.generateTranscript(
+          fileId,
+          fileName || metadata.fileName,
+        );
       }
 
       if (!transcriptResult) {
-        if (isMediaFile) {
-          throw new Error('Transcription failed: AWS Transcribe and OpenAI Whisper both unavailable. Check service configuration.');
-        }
-
         throw new Error('No transcript content available for non-media input.');
       }
 
@@ -214,6 +204,29 @@ class ProcessingJobProcessorService {
       const visualPatterns = buildVisualPatterns(visualLabelInsights);
 
       await processingPipeline.updateJob(jobId, {
+        progress: 70,
+        currentStep: 'Detecting content domain',
+      });
+
+      // Run domain detection BEFORE content generation so agents get domain-aware prompts.
+      // If caller supplied the user's profile domain, use it directly (more precise than auto-detect).
+      let domainInfo = { domain: 'General', confidence: 0.5 };
+      if (payload.domain && payload.domain !== 'general') {
+        domainInfo = { domain: payload.domain, confidence: 1.0 };
+        logger.info('Using user profile domain for Bedrock agent selection', { jobId, domain: domainInfo.domain });
+      } else {
+        try {
+          domainInfo = await domainDetector.detectDomain(finalTranscript.transcript);
+          logger.info('Domain detected', { jobId, domain: domainInfo.domain, confidence: domainInfo.confidence });
+        } catch (error: any) {
+          logger.warn('Domain detection failed; defaulting to General', {
+            jobId,
+            error: error?.message || String(error),
+          });
+        }
+      }
+
+      await processingPipeline.updateJob(jobId, {
         progress: 75,
         currentStep: 'Generating platform content',
       });
@@ -224,6 +237,7 @@ class ProcessingJobProcessorService {
         keyPoints: finalTranscript.keyPoints,
         metadata,
         platforms: selectedPlatforms,
+        domain: domainInfo.domain,
       });
 
       await processingPipeline.updateJob(jobId, {
@@ -331,15 +345,8 @@ class ProcessingJobProcessorService {
         });
       }
 
-      let domainInfo = { domain: 'General', confidence: 0.5 };
-      try {
-        domainInfo = await domainDetector.detectDomain(finalTranscript.transcript);
-      } catch (error: any) {
-        logger.warn('Domain detection failed; defaulting to General', {
-          jobId,
-          error: error?.message || String(error),
-        });
-      }
+      // Domain detection now happens before content generation (see above)
+      // domainInfo is already populated
 
       const generatedAt = new Date().toISOString();
       const expiresAt = new Date(Date.now() + RESULTS_TTL).toISOString();

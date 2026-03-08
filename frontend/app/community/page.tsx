@@ -7,6 +7,14 @@ import apiClient from '@/services/api';
 import { Post, UserProfile, Group, Comment } from '@/types/api';
 import Image from 'next/image';
 
+interface KlaDraft {
+  draftId: string;
+  name: string;
+  iterationNumber: number;
+  platforms: Record<string, string>;
+  createdAt: string;
+}
+
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -38,6 +46,12 @@ export default function CommunityPage() {
   const { user } = useAuth();
   const currentUserId = user?.id || 'guest';
   
+  // Banner + workspace draft state
+  const [bannerDismissed, setBannerDismissed] = useState(true); // avoid flash
+  const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
+  const [latestDraft, setLatestDraft] = useState<KlaDraft | null>(null);
+  const [draftModalContent, setDraftModalContent] = useState('');
+
   // State management
   const [feedState, setFeedState] = useState<FeedState>({
     posts: [],
@@ -289,12 +303,121 @@ export default function CommunityPage() {
     fetchGroups();
   }, []);
 
+  // Load banner state and latest draft from localStorage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const dismissed = localStorage.getItem('kla_community_banner_dismissed');
+    setBannerDismissed(dismissed === 'true');
+    try {
+      const raw = localStorage.getItem('kla_current_draft');
+      if (raw) {
+        const draft: KlaDraft = JSON.parse(raw);
+        setLatestDraft(draft);
+      } else {
+        const draftsRaw = localStorage.getItem('kla_drafts');
+        if (draftsRaw) {
+          const drafts: KlaDraft[] = JSON.parse(draftsRaw);
+          if (drafts.length > 0) setLatestDraft(drafts[drafts.length - 1]);
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const dismissBanner = () => {
+    setBannerDismissed(true);
+    localStorage.setItem('kla_community_banner_dismissed', 'true');
+  };
+
+  const openWorkspaceModal = () => {
+    if (!latestDraft) return;
+    const firstContent = Object.values(latestDraft.platforms).find(v => v?.trim()) || '';
+    setDraftModalContent(firstContent);
+    setShowWorkspaceModal(true);
+  };
+
+  const useWorkspaceDraftAsPost = () => {
+    setNewPostContent(draftModalContent);
+    setShowWorkspaceModal(false);
+  };
+
   // ============================================================================
   // RENDER
   // ============================================================================
 
   return (
     <div className="min-h-screen bg-[#030712] text-white">
+      {/* Dismissible community banner */}
+      {!bannerDismissed && (
+        <div className="bg-gradient-to-r from-brand-600/20 via-indigo-600/10 to-transparent border-b border-brand-500/20 px-6 py-3">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-lg">🇮🇳</span>
+              <p className="text-sm text-white/80">
+                <span className="font-semibold text-white">KLA Community</span>
+                {' — '}Share your content journey with <span className="text-brand-400 font-semibold">10,000+ Indian creators</span>. Posts here appear in the community feed visible to all KLA members — not on Instagram, YouTube, or other social platforms.
+              </p>
+            </div>
+            <button
+              onClick={dismissBanner}
+              className="shrink-0 text-white/40 hover:text-white transition-colors p-1 rounded"
+              aria-label="Dismiss banner"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Workspace draft modal */}
+      {showWorkspaceModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-[#0A0E1A] border border-white/[0.08] rounded-2xl w-full max-w-lg shadow-2xl">
+            <div className="p-6 border-b border-white/[0.06]">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-white font-display">Share from Workspace</h3>
+                <button onClick={() => setShowWorkspaceModal(false)} className="text-white/40 hover:text-white transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              {latestDraft && (
+                <p className="text-xs text-white/40 mt-1">
+                  From: <span className="text-white/60">{latestDraft.name}</span> · Draft {latestDraft.iterationNumber}
+                </p>
+              )}
+            </div>
+            <div className="p-6">
+              <textarea
+                value={draftModalContent}
+                onChange={(e) => setDraftModalContent(e.target.value)}
+                className="w-full h-48 bg-white/[0.03] border border-white/[0.08] rounded-xl p-4 text-white/80 text-sm resize-none focus:outline-none focus:border-brand-500/40 transition-all"
+                placeholder="Draft content will appear here…"
+              />
+              <p className="text-xs text-white/30 mt-2">✦ This will be posted to the KLA internal community feed — not to any external social platform.</p>
+            </div>
+            <div className="px-6 pb-6 flex gap-3 justify-end">
+              <button
+                onClick={() => setShowWorkspaceModal(false)}
+                className="px-4 py-2 text-sm text-white/50 hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={useWorkspaceDraftAsPost}
+                className="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-sm font-semibold transition-all"
+              >
+                Use as post draft
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
@@ -402,6 +525,11 @@ export default function CommunityPage() {
                 </button>
               </div>
             </div>
+
+            {/* Post visibility hint */}
+            <p className="text-xs text-white/30 px-1 -mt-3 mb-6">
+              ✦ Your post will be visible to all KLA creators in this feed — this is the KLA internal community, not Instagram/YouTube/etc.
+            </p>
 
             {/* Feed Posts */}
             {feedState.loading && feedState.posts.length === 0 ? (
@@ -534,6 +662,29 @@ export default function CommunityPage() {
 
           {/* RIGHT SIDEBAR - Groups & Trending */}
           <aside className="lg:col-span-3">
+
+            {/* Share from Workspace card */}
+            <div className="bg-gradient-to-br from-brand-600/10 to-indigo-600/5 border border-brand-500/20 rounded-2xl p-5 mb-6">
+              <div className="text-2xl mb-2">📤</div>
+              <h3 className="font-bold text-white text-sm mb-1 font-display">Share your latest draft</h3>
+              <p className="text-xs text-white/40 mb-4 leading-relaxed">
+                {latestDraft
+                  ? `"${latestDraft.name}" · Draft ${latestDraft.iterationNumber}`
+                  : 'No drafts yet. Upload a video to generate content.'}
+              </p>
+              <button
+                onClick={openWorkspaceModal}
+                disabled={!latestDraft}
+                className="w-full px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Share to community
+              </button>
+              {!latestDraft && (
+                <a href="/upload" className="block text-center text-xs text-brand-400 hover:text-brand-300 mt-2 transition-colors">
+                  Upload a video →
+                </a>
+              )}
+            </div>
             
             {/* Groups */}
             <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6 mb-6">

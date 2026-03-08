@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import apiClient from '@/services/api'
+import { useAuth } from '@/hooks/useAuth'
 
 const TIME_RANGES = ['24h', '7d', '30d', '90d']
 
@@ -18,6 +19,7 @@ const PLATFORM_DATA = [
 const SPARKLINE = [40, 55, 48, 62, 58, 71, 68, 82, 75, 90, 88, 95, 84, 100, 92, 88, 76, 95, 100, 96]
 
 export default function AnalyticsPage() {
+  const { user } = useAuth()
   const [timeRange, setTimeRange] = useState('7d')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -35,8 +37,8 @@ export default function AnalyticsPage() {
         setLoading(true)
         setError(null)
         
-        // TODO: Get actual userId from auth context
-        const userId = 'demo-user'
+        // Use real userId from auth, fall back to demo-user for unauthenticated viewing
+        const userId = user?.id || 'demo-user'
         const response = await apiClient.analytics.get(userId)
         
         if (response.success && response.analytics) {
@@ -157,6 +159,23 @@ export default function AnalyticsPage() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Connect Accounts Banner */}
+        <div className="bg-gradient-to-r from-brand-600/20 to-cyan-600/20 border border-brand-500/30 rounded-2xl p-5 flex items-center gap-4 flex-wrap">
+          <div className="flex-1">
+            <div className="font-bold text-white text-sm mb-0.5">Connect your social accounts for real analytics</div>
+            <div className="text-white/40 text-xs">
+              Link YouTube (OAuth), or enter Instagram/TikTok/LinkedIn/X stats manually.
+              Currently showing AI-estimated data.
+            </div>
+          </div>
+          <Link
+            href="/connect-accounts"
+            className="flex-shrink-0 px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-brand-500/20"
+          >
+            Connect Accounts →
+          </Link>
         </div>
 
         {/* Error Message */}

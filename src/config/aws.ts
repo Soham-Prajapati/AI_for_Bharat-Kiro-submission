@@ -76,7 +76,11 @@ let sqsClientInstance: SQSClient | null = null;
 
 export const getS3Client = (): S3Client => {
   if (!s3ClientInstance) {
-    s3ClientInstance = new S3Client(requireBaseAWSConfig());
+    const baseConfig = requireBaseAWSConfig();
+    s3ClientInstance = new S3Client({
+      ...baseConfig,
+      region: process.env.AWS_S3_REGION || baseConfig.region,
+    });
   }
   return s3ClientInstance;
 };
@@ -105,7 +109,11 @@ export const getRekognitionClient = (): RekognitionClient => {
 
 export const getBedrockClient = (): BedrockRuntimeClient => {
   if (!bedrockClientInstance) {
-    bedrockClientInstance = new BedrockRuntimeClient(requireBaseAWSConfig());
+    const baseConfig = requireBaseAWSConfig();
+    bedrockClientInstance = new BedrockRuntimeClient({
+      ...baseConfig,
+      region: process.env.AWS_BEDROCK_REGION || 'us-east-1',
+    });
   }
   return bedrockClientInstance;
 };

@@ -33,6 +33,7 @@ router.post('/process', asyncHandler(async (req: Request, res: Response) => {
     platforms,
     localPath,
     url,
+    domain,
   } = req.body;
 
   if (!fileId) {
@@ -59,6 +60,7 @@ router.post('/process', asyncHandler(async (req: Request, res: Response) => {
     platforms: selectedPlatforms,
     localPath,
     url,
+    domain,
   });
 
   await processingPipeline.updateJob(job.jobId, {

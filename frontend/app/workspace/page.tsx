@@ -1,425 +1,366 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Editor from '@/components/workspace/Editor';
-import UserPresence from '@/components/workspace/UserPresence';
-import CommentThread from '@/components/workspace/CommentThread';
-import VersionHistory from '@/components/workspace/VersionHistory';
-import {
-  UserPresence as UserPresenceType,
-  Comment,
-  VersionHistoryEntry,
-  User,
-} from '@/types/workspace';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
-// Mock data for demonstration
-const mockCurrentUser: User = {
-  id: 'user-1',
-  name: 'You',
-  email: 'you@example.com',
-  color: '#3B82F6',
-};
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-const mockUsers: UserPresenceType[] = [
-  {
-    userId: 'user-1',
-    user: mockCurrentUser,
-    isTyping: false,
-    lastActive: new Date(),
-  },
-  {
-    userId: 'user-2',
-    user: {
-      id: 'user-2',
-      name: 'Sarah Chen',
-      email: 'sarah@example.com',
-      color: '#10B981',
-    },
-    isTyping: true,
-    lastActive: new Date(),
-    cursorPosition: { line: 5, column: 20 },
-  },
-  {
-    userId: 'user-3',
-    user: {
-      id: 'user-3',
-      name: 'Mike Johnson',
-      email: 'mike@example.com',
-      color: '#F59E0B',
-    },
-    isTyping: false,
-    lastActive: new Date(Date.now() - 300000),
-  },
-];
+const PLATFORMS = ['YouTube', 'Instagram', 'TikTok', 'LinkedIn', 'Twitter', 'Blog'] as const;
+type Platform = typeof PLATFORMS[number];
 
-const mockComments: Comment[] = [
-  {
-    id: 'comment-1',
-    workspaceId: 'workspace-1',
-    userId: 'user-2',
-    user: {
-      id: 'user-2',
-      name: 'Sarah Chen',
-      email: 'sarah@example.com',
-      color: '#10B981',
-    },
-    content: 'Should we expand on this section? I think we need more details about the implementation.',
-    position: { line: 10, column: 0 },
-    resolved: false,
-    replies: [
-      {
-        id: 'reply-1',
-        commentId: 'comment-1',
-        userId: 'user-3',
-        user: {
-          id: 'user-3',
-          name: 'Mike Johnson',
-          email: 'mike@example.com',
-          color: '#F59E0B',
-        },
-        content: 'Good point! I can add more technical details.',
-        createdAt: new Date(Date.now() - 3600000),
-      },
-    ],
-    createdAt: new Date(Date.now() - 7200000),
-    updatedAt: new Date(Date.now() - 3600000),
-  },
-  {
-    id: 'comment-2',
-    workspaceId: 'workspace-1',
-    userId: 'user-3',
-    user: {
-      id: 'user-3',
-      name: 'Mike Johnson',
-      email: 'mike@example.com',
-      color: '#F59E0B',
-    },
-    content: 'This looks great! Ready to publish.',
-    position: { line: 25, column: 0 },
-    resolved: true,
-    replies: [],
-    createdAt: new Date(Date.now() - 1800000),
-    updatedAt: new Date(Date.now() - 1800000),
-  },
-];
+interface Draft {
+  draftId: string;
+  name: string;
+  iterationNumber: number;
+  platforms: Record<string, string>;
+  createdAt: string;
+}
 
-const mockHistory: VersionHistoryEntry[] = [
-  {
-    id: 'version-3',
-    workspaceId: 'workspace-1',
-    version: 3,
-    userId: 'user-1',
-    user: mockCurrentUser,
-    changes: 'Updated introduction and added examples',
-    content: '',
-    timestamp: new Date(),
-  },
-  {
-    id: 'version-2',
-    workspaceId: 'workspace-1',
-    version: 2,
-    userId: 'user-2',
-    user: {
-      id: 'user-2',
-      name: 'Sarah Chen',
-      email: 'sarah@example.com',
-      color: '#10B981',
-    },
-    changes: 'Fixed typos and improved formatting',
-    content: '',
-    timestamp: new Date(Date.now() - 3600000),
-  },
-  {
-    id: 'version-1',
-    workspaceId: 'workspace-1',
-    version: 1,
-    userId: 'user-3',
-    user: {
-      id: 'user-3',
-      name: 'Mike Johnson',
-      email: 'mike@example.com',
-      color: '#F59E0B',
-    },
-    changes: 'Initial draft created',
-    content: '',
-    timestamp: new Date(Date.now() - 86400000),
-  },
-];
+const AVATAR_COLORS = ['from-violet-500 to-indigo-500', 'from-cyan-500 to-blue-500', 'from-emerald-500 to-teal-500'];
+const COLLAB_INITIALS = ['S', 'R'];
 
 export default function WorkspacePage() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [showComments, setShowComments] = useState(true);
-  const [showHistory, setShowHistory] = useState(false);
-  const [lastEditedTime, setLastEditedTime] = useState('--:--:--');
-  const [content, setContent] = useState(
-    `# Content Intelligence Platform - Collaborative Workspace
+  const { user } = useAuth();
 
-Welcome to the collaborative workspace! This is a Google Docs-style editor with real-time collaboration features.
+  const [drafts, setDrafts] = useState<Draft[]>([]);
+  const [selectedDraft, setSelectedDraft] = useState<Draft | null>(null);
+  const [activePlatform, setActivePlatform] = useState<Platform>('YouTube');
+  const [editedContent, setEditedContent] = useState('');
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [publishStatus, setPublishStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [copyStatus, setCopyStatus] = useState(false);
 
-## Features
-
-- **Real-time Collaboration**: See who's online and where they're editing
-- **Inline Comments**: Add comments and have threaded discussions
-- **Version History**: Track all changes and restore previous versions
-- **Dark Mode**: Easy on the eyes for long editing sessions
-
-## Getting Started
-
-Start typing to see the magic happen. Your changes are automatically saved and synced with other collaborators in real-time.
-
-### Collaboration Tools
-
-Use the toolbar above to format your text. Click the comment button to add inline comments. Check the version history to see all changes made to this document.
-
-## Next Steps
-
-1. Invite team members to collaborate
-2. Set up automated workflows
-3. Export your content to various platforms
-
-Happy collaborating!`
-  );
-  const [activeUsers, setActiveUsers] = useState<UserPresenceType[]>(mockUsers);
-  const [comments, setComments] = useState<Comment[]>(mockComments);
-  const [history, setHistory] = useState<VersionHistoryEntry[]>(mockHistory);
-  const [documentName, setDocumentName] = useState('Untitled Document');
-  const [isEditingName, setIsEditingName] = useState(false);
-
+  // Load drafts from localStorage on mount
   useEffect(() => {
-    // Apply dark mode class to html element
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem('kla_drafts');
+      if (raw) {
+        const parsed: Draft[] = JSON.parse(raw);
+        setDrafts(parsed);
+        // Auto-select the most recent draft
+        if (parsed.length > 0) {
+          const latest = parsed[parsed.length - 1];
+          setSelectedDraft(latest);
+          const platformKey = activePlatform.toLowerCase();
+          setEditedContent(latest.platforms[platformKey] || '');
+        }
+      } else {
+        // Also check kla_current_draft
+        const currentRaw = localStorage.getItem('kla_current_draft');
+        if (currentRaw) {
+          const current: Draft = JSON.parse(currentRaw);
+          setDrafts([current]);
+          setSelectedDraft(current);
+          const platformKey = activePlatform.toLowerCase();
+          setEditedContent(current.platforms[platformKey] || '');
+        }
+      }
+    } catch {
+      // ignore parse errors
     }
-  }, [isDarkMode]);
-
-  useEffect(() => {
-    setLastEditedTime(new Date().toLocaleTimeString());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleContentChange = (newContent: string) => {
-    setContent(newContent);
-    // In a real app, this would trigger a WebSocket event to sync with other users
+  const loadDraft = useCallback((draft: Draft) => {
+    setSelectedDraft(draft);
+    setActivePlatform('YouTube');
+    setEditedContent(draft.platforms['youtube'] || draft.platforms['YouTube'] || '');
+    setPublishStatus('idle');
+  }, []);
+
+  const switchPlatform = useCallback((platform: Platform) => {
+    // Save current edits back to selectedDraft in memory
+    if (selectedDraft) {
+      const key = activePlatform.toLowerCase();
+      setSelectedDraft(prev => prev ? { ...prev, platforms: { ...prev.platforms, [key]: editedContent } } : prev);
+    }
+    setActivePlatform(platform);
+    if (selectedDraft) {
+      const key = platform.toLowerCase();
+      const content = selectedDraft.platforms[key] || selectedDraft.platforms[platform] || '';
+      setEditedContent(content);
+    }
+  }, [selectedDraft, activePlatform, editedContent]);
+
+  const handlePublishToCommunity = async () => {
+    if (!editedContent.trim()) return;
+    setIsPublishing(true);
+    setPublishStatus('idle');
+    try {
+      const res = await fetch(`${API_BASE}/api/community/post`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user?.id || 'guest',
+          content: editedContent,
+          images: [],
+        }),
+      });
+      if (res.ok) {
+        setPublishStatus('success');
+      } else {
+        setPublishStatus('error');
+      }
+    } catch {
+      setPublishStatus('error');
+    } finally {
+      setIsPublishing(false);
+      setTimeout(() => setPublishStatus('idle'), 3000);
+    }
   };
 
-  const handleCursorMove = (position: { line: number; column: number }) => {
-    // In a real app, broadcast cursor position to other users
-    console.log('Cursor moved to:', position);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(editedContent).then(() => {
+      setCopyStatus(true);
+      setTimeout(() => setCopyStatus(false), 2000);
+    });
   };
 
-  const handleAddComment = () => {
-    const newComment: Comment = {
-      id: `comment-${Date.now()}`,
-      workspaceId: 'workspace-1',
-      userId: mockCurrentUser.id,
-      user: mockCurrentUser,
-      content: '',
-      position: { line: 0, column: 0 },
-      resolved: false,
-      replies: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    setComments([...comments, newComment]);
+  const handleDownload = () => {
+    const blob = new Blob([editedContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${selectedDraft?.name || 'draft'}-${activePlatform}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
-  const handleReply = (commentId: string, replyContent: string) => {
-    setComments(
-      comments.map((comment) => {
-        if (comment.id === commentId) {
-          return {
-            ...comment,
-            replies: [
-              ...comment.replies,
-              {
-                id: `reply-${Date.now()}`,
-                commentId,
-                userId: mockCurrentUser.id,
-                user: mockCurrentUser,
-                content: replyContent,
-                createdAt: new Date(),
-              },
-            ],
-          };
-        }
-        return comment;
-      })
-    );
-  };
-
-  const handleResolveComment = (commentId: string) => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === commentId ? { ...comment, resolved: true } : comment
-      )
-    );
-  };
-
-  const handleDeleteComment = (commentId: string) => {
-    setComments(comments.filter((comment) => comment.id !== commentId));
-  };
-
-  const handleRestoreVersion = (versionId: string) => {
-    console.log('Restoring version:', versionId);
-    // In a real app, fetch and restore the version content
-  };
-
-  const handlePreviewVersion = (versionId: string) => {
-    console.log('Previewing version:', versionId);
-    // In a real app, show a preview modal
-  };
+  const hasDrafts = drafts.length > 0;
 
   return (
-    <div className="h-screen flex flex-col bg-[#030712] transition-colors">
+    <div className="min-h-screen bg-[#030712] text-white flex flex-col">
       {/* Header */}
-      <header className="bg-[#0A0E1A] border-b border-white/[0.07] px-6 py-3 transition-colors">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 flex-1">
-            {isEditingName ? (
-              <input
-                type="text"
-                value={documentName}
-                onChange={(e) => setDocumentName(e.target.value)}
-                onBlur={() => setIsEditingName(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
-                className="text-xl font-bold bg-transparent border-b-2 border-brand-500 focus:outline-none text-white"
-                autoFocus
-              />
-            ) : (
-              <h1
-                className="text-xl font-bold text-white cursor-pointer hover:text-brand-300 transition-colors font-display"
-                onClick={() => setIsEditingName(true)}
-              >
-                {documentName}
-              </h1>
-            )}
-            <span className="text-xs font-mono text-white/30">
-              Last edited {lastEditedTime}
-            </span>
+      <header className="bg-[#0A0E1A] border-b border-white/[0.07] px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-brand-600/20 flex items-center justify-center">
+            <svg className="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
           </div>
+          <div>
+            <h1 className="text-base font-bold text-white font-display">
+              {selectedDraft ? selectedDraft.name : 'Workspace'}
+            </h1>
+            {selectedDraft && (
+              <span className="text-xs text-white/30">
+                {new Date(selectedDraft.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </span>
+            )}
+          </div>
+          {selectedDraft && (
+            <span className="ml-2 px-2.5 py-0.5 text-xs font-semibold rounded-full bg-brand-500/15 text-brand-400 border border-brand-500/20">
+              Draft {selectedDraft.iterationNumber}
+            </span>
+          )}
+        </div>
 
-          <div className="flex items-center gap-4">
-            <UserPresence activeUsers={activeUsers} />
-
-            <div className="flex items-center gap-2 border-l border-white/[0.07] pl-4">
-              <button
-                onClick={() => {
-                  setShowComments(!showComments);
-                  if (showHistory) setShowHistory(false);
-                }}
-                className={`p-2 rounded-lg transition-colors ${
-                  showComments
-                    ? 'bg-brand-500/20 text-brand-400'
-                    : 'hover:bg-white/[0.05] text-white/50 hover:text-white'
-                }`}
-                title="Comments"
-                aria-label="Toggle comments"
+        {/* Collaborators */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center -space-x-2">
+            {COLLAB_INITIALS.map((initial, i) => (
+              <div
+                key={i}
+                className={`w-8 h-8 rounded-full bg-gradient-to-br ${AVATAR_COLORS[i + 1]} border-2 border-[#0A0E1A] flex items-center justify-center text-xs font-bold`}
+                title={`Collaborator ${i + 1}`}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                </svg>
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowHistory(!showHistory);
-                  if (showComments) setShowComments(false);
-                }}
-                className={`p-2 rounded-lg transition-colors ${
-                  showHistory
-                    ? 'bg-brand-500/20 text-brand-400'
-                    : 'hover:bg-white/[0.05] text-white/50 hover:text-white'
-                }`}
-                title="Version History"
-                aria-label="Toggle version history"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </button>
-
-              <button
-                className="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-lg transition-colors font-semibold text-sm"
-                aria-label="Share document"
-              >
-                Share
-              </button>
+                {initial}
+              </div>
+            ))}
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 border-2 border-[#0A0E1A] flex items-center justify-center text-xs font-bold">
+              {user?.name?.charAt(0)?.toUpperCase() || 'Y'}
             </div>
           </div>
+          <button className="text-xs text-brand-400 hover:text-brand-300 font-semibold border border-brand-500/20 px-3 py-1.5 rounded-lg hover:bg-brand-500/10 transition-all">
+            + Invite collaborator
+          </button>
         </div>
       </header>
 
-      {/* Main content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Editor */}
-        <main className="flex-1 overflow-hidden">
-          <Editor
-            content={content}
-            onChange={handleContentChange}
-            activeUsers={activeUsers.filter((u) => u.userId !== mockCurrentUser.id)}
-            onCursorMove={handleCursorMove}
-          />
-        </main>
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left sidebar — Draft list */}
+        <aside className="w-64 border-r border-white/[0.08] bg-[#0A0E1A] flex flex-col overflow-hidden">
+          <div className="p-4 border-b border-white/[0.06]">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-white/40">Saved Drafts</h2>
+          </div>
+          <div className="flex-1 overflow-y-auto p-3 space-y-2">
+            {drafts.length === 0 ? (
+              <div className="text-center py-8 px-3">
+                <div className="text-3xl mb-3 opacity-30">📄</div>
+                <p className="text-xs text-white/30 leading-relaxed">No drafts yet. Upload a video to generate content.</p>
+              </div>
+            ) : (
+              drafts.map((draft) => (
+                <button
+                  key={draft.draftId}
+                  onClick={() => loadDraft(draft)}
+                  className={`w-full text-left p-3 rounded-xl transition-all ${
+                    selectedDraft?.draftId === draft.draftId
+                      ? 'bg-brand-500/15 border border-brand-500/30'
+                      : 'bg-white/[0.03] border border-white/[0.06] hover:border-white/[0.12] hover:bg-white/[0.05]'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-sm font-medium text-white/90 truncate leading-tight">{draft.name}</span>
+                    <span className={`shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                      selectedDraft?.draftId === draft.draftId ? 'bg-brand-500/20 text-brand-400' : 'bg-white/[0.06] text-white/30'
+                    }`}>
+                      v{draft.iterationNumber}
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-white/30 mt-1">
+                    {new Date(draft.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                  </div>
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {Object.keys(draft.platforms).slice(0, 3).map((p) => (
+                      <span key={p} className="text-[9px] px-1.5 py-0.5 rounded bg-white/[0.05] text-white/30 capitalize">{p}</span>
+                    ))}
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+        </aside>
 
-        {/* Sidebar */}
-        {(showComments || showHistory) && (
-          <aside className="w-80 border-l border-white/[0.07] bg-[#0A0E1A] overflow-hidden transition-colors">
-            {showComments && (
-              <div className="h-full flex flex-col">
-                <div className="p-4 border-b border-white/[0.07]">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-base font-bold text-white font-display">Comments</h2>
-                    <button
-                      onClick={handleAddComment}
-                      className="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold rounded-lg transition-colors"
-                    >
-                      + Add
-                    </button>
-                  </div>
-                  <div className="flex gap-2 text-xs">
-                    <button className="px-3 py-1 bg-brand-500/10 text-brand-400 rounded-lg font-mono font-semibold">
-                      All ({comments.length})
-                    </button>
-                    <button className="px-3 py-1 text-white/40 hover:bg-white/[0.05] hover:text-white rounded-lg transition-colors font-mono">
-                      Open ({comments.filter((c) => !c.resolved).length})
-                    </button>
-                  </div>
+        {/* Main area */}
+        <main className="flex-1 flex flex-col overflow-hidden">
+          {!hasDrafts ? (
+            /* Onboarding panel */
+            <div className="flex-1 flex items-center justify-center p-8">
+              <div className="max-w-md text-center">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-brand-600/10 border border-brand-500/20 flex items-center justify-center">
+                  <svg className="w-10 h-10 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  </svg>
                 </div>
-
-                <div className="flex-1 overflow-y-auto p-4">
-                  {comments.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full text-center">
-                      <div className="text-4xl mb-4 opacity-20">💬</div>
-                      <p className="text-white/40 text-sm">No comments yet</p>
-                      <p className="text-xs text-white/20 mt-1">Start a conversation</p>
+                <h2 className="text-2xl font-bold text-white mb-3 font-display">Your workspace is ready</h2>
+                <p className="text-white/50 text-sm leading-relaxed mb-6">
+                  Workspace is where you refine and publish your content. Upload a video first — your AI-generated drafts for YouTube, Instagram, TikTok, and more will appear here ready to edit and publish.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <a
+                    href="/upload"
+                    className="px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-semibold text-sm transition-all"
+                  >
+                    Upload a video →
+                  </a>
+                  <a
+                    href="/results"
+                    className="px-6 py-3 bg-white/[0.05] hover:bg-white/[0.08] text-white/70 hover:text-white rounded-xl font-semibold text-sm transition-all border border-white/[0.08]"
+                  >
+                    View results
+                  </a>
+                </div>
+                <div className="mt-8 grid grid-cols-3 gap-4">
+                  {['YouTube', 'Instagram', 'TikTok'].map((p) => (
+                    <div key={p} className="p-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-center">
+                      <div className="text-2xl mb-1">
+                        {p === 'YouTube' ? '▶' : p === 'Instagram' ? '📸' : '🎵'}
+                      </div>
+                      <div className="text-xs text-white/40">{p}</div>
                     </div>
-                  ) : (
-                    comments.map((comment) => (
-                      <CommentThread
-                        key={comment.id}
-                        comment={comment}
-                        onReply={handleReply}
-                        onResolve={handleResolveComment}
-                        onDelete={handleDeleteComment}
-                        currentUserId={mockCurrentUser.id}
-                      />
-                    ))
-                  )}
+                  ))}
                 </div>
               </div>
-            )}
+            </div>
+          ) : !selectedDraft ? (
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-white/30 text-sm">Select a draft from the left to start editing</p>
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              {/* Platform tabs */}
+              <div className="border-b border-white/[0.07]">
+                <div className="px-6 flex items-center gap-1 overflow-x-auto max-w-3xl mx-auto">
+                {PLATFORMS.map((platform) => {
+                  const key = platform.toLowerCase();
+                  const hasContent = !!(selectedDraft.platforms[key] || selectedDraft.platforms[platform]);
+                  return (
+                    <button
+                      key={platform}
+                      onClick={() => switchPlatform(platform)}
+                      className={`relative px-4 py-3 text-sm font-semibold whitespace-nowrap transition-all ${
+                        activePlatform === platform
+                          ? 'text-brand-400 border-b-2 border-brand-500'
+                          : hasContent
+                          ? 'text-white/60 hover:text-white'
+                          : 'text-white/25 hover:text-white/40'
+                      }`}
+                    >
+                      {platform}
+                      {hasContent && activePlatform !== platform && (
+                        <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-brand-500/60" />
+                      )}
+                    </button>
+                  );
+                })}
+                </div>
+              </div>
 
-            {showHistory && (
-              <VersionHistory
-                history={history}
-                currentVersion={3}
-                onRestore={handleRestoreVersion}
-                onPreview={handlePreviewVersion}
-              />
-            )}
-          </aside>
-        )}
+              {/* Editor area */}
+              <div className="flex-1 flex flex-col overflow-hidden p-6 gap-4 max-w-3xl w-full mx-auto">
+                <textarea
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                  className="flex-1 w-full bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 text-white/90 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-500/40 focus:ring-1 focus:ring-brand-500/20 placeholder:text-white/20 font-mono transition-all"
+                  placeholder={`No ${activePlatform} content in this draft. You can write here or regenerate content from the upload page.`}
+                  spellCheck={false}
+                />
+
+                {/* Share/Export section */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] rounded-xl text-sm text-white/70 hover:text-white transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    {copyStatus ? '✓ Copied!' : 'Copy'}
+                  </button>
+
+                  <button
+                    onClick={handleDownload}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] rounded-xl text-sm text-white/70 hover:text-white transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download .txt
+                  </button>
+
+                  <button
+                    onClick={handlePublishToCommunity}
+                    disabled={isPublishing || !editedContent.trim()}
+                    className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                      publishStatus === 'success'
+                        ? 'bg-emerald-600 text-white'
+                        : publishStatus === 'error'
+                        ? 'bg-red-600 text-white'
+                        : 'bg-brand-600 hover:bg-brand-500 text-white'
+                    }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    {isPublishing
+                      ? 'Publishing…'
+                      : publishStatus === 'success'
+                      ? '✓ Posted to Community!'
+                      : publishStatus === 'error'
+                      ? '✕ Failed — Retry'
+                      : 'Post to KLA Community'}
+                  </button>
+
+                  <span className="text-xs text-white/25 ml-auto">
+                    {editedContent.length} chars · {editedContent.trim().split(/\s+/).filter(Boolean).length} words
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

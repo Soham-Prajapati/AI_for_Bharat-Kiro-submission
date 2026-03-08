@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ShoppingBag, Search, Filter, TrendingUp } from 'lucide-react';
 import apiClient from '@/services/api';
+import { useAuth } from '@/hooks/useAuth';
 import ListingCard from '@/components/marketplace/ListingCard';
 import SearchBar from '@/components/marketplace/SearchBar';
 import CheckoutModal from '@/components/marketplace/CheckoutModal';
@@ -13,6 +14,7 @@ import { Listing, ListingType } from '@/types/api';
 type ViewMode = 'browse' | 'purchases' | 'seller';
 
 export default function MarketplacePage() {
+  const { user } = useAuth()
   const [listings, setListings] = useState<Listing[]>([]);
   const [filteredListings, setFilteredListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,8 +25,7 @@ export default function MarketplacePage() {
   const [selectedType, setSelectedType] = useState<ListingType | 'all'>('all');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
 
-  // Mock user ID (in production, get from auth context)
-  const userId = 'user_123';
+  const userId = user?.id || 'demo_user';
 
   useEffect(() => {
     loadListings();
@@ -38,7 +39,21 @@ export default function MarketplacePage() {
     try {
       setLoading(true);
       const response = await apiClient.marketplace.getListings();
-      setListings(response.listings);
+      // Map backend listingId to id, normalize fields for the frontend Listing type
+      const mapped: Listing[] = (response.listings as any[]).map((l: any) => ({
+        id: l.id ?? l.listingId,
+        title: l.title,
+        description: l.description,
+        price: l.price ?? 0,
+        type: (l.type ?? l.category ?? 'template') as ListingType,
+        userId: l.userId ?? l.sellerId ?? '',
+        fileUrl: l.fileUrl ?? l.previewUrl,
+        status: (l.status ?? 'active') as 'active' | 'sold' | 'inactive',
+        rating: l.rating,
+        sales: l.sales ?? l.salesCount,
+        createdAt: l.createdAt,
+      }));
+      setListings(mapped);
     } catch (error) {
       console.error('Failed to load listings:', error);
     } finally {
