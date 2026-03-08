@@ -89,71 +89,85 @@ function calcViralScore(text: string): number {
 
 // ── India Map SVG ────────────────────────────────────────────────────────
 function IndiaMap({ isDark }: { isDark: boolean }) {
-  const stroke = isDark ? 'rgba(129,140,248,0.5)' : 'rgba(79,70,229,0.4)'
-  const fill = isDark ? 'rgba(129,140,248,0.08)' : 'rgba(79,70,229,0.06)'
-  const glow = isDark ? 'rgba(129,140,248,0.15)' : 'rgba(79,70,229,0.1)'
+  const stroke = isDark ? 'rgba(129,140,248,0.6)' : 'rgba(79,70,229,0.45)'
+  const fill = isDark ? 'rgba(129,140,248,0.10)' : 'rgba(79,70,229,0.08)'
   const cityColor = isDark ? '#818CF8' : '#4F46E5'
   const cities = [
-    { name: 'Delhi', x: 155, y: 120, r: 4 },
-    { name: 'Mumbai', x: 108, y: 235, r: 3.5 },
-    { name: 'Chennai', x: 183, y: 315, r: 3 },
-    { name: 'Kolkata', x: 235, y: 190, r: 3 },
-    { name: 'Bengaluru', x: 155, y: 320, r: 3 },
-    { name: 'Hyderabad', x: 155, y: 265, r: 3 },
+    { name: 'Delhi', x: 247, y: 195, r: 4 },
+    { name: 'Mumbai', x: 195, y: 345, r: 3.5 },
+    { name: 'Chennai', x: 270, y: 440, r: 3 },
+    { name: 'Kolkata', x: 340, y: 300, r: 3 },
+    { name: 'Bengaluru', x: 240, y: 440, r: 3 },
+    { name: 'Hyderabad', x: 255, y: 380, r: 3 },
   ]
   return (
-    <svg viewBox="0 0 320 420" fill="none" className="w-full h-full max-w-[280px]">
+    <svg viewBox="60 30 420 530" fill="none" className="w-full h-full max-w-[300px]">
       <defs>
-        <filter id="map-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="6" result="blur" />
+        <filter id="map-glow" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
+      {/* Accurate India outline */}
       <path
-        d="M 155 25 C 163 22, 175 20, 185 22 C 195 24, 200 28, 208 35
-           C 215 42, 220 50, 228 55 C 235 60, 242 58, 248 62
-           C 255 68, 258 75, 255 85 C 252 95, 248 100, 250 108
-           C 252 118, 258 125, 258 135 C 258 145, 252 152, 248 160
-           C 245 168, 242 175, 240 185 C 238 192, 238 198, 235 205
-           C 232 215, 228 222, 225 230 C 222 238, 218 245, 212 255
-           C 208 262, 205 268, 200 275 C 195 282, 190 290, 188 298
-           C 185 308, 182 318, 178 325 C 175 332, 172 338, 170 345
-           C 168 352, 170 358, 172 362 C 175 368, 178 372, 175 378
-           C 172 382, 168 385, 162 385 C 158 385, 155 382, 152 378
-           C 148 372, 145 368, 142 362 C 138 355, 135 348, 132 340
-           C 128 332, 122 325, 118 318 C 112 308, 108 298, 102 290
-           C 96 280, 90 270, 85 260 C 80 250, 76 242, 72 232
-           C 68 222, 65 215, 62 205 C 58 195, 55 185, 55 175
-           C 55 165, 58 155, 60 148 C 62 140, 60 132, 58 125
-           C 55 118, 52 112, 52 105 C 52 95, 55 88, 58 80
-           C 62 72, 68 65, 72 58 C 78 50, 82 45, 88 40
-           C 95 35, 102 32, 110 30 C 118 28, 128 25, 138 24
-           C 145 23, 150 24, 155 25 Z"
+        d="M 220 55 L 230 52 L 248 55 L 260 50 L 272 52 L 285 48
+           L 298 55 L 310 60 L 315 70 L 325 75 L 330 68 L 340 72
+           L 345 65 L 355 70 L 358 80 L 350 88 L 345 95 L 355 100
+           L 365 95 L 375 100 L 380 110 L 370 115 L 360 112 L 348 118
+           L 355 128 L 365 135 L 372 145 L 368 155 L 375 165 L 370 172
+           L 360 170 L 350 175 L 345 185 L 355 195 L 365 205 L 368 215
+           L 360 220 L 350 218 L 340 225 L 345 235 L 355 242 L 360 255
+           L 365 268 L 370 278 L 365 288 L 358 295 L 350 288 L 342 295
+           L 348 305 L 355 315 L 350 325 L 340 320 L 332 328 L 328 340
+           L 320 345 L 312 338 L 305 345 L 308 358 L 300 365 L 295 358
+           L 288 365 L 290 378 L 285 388 L 278 395 L 280 408 L 275 418
+           L 268 425 L 272 438 L 265 448 L 258 455 L 262 468 L 255 478
+           L 248 485 L 240 478 L 235 468 L 228 478 L 220 488 L 212 498
+           L 205 505 L 198 498 L 195 488 L 188 478 L 182 468 L 178 455
+           L 172 448 L 168 438 L 165 425 L 162 415 L 158 405 L 155 395
+           L 150 385 L 145 375 L 140 365 L 135 355 L 130 345 L 125 335
+           L 122 325 L 120 315 L 118 305 L 120 295 L 125 288 L 130 280
+           L 135 270 L 138 260 L 140 250 L 142 240 L 148 232 L 155 225
+           L 158 215 L 160 205 L 162 195 L 155 185 L 150 175 L 148 165
+           L 150 155 L 155 148 L 160 140 L 158 130 L 155 120 L 158 110
+           L 165 105 L 170 98 L 175 90 L 180 85 L 188 82 L 195 78
+           L 200 72 L 208 68 L 215 62 L 220 55 Z"
         fill={fill} stroke={stroke} strokeWidth="1.8" strokeLinejoin="round" filter="url(#map-glow)"
       />
-      {/* NE India */}
+      {/* Kashmir region */}
       <path
-        d="M 250 108 C 255 102, 262 98, 268 96 C 275 94, 280 96, 282 102
-           C 284 108, 280 112, 274 114 C 268 116, 260 114, 255 116"
-        fill={fill} stroke={stroke} strokeWidth="1.2"
+        d="M 220 55 L 215 45 L 210 38 L 218 35 L 228 38 L 235 42 L 248 40
+           L 255 35 L 265 38 L 275 42 L 285 48 L 272 52 L 260 50 L 248 55
+           L 230 52 L 220 55 Z"
+        fill={fill} stroke={stroke} strokeWidth="1.2" strokeLinejoin="round"
       />
-      {/* Sri Lanka */}
-      <ellipse cx="175" cy="395" rx="10" ry="14" fill={glow} stroke={stroke} strokeWidth="0.8" />
+      {/* North-East India */}
+      <path
+        d="M 375 165 L 385 160 L 395 162 L 405 158 L 412 165 L 418 172
+           L 422 180 L 415 185 L 408 182 L 400 188 L 395 195 L 388 200
+           L 380 195 L 375 188 L 370 180 L 370 172 L 375 165 Z"
+        fill={fill} stroke={stroke} strokeWidth="1.2" strokeLinejoin="round"
+      />
+      {/* Sri Lanka (separate island) */}
+      <ellipse cx="265" cy="520" rx="15" ry="22" fill={fill} stroke={stroke} strokeWidth="0.8" opacity="0.5" />
       {/* City dots */}
       {cities.map((city, i) => (
         <g key={i}>
-          <circle cx={city.x} cy={city.y} r={city.r + 8} fill={cityColor} opacity="0.06" />
+          <circle cx={city.x} cy={city.y} r={city.r + 8} fill={cityColor} opacity="0.08">
+            <animate attributeName="opacity" values="0.08;0.15;0.08" dur="3s" repeatCount="indefinite" begin={`${i * 0.5}s`} />
+          </circle>
           <circle cx={city.x} cy={city.y} r={city.r} fill={cityColor} opacity="0.9" />
-          <text x={city.x + 8} y={city.y + 3} fontSize="8"
-            fill={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)'} fontFamily="monospace">
+          <text x={city.x + 8} y={city.y + 3} fontSize="9"
+            fill={isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)'} fontFamily="system-ui, sans-serif" fontWeight="500">
             {city.name}
           </text>
         </g>
       ))}
+      {/* Connection lines between cities */}
       <path
         d={cities.map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x} ${c.y}`).join(' ')}
-        stroke={isDark ? 'rgba(99,102,241,0.12)' : 'rgba(99,102,241,0.08)'}
-        strokeWidth="0.8" strokeDasharray="4 8"
+        stroke={isDark ? 'rgba(99,102,241,0.15)' : 'rgba(99,102,241,0.10)'}
+        strokeWidth="0.8" strokeDasharray="4 8" fill="none"
       />
     </svg>
   )
@@ -217,20 +231,13 @@ export default function IterationF() {
   const [showDNA, setShowDNA] = useState(false)
   const konamiBuffer = useRef<string[]>([])
   const logoTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [showConfetti, setShowConfetti] = useState(false)
-  const scrollDirRef = useRef<'up' | 'down' | null>(null)
-  const scrollFlips = useRef(0)
-  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // ── Hero auto-cycle language with smooth fading ────────────────────────
   const [heroLangIdx, setHeroLangIdx] = useState(0)
   const [nextLangIdx, setNextLangIdx] = useState(0)
   const [fadeState, setFadeState] = useState<FadeState>('visible')
 
-  // ── Secret phrase tracker (easter egg) ──────────────────────────────────
-  const [secretInput, setSecretInput] = useState('')
-  const [easterLevel, setEasterLevel] = useState(0) // 0-3 levels
-  const [showMatrix, setShowMatrix] = useState(false)
+  // easter egg states removed — kept only Konami
 
   // ── Viral score ─────────────────────────────────────────────────────────
   const [viralInput, setViralInput] = useState('')
@@ -267,48 +274,9 @@ export default function IterationF() {
     return () => clearInterval(interval)
   }, [])
 
-  // ── Secret word easter egg listener ─────────────────────────────────────
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      // Track typed characters
-      setSecretInput(prev => {
-        const next = (prev + e.key).slice(-10)
-        // "bharat" typed anywhere unlocks level 1
-        if (next.includes('bharat') && easterLevel < 1) {
-          setEasterLevel(1)
-          setTimeout(() => setEasterLevel(0), 5000)
-        }
-        // "creator" typed unlocks level 2 — matrix rain
-        if (next.includes('creator')) {
-          setShowMatrix(true)
-          setTimeout(() => setShowMatrix(false), 6000)
-        }
-        return next
-      })
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [easterLevel])
 
-  // ── Rapid scroll easter egg (scroll up/down 5x fast = confetti) ────────
-  useEffect(() => {
-    const onScroll = (e: WheelEvent) => {
-      const dir = e.deltaY > 0 ? 'down' : 'up'
-      if (scrollDirRef.current && dir !== scrollDirRef.current) {
-        scrollFlips.current++
-        if (scrollTimer.current) clearTimeout(scrollTimer.current)
-        scrollTimer.current = setTimeout(() => { scrollFlips.current = 0 }, 2000)
-        if (scrollFlips.current >= 8) {
-          setShowConfetti(true)
-          scrollFlips.current = 0
-          setTimeout(() => setShowConfetti(false), 4000)
-        }
-      }
-      scrollDirRef.current = dir
-    }
-    window.addEventListener('wheel', onScroll)
-    return () => window.removeEventListener('wheel', onScroll)
-  }, [])
+
+
 
   // ── Viral score animation ──────────────────────────────────────────────
   const animateViral = useCallback((target: number) => {
@@ -387,53 +355,7 @@ export default function IterationF() {
         </div>
       )}
 
-      {/* ── "bharat" easter egg — tricolor pulse ring ────────────────────── */}
-      {easterLevel >= 1 && (
-        <div className="fixed inset-0 z-[9996] pointer-events-none">
-          <div className="absolute inset-0" style={{ animation: 'tricolor-pulse 2s ease-in-out infinite' }}>
-            <div className="absolute inset-0 rounded-full" style={{
-              border: '3px solid',
-              borderImage: 'linear-gradient(180deg, #FF9933 33%, #FFFFFF 33%, #FFFFFF 66%, #138808 66%) 1',
-              opacity: 0.4,
-              animation: 'tricolor-ring 2s ease-in-out infinite',
-            }} />
-          </div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-            <div className="text-5xl font-black bg-gradient-to-b from-[#FF9933] via-white to-[#138808] bg-clip-text text-transparent" style={{ animation: 'scale-breathe 2s ease-in-out infinite' }}>
-              जय हिंद 🇮🇳
-            </div>
-            <div className={`mt-2 font-mono text-xs ${t.textMuted}`}>type &ldquo;creator&rdquo; for the next level...</div>
-          </div>
-        </div>
-      )}
 
-      {/* ── "creator" easter egg — Devanagari matrix rain ─────────────── */}
-      {showMatrix && (
-        <div className="fixed inset-0 z-[9997] pointer-events-none overflow-hidden"
-          style={{ background: isDark ? 'rgba(3,7,18,0.85)' : 'rgba(255,255,255,0.9)' }}>
-          {Array.from({ length: 30 }).map((_, i) => (
-            <div key={i} className="absolute text-sm font-mono" style={{
-              left: `${(i * 3.33) % 100}%`,
-              animation: `matrix-fall ${2 + Math.random() * 3}s linear infinite`,
-              animationDelay: `${Math.random() * 2}s`,
-              color: ['#F97316', '#818CF8', '#22D3EE', '#138808', '#FF9933'][i % 5],
-              opacity: 0.6 + Math.random() * 0.4,
-              fontSize: `${10 + Math.random() * 8}px`,
-            }}>
-              {'अआइईउऊऋएऐओऔकखगघचछजझटठडढणतथदधनपफबभमयरलवशषसह'.split('').sort(() => Math.random() - 0.5).slice(0, 8 + Math.floor(Math.random() * 12)).join('\n')}
-            </div>
-          ))}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-10">
-            <div className="text-6xl font-black mb-4" style={{ textShadow: '0 0 40px rgba(249,115,22,0.5)' }}>
-              <span className="text-orange-500">क</span><span className={isDark ? 'text-white' : 'text-gray-900'}>LA</span>
-            </div>
-            <div className="text-lg font-bold bg-gradient-to-r from-orange-400 to-indigo-400 bg-clip-text text-transparent">
-              Made for Bharat&apos;s Creators
-            </div>
-            <div className={`mt-1 text-xs font-mono ${t.textMuted}`}>scroll up & down 5 times fast for one more...</div>
-          </div>
-        </div>
-      )}
 
       {/* ── DNA modal ──────────────────────────────────────────────────── */}
       {showDNA && (
@@ -450,31 +372,7 @@ export default function IterationF() {
         </div>
       )}
 
-      {/* ── Confetti burst (rapid scroll easter egg) ─────────────────── */}
-      {showConfetti && (
-        <div className="fixed inset-0 z-[9998] pointer-events-none overflow-hidden">
-          {Array.from({ length: 60 }).map((_, i) => (
-            <div key={i} className="absolute" style={{
-              left: `${Math.random() * 100}%`,
-              top: '-5%',
-              width: `${6 + Math.random() * 8}px`,
-              height: `${6 + Math.random() * 8}px`,
-              borderRadius: Math.random() > 0.5 ? '50%' : '2px',
-              background: ['#FF9933', '#FFFFFF', '#138808', '#F97316', '#818CF8', '#22D3EE', '#FBBF24', '#F472B6'][i % 8],
-              animation: `confetti-fall ${2 + Math.random() * 2}s ease-in forwards`,
-              animationDelay: `${Math.random() * 0.8}s`,
-              transform: `rotate(${Math.random() * 360}deg)`,
-            }} />
-          ))}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 text-center" style={{ animation: 'scale-breathe 1s ease-in-out infinite' }}>
-            <div className="text-5xl mb-2">🎉</div>
-            <div className="text-xl font-black bg-gradient-to-r from-orange-400 to-indigo-400 bg-clip-text text-transparent">
-              You found it!
-            </div>
-            <div className={`text-xs mt-1 font-mono ${t.textMuted}`}>You&apos;re a true explorer</div>
-          </div>
-        </div>
-      )}
+
 
       {/* ═══════════════════════════════════════════════════════════════════
            NAV
@@ -534,7 +432,7 @@ export default function IterationF() {
               </span>
             </div>
 
-            <div className="relative overflow-hidden" style={{ minHeight: 'clamp(7rem, 20vw, 16rem)' }}>
+            <div className="relative overflow-visible" style={{ minHeight: 'clamp(7rem, 20vw, 16rem)' }}>
               <h1
                 className="font-black leading-[0.9] tracking-tight"
                 style={{
@@ -572,7 +470,7 @@ export default function IterationF() {
             <div className="flex items-center gap-2 mt-8">
               {HERO_LANGS.map((v, i) => (
                 <button key={i} onClick={() => setHeroLangIdx(i)}
-                  className={`text-xs px-2.5 py-1 rounded-full border transition-all cursor-pointer ${
+                  className={`text-xs px-2.5 py-1.5 rounded-full border transition-all cursor-pointer leading-relaxed ${
                     i === heroLangIdx
                       ? 'border-orange-400/50 text-orange-400 bg-orange-400/10'
                       : `${t.borderFaint} ${t.textFaint}`
@@ -595,10 +493,10 @@ export default function IterationF() {
       </section>
 
       {/* ── MARQUEE 1 ─────────────────────────────────────────────────── */}
-      <div className={`border-y ${t.borderFaint} py-4 overflow-hidden ${t.bgAlt}`}>
+      <div className={`border-y ${t.borderFaint} py-5 overflow-hidden ${t.bgAlt}`}>
         <div className="flex gap-10 animate-marquee-left whitespace-nowrap" aria-hidden>
           {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
-            <span key={i} className={`text-sm font-medium uppercase tracking-widest flex items-center gap-3 ${t.textMuted}`}>
+            <span key={i} className={`text-sm font-medium uppercase tracking-widest flex items-center gap-3 leading-loose py-1 ${t.textMuted}`}>
               <span className="w-1 h-1 rounded-full bg-orange-400/60" />
               {item}
             </span>
@@ -713,10 +611,10 @@ export default function IterationF() {
       </section>
 
       {/* ── MARQUEE 2 — Languages ─────────────────────────────────────── */}
-      <div className={`border-y ${t.borderFaint} py-4 overflow-hidden ${t.bgAlt}`}>
+      <div className={`border-y ${t.borderFaint} py-5 overflow-hidden ${t.bgAlt}`}>
         <div className="flex gap-10 animate-marquee-right whitespace-nowrap" aria-hidden>
           {[...MARQUEE_LANGS, ...MARQUEE_LANGS].map((item, i) => (
-            <span key={i} className={`text-sm font-medium uppercase tracking-widest flex items-center gap-3 ${t.textMuted}`}>
+            <span key={i} className={`text-sm font-medium uppercase tracking-widest flex items-center gap-3 leading-loose py-1 ${t.textMuted}`} style={{ lineHeight: '2' }}>
               <span className="w-1 h-1 rounded-full bg-indigo-400/60" />
               {item}
             </span>
@@ -743,8 +641,8 @@ export default function IterationF() {
             </p>
             <div className="grid grid-cols-3 gap-3">
               {LANGUAGES.map((lang, i) => (
-                <div key={i} className={`rounded-xl border p-3 transition-all duration-300 ${t.card} ${t.cardHover}`}>
-                  <div className={`font-bold text-lg ${t.text}`}>{lang.script}</div>
+                <div key={i} className={`rounded-xl border p-3 transition-all duration-300 overflow-visible ${t.card} ${t.cardHover}`}>
+                  <div className={`font-bold text-lg leading-loose ${t.text}`} style={{ lineHeight: '1.8' }}>{lang.script}</div>
                   <div className={`text-xs ${t.textMuted}`}>{lang.name}</div>
                   <div className={`text-[10px] font-mono mt-1 ${t.textFaint}`}>{lang.speakers}</div>
                 </div>
@@ -944,7 +842,7 @@ export default function IterationF() {
         </div>
 
         <div className={`mt-16 font-mono text-[9px] uppercase tracking-widest relative z-10 ${t.textFaint}`}>
-          psst... type &ldquo;bharat&rdquo; anywhere on this page
+          Made with ❤️ for Bharat
         </div>
       </section>
 
