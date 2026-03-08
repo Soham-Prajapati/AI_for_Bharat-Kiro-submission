@@ -19,9 +19,10 @@ const DOMAIN_LABELS: Record<string, string> = {
 export default function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated, logout, resetDemo } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const [isResetting, setIsResetting] = useState(false)
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: '📊' },
@@ -37,6 +38,14 @@ export default function Navbar() {
   const handleLogout = async () => {
     await logout()
     router.push('/login')
+  }
+
+  const handleResetDemo = async () => {
+    if (!confirm('Reset demo? This will clear all your data and restart from the beginning (register → onboarding → dashboard).')) return
+    setIsResetting(true)
+    setIsUserMenuOpen(false)
+    await resetDemo()
+    router.push('/register')
   }
 
   const initials = user?.name
@@ -110,6 +119,13 @@ export default function Navbar() {
                       >
                         ⚙️ Edit Profile
                       </Link>
+                      <button
+                        onClick={handleResetDemo}
+                        disabled={isResetting}
+                        className="w-full text-left px-3 py-2 text-sm text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 rounded-lg transition-colors disabled:opacity-50"
+                      >
+                        🎬 Reset Demo
+                      </button>
                       <button
                         onClick={handleLogout}
                         className="w-full text-left px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
