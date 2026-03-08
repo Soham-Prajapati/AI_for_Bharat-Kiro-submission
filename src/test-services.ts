@@ -264,8 +264,8 @@ async function runTests(): Promise<void> {
 
     // Test 17: Trend Predictor
     await testService('trend-predictor.service.ts', async () => {
-      const { TrendPredictorService } = await import('./services/trend-predictor.service');
-      const service = new TrendPredictorService();
+      const { trendPredictorService } = await import('./services/trend-predictor.service');
+      const service = trendPredictorService;
       return { status: 'initialized', usage: { input: 0, output: 0 } };
     });
 
@@ -305,9 +305,9 @@ async function runTests(): Promise<void> {
     });
 
     // Test 23: Content DNA
-    await testService('content-dna.service.ts', async () => {
-      const { ContentDNAService } = await import('./services/content-dna.service');
-      const service = new ContentDNAService();
+    await testService('dna-analysis.service.ts', async () => {
+      const { DNAAnalysisService } = await import('./services/dna-analysis.service');
+      const service = new DNAAnalysisService();
       return { status: 'initialized', usage: { input: 0, output: 0 } };
     });
 
@@ -319,9 +319,9 @@ async function runTests(): Promise<void> {
     });
 
     // Test 25: Quality Validator
-    await testService('quality-validator.service.ts', async () => {
-      const { QualityValidatorService } = await import('./services/quality-validator.service');
-      const service = new QualityValidatorService();
+    await testService('creative-director.service.ts', async () => {
+      const { CreativeDirectorService } = await import('./services/creative-director.service');
+      const service = new CreativeDirectorService();
       return { status: 'initialized', usage: { input: 0, output: 0 } };
     });
 

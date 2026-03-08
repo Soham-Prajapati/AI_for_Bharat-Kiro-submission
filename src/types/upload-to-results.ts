@@ -207,6 +207,8 @@ export interface UploadFileResponse {
   size: number;
   userId: string;
   url: string;
+  cdnUrl?: string;
+  s3Url?: string;
   uploadedAt: string;
   localPath: string;
 }
