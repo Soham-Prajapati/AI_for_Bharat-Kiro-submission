@@ -12,21 +12,22 @@ interface GenerateOptions {
 }
 
 export class GitHubModelsService {
-  private apiKey: string;
   private baseUrl = 'https://models.inference.ai.azure.com';
 
   constructor() {
-    this.apiKey = process.env.GITHUB_TOKEN || '';
+    // API key is read dynamically to support dotenv loading
   }
 
-  private ensureApiKey() {
-    if (!this.apiKey) {
+  private getApiKey(): string {
+    const apiKey = process.env.GITHUB_TOKEN;
+    if (!apiKey) {
       throw new Error('GITHUB_TOKEN not found in environment variables');
     }
+    return apiKey;
   }
 
   async generate(prompt: string, options: GenerateOptions = {}): Promise<string> {
-    this.ensureApiKey();
+    const apiKey = this.getApiKey();
     const {
       model = 'gpt-4o',
       temperature = 0.7,
@@ -44,7 +45,7 @@ export class GitHubModelsService {
         },
         {
           headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
+            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
           }
         }
@@ -58,6 +59,7 @@ export class GitHubModelsService {
   }
 
   async generateWithContext(messages: Message[], options: GenerateOptions = {}): Promise<string> {
+    const apiKey = this.getApiKey();
     const {
       model = 'gpt-4o',
       temperature = 0.7,
@@ -75,7 +77,7 @@ export class GitHubModelsService {
         },
         {
           headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
+            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
           }
         }
@@ -89,6 +91,7 @@ export class GitHubModelsService {
   }
 
   async *streamGenerate(prompt: string, options: GenerateOptions = {}): AsyncGenerator<string> {
+    const apiKey = this.getApiKey();
     const {
       model = 'gpt-4o',
       temperature = 0.7,
@@ -107,7 +110,7 @@ export class GitHubModelsService {
         },
         {
           headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
+            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
           },
           responseType: 'stream'

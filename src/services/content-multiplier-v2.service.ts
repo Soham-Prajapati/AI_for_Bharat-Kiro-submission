@@ -2,12 +2,19 @@
  * Content Multiplier V2 Service
  * 
  * Advanced content repurposing: 1 video → 100+ pieces
- * - AI-generated variations for each platform
+ * - AI-generated variations for each platform (REAL AI)
  * - Platform-specific optimizations
  * - Auto-scheduling recommendations
  * - Content calendar generation
  * - Performance tracking
+ * 
+ * UPDATED: Now uses GitHubModelsService for actual AI content generation
  */
+
+import { GitHubModelsService } from './github-models.service';
+
+// Initialize AI service
+const githubModels = new GitHubModelsService();
 
 export interface MultiplyRequest {
   videoId: string;
@@ -224,11 +231,11 @@ export class ContentMultiplierV2Service {
   }
 
   // ============================================================================
-  // CONTENT TYPE GENERATORS
+  // CONTENT TYPE GENERATORS - AI POWERED
   // ============================================================================
 
   /**
-   * Generate short-form video content (60s)
+   * Generate short-form video content (60s) using AI
    */
   private async generateShortFormContent(
     keyPoints: string[],
@@ -236,64 +243,126 @@ export class ContentMultiplierV2Service {
     variation: number,
     brandVoice?: string
   ): Promise<string> {
-    const hooks = [
-      'Wait, you need to see this...',
-      'Here\'s what nobody tells you about',
-      'The secret to',
-      'Stop scrolling! This is important:',
-      'You won\'t believe',
-    ];
+    const prompt = `You are an expert ${platform} content creator. Create a compelling 60-second short-form video script.
 
-    const hook = hooks[variation % hooks.length];
-    const mainPoint = keyPoints[0] || 'this topic';
-    const cta = platform === 'tiktok' ? 'Follow for more!' : 'Like and subscribe!';
+KEY POINTS FROM ORIGINAL CONTENT:
+${keyPoints.slice(0, 5).map((p, i) => `${i + 1}. ${p}`).join('\n')}
 
-    return `${hook} ${mainPoint}\n\n[Visual: Eye-catching opening]\n\nKey insight: ${keyPoints[1] || 'valuable information'}\n\n[Visual: Supporting content]\n\nRemember: ${keyPoints[2] || 'main takeaway'}\n\n${cta}`;
+REQUIREMENTS:
+- Platform: ${platform.toUpperCase()} (optimize for this platform's audience)
+- Duration: 60 seconds
+- Tone: ${brandVoice || 'engaging and informative'}
+- Variation #${variation} (make it unique)
+- Start with a strong hook (first 3 seconds must grab attention)
+- Include clear visual/scene suggestions in [brackets]
+- End with a platform-appropriate call-to-action
+
+FORMAT:
+[0:00-0:03 HOOK]
+(attention-grabbing opening)
+
+[0:03-0:20 MAIN POINT 1]
+(content with visual suggestions)
+
+[0:20-0:40 MAIN POINT 2]
+(content with visual suggestions)
+
+[0:40-0:55 KEY TAKEAWAY]
+(memorable conclusion)
+
+[0:55-1:00 CTA]
+(call to action)
+
+Generate unique, engaging content now:`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.8 + (variation * 0.05), // Slightly different for each variation
+        maxTokens: 800
+      });
+      return response;
+    } catch (error) {
+      console.error('AI generation failed for short-form, using fallback:', error);
+      // Fallback template
+      const cta = platform === 'tiktok' ? 'Follow for more!' : 'Like and subscribe!';
+      return `🎬 ${keyPoints[0] || 'Key insight'}\n\n✨ ${keyPoints[1] || 'More details'}\n\n💡 ${keyPoints[2] || 'Pro tip'}\n\n${cta}`;
+    }
   }
 
   /**
-   * Generate Instagram/TikTok reel content (30s)
+   * Generate Instagram/TikTok reel content (30s) using AI
    */
   private async generateReelContent(
     keyPoints: string[],
     variation: number,
     brandVoice?: string
   ): Promise<string> {
-    const formats = [
-      'Quick tip',
-      'Did you know',
-      'Here\'s how',
-      'The truth about',
-      'Stop doing this',
-    ];
+    const prompt = `Create an engaging 30-second Instagram Reel script.
 
-    const format = formats[variation % formats.length];
-    const point = keyPoints[0] || 'this';
+KEY POINTS:
+${keyPoints.slice(0, 4).map((p, i) => `${i + 1}. ${p}`).join('\n')}
 
-    return `${format}: ${point}\n\n✨ ${keyPoints[1] || 'Key insight'}\n\n💡 ${keyPoints[2] || 'Pro tip'}\n\nSave this for later!`;
+REQUIREMENTS:
+- Duration: 30 seconds max
+- Tone: ${brandVoice || 'trendy and engaging'}
+- Start with a hook that stops the scroll
+- Include emoji for visual appeal
+- Add trending reel format elements
+- End with "Save this!" or similar CTA
+- Variation #${variation}
+
+Generate the reel script:`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.8,
+        maxTokens: 500
+      });
+      return response;
+    } catch (error) {
+      console.error('AI generation failed for reel, using fallback:', error);
+      return `✨ ${keyPoints[0] || 'Quick tip'}\n\n💡 ${keyPoints[1] || 'Key insight'}\n\nSave this for later! 📌`;
+    }
   }
 
   /**
-   * Generate story content (24h ephemeral)
+   * Generate story content (24h ephemeral) using AI
    */
   private async generateStoryContent(
     keyPoints: string[],
     variation: number,
     brandVoice?: string
   ): Promise<string> {
-    const templates = [
-      `🔥 Hot take:\n${keyPoints[0] || 'Interesting insight'}\n\nSwipe up to learn more!`,
-      `💭 Quick thought:\n${keyPoints[0] || 'Key point'}\n\nDM me your thoughts!`,
-      `⚡ Pro tip:\n${keyPoints[0] || 'Valuable advice'}\n\nTap to see full video!`,
-      `🎯 Today's lesson:\n${keyPoints[0] || 'Important lesson'}\n\nReply with 🙌 if you agree!`,
-      `✨ Fun fact:\n${keyPoints[0] || 'Interesting fact'}\n\nShare this story!`,
-    ];
+    const prompt = `Create an engaging Instagram Story slide.
 
-    return templates[variation % templates.length];
+KEY INSIGHT: ${keyPoints[0] || 'Interesting topic'}
+
+REQUIREMENTS:
+- Very short (story slide format)
+- Include emoji
+- Add interactive element (poll, question, or CTA)
+- Tone: ${brandVoice || 'casual and engaging'}
+- Variation #${variation}
+
+Generate story content:`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.8,
+        maxTokens: 200
+      });
+      return response;
+    } catch (error) {
+      console.error('AI generation failed for story, using fallback:', error);
+      return `🔥 ${keyPoints[0] || 'Hot take'}\n\nSwipe up to learn more! ✨`;
+    }
   }
 
   /**
-   * Generate social media post
+   * Generate social media post using AI
    */
   private async generateSocialPost(
     keyPoints: string[],
@@ -301,146 +370,451 @@ export class ContentMultiplierV2Service {
     variation: number,
     brandVoice?: string
   ): Promise<{ title: string; content: string }> {
-    const title = keyPoints[0] || 'Interesting insight';
-    
-    let content = '';
-    if (platform === 'linkedin') {
-      content = `${title}\n\nHere's what I learned:\n\n`;
-      keyPoints.slice(1, 4).forEach((point, i) => {
-        content += `${i + 1}. ${point}\n`;
-      });
-      content += `\nWhat's your experience with this? Share in the comments!`;
-    } else if (platform === 'facebook') {
-      content = `${title} 🎯\n\n${keyPoints[1] || 'Key insight'}\n\n${keyPoints[2] || 'Additional point'}\n\nTag someone who needs to see this!`;
-    } else {
-      content = `${title}\n\n${keyPoints.slice(1, 3).join('\n\n')}\n\nThoughts?`;
-    }
+    const prompt = `Create an engaging ${platform.toUpperCase()} post.
 
-    return { title, content };
+KEY POINTS:
+${keyPoints.slice(0, 4).map((p, i) => `${i + 1}. ${p}`).join('\n')}
+
+PLATFORM: ${platform}
+TONE: ${brandVoice || 'professional yet engaging'}
+VARIATION: #${variation}
+
+REQUIREMENTS:
+${platform === 'linkedin' ? `- Professional tone
+- Include personal insight or story hook
+- Add line breaks for readability
+- End with a question to drive engagement
+- 150-300 words` : 
+platform === 'facebook' ? `- Conversational and friendly
+- Include emoji naturally
+- End with "Tag someone" or similar CTA
+- 50-150 words` : 
+`- Platform-optimized format
+- Include relevant emoji
+- Clear call-to-action
+- Concise and engaging`}
+
+OUTPUT FORMAT:
+Title: [catchy title/headline]
+---
+Content:
+[the full post content]
+
+Generate now:`; 
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.7,
+        maxTokens: 600
+      });
+      
+      // Parse title and content
+      const titleMatch = response.match(/Title:\s*(.+?)(?:\n|---)/);
+      const contentMatch = response.match(/Content:\s*([\s\S]+)/);
+      
+      return {
+        title: titleMatch?.[1]?.trim() || keyPoints[0] || 'Engaging Post',
+        content: contentMatch?.[1]?.trim() || response
+      };
+    } catch (error) {
+      console.error('AI generation failed for social post, using fallback:', error);
+      const title = keyPoints[0] || 'Interesting insight';
+      let content = `${title}\n\n`;
+      keyPoints.slice(1, 3).forEach((point) => {
+        content += `• ${point}\n`;
+      });
+      content += `\nWhat do you think? 💭`;
+      return { title, content };
+    }
   }
 
   /**
-   * Generate Twitter thread
+   * Generate Twitter thread using AI
    */
   private async generateThread(
     keyPoints: string[],
     variation: number,
     brandVoice?: string
   ): Promise<string> {
-    let thread = `1/ ${keyPoints[0] || 'Thread about this topic'} 🧵\n\n`;
-    
-    keyPoints.slice(1, 6).forEach((point, i) => {
-      thread += `${i + 2}/ ${point}\n\n`;
-    });
+    const prompt = `Create an engaging Twitter/X thread (8-12 tweets).
 
-    thread += `${keyPoints.length + 1}/ That's it! Retweet if you found this helpful 🙏`;
+KEY POINTS TO COVER:
+${keyPoints.map((p, i) => `${i + 1}. ${p}`).join('\n')}
 
-    return thread;
+REQUIREMENTS:
+- Each tweet must be under 280 characters
+- Start with a hook that makes people want to read more
+- Number each tweet (1/, 2/, etc.)
+- Include 🧵 emoji on first tweet
+- Add relevant emoji throughout
+- End with a strong call-to-action (retweet if useful, follow for more, etc.)
+- Tone: ${brandVoice || 'insightful and engaging'}
+- Variation #${variation}
+
+Generate the complete thread:`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.8,
+        maxTokens: 1000
+      });
+      return response;
+    } catch (error) {
+      console.error('AI generation failed for thread, using fallback:', error);
+      let thread = `1/ ${keyPoints[0] || 'Thread'} 🧵\n\n`;
+      keyPoints.slice(1, 5).forEach((point, i) => {
+        thread += `${i + 2}/ ${point}\n\n`;
+      });
+      thread += `${keyPoints.length}/ That's it! Retweet if useful 🙏`;
+      return thread;
+    }
   }
 
   /**
-   * Generate carousel content (multi-slide)
+   * Generate carousel content (multi-slide) using AI
    */
   private async generateCarouselContent(
     keyPoints: string[],
     variation: number,
     brandVoice?: string
   ): Promise<string> {
-    let carousel = `Slide 1: ${keyPoints[0] || 'Title slide'}\n\n`;
-    
-    keyPoints.slice(1, 6).forEach((point, i) => {
-      carousel += `Slide ${i + 2}: ${point}\n\n`;
-    });
+    const prompt = `Create an Instagram carousel post (6-10 slides).
 
-    carousel += `Slide ${keyPoints.length + 1}: Swipe left to see all slides! ➡️`;
+KEY POINTS:
+${keyPoints.map((p, i) => `${i + 1}. ${p}`).join('\n')}
 
-    return carousel;
+REQUIREMENTS:
+- Slide 1: Eye-catching title/hook
+- Slides 2-8: One key point per slide (short, punchy text)
+- Last slide: Call-to-action (save, share, follow)
+- Each slide should have minimal text (3-5 lines max)
+- Include emoji for visual appeal
+- Design suggestions in [brackets]
+- Tone: ${brandVoice || 'educational and engaging'}
+- Variation #${variation}
+
+FORMAT:
+Slide 1: [TITLE]
+text here
+[design suggestion]
+
+Slide 2: [TOPIC]
+text here
+
+...continue for all slides
+
+Generate the carousel:`; 
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.7,
+        maxTokens: 800
+      });
+      return response;
+    } catch (error) {
+      console.error('AI generation failed for carousel, using fallback:', error);
+      let carousel = `Slide 1: ${keyPoints[0] || 'Title'}\n\n`;
+      keyPoints.slice(1, 5).forEach((point, i) => {
+        carousel += `Slide ${i + 2}: ${point}\n\n`;
+      });
+      carousel += `Last Slide: Save this for later! ➡️`;
+      return carousel;
+    }
   }
 
   /**
-   * Generate infographic content
+   * Generate infographic content using AI
    */
   private async generateInfographicContent(
     keyPoints: string[],
     variation: number
   ): Promise<string> {
-    let infographic = `📊 Infographic: ${keyPoints[0] || 'Visual guide'}\n\n`;
-    
-    keyPoints.slice(1, 6).forEach((point, i) => {
-      infographic += `${i + 1}. ${point}\n`;
-    });
+    const prompt = `Create content for an infographic.
 
-    infographic += `\n[Visual: Data visualization with icons and charts]`;
+KEY POINTS:
+${keyPoints.map((p, i) => `${i + 1}. ${p}`).join('\n')}
 
-    return infographic;
+REQUIREMENTS:
+- Clear, visual-friendly structure
+- Numbered or bulleted points
+- Design suggestions for each section
+- Include data visualization ideas
+- Variation #${variation}
+
+FORMAT:
+📊 INFOGRAPHIC: [Title]
+
+Section 1: [Topic]
+• Key stat or fact
+[Visual suggestion: chart type, icon, etc.]
+
+...continue for all sections
+
+Generate the infographic content:`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.7,
+        maxTokens: 600
+      });
+      return response;
+    } catch (error) {
+      console.error('AI generation failed for infographic, using fallback:', error);
+      let infographic = `📊 Infographic: ${keyPoints[0] || 'Visual guide'}\n\n`;
+      keyPoints.slice(1, 5).forEach((point, i) => {
+        infographic += `${i + 1}. ${point}\n`;
+      });
+      infographic += `\n[Visual: Data visualization with icons and charts]`;
+      return infographic;
+    }
   }
 
   /**
-   * Generate quote card content
+   * Generate quote card content using AI
    */
   private async generateQuoteContent(
     keyPoints: string[],
     variation: number,
     brandVoice?: string
   ): Promise<string> {
-    const quotes = keyPoints.filter(p => p.length < 150);
-    const quote = quotes[variation % quotes.length] || keyPoints[0] || 'Inspirational quote';
+    const prompt = `Create a powerful quote card from this content.
 
-    return `"${quote}"\n\n[Visual: Beautiful quote card with branded design]`;
+KEY INSIGHTS:
+${keyPoints.slice(0, 3).map((p, i) => `${i + 1}. ${p}`).join('\n')}
+
+REQUIREMENTS:
+- Extract or create a memorable, quotable statement
+- Should be inspiring/thought-provoking
+- 15-30 words maximum
+- Include attribution suggestion
+- Design suggestion
+- Variation #${variation}
+
+FORMAT:
+"[The quote here]"
+
+— [Attribution]
+
+[Visual suggestion: design style, colors, etc.]
+
+Generate the quote card:`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.8,
+        maxTokens: 200
+      });
+      return response;
+    } catch (error) {
+      console.error('AI generation failed for quote, using fallback:', error);
+      const quote = keyPoints[0] || 'Inspirational thought';
+      return `"${quote}"\n\n[Visual: Beautiful quote card with branded design]`;
+    }
   }
 
   /**
-   * Generate audiogram content (audio snippet)
+   * Generate audiogram content (audio snippet) using AI
    */
   private async generateAudiogramContent(
     keyPoints: string[],
     variation: number
   ): Promise<string> {
-    const point = keyPoints[variation % keyPoints.length] || 'Key insight';
+    const prompt = `Create an audiogram/audio snippet promotion.
 
-    return `🎧 Audio snippet:\n\n"${point}"\n\n[Visual: Animated waveform with captions]\n\nListen to the full episode!`;
+KEY POINTS FROM AUDIO:
+${keyPoints.slice(0, 4).map((p, i) => `${i + 1}. ${p}`).join('\n')}
+
+REQUIREMENTS:
+- Select the most engaging 30-60 second clip idea
+- Create caption/teaser text
+- Include timestamp suggestion
+- Waveform visual suggestion
+- Variation #${variation}
+
+FORMAT:
+🎧 AUDIOGRAM: [Title]
+
+Featured Quote:
+"[Most engaging snippet]"
+
+Caption: [Social media caption]
+
+[Visual: Audiogram design suggestion]
+
+Generate the audiogram:`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.7,
+        maxTokens: 400
+      });
+      return response;
+    } catch (error) {
+      console.error('AI generation failed for audiogram, using fallback:', error);
+      const point = keyPoints[variation % keyPoints.length] || 'Key insight';
+      return `🎧 Audio snippet:\n\n"${point}"\n\n[Visual: Animated waveform with captions]\n\nListen to the full episode!`;
+    }
   }
 
   /**
-   * Generate blog post
+   * Generate blog post using AI
    */
   private async generateBlogPost(
     keyPoints: string[],
     variation: number,
     brandVoice?: string
   ): Promise<{ title: string; content: string }> {
-    const title = keyPoints[0] || 'Blog post title';
-    
-    let content = `# ${title}\n\n`;
-    content += `## Introduction\n\n${keyPoints[1] || 'Opening paragraph'}\n\n`;
-    
-    keyPoints.slice(2, 6).forEach((point, i) => {
-      content += `## Point ${i + 1}\n\n${point}\n\n`;
-    });
+    const prompt = `Write a compelling blog post based on these key points.
 
-    content += `## Conclusion\n\n${keyPoints[keyPoints.length - 1] || 'Closing thoughts'}\n\n`;
-    content += `---\n\nWhat do you think? Leave a comment below!`;
+KEY POINTS:
+${keyPoints.map((p, i) => `${i + 1}. ${p}`).join('\n')}
 
-    return { title, content };
+REQUIREMENTS:
+- Engaging, SEO-friendly title
+- Hook readers in the introduction
+- Well-structured with H2 headings
+- Include practical insights and examples
+- End with a strong call-to-action
+- 400-600 words
+- Tone: ${brandVoice || 'informative and engaging'}
+- Variation #${variation}
+
+FORMAT:
+TITLE: [Blog post title]
+
+---
+
+# [Title]
+
+[Introduction paragraph - hook the reader]
+
+## [Section 1 Heading]
+[Content with insights]
+
+## [Section 2 Heading]
+[Content with examples]
+
+## [Section 3 Heading]
+[Content with practical advice]
+
+## Conclusion
+[Wrap up with key takeaways and CTA]
+
+Generate the blog post:`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.7,
+        maxTokens: 1200
+      });
+      
+      // Parse title
+      const titleMatch = response.match(/TITLE:\s*(.+?)(?:\n|---)/);
+      const title = titleMatch?.[1]?.trim() || keyPoints[0] || 'Blog Post';
+      
+      // Get content after the title line
+      const contentMatch = response.match(/---\s*([\s\S]+)/);
+      const content = contentMatch?.[1]?.trim() || response;
+      
+      return { title, content };
+    } catch (error) {
+      console.error('AI generation failed for blog post, using fallback:', error);
+      const title = keyPoints[0] || 'Blog post';
+      let content = `# ${title}\n\n`;
+      content += `## Introduction\n\n${keyPoints[1] || 'Opening'}\n\n`;
+      keyPoints.slice(2, 5).forEach((point, i) => {
+        content += `## ${point.split(' ').slice(0, 3).join(' ')}\n\n${point}\n\n`;
+      });
+      content += `## Conclusion\n\nWhat do you think? Share your thoughts!`;
+      return { title, content };
+    }
   }
 
   /**
-   * Generate generic content
+   * Generate generic content using AI
    */
   private async generateGenericContent(
     keyPoints: string[],
     variation: number,
     brandVoice?: string
   ): Promise<string> {
-    return keyPoints.slice(0, 3).join('\n\n') || 'Content generated from video';
+    const prompt = `Create engaging social media content from these key points.
+
+KEY POINTS:
+${keyPoints.slice(0, 4).map((p, i) => `${i + 1}. ${p}`).join('\n')}
+
+REQUIREMENTS:
+- Engaging and shareable
+- Include emoji for visual appeal
+- Clear call-to-action
+- Tone: ${brandVoice || 'friendly and informative'}
+- Variation #${variation}
+
+Generate the content:`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.8,
+        maxTokens: 400
+      });
+      return response;
+    } catch (error) {
+      console.error('AI generation failed for generic content, using fallback:', error);
+      return keyPoints.slice(0, 3).join('\n\n') || 'Content generated from video';
+    }
   }
 
   // ============================================================================
-  // HELPER METHODS
+  // HELPER METHODS - AI ENHANCED
   // ============================================================================
 
   /**
-   * Extract key points from transcript
+   * Extract key points from transcript using AI
+   */
+  private async extractKeyPointsWithAI(transcript: string): Promise<string[]> {
+    const prompt = `Extract 5-8 key points from this transcript.
+
+TRANSCRIPT:
+${transcript.substring(0, 2000)}
+
+REQUIREMENTS:
+- Each point should be a complete, standalone insight
+- Focus on actionable or memorable content
+- Keep each point under 100 characters
+- Prioritize the most valuable information
+
+Return as a JSON array of strings:
+["point 1", "point 2", ...]`;
+
+    try {
+      const response = await githubModels.generate(prompt, {
+        model: 'gpt-4o',
+        temperature: 0.3,
+        maxTokens: 500
+      });
+      
+      // Try to parse JSON
+      const match = response.match(/\[[\s\S]*\]/);
+      if (match) {
+        return JSON.parse(match[0]);
+      }
+      return this.extractKeyPoints(transcript);
+    } catch (error) {
+      console.error('AI key point extraction failed, using fallback:', error);
+      return this.extractKeyPoints(transcript);
+    }
+  }
+
+  /**
+   * Extract key points from transcript (fallback)
    */
   private extractKeyPoints(transcript: string): string[] {
     // Simple extraction (in production, use AI for better results)

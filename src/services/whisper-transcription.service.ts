@@ -26,11 +26,9 @@ export interface WhisperTranscriptResult {
 }
 
 class WhisperTranscriptionService {
-  private readonly openaiApiKey: string | undefined;
   private readonly tempDir: string;
 
   constructor() {
-    this.openaiApiKey = process.env.OPENAI_API_KEY;
     this.tempDir = path.join(process.cwd(), 'temp');
     
     // Create temp directory if it doesn't exist
@@ -40,10 +38,18 @@ class WhisperTranscriptionService {
   }
 
   /**
+   * Get API key dynamically (handles late dotenv loading)
+   */
+  private getApiKey(): string | undefined {
+    return process.env.OPENAI_API_KEY;
+  }
+
+  /**
    * Check if Whisper transcription is available
    */
   isAvailable(): boolean {
-    return !!this.openaiApiKey && this.openaiApiKey !== 'your_openai_api_key_here';
+    const apiKey = this.getApiKey();
+    return !!apiKey && apiKey !== 'your_openai_api_key_here';
   }
 
   /**
@@ -175,7 +181,7 @@ class WhisperTranscriptionService {
       const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.openaiApiKey}`
+          'Authorization': `Bearer ${this.getApiKey()}`
         },
         body: formData
       });
