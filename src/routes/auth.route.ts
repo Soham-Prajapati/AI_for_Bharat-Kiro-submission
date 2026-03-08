@@ -227,4 +227,31 @@ router.post('/refresh', asyncHandler(async (req: Request, res: Response) => {
   }
 }));
 
+// ============================================================================
+// POST /api/auth/reset-demo
+// Clears onboarding data so the user goes through the full flow again.
+// Used for demo recording.
+// ============================================================================
+router.post('/reset-demo', asyncHandler(async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    throw new AuthenticationError('Authorization token required');
+  }
+
+  let decoded: any;
+  try {
+    decoded = jwt.verify(authHeader.slice(7), JWT_SECRET);
+  } catch {
+    throw new AuthenticationError('Invalid or expired token');
+  }
+
+  await userStore.update(decoded.userId, {
+    domain: null as any,
+    audienceType: null as any,
+    creatorMode: null as any,
+  });
+
+  res.json({ success: true, message: 'Demo reset — onboarding cleared' });
+}));
+
 export default router;

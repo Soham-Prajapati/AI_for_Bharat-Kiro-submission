@@ -118,6 +118,33 @@ export function useAuth() {
     }
   }, [state.user, actions]);
 
+  const resetDemo = useCallback(async () => {
+    try {
+      // Reset profile on backend (clears domain/audienceType/creatorMode)
+      const token = apiClient.getAuthToken();
+      if (token) {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/reset-demo`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+      }
+    } catch {
+      // Ignore backend errors — still clear everything locally
+    }
+    // Clear ALL app localStorage
+    if (typeof window !== 'undefined') {
+      const keysToClear = [
+        'authToken', 'app_user', 'app_settings',
+        'kla_drafts', 'kla_current_draft', 'workspaceContent',
+        'kla_community_banner_dismissed', 'templateContent',
+      ];
+      keysToClear.forEach(k => localStorage.removeItem(k));
+    }
+    apiClient.auth.logout();
+    actions.logoutUser();
+    return { success: true };
+  }, [actions]);
+
   const logout = useCallback(async () => {
     try {
       apiClient.auth.logout();
@@ -145,6 +172,7 @@ export function useAuth() {
     login,
     register,
     logout,
+    resetDemo,
     updateProfile,
     saveProfile,
   };
