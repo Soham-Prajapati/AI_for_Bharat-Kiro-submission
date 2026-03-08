@@ -40,13 +40,25 @@ import safetyRoute from './routes/safety.route';
 import vernacularRoute from './routes/vernacular.route';
 import regionalRoute from './routes/regional.route';
 import uploadToResultsRoute from './routes/upload-to-results.route';
+import { sqsWorkerService } from './services/sqs-worker.service';
 import { workspaceWSServer } from './services/workspace-ws.service';
 import { createServer } from 'http';
 
 dotenv.config();
 
-// Use mock upload if AWS credentials are not configured
-const USE_MOCK_UPLOAD = !process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID === 'your_access_key_here';
+// Use mock upload if AWS credentials/S3 bucket are not configured in .env.
+const awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const s3BucketName = process.env.S3_BUCKET_NAME || process.env.S3_BUCKET;
+const placeholderAccessKeys = new Set(['your_access_key', 'your_access_key_here']);
+const placeholderSecretKeys = new Set(['your_secret_key', 'your_secret_key_here']);
+
+const USE_MOCK_UPLOAD =
+  !awsAccessKeyId ||
+  !awsSecretAccessKey ||
+  !s3BucketName ||
+  placeholderAccessKeys.has(awsAccessKeyId) ||
+  placeholderSecretKeys.has(awsSecretAccessKey);
 
 const app = express();
 const server = createServer(app);
@@ -134,6 +146,9 @@ if (require.main === module) {
     // Initialize WebSocket server
     workspaceWSServer.initialize(server);
     console.log(`🔌 WebSocket server ready at ws://localhost:${PORT}/ws/workspace`);
+
+    // Start asynchronous SQS worker for processing jobs.
+    sqsWorkerService.startPolling();
   });
 }
 

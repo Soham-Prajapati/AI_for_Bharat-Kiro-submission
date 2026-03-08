@@ -26,10 +26,10 @@ router.post('/', upload.single('file'), asyncHandler(async (req: Request, res: R
   const { originalname, mimetype, buffer, size } = req.file;
   const userId = req.body.userId || 'anonymous';
   const sanitizedFilename = sanitizeFilename(originalname);
-  const key = `${userId}/${Date.now()}-${sanitizedFilename}`;
 
   try {
-    const result = await s3Service.upload(buffer, key, mimetype);
+    // Upload to S3 with a unique key and return both S3 + CloudFront URLs.
+    const result = await s3Service.uploadMedia(buffer, sanitizedFilename, mimetype, `uploads/${userId}`);
 
     res.json({
       success: true,
@@ -38,7 +38,10 @@ router.post('/', upload.single('file'), asyncHandler(async (req: Request, res: R
       mimeType: mimetype,
       size,
       userId,
-      url: result.url,
+      // Frontend should consume CDN URL for optimized delivery.
+      url: result.cdnUrl,
+      cdnUrl: result.cdnUrl,
+      s3Url: result.s3Url,
       uploadedAt: new Date().toISOString()
     });
   } catch (error: any) {

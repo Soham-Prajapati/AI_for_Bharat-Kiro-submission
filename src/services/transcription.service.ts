@@ -24,7 +24,7 @@ export class TranscribeService {
         LanguageCode: languageCode as any, // AWS SDK type issue
         Media: { MediaFileUri: fileUri },
         MediaFormat: 'mp4',
-        OutputBucketName: process.env.AWS_S3_BUCKET
+        OutputBucketName: process.env.S3_BUCKET_NAME || process.env.S3_BUCKET
       });
 
       await client.send(command);
