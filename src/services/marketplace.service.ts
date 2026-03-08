@@ -113,6 +113,28 @@ export class MarketplaceService {
   private purchases: Map<string, Set<string>> = new Map(); // buyerId -> Set of itemIds
   private listings: Map<string, MarketplaceListing> = new Map();
 
+  constructor() {
+    this.seedListings();
+  }
+
+  private seedListings() {
+    const seeds: MarketplaceListing[] = [
+      { listingId: 'seed-1', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'Viral Travel Vlog Script', description: 'Ready-to-use travel vlog script with hooks, B-roll cues & CTAs. Tested on 50K+ views.', category: 'script', price: 0, currency: 'INR', license: 'personal', tags: ['travel', 'vlog', 'viral'], rating: 4.8, reviewCount: 124, salesCount: 340, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { listingId: 'seed-2', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'Food Recipe Reel Template', description: 'Instagram Reels template for food creators — swipe format with voiceover guide.', category: 'template', price: 199, currency: 'INR', license: 'personal', tags: ['food', 'reels', 'instagram'], rating: 4.9, reviewCount: 89, salesCount: 210, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { listingId: 'seed-3', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'EdTech Explainer Video Pack', description: 'Script + thumbnail template for educational YouTube videos. Used by top Indian EdTech creators.', category: 'template', price: 0, currency: 'INR', license: 'commercial', tags: ['education', 'youtube', 'explainer'], rating: 4.7, reviewCount: 203, salesCount: 510, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { listingId: 'seed-4', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'Business Pitch LinkedIn Script', description: 'Proven LinkedIn video script format for B2B creators and founders. 3x engagement uplift.', category: 'script', price: 299, currency: 'INR', license: 'commercial', tags: ['business', 'linkedin', 'pitch'], rating: 4.6, reviewCount: 67, salesCount: 145, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { listingId: 'seed-5', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'Lifestyle Morning Routine Template', description: 'Full-day-in-life and morning routine YouTube template with timestamps and transitions guide.', category: 'template', price: 0, currency: 'INR', license: 'personal', tags: ['lifestyle', 'youtube', 'routine'], rating: 4.5, reviewCount: 156, salesCount: 390, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { listingId: 'seed-6', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'Tech Review YouTube Script', description: 'Gadget & tech review script with intro hook, specs breakdown, pros/cons & affiliate CTA sections.', category: 'script', price: 199, currency: 'INR', license: 'personal', tags: ['tech', 'review', 'youtube'], rating: 4.8, reviewCount: 98, salesCount: 275, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { listingId: 'seed-7', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'Health & Fitness TikTok Pack', description: '10 ready-to-shoot TikTok hooks for fitness coaches + workout challenge format guide.', category: 'template', price: 149, currency: 'INR', license: 'personal', tags: ['health', 'fitness', 'tiktok'], rating: 4.7, reviewCount: 72, salesCount: 189, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { listingId: 'seed-8', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'Podcast Intro & Outro Scripts', description: 'Professional podcast intro/outro script templates for 5 different styles (interview, solo, news).', category: 'script', price: 0, currency: 'INR', license: 'commercial', tags: ['podcast', 'audio', 'intro'], rating: 4.9, reviewCount: 44, salesCount: 122, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { listingId: 'seed-9', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'Travel Thumbnail Preset Pack', description: 'Lightroom & Canva preset pack for travel thumbnails — 5 color grades used by 100K+ YouTubers.', category: 'preset', price: 249, currency: 'INR', license: 'personal', tags: ['travel', 'thumbnail', 'design'], rating: 4.6, reviewCount: 133, salesCount: 420, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { listingId: 'seed-10', sellerId: 'kla-team', sellerName: 'KLA Team', title: 'Viral Hook Formula Sheet', description: 'A one-page formula sheet with 40+ proven viral hook structures across YouTube, Instagram & TikTok.', category: 'template', price: 0, currency: 'INR', license: 'commercial', tags: ['viral', 'hooks', 'all-platforms'], rating: 5.0, reviewCount: 312, salesCount: 890, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    ];
+    for (const listing of seeds) {
+      this.listings.set(listing.listingId, listing);
+    }
+  }
+
   /**
    * List an item for sale
    */

@@ -10,26 +10,44 @@ import {
   VideoMetadata 
 } from '../types/upload-to-results';
 import { contentMultiplierV2Service, ContentPiece } from './content-multiplier-v2.service';
+import { bedrockContentService } from './bedrock-content.service';
 
 export interface GeneratePlatformContentRequest {
   transcript: string;
   keyPoints: string[];
   metadata: VideoMetadata;
   platforms: Platform[];
+  domain?: string;
 }
 
 export class PlatformContentGeneratorV2 {
   /**
    * Generate content for all requested platforms in parallel
-   * Uses Promise.allSettled to handle failures gracefully
-   * Integrates Content Multiplier V2 service for enhanced content generation
+   * Primary: AWS Bedrock Claude agents (domain-aware, parallel)
+   * Fallback: Content Multiplier V2 → basic templates
    */
   async generatePlatformContent(
     request: GeneratePlatformContentRequest
   ): Promise<Record<string, PlatformContent>> {
-    const { transcript, keyPoints, metadata, platforms } = request;
-    
-    // Try to use Content Multiplier V2 service first for enhanced content
+    const { transcript, keyPoints, metadata, platforms, domain } = request;
+
+    // Primary: AWS Bedrock domain-aware parallel agents
+    try {
+      const available = await bedrockContentService.checkAvailability();
+      if (available) {
+        const bedrockResult = await bedrockContentService.generateContent({
+          transcript, keyPoints, metadata, platforms, domain,
+        });
+        if (bedrockResult && Object.keys(bedrockResult).filter(k => k !== 'analytics').length > 0) {
+          console.log('Successfully generated content using Bedrock agents');
+          return bedrockResult;
+        }
+      }
+    } catch (error: any) {
+      console.warn('Bedrock generation failed, falling back to Content Multiplier V2:', error?.message || error);
+    }
+
+    // Fallback: Content Multiplier V2
     try {
       const multiplierResult = await this.generateWithContentMultiplier(
         transcript,
@@ -37,8 +55,6 @@ export class PlatformContentGeneratorV2 {
         metadata,
         platforms
       );
-      
-      // If Content Multiplier V2 succeeded, use its results
       if (multiplierResult && Object.keys(multiplierResult).length > 0) {
         console.log('Successfully generated content using Content Multiplier V2');
         return multiplierResult;
@@ -46,10 +62,11 @@ export class PlatformContentGeneratorV2 {
     } catch (error) {
       console.warn('Content Multiplier V2 failed, falling back to basic generation:', error);
     }
-    
-    // Fallback to basic generation if Content Multiplier V2 fails
+
+    // Final fallback
     return this.generateWithBasicMethod(transcript, keyPoints, metadata, platforms);
   }
+
 
   /**
    * Generate content using Content Multiplier V2 service

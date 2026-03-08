@@ -1,5 +1,8 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { randomUUID } from 'crypto';
 import { S3Service } from '../services/s3.service';
 import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError, AWSError } from '../types/errors';
@@ -8,6 +11,10 @@ import { videoURLProcessor } from '../services/video-url-processor.service';
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 100 * 1024 * 1024 } });
 const s3Service = new S3Service();
+
+// Ensure uploads directory exists
+const UPLOADS_DIR = path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 // Sanitize filename to prevent path traversal and special characters
 const sanitizeFilename = (filename: string): string => {
@@ -27,8 +34,8 @@ router.post('/', upload.single('file'), asyncHandler(async (req: Request, res: R
   const userId = req.body.userId || 'anonymous';
   const sanitizedFilename = sanitizeFilename(originalname);
 
+  // Try S3 first, fall back to local disk storage
   try {
-    // Upload to S3 with a unique key and return both S3 + CloudFront URLs.
     const result = await s3Service.uploadMedia(buffer, sanitizedFilename, mimetype, `uploads/${userId}`);
 
     res.json({
@@ -38,17 +45,35 @@ router.post('/', upload.single('file'), asyncHandler(async (req: Request, res: R
       mimeType: mimetype,
       size,
       userId,
-      // Frontend should consume CDN URL for optimized delivery.
       url: result.cdnUrl,
       cdnUrl: result.cdnUrl,
       s3Url: result.s3Url,
       uploadedAt: new Date().toISOString()
     });
-  } catch (error: any) {
-    if (error instanceof AWSError) {
-      throw error;
-    }
-    throw new AWSError(error.message || 'Upload failed', 'S3');
+  } catch (s3Error: any) {
+    // S3 failed — save to local disk and continue pipeline
+    console.warn(`S3 upload failed (${s3Error.message}), falling back to local storage`);
+
+    const userDir = path.join(UPLOADS_DIR, userId);
+    if (!fs.existsSync(userDir)) fs.mkdirSync(userDir, { recursive: true });
+
+    const uniqueKey = `uploads/${userId}/${Date.now()}-${randomUUID().slice(0, 8)}-${sanitizedFilename}`;
+    const localPath = path.join(UPLOADS_DIR, userId, `${Date.now()}-${randomUUID().slice(0, 8)}-${sanitizedFilename}`);
+
+    fs.writeFileSync(localPath, buffer);
+
+    res.json({
+      success: true,
+      fileId: uniqueKey,
+      fileName: sanitizedFilename,
+      mimeType: mimetype,
+      size,
+      userId,
+      url: `http://localhost:3001/uploads/${userId}/${path.basename(localPath)}`,
+      localPath,
+      storageType: 'local',
+      uploadedAt: new Date().toISOString()
+    });
   }
 }));
 

@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import path from 'path';
 import { logger } from './middleware/logger.middleware';
 import { requestIdMiddleware } from './middleware/requestId.middleware';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
@@ -14,6 +15,7 @@ import uploadRoute from './routes/upload.route';
 import uploadRouteMock from './routes/upload.route.mock';
 import processRoute from './routes/process.route';
 import generateRoute from './routes/generate.route';
+import ideateRoute from './routes/ideate.route';
 import authRoute from './routes/auth.route';
 import dnaRoute from './routes/dna.route';
 import analyticsRoute from './routes/analytics.route';
@@ -40,6 +42,10 @@ import safetyRoute from './routes/safety.route';
 import vernacularRoute from './routes/vernacular.route';
 import regionalRoute from './routes/regional.route';
 import uploadToResultsRoute from './routes/upload-to-results.route';
+import youtubeOAuthRoute from './routes/youtube-oauth.route';
+import socialOAuthRoute from './routes/social-oauth.route';
+import contentRefineRouter from './routes/content-refine.route';
+import draftsRouter from './routes/drafts.route';
 import { sqsWorkerService } from './services/sqs-worker.service';
 import { workspaceWSServer } from './services/workspace-ws.service';
 import { createServer } from 'http';
@@ -88,6 +94,9 @@ app.use(cors({
 
 app.use(express.json({ limit: '10mb' }));
 
+// Serve locally uploaded files (fallback when S3 is unavailable)
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 // Request tracking
 app.use(requestIdMiddleware);
 app.use(logger);
@@ -104,6 +113,7 @@ if (USE_MOCK_UPLOAD) {
 app.use('/api/upload-to-results', uploadToResultsRoute);
 app.use('/api/process', processRoute);
 app.use('/api/generate', generateRoute);
+app.use('/api/ideate', ideateRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/dna', dnaRoute);
 app.use('/api/analytics', analyticsRoute);
@@ -129,6 +139,10 @@ app.use('/api/multiply-v2', multiplyV2Route);
 app.use('/api/safety', safetyRoute);
 app.use('/api/vernacular', vernacularRoute);
 app.use('/api/regional', regionalRoute);
+app.use('/api/youtube-oauth', youtubeOAuthRoute);
+app.use('/api/social-oauth', socialOAuthRoute);
+app.use('/api/content', contentRefineRouter);
+app.use('/api/drafts', draftsRouter);
 
 // Health check
 app.get('/health', (req, res) => {

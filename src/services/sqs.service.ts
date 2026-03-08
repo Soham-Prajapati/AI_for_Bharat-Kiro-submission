@@ -17,6 +17,7 @@ export interface ProcessingJobPayload {
   platforms?: string[];
   localPath?: string;
   url?: string;
+  domain?: string;  // user profile domain — passed to Bedrock agents
 }
 
 class SQSService {
