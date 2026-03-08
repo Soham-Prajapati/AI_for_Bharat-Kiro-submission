@@ -3,6 +3,7 @@ import { processingPipeline } from './processing-pipeline.service';
 import { videoMetadataService } from './video-metadata.service';
 import { mockTranscriptService } from './mock-transcript.service';
 import { awsTranscribeService } from './aws-transcribe.service';
+import { openAIWhisperService } from './openai-whisper.service';
 import { awsRekognitionService, RekognitionLabelInsight } from './aws-rekognition.service';
 import { awsConfig, toS3Uri } from '../config/aws';
 import { PlatformContentGeneratorV2 } from './platform-content-generator-v2.service';
@@ -162,9 +163,27 @@ class ProcessingJobProcessorService {
         }
       }
 
+      // Whisper fallback: for media files that failed Transcribe and aren't plain text
+      if (!transcriptResult && isMediaFile && openAIWhisperService.isConfigured()) {
+        await processingPipeline.updateJob(jobId, {
+          currentStep: 'Transcribing with OpenAI Whisper (fallback)...',
+        });
+
+        const whisperPath = metadata.localPath || localPath || '';
+        try {
+          const whisperResult = await openAIWhisperService.transcribeLocalFile(whisperPath, fileId);
+          transcriptResult = whisperResult;
+        } catch (error: any) {
+          logger.warn('OpenAI Whisper fallback failed', {
+            jobId,
+            error: error?.message || String(error),
+          });
+        }
+      }
+
       if (!transcriptResult) {
         if (isMediaFile) {
-          throw new Error('Real transcription failed for media file. Configure AWS Transcribe correctly to get actual results.');
+          throw new Error('Transcription failed: AWS Transcribe and OpenAI Whisper both unavailable. Check service configuration.');
         }
 
         throw new Error('No transcript content available for non-media input.');

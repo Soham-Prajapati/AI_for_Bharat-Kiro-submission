@@ -14,6 +14,17 @@ export interface S3UploadResult {
 }
 
 const ALLOWED_EXTENSIONS = ['.mp4', '.mov', '.avi', '.mp3', '.wav', '.txt', '.json'];
+const ALLOWED_MIME_TYPES = [
+  'video/mp4',
+  'video/quicktime',
+  'video/x-msvideo',
+  'video/webm',
+  'audio/mpeg',
+  'audio/wav',
+  'audio/x-m4a',
+  'text/plain',
+  'application/json',
+];
 
 export class S3Service {
   private client: S3Client | null;
@@ -56,10 +67,17 @@ export class S3Service {
     return `${prefix}/${Date.now()}-${randomUUID().slice(0, 8)}-${safeName}`;
   }
 
-  private validateKey(key: string): void {
+  private validateKey(key: string, mimeType?: string): void {
     const ext = key.substring(key.lastIndexOf('.'));
-    if (!ALLOWED_EXTENSIONS.includes(ext.toLowerCase())) {
-      throw new ValidationError('Invalid file extension');
+    const normalizedExt = ext.toLowerCase();
+    const normalizedMimeType = (mimeType || '').toLowerCase();
+
+    const hasAllowedExtension = ALLOWED_EXTENSIONS.includes(normalizedExt)
+      || ['.m4a', '.webm'].includes(normalizedExt);
+    const hasAllowedMimeType = normalizedMimeType.length > 0 && ALLOWED_MIME_TYPES.includes(normalizedMimeType);
+
+    if (!hasAllowedExtension && !hasAllowedMimeType) {
+      throw new ValidationError('Invalid file extension or MIME type');
     }
     if (key.includes('..') || key.includes('//')) {
       throw new ValidationError('Invalid file path');
@@ -68,7 +86,7 @@ export class S3Service {
 
   async upload(file: Buffer, key: string, mimeType: string): Promise<S3UploadResult> {
     try {
-      this.validateKey(key);
+      this.validateKey(key, mimeType);
       const client = this.getClient();
       const bucket = this.getBucketName();
 

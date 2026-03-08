@@ -284,7 +284,7 @@ export default function IterationA() {
       <IndiaCoverage />
 
       {/* ══════════ TESTIMONIALS ══════════ */}
-      <TestimonialsSection variant="dark" />
+      <TestimonialsSection theme="indigo" />
 
       {/* ══════════ PRICING ══════════ */}
       <PricingStripSection />

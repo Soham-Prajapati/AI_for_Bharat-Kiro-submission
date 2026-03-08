@@ -268,6 +268,11 @@ export interface AuthResponse {
   email: string;
   name?: string;
   token: string;
+  accessToken?: string;
+  refreshToken?: string;
+  domain?: string;
+  audienceType?: string;
+  creatorMode?: string;
   createdAt?: string;
   loginAt?: string;
 }

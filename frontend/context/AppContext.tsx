@@ -12,6 +12,10 @@ export interface User {
   email: string;
   avatar?: string;
   subscription: 'free' | 'pro' | 'enterprise';
+  domain?: string;
+  audienceType?: string;
+  creatorMode?: string;
+  onboardingComplete?: boolean;
   preferences: {
     emailNotifications: boolean;
     pushNotifications: boolean;
@@ -254,7 +258,21 @@ function appReducer(state: AppState, action: AppAction): AppState {
 interface AppContextValue {
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
-  actions: typeof actionCreators;
+  actions: {
+    setUser: (user: User) => void;
+    logoutUser: () => void;
+    setContentItems: (items: ContentItem[]) => void;
+    addContentItem: (item: ContentItem) => void;
+    updateContentItem: (id: string, updates: Partial<ContentItem>) => void;
+    deleteContentItem: (id: string) => void;
+    setCurrentItem: (item: ContentItem | null) => void;
+    setGenerationStatus: (status: GenerationStatus | null) => void;
+    updateSettings: (settings: Partial<Settings>) => void;
+    setLoading: (loading: boolean) => void;
+    setError: (error: string) => void;
+    clearError: () => void;
+  };
+  hydrated: boolean;
 }
 
 const AppContext = createContext<AppContextValue | undefined>(undefined);
@@ -369,34 +387,64 @@ interface AppProviderProps {
 }
 
 export function AppProvider({ children }: AppProviderProps): JSX.Element {
-  // Load persisted state
-  const persistedUser = loadFromStorage<User | null>(STORAGE_KEYS.USER, null);
-  const persistedSettings = loadFromStorage<Settings>(STORAGE_KEYS.SETTINGS, initialSettings);
+  const [hydrated, setHydrated] = React.useState(false);
 
+  // Always start with empty state (works on both server and client)
   const [state, dispatch] = useReducer(appReducer, {
     ...initialState,
-    user: persistedUser,
-    settings: persistedSettings,
+    user: null,
+    settings: initialSettings,
   });
+
+  // On first client render: restore from localStorage and mark hydrated
+  useEffect(() => {
+    const persistedUser = loadFromStorage<User | null>(STORAGE_KEYS.USER, null);
+    const persistedSettings = loadFromStorage<Settings>(STORAGE_KEYS.SETTINGS, initialSettings);
+    if (persistedUser) {
+      dispatch({ type: ActionType.SET_USER, payload: persistedUser });
+    }
+    dispatch({ type: ActionType.UPDATE_SETTINGS, payload: persistedSettings });
+    setHydrated(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Persist user to localStorage
   useEffect(() => {
+    if (!hydrated) return;
     if (state.user) {
       saveToStorage(STORAGE_KEYS.USER, state.user);
     } else {
       removeFromStorage(STORAGE_KEYS.USER);
     }
-  }, [state.user]);
+  }, [state.user, hydrated]);
 
   // Persist settings to localStorage
   useEffect(() => {
+    if (!hydrated) return;
     saveToStorage(STORAGE_KEYS.SETTINGS, state.settings);
-  }, [state.settings]);
+  }, [state.settings, hydrated]);
+
+  // Dispatch-bound actions (so consumers don't need to call dispatch manually)
+  const boundActions = React.useMemo(() => ({
+    setUser: (user: User) => dispatch({ type: ActionType.SET_USER, payload: user }),
+    logoutUser: () => dispatch({ type: ActionType.LOGOUT_USER }),
+    setContentItems: (items: ContentItem[]) => dispatch({ type: ActionType.SET_CONTENT_ITEMS, payload: items }),
+    addContentItem: (item: ContentItem) => dispatch({ type: ActionType.ADD_CONTENT_ITEM, payload: item }),
+    updateContentItem: (id: string, updates: Partial<ContentItem>) => dispatch({ type: ActionType.UPDATE_CONTENT_ITEM, payload: { id, updates } }),
+    deleteContentItem: (id: string) => dispatch({ type: ActionType.DELETE_CONTENT_ITEM, payload: id }),
+    setCurrentItem: (item: ContentItem | null) => dispatch({ type: ActionType.SET_CURRENT_ITEM, payload: item }),
+    setGenerationStatus: (status: GenerationStatus | null) => dispatch({ type: ActionType.SET_GENERATION_STATUS, payload: status }),
+    updateSettings: (settings: Partial<Settings>) => dispatch({ type: ActionType.UPDATE_SETTINGS, payload: settings }),
+    setLoading: (loading: boolean) => dispatch({ type: ActionType.SET_LOADING, payload: loading }),
+    setError: (error: string) => dispatch({ type: ActionType.SET_ERROR, payload: error }),
+    clearError: () => dispatch({ type: ActionType.CLEAR_ERROR }),
+  }), [dispatch]);
 
   const contextValue: AppContextValue = {
     state,
     dispatch,
-    actions: actionCreators,
+    actions: boundActions,
+    hydrated,
   };
 
   return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
