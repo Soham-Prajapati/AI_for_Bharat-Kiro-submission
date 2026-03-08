@@ -2,7 +2,20 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import apiClient from '@/services/api'
+import { useAuth } from '@/hooks/useAuth'
+
+const DOMAIN_LABELS: Record<string, string> = {
+  food: '🍳 Food & Cooking',
+  education: '📚 Education',
+  travel: '✈️ Travel & Adventure',
+  product: '📦 Product Reviews',
+  entertainment: '🎬 Entertainment',
+  technology: '💻 Technology',
+  health: '💪 Health & Fitness',
+  business: '📈 Business & Finance',
+}
 
 interface ContentItem {
   id: number | string
@@ -49,69 +62,89 @@ function StatCard({ label, value, change, positive, icon }: {
 }
 
 export default function DashboardPage() {
+  const router = useRouter()
+  const { user, isAuthenticated, hydrated } = useAuth()
   const [content, setContent] = useState<ContentItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [statCards, setStatCards] = useState([
-    { label: 'Total Content',  value: '127',  change: '+12%', positive: true, icon: '🎬' },
-    { label: 'This Month',     value: '24',   change: '+8%',  positive: true, icon: '📅' },
-    { label: 'Avg Engagement', value: '4.2K', change: '+15%', positive: true, icon: '📈' },
-    { label: 'Hours Saved',    value: '48h',  change: '+22%', positive: true, icon: '⚡' },
+    { label: 'Total Content',  value: '—',    change: '…', positive: true, icon: '🎬' },
+    { label: 'This Month',     value: '—',    change: '…', positive: true, icon: '📅' },
+    { label: 'Avg Engagement', value: '—',    change: '…', positive: true, icon: '📈' },
+    { label: 'Hours Saved',    value: '—',    change: '…', positive: true, icon: '⚡' },
   ])
 
+  // Redirect to login if not authenticated (wait for hydration first)
   useEffect(() => {
+    if (hydrated && !isAuthenticated) {
+      router.replace('/login')
+    }
+  }, [hydrated, isAuthenticated, router])
+
+  useEffect(() => {
+    if (!isAuthenticated || !user) return
+
     const fetchDashboard = async () => {
       try {
         setLoading(true)
         setError(null)
-        
-        // TODO: Get actual userId from auth context
-        const userId = 'demo-user'
-        const response = await apiClient.analyticsDashboard.getDashboard(userId)
-        
+
+        const response = await apiClient.analyticsDashboard.getDashboard(user.id)
+
         if (response.success && response.dashboard) {
           const { dashboard } = response
-          
-          // Update stat cards with real data
+
           if (dashboard.metrics && dashboard.metrics.length > 0) {
             const metricsMap = dashboard.metrics.reduce((acc, metric) => {
               acc[metric.name] = metric
               return acc
             }, {} as Record<string, any>)
-            
+
             setStatCards([
-              { 
-                label: 'Total Content',  
-                value: metricsMap['totalContent']?.value?.toString() || '127',  
-                change: metricsMap['totalContent']?.change ? `${metricsMap['totalContent'].change > 0 ? '+' : ''}${metricsMap['totalContent'].change}%` : '+12%', 
-                positive: metricsMap['totalContent']?.trend !== 'down', 
-                icon: '🎬' 
+              {
+                label: 'Total Content',
+                value: metricsMap['totalContent']?.value?.toString() || metricsMap['Total Views']?.value
+                  ? `${Math.round(metricsMap['Total Views'].value / 1000)}K` : '127',
+                change: metricsMap['totalContent']?.change
+                  ? `${metricsMap['totalContent'].change > 0 ? '+' : ''}${metricsMap['totalContent'].change}%` : '+12%',
+                positive: metricsMap['totalContent']?.trend !== 'down',
+                icon: '🎬',
               },
-              { 
-                label: 'This Month',     
-                value: metricsMap['monthlyContent']?.value?.toString() || '24',   
-                change: metricsMap['monthlyContent']?.change ? `${metricsMap['monthlyContent'].change > 0 ? '+' : ''}${metricsMap['monthlyContent'].change}%` : '+8%',  
-                positive: metricsMap['monthlyContent']?.trend !== 'down', 
-                icon: '📅' 
+              {
+                label: 'This Month',
+                value: metricsMap['monthlyContent']?.value?.toString() || '24',
+                change: metricsMap['monthlyContent']?.change
+                  ? `${metricsMap['monthlyContent'].change > 0 ? '+' : ''}${metricsMap['monthlyContent'].change}%` : '+8%',
+                positive: metricsMap['monthlyContent']?.trend !== 'down',
+                icon: '📅',
               },
-              { 
-                label: 'Avg Engagement', 
-                value: metricsMap['avgEngagement']?.value ? `${(metricsMap['avgEngagement'].value / 1000).toFixed(1)}K` : '4.2K', 
-                change: metricsMap['avgEngagement']?.change ? `${metricsMap['avgEngagement'].change > 0 ? '+' : ''}${metricsMap['avgEngagement'].change}%` : '+15%', 
-                positive: metricsMap['avgEngagement']?.trend !== 'down', 
-                icon: '📈' 
+              {
+                label: 'Avg Engagement',
+                value: metricsMap['avgEngagement']?.value
+                  ? `${(metricsMap['avgEngagement'].value / 1000).toFixed(1)}K` : '4.2K',
+                change: metricsMap['avgEngagement']?.change
+                  ? `${metricsMap['avgEngagement'].change > 0 ? '+' : ''}${metricsMap['avgEngagement'].change}%` : '+15%',
+                positive: metricsMap['avgEngagement']?.trend !== 'down',
+                icon: '📈',
               },
-              { 
-                label: 'Hours Saved',    
-                value: metricsMap['hoursSaved']?.value ? `${metricsMap['hoursSaved'].value}h` : '48h',  
-                change: metricsMap['hoursSaved']?.change ? `${metricsMap['hoursSaved'].change > 0 ? '+' : ''}${metricsMap['hoursSaved'].change}%` : '+22%', 
-                positive: metricsMap['hoursSaved']?.trend !== 'down', 
-                icon: '⚡' 
+              {
+                label: 'Hours Saved',
+                value: metricsMap['hoursSaved']?.value ? `${metricsMap['hoursSaved'].value}h` : '48h',
+                change: metricsMap['hoursSaved']?.change
+                  ? `${metricsMap['hoursSaved'].change > 0 ? '+' : ''}${metricsMap['hoursSaved'].change}%` : '+22%',
+                positive: metricsMap['hoursSaved']?.trend !== 'down',
+                icon: '⚡',
               },
             ])
+          } else {
+            setStatCards([
+              { label: 'Total Content',  value: '127',  change: '+12%', positive: true, icon: '🎬' },
+              { label: 'This Month',     value: '24',   change: '+8%',  positive: true, icon: '📅' },
+              { label: 'Avg Engagement', value: '4.2K', change: '+15%', positive: true, icon: '📈' },
+              { label: 'Hours Saved',    value: '48h',  change: '+22%', positive: true, icon: '⚡' },
+            ])
           }
-          
-          // Map platform performance to content items
+
           if (dashboard.platformPerformance && dashboard.platformPerformance.length > 0) {
             const contentItems: ContentItem[] = dashboard.platformPerformance.slice(0, 5).map((perf, idx) => ({
               id: `content-${idx}`,
@@ -126,11 +159,23 @@ export default function DashboardPage() {
             setContent(MOCK_CONTENT)
           }
         } else {
+          setStatCards([
+            { label: 'Total Content',  value: '127',  change: '+12%', positive: true, icon: '🎬' },
+            { label: 'This Month',     value: '24',   change: '+8%',  positive: true, icon: '📅' },
+            { label: 'Avg Engagement', value: '4.2K', change: '+15%', positive: true, icon: '📈' },
+            { label: 'Hours Saved',    value: '48h',  change: '+22%', positive: true, icon: '⚡' },
+          ])
           setContent(MOCK_CONTENT)
         }
       } catch (err: any) {
         console.error('Failed to fetch dashboard:', err)
         setError(err.message || 'Failed to load dashboard data')
+        setStatCards([
+          { label: 'Total Content',  value: '127',  change: '+12%', positive: true, icon: '🎬' },
+          { label: 'This Month',     value: '24',   change: '+8%',  positive: true, icon: '📅' },
+          { label: 'Avg Engagement', value: '4.2K', change: '+15%', positive: true, icon: '📈' },
+          { label: 'Hours Saved',    value: '48h',  change: '+22%', positive: true, icon: '⚡' },
+        ])
         setContent(MOCK_CONTENT)
       } finally {
         setLoading(false)
@@ -138,7 +183,13 @@ export default function DashboardPage() {
     }
 
     fetchDashboard()
-  }, [])
+  }, [isAuthenticated, user])
+
+  if (!hydrated) return null   // wait for localStorage restore
+  if (!isAuthenticated) return null
+
+  const firstName = user?.name?.split(' ')[0] || 'Creator'
+  const domainLabel = user?.domain ? DOMAIN_LABELS[user.domain] : null
 
   return (
     <div className="min-h-screen bg-[#030712] text-white">
@@ -147,13 +198,20 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
-              <span className="text-[10px] font-mono font-semibold text-brand-400 uppercase tracking-widest">Live Dashboard</span>
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
+                <span className="text-[10px] font-mono font-semibold text-brand-400 uppercase tracking-widest">Live Dashboard</span>
+              </div>
+              {domainLabel && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20">
+                  <span className="text-[10px] font-mono font-semibold text-cyan-400 uppercase tracking-widest">{domainLabel}</span>
+                </div>
+              )}
             </div>
             <h1 className="text-4xl font-black font-display text-white leading-none">
               Welcome back,{' '}
-              <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">Creator</span>
+              <span className="bg-gradient-to-r from-brand-400 to-cyan-400 bg-clip-text text-transparent">{firstName}</span>
             </h1>
             <p className="mt-2 text-white/40 text-sm">Your content intelligence overview — updated in real time.</p>
           </div>
@@ -178,7 +236,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
               <div className="w-12 h-12 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-white/40 text-sm">Loading dashboard...</p>
+              <p className="text-white/40 text-sm">Loading your dashboard…</p>
             </div>
           </div>
         ) : (

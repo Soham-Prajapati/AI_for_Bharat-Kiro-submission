@@ -45,6 +45,9 @@ router.post('/', upload.single('file'), asyncHandler(async (req: Request, res: R
       uploadedAt: new Date().toISOString()
     });
   } catch (error: any) {
+    if (error instanceof AWSError) {
+      throw error;
+    }
     throw new AWSError(error.message || 'Upload failed', 'S3');
   }
 }));

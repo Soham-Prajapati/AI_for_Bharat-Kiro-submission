@@ -3,7 +3,7 @@ import { useAppContext, User } from '@/context/AppContext';
 import apiClient from '@/services/api';
 
 export function useAuth() {
-  const { state, actions } = useAppContext();
+  const { state, actions, hydrated } = useAppContext();
 
   const login = useCallback(async (email: string, password: string) => {
     try {
@@ -12,12 +12,20 @@ export function useAuth() {
 
       const response = await apiClient.auth.login({ email, password });
 
+      // Set JWT so all subsequent API calls are authenticated
+      const token = response.token || response.accessToken;
+      if (token) apiClient.setAuthToken(token);
+
       const user: User = {
         id: response.userId,
-        name: response.name || 'User',
+        name: response.name || 'Creator',
         email: response.email,
         avatar: undefined,
         subscription: 'free',
+        domain: response.domain || undefined,
+        audienceType: response.audienceType || undefined,
+        creatorMode: response.creatorMode || undefined,
+        onboardingComplete: !!response.domain,
         preferences: {
           emailNotifications: true,
           pushNotifications: true,
@@ -26,8 +34,7 @@ export function useAuth() {
       };
 
       actions.setUser(user);
-
-      return { success: true };
+      return { success: true, user };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Login failed';
       actions.setError(message);
@@ -44,12 +51,16 @@ export function useAuth() {
 
       const response = await apiClient.auth.register({ name, email, password });
 
+      const token = response.token || response.accessToken;
+      if (token) apiClient.setAuthToken(token);
+
       const user: User = {
         id: response.userId,
-        name: response.name || 'User',
+        name: response.name || name,
         email: response.email,
         avatar: undefined,
         subscription: 'free',
+        onboardingComplete: false,
         preferences: {
           emailNotifications: true,
           pushNotifications: true,
@@ -58,8 +69,7 @@ export function useAuth() {
       };
 
       actions.setUser(user);
-
-      return { success: true };
+      return { success: true, user };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Registration failed';
       actions.setError(message);
@@ -69,30 +79,34 @@ export function useAuth() {
     }
   }, [actions]);
 
-  const logout = useCallback(async () => {
-    try {
-      actions.setLoading(true);
-      apiClient.auth.logout();
-      actions.logoutUser();
-      return { success: true };
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Logout failed';
-      actions.setError(message);
-      return { success: false, error: message };
-    } finally {
-      actions.setLoading(false);
-    }
-  }, [actions]);
-
-  const updateProfile = useCallback(async (updates: Partial<User>) => {
+  const saveProfile = useCallback(async (updates: {
+    domain?: string;
+    audienceType?: string;
+    creatorMode?: string;
+    name?: string;
+  }) => {
     if (!state.user) return { success: false, error: 'Not authenticated' };
 
     try {
       actions.setLoading(true);
       actions.clearError();
 
-      // Update local state immediately for better UX
-      actions.setUser({ ...state.user, ...updates });
+      // Call backend to persist profile
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/profile`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiClient.getAuthToken()}`,
+        },
+        body: JSON.stringify(updates),
+      });
+
+      const updatedUser: User = {
+        ...state.user,
+        ...updates,
+        onboardingComplete: true,
+      };
+      actions.setUser(updatedUser);
 
       return { success: true };
     } catch (error) {
@@ -104,14 +118,34 @@ export function useAuth() {
     }
   }, [state.user, actions]);
 
+  const logout = useCallback(async () => {
+    try {
+      apiClient.auth.logout();
+      actions.logoutUser();
+      return { success: true };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Logout failed';
+      actions.setError(message);
+      return { success: false, error: message };
+    }
+  }, [actions]);
+
+  const updateProfile = useCallback(async (updates: Partial<User>) => {
+    if (!state.user) return { success: false, error: 'Not authenticated' };
+    actions.setUser({ ...state.user, ...updates });
+    return { success: true };
+  }, [state.user, actions]);
+
   return {
     user: state.user,
     isAuthenticated: !!state.user,
+    hydrated,
     loading: state.loading,
     error: state.error,
     login,
     register,
     logout,
     updateProfile,
+    saveProfile,
   };
 }

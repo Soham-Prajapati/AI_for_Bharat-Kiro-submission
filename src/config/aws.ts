@@ -13,6 +13,7 @@ export interface AWSConfig {
   accessKeyId?: string;
   secretAccessKey?: string;
   region?: string;
+  rekognitionRegion?: string;
   s3BucketName?: string;
   dynamoDBTablePrefix?: string;
   sqsQueueUrl?: string;
@@ -24,6 +25,7 @@ export const awsConfig: AWSConfig = {
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_REGION,
+  rekognitionRegion: process.env.AWS_REKOGNITION_REGION,
   s3BucketName: process.env.S3_BUCKET_NAME || process.env.S3_BUCKET,
   dynamoDBTablePrefix: process.env.AWS_DYNAMODB_TABLE_PREFIX || 'content-platform',
   sqsQueueUrl: process.env.AWS_SQS_QUEUE_URL,
@@ -81,14 +83,22 @@ export const getS3Client = (): S3Client => {
 
 export const getTranscribeClient = (): TranscribeClient => {
   if (!transcribeClientInstance) {
-    transcribeClientInstance = new TranscribeClient(requireBaseAWSConfig());
+    const baseConfig = requireBaseAWSConfig();
+    transcribeClientInstance = new TranscribeClient({
+      ...baseConfig,
+      region: process.env.AWS_TRANSCRIBE_REGION || baseConfig.region,
+    });
   }
   return transcribeClientInstance;
 };
 
 export const getRekognitionClient = (): RekognitionClient => {
   if (!rekognitionClientInstance) {
-    rekognitionClientInstance = new RekognitionClient(requireBaseAWSConfig());
+    const baseConfig = requireBaseAWSConfig();
+    rekognitionClientInstance = new RekognitionClient({
+      ...baseConfig,
+      region: awsConfig.rekognitionRegion || baseConfig.region,
+    });
   }
   return rekognitionClientInstance;
 };
