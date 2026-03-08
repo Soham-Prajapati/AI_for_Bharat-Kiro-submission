@@ -114,7 +114,6 @@ class ProcessingJobProcessorService {
         currentStep: 'Generating transcript',
       });
 
-      const transcriptContextHint = [fileName, metadata.fileName, url].filter(Boolean).join(' ');
       let transcriptResult: { transcript: string; keyPoints: string[]; wordCount: number } | null = null;
 
       const isMediaFile = (mimeType || metadata.mimeType || '').startsWith('video/') ||
@@ -164,11 +163,11 @@ class ProcessingJobProcessorService {
       }
 
       if (!transcriptResult) {
-        transcriptResult = mockTranscriptService.generateTranscript(
-          fileId,
-          fileName || metadata.fileName,
-          transcriptContextHint
-        );
+        if (isMediaFile) {
+          throw new Error('Real transcription failed for media file. Configure AWS Transcribe correctly to get actual results.');
+        }
+
+        throw new Error('No transcript content available for non-media input.');
       }
 
       const finalTranscript = transcriptResult;
