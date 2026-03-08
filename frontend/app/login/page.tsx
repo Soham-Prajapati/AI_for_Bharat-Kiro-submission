@@ -135,10 +135,6 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-
-        <p className="text-center text-xs text-white/20 mt-4 font-mono">
-          New here? <Link href="/register" className="text-white/40 hover:text-white/60 transition-colors">Register first →</Link>
-        </p>
       </div>
     </div>
   )

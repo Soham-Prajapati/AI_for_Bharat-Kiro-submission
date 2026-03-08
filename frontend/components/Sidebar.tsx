@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import { useAuth } from '@/hooks/useAuth'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: '📊' },
@@ -15,6 +16,11 @@ const navigation = [
 export default function Sidebar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
+  const { user, isAuthenticated } = useAuth()
+
+  const displayName = user?.name || 'Guest'
+  const displayEmail = user?.email || ''
+  const initials = displayName.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase() || 'G'
 
   return (
     <aside className={`fixed left-0 top-0 h-screen bg-bg-elevated border-r border-border-subtle transition-all duration-200 z-50 ${collapsed ? 'w-16' : 'w-64'}`}>
@@ -61,20 +67,22 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* User Section */}
-      <div className="absolute bottom-0 left-0 right-0 p-2 border-t border-border-subtle">
-        <button className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-bg-overlay transition-colors w-full text-left">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
-            U
-          </div>
-          {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-text-primary truncate">User</div>
-              <div className="text-xs text-text-tertiary truncate">user@email.com</div>
+      {/* User Section — only show when authenticated */}
+      {isAuthenticated && (
+        <div className="absolute bottom-0 left-0 right-0 p-2 border-t border-border-subtle">
+          <button className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-bg-overlay transition-colors w-full text-left">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
+              {initials}
             </div>
-          )}
-        </button>
-      </div>
+            {!collapsed && (
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-text-primary truncate">{displayName}</div>
+                <div className="text-xs text-text-tertiary truncate">{displayEmail}</div>
+              </div>
+            )}
+          </button>
+        </div>
+      )}
     </aside>
   )
 }
