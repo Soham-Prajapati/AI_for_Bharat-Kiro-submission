@@ -772,7 +772,7 @@ export default function UploadPage() {
                   {draftSaved ? '✓ Saved' : '💾 Save to Workspace'}
                 </button>
                 <button
-                  onClick={() => router.push('/workspace')}
+                  onClick={() => { saveDraft(); }}
                   className="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-lg text-sm font-semibold transition-colors"
                 >
                   Open Workspace ↗
