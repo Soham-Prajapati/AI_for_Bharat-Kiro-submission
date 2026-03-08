@@ -110,6 +110,8 @@ export interface Analytics {
   estimatedEngagement: number;
   contentQualityScore: number;
   viralPotential: number;
+  detectedDomain?: string;
+  domainConfidence?: number;
 }
 
 // ============================================================================

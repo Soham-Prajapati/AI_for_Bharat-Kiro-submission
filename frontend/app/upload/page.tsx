@@ -30,7 +30,7 @@ const TARGET_PLATFORMS: Platform[] = [
 ]
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
-const PROCESS_TIMEOUT_MS = 45000
+const PROCESS_TIMEOUT_MS = 120000 // 2 minutes - AI processing takes time
 
 export default function UploadPage() {
   const router = useRouter()
@@ -83,7 +83,7 @@ export default function UploadPage() {
       })
     } catch (error: any) {
       if (error?.name === 'AbortError') {
-        throw new Error('Generation timed out after 45s. Please verify backend is running on port 3001 and retry.')
+        throw new Error('Generation timed out after 2 minutes. The AI services may be slow. Try uploading a shorter video or check backend logs.')
       }
       throw error
     } finally {
