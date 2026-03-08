@@ -3,15 +3,9 @@ import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { getBedrockClient } from '../config/aws';
 import { GitHubModelsService } from '../services/github-models.service';
+import { BEDROCK_MODELS, PLATFORM_MODEL } from '../config/bedrock-models';
 
 const router = Router();
-
-const SONNET = 'anthropic.claude-3-5-sonnet-20241022-v2:0';
-const HAIKU  = 'anthropic.claude-3-haiku-20240307-v1:0';
-const PLATFORM_MODEL: Record<string, string> = {
-  youtube: SONNET, linkedin: SONNET, blog: SONNET, podcast: SONNET,
-  instagram: HAIKU, tiktok: HAIKU, twitter: HAIKU,
-};
 
 const DOMAIN_SYSTEM: Record<string, string> = {
   technology:    'You are a tech content expert for Indian developers and tech enthusiasts.',
@@ -107,7 +101,7 @@ Respond with ONLY the refined content - no preamble, no explanations.`;
 
   const domainKey = (domain || 'general').toLowerCase();
   const systemPersona = DOMAIN_SYSTEM[domainKey] || DOMAIN_SYSTEM.general;
-  const modelId = PLATFORM_MODEL[platform.toLowerCase()] || HAIKU;
+  const modelId = PLATFORM_MODEL[platform.toLowerCase()] || BEDROCK_MODELS.HAIKU_3;
 
   let refinedContent: string;
   let usedEngine = 'bedrock';

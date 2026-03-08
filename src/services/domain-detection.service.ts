@@ -1,4 +1,5 @@
 import { GitHubModelsService } from './github-models.service';
+import { safeParseJSON } from '../utils/json';
 
 interface DomainResult {
   domain: string;
@@ -31,8 +32,7 @@ Respond in JSON format:
         temperature: 0.3
       });
 
-      const result = JSON.parse(response);
-      return result;
+      return safeParseJSON<DomainResult>(response);
     } catch (error) {
       console.error('Domain detection failed:', error);
       return {
@@ -56,7 +56,7 @@ Return only a JSON array of keywords: ["keyword1", "keyword2", ...]`;
         temperature: 0.3
       });
 
-      return JSON.parse(response);
+      return safeParseJSON(response);
     } catch (error) {
       console.error('Keyword extraction failed:', error);
       return [];
@@ -80,7 +80,7 @@ Respond in JSON format:
         temperature: 0.3
       });
 
-      return JSON.parse(response);
+      return safeParseJSON(response);
     } catch (error) {
       console.error('Sentiment analysis failed:', error);
       return { sentiment: 'neutral', score: 0 };

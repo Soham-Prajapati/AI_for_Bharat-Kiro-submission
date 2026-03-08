@@ -11,6 +11,9 @@ import {
 } from '../types/upload-to-results';
 import { contentMultiplierV2Service, ContentPiece } from './content-multiplier-v2.service';
 import { bedrockContentService } from './bedrock-content.service';
+import { GitHubModelsService } from './github-models.service';
+
+const githubModels = new GitHubModelsService();
 
 export interface GeneratePlatformContentRequest {
   transcript: string;
@@ -47,7 +50,18 @@ export class PlatformContentGeneratorV2 {
       console.warn('Bedrock generation failed, falling back to Content Multiplier V2:', error?.message || error);
     }
 
-    // Fallback: Content Multiplier V2
+    // Fallback 1: GitHub Models (GPT-4o) — real AI, per-platform parallel calls
+    try {
+      const ghResult = await this.generateWithGitHubModels(transcript, keyPoints, metadata, platforms, domain);
+      if (ghResult && Object.keys(ghResult).filter(k => k !== 'analytics').length > 0) {
+        console.log('Successfully generated content using GitHub Models (GPT-4o)');
+        return ghResult;
+      }
+    } catch (error: any) {
+      console.warn('GitHub Models generation failed, falling back to Content Multiplier V2:', error?.message || error);
+    }
+
+    // Fallback 2: Content Multiplier V2
     try {
       const multiplierResult = await this.generateWithContentMultiplier(
         transcript,
@@ -67,6 +81,221 @@ export class PlatformContentGeneratorV2 {
     return this.generateWithBasicMethod(transcript, keyPoints, metadata, platforms);
   }
 
+
+  /**
+   * Generate platform-specific content using GitHub Models (GPT-4o).
+   * This is the AI fallback when Bedrock is unavailable.
+   * Each platform gets its own focused prompt and runs in parallel.
+   */
+  private async generateWithGitHubModels(
+    transcript: string,
+    keyPoints: string[],
+    metadata: VideoMetadata,
+    platforms: Platform[],
+    domain?: string
+  ): Promise<Record<string, PlatformContent>> {
+    const kp = keyPoints.slice(0, 5).join(' | ');
+    const excerpt = transcript.substring(0, 900);
+    const topic = metadata.fileName?.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ') || 'content';
+    const domainCtx = domain && domain !== 'General' ? `Domain/niche: ${domain}.` : '';
+
+    const systemBase = `You are an expert Indian content strategist. ${domainCtx}
+The creator's content is about: "${topic}"
+Key insights from transcript: ${kp}
+Transcript excerpt: ${excerpt}
+
+IMPORTANT: Generate ORIGINAL, specific content based on the above. Do NOT echo the transcript back. Do NOT use generic placeholders. Write content the creator can actually use today.`;
+
+    const platformPrompts: Partial<Record<Platform, { prompt: string; maxTokens: number }>> = {
+      youtube: {
+        maxTokens: 1400,
+        prompt: `${systemBase}
+
+Generate a complete YouTube content pack. Return ONLY valid JSON:
+{
+  "hook": "A powerful 2-3 sentence spoken hook for the first 30 seconds. Start with a surprising question or bold claim that makes viewers unable to click away. Be specific to the topic.",
+  "title": "SEO-optimised YouTube title under 70 chars with a power word. Specific and compelling.",
+  "titleAlternatives": ["second strong title option", "third strong title option"],
+  "description": "A complete 200-word YouTube description. Open with a punchy value statement, list 3 specific things viewers will learn, add timestamps placeholder, include relevant keywords naturally, end with a subscribe CTA.",
+  "chapters": [
+    {"time": "0:00", "title": "Hook & what we're covering"},
+    {"time": "1:30", "title": "First key insight"},
+    {"time": "3:00", "title": "Second key insight"},
+    {"time": "4:30", "title": "Practical takeaway"},
+    {"time": "5:30", "title": "Wrap-up"}
+  ],
+  "tags": ["specific-tag-1", "specific-tag-2", "specific-tag-3", "specific-tag-4", "specific-tag-5", "specific-tag-6", "specific-tag-7", "specific-tag-8", "specific-tag-9", "specific-tag-10"],
+  "thumbnailConcept": "Describe the thumbnail: exact visual, text overlay (max 5 words), and emotional expression to maximise CTR"
+}`,
+      },
+
+      instagram: {
+        maxTokens: 800,
+        prompt: `${systemBase}
+
+Generate a complete Instagram content pack. Return ONLY valid JSON:
+{
+  "hook": "On-screen text for the first 3 seconds of the reel. Max 8 words. Shocking, curiosity-gap, or bold. Specific to the topic.",
+  "caption": "Full Instagram caption: bold hook line, 3-4 value sentences with relevant emojis, line breaks for readability, strong CTA (save/follow/comment). Under 150 words. Be specific, not generic.",
+  "hashtags": ["#india", "#travel", "#reels", "#trending", "#viral", "#explore", "#reelsinstagram", "#instareels", "#indiancreator", "#contentcreator", "#insta", "#instagood", "#reelsvideo", "#instadaily", "#fyp", "#reelsindia", "#indiatravel", "#travelreels", "#travelblogger", "#wanderlust"],
+  "reelConcept": "A specific 3-act reel structure: Hook (0-3s: exact visual/text), Content (3-25s: specific beats to show), Payoff (25-30s: reveal + CTA)",
+  "coverConcept": "Instagram cover concept: dominant colour, bold text overlay (3-5 words), visual that communicates topic instantly"
+}`,
+      },
+
+      tiktok: {
+        maxTokens: 700,
+        prompt: `${systemBase}
+
+Generate TikTok content. Return ONLY valid JSON:
+{
+  "hook": "First 3 seconds on-screen text. Max 8 words. Controversial, surprising, or a bold statement to stop scrolling. Specific to this topic.",
+  "caption": "TikTok caption under 120 chars. Punchy with 2-3 relevant emojis.",
+  "hashtags": ["#fyp", "#foryou", "#foryoupage", "#viral", "#trending", "#india", "#tiktokindia", "#tiktoktrend", "#explore", "#learnontiktok"],
+  "videoStructure": "Specific scene-by-scene TikTok structure: Hook (0-3s exact visual), Core content (3-45s: 3-4 punchy beats to film), Payoff (45-60s: surprising end or CTA)",
+  "soundSuggestion": "Specific audio style that amplifies this content (e.g. trending beat genre, voiceover only, emotional piano, etc.)"
+}`,
+      },
+
+      linkedin: {
+        maxTokens: 1000,
+        prompt: `${systemBase}
+
+Generate a LinkedIn post. Return ONLY valid JSON:
+{
+  "headline": "One bold sentence to stop scrolling. A strong claim, contrarian take, or specific number. This is the FIRST line of the post — not a title.",
+  "post": "Full LinkedIn post (160-200 words): Start with the headline, blank line, then 3-4 insight paragraphs with blank lines between each. Conversational but professional. End with a direct question to drive comments.",
+  "hashtags": ["#india", "#growth", "#career", "#learning", "#leadership"],
+  "keyInsight": "The single most shareable insight in 1-2 punchy sentences — the thing people screenshot"
+}`,
+      },
+
+      twitter: {
+        maxTokens: 900,
+        prompt: `${systemBase}
+
+Generate a Twitter/X thread. Return ONLY valid JSON:
+{
+  "hook": "Opening tweet under 280 chars. Bold claim or surprising question that makes people click 'read more'. Specific, not generic.",
+  "thread": [
+    "Tweet 2: expand the hook with the context people need (under 280 chars)",
+    "Tweet 3: the surprising insight or counter-intuitive point (under 280 chars)",
+    "Tweet 4: specific actionable tip anyone can use today (under 280 chars)",
+    "Tweet 5: real-world example or mini-story to make it concrete (under 280 chars)",
+    "Tweet 6: the broader implication — why this matters now (under 280 chars)"
+  ],
+  "cta": "Final tweet: engaging question + follow for more CTA (under 280 chars)"
+}`,
+      },
+
+      blog: {
+        maxTokens: 1200,
+        prompt: `${systemBase}
+
+Generate a blog post structure. Return ONLY valid JSON:
+{
+  "title": "SEO blog title 60-70 chars with primary keyword. Specific and promise-driven.",
+  "metaDescription": "Meta description under 155 chars: clear value + keyword + subtle CTA",
+  "outline": [
+    "Introduction: open with a relatable problem or surprising fact",
+    "Section 1: first key concept explained simply with an example",
+    "Section 2: step-by-step practical application",
+    "Section 3: common mistakes and how to avoid them",
+    "Conclusion: the one key takeaway + next steps for the reader"
+  ],
+  "intro": "Opening 2 paragraphs: start with a relatable problem or a surprising statistic. Then establish why this matters and what the reader will walk away with.",
+  "cta": "End-of-post call to action that feels natural and valuable, not salesy"
+}`,
+      },
+
+      podcast: {
+        maxTokens: 1200,
+        prompt: `${systemBase}
+
+Generate a podcast episode pack. Return ONLY valid JSON:
+{
+  "episodeTitle": "Episode title that makes listeners click play. Specific, curiosity-driven, promises a clear outcome.",
+  "intro": "A 45-second warm spoken intro script. Greet the audience, tease the episode's key insight, explain why it matters today. Conversational, not corporate. Write it as spoken words.",
+  "segments": [
+    {"title": "Opening story", "description": "Specific relatable hook story or question that sets up the core problem", "duration": "3-4 min"},
+    {"title": "Core teaching", "description": "Main insight broken into 2-3 digestible points with real examples", "duration": "8-10 min"},
+    {"title": "Practical framework", "description": "Actionable steps the listener can apply immediately after this episode", "duration": "6-8 min"},
+    {"title": "Real example or Q&A", "description": "A real-world case study or listener question that makes the lesson concrete", "duration": "4-5 min"}
+  ],
+  "outro": "30-second outro: summarise the ONE key takeaway, ask listeners to subscribe/share/review, tease what's coming next episode"
+}`,
+      },
+    };
+
+    const targetPlatforms = platforms.filter(p => p !== 'analytics' && platformPrompts[p]);
+
+    const settled = await Promise.allSettled(
+      targetPlatforms.map(async (p) => {
+        const cfg = platformPrompts[p]!;
+        const raw = await githubModels.generate(cfg.prompt, { model: 'gpt-4o', temperature: 0.75, maxTokens: cfg.maxTokens });
+        const start = raw.indexOf('{');
+        const end = raw.lastIndexOf('}');
+        if (start === -1 || end <= start) throw new Error(`No JSON in response for ${p}`);
+        const data = JSON.parse(raw.substring(start, end + 1));
+        return { platform: p, data };
+      })
+    );
+
+    const result: Record<string, PlatformContent> = {};
+
+    for (const outcome of settled) {
+      if (outcome.status === 'rejected') {
+        console.warn('GitHub Models: platform agent failed:', outcome.reason?.message || outcome.reason);
+        continue;
+      }
+      const { platform: p, data } = outcome.value;
+      result[p] = this.mapGitHubResponseToContent(p, data);
+    }
+
+    if (platforms.includes('analytics')) {
+      const wordCount = transcript.split(/\s+/).length;
+      result.analytics = {
+        platform: 'analytics',
+        content: JSON.stringify({ wordCount, keyTopics: keyPoints.slice(0, 5) }, null, 2),
+        metadata: { wordCount, keyTopics: keyPoints.slice(0, 5) },
+      };
+    }
+
+    if (Object.keys(result).filter(k => k !== 'analytics').length === 0) {
+      throw new Error('GitHub Models: all platform agents failed');
+    }
+    return result;
+  }
+
+  private mapGitHubResponseToContent(platform: Platform, data: Record<string, any>): PlatformContent {
+    switch (platform) {
+      case 'youtube':
+        return { platform: 'youtube', title: data.title, content: data.description || data.hook, hashtags: data.tags,
+          metadata: { hook: data.hook, titleAlternatives: data.titleAlternatives, description: data.description, chapters: data.chapters, thumbnailConcept: data.thumbnailConcept } };
+      case 'instagram':
+        return { platform: 'instagram', content: data.caption, hashtags: data.hashtags,
+          metadata: { hook: data.hook, caption: data.caption, reelConcept: data.reelConcept, coverConcept: data.coverConcept } };
+      case 'tiktok':
+        return { platform: 'tiktok', content: data.caption, hashtags: data.hashtags,
+          metadata: { hook: data.hook, videoStructure: data.videoStructure, soundSuggestion: data.soundSuggestion } };
+      case 'linkedin':
+        return { platform: 'linkedin', title: data.headline, content: data.post, hashtags: data.hashtags,
+          metadata: { headline: data.headline, keyInsight: data.keyInsight } };
+      case 'twitter': {
+        const tweets = [data.hook, ...(data.thread || []), data.cta].filter(Boolean);
+        return { platform: 'twitter', content: tweets.join('\n\n'),
+          metadata: { hook: data.hook, thread: data.thread, cta: data.cta, tweets } };
+      }
+      case 'blog':
+        return { platform: 'blog', title: data.title, content: data.intro,
+          metadata: { metaDescription: data.metaDescription, outline: data.outline, intro: data.intro, cta: data.cta } };
+      case 'podcast':
+        return { platform: 'podcast', title: data.episodeTitle, content: data.intro, script: data.intro,
+          metadata: { episodeTitle: data.episodeTitle, intro: data.intro, segments: data.segments, outro: data.outro } };
+      default:
+        return { platform, content: JSON.stringify(data) };
+    }
+  }
 
   /**
    * Generate content using Content Multiplier V2 service
