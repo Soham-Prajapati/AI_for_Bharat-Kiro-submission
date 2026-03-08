@@ -90,14 +90,14 @@ function calcViralScore(text: string): number {
 // ── India Map (real geographic data from Natural Earth GeoJSON) ──────────
 function IndiaMap({ isDark }: { isDark: boolean }) {
   const cityColor = isDark ? '#818CF8' : '#4F46E5'
-  // City positions mapped to Natural Earth coordinate system (viewBox 0 0 500 492)
+  // City positions mapped to Natural Earth coordinate system (viewBox 0 0 500 515, includes PoK)
   const cities = [
-    { name: 'Delhi', x: 158, y: 122, r: 4 },
-    { name: 'Mumbai', x: 87, y: 280, r: 3.5 },
-    { name: 'Chennai', x: 209, y: 379, r: 3 },
-    { name: 'Kolkata', x: 343, y: 222, r: 3 },
-    { name: 'Bengaluru', x: 165, y: 381, r: 3 },
-    { name: 'Hyderabad', x: 179, y: 308, r: 3 },
+    { name: 'Delhi', x: 158, y: 145, r: 4 },
+    { name: 'Mumbai', x: 87, y: 303, r: 3.5 },
+    { name: 'Chennai', x: 209, y: 402, r: 3 },
+    { name: 'Kolkata', x: 343, y: 245, r: 3 },
+    { name: 'Bengaluru', x: 165, y: 404, r: 3 },
+    { name: 'Hyderabad', x: 179, y: 331, r: 3 },
   ]
   return (
     <div className="relative w-full h-full max-w-[300px]">
@@ -113,7 +113,7 @@ function IndiaMap({ isDark }: { isDark: boolean }) {
         }}
       />
       {/* City dots overlay */}
-      <svg viewBox="0 0 500 492" fill="none" className="absolute inset-0 w-full h-full">
+      <svg viewBox="0 0 500 515" fill="none" className="absolute inset-0 w-full h-full">
         {cities.map((city, i) => (
           <g key={i}>
             <circle cx={city.x} cy={city.y} r={city.r + 8} fill={cityColor} opacity="0.08">
@@ -343,14 +343,9 @@ export default function IterationF() {
       <nav className={`sticky top-0 z-50 ${t.navBg} backdrop-blur-xl border-b ${t.navBorder}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
           <button onClick={handleLogoClick} className="relative flex items-center gap-0 outline-none group">
-            <span className="font-black text-xl tracking-[-0.05em] flex items-baseline" style={{ lineHeight: 1 }}>
-              <span className="text-orange-500 relative">
-                क
-                {/* Connecting matra line */}
-                <span className="absolute top-[1px] right-[-6px] w-[10px] h-[2.5px] bg-orange-500 rounded-full" />
-              </span>
-              <span className={isDark ? 'text-white' : 'text-gray-900'}>L</span>
-              <span className={isDark ? 'text-white' : 'text-gray-900'}>A</span>
+            <span className="font-black text-2xl tracking-tight flex items-center" style={{ lineHeight: 1, gap: '1px' }}>
+              <span className="text-orange-500" style={{ fontFamily: 'system-ui, sans-serif' }}>क</span>
+              <span className={isDark ? 'text-white' : 'text-gray-900'} style={{ fontFamily: 'Outfit, system-ui, sans-serif', marginLeft: '-2px' }}>LA</span>
             </span>
             {logoClicks > 0 && (
               <span className="absolute -top-0.5 -right-2 w-1.5 h-1.5 rounded-full bg-orange-400 animate-ping" />
@@ -397,7 +392,7 @@ export default function IterationF() {
 
             <div className="relative overflow-visible" style={{ minHeight: 'clamp(7rem, 20vw, 16rem)' }}>
               <h1
-                className="font-black leading-[1.15] tracking-tight"
+                className="font-black leading-[1.3] tracking-tight"
                 style={{
                   fontSize: 'clamp(3rem, 9vw, 7rem)',
                   transition: 'opacity 0.5s ease, transform 0.5s ease, filter 0.3s ease',
@@ -405,8 +400,8 @@ export default function IterationF() {
                   transform: fadeState === 'fading-out' ? 'translateY(20px)' : fadeState === 'fading-in' ? 'translateY(0)' : 'translateY(0)',
                   filter: fadeState === 'fading-out' ? 'blur(6px)' : 'blur(0)',
                 }}>
-                <span className={`block pb-1 ${t.text}`}>{currentHeroLang.line1}</span>
-                <span className="block pb-1 bg-gradient-to-r from-orange-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+                <span className={`block pb-2 ${t.text}`} style={{ paddingTop: '0.15em', paddingBottom: '0.15em' }}>{currentHeroLang.line1}</span>
+                <span className="block bg-gradient-to-r from-orange-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent" style={{ paddingTop: '0.1em', paddingBottom: '0.2em' }}>
                   {currentHeroLang.line2}
                 </span>
               </h1>
