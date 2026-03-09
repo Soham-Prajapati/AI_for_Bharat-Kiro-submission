@@ -368,14 +368,8 @@ router.post('/group/:id/leave', asyncHandler(async (req: Request, res: Response)
 router.get('/user/:id', asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const user = communityService.getUser(id);
-
-  if (!user) {
-    return res.status(404).json({
-      success: false,
-      error: 'User not found'
-    });
-  }
+  // Auto-create a default profile if the user hasn't joined the community yet
+  const user = communityService.getUser(id) || communityService.upsertUser({ id });
 
   res.json({
     success: true,
