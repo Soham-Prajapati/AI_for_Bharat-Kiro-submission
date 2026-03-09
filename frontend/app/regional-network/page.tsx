@@ -87,8 +87,9 @@ export default function RegionalNetworkPage() {
 
   const handleSendRequest = async (message: string, collabType: string) => {
     try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       // Try backend directly; silently succeed even if unavailable
-      await fetch('http://localhost:3001/api/regional/collab-request', {
+      await fetch(`${apiBase}/api/regional/collab-request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ toCreatorId: selectedCreator?.id, message, collabType }),
