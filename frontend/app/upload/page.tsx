@@ -31,7 +31,9 @@ const TARGET_PLATFORMS: Platform[] = [
 ]
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
-const PROCESS_TIMEOUT_MS = 120000 // 2 minutes - AI processing takes time
+const PROCESS_TIMEOUT_MS = 300000 // 5 minutes - AI processing takes time (16MB+ files need AWS Transcribe + Rekognition + 8-platform generation)
+const UPLOAD_SESSION_KEY = 'kla_upload_session'
+const SESSION_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
 interface FullResults {
   platforms: Record<string, PlatformContent>
@@ -66,15 +68,50 @@ const DOMAIN_AGENTS: Record<string, { name: string; emoji: string; description: 
   general:       { name: 'Content Strategy Agent',    emoji: '✦',  description: 'Broad Indian content strategist — platform algorithms, creator trends, and viral frameworks.',    model: 'Claude 3.5 Sonnet' },
 }
 
+// ── Processing pipeline stages shown during upload ─────────────────────────
+const UPLOAD_STAGES = [
+  {
+    id: 'analyze',
+    label: 'Analyzing content',
+    sub: 'Reading file metadata and validating input',
+    icon: '🔍',
+  },
+  {
+    id: 'transcribe',
+    label: 'Recognizing script',
+    sub: 'Transcribing audio and detecting language',
+    icon: '🎙️',
+  },
+  {
+    id: 'domain',
+    label: 'Detecting domain',
+    sub: 'Activating the right niche AI agent',
+    icon: '🧠',
+  },
+  {
+    id: 'generate',
+    label: 'Generating content',
+    sub: 'Writing platform-optimised scripts in parallel',
+    icon: '⚡',
+  },
+  {
+    id: 'virality',
+    label: 'Scoring virality',
+    sub: 'Computing hook strength, trends and reach',
+    icon: '📈',
+  },
+]
+
 export default function UploadPage() {
   const router = useRouter()
   const { user, isAuthenticated, hydrated } = useAuth()
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null)
   const [youtubeUrl, setYoutubeUrl] = useState('')
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
-  const [processingStep, setProcessingStep] = useState('')
+  const [currentStageIndex, setCurrentStageIndex] = useState(-1)
   const [generatedContent, setGeneratedContent] = useState<Record<string, PlatformContent> | null>(null)
   const [fullResults, setFullResults] = useState<FullResults | null>(null)
   const [showAllHooks, setShowAllHooks] = useState(false)
@@ -97,7 +134,10 @@ export default function UploadPage() {
   // Extract a thumbnail from the uploaded video file using HTML5 canvas
   useEffect(() => {
     if (!selectedFile || !selectedFile.type.startsWith('video/')) {
-      setVideoThumbnail(null)
+      // Don't wipe a restored thumbnail — only clear if there's no persisted one
+      if (selectedFile === null) {
+        // check localStorage before nuking — restore effect runs first via hydration guard
+      }
       return
     }
     const url = URL.createObjectURL(selectedFile)
@@ -141,8 +181,77 @@ export default function UploadPage() {
     if (hydrated && !isAuthenticated) router.replace('/login')
   }, [hydrated, isAuthenticated, router])
 
+  // ── Restore session from localStorage on mount ───────────────────────────
+  useEffect(() => {
+    if (!hydrated) return
+    try {
+      const raw = localStorage.getItem(UPLOAD_SESSION_KEY)
+      if (!raw) return
+      const s = JSON.parse(raw)
+      if (!s.savedAt || Date.now() - new Date(s.savedAt).getTime() > SESSION_TTL_MS) {
+        localStorage.removeItem(UPLOAD_SESSION_KEY)
+        return
+      }
+      if (s.generatedContent) setGeneratedContent(s.generatedContent)
+      if (s.fullResults)      setFullResults(s.fullResults)
+      if (s.savedTranscript)  setSavedTranscript(s.savedTranscript)
+      if (s.videoThumbnail)   setVideoThumbnail(s.videoThumbnail)
+      if (s.iterationNumber)  setIterationNumber(s.iterationNumber)
+      if (s.activeAgent !== undefined) setActiveAgent(s.activeAgent)
+      if (s.ideaText)         setIdeaText(s.ideaText)
+      if (s.ideaTone)         setIdeaTone(s.ideaTone)
+      if (s.viralData)        setViralData(s.viralData)
+      if (s.youtubeUrl)       setYoutubeUrl(s.youtubeUrl)
+      if (s.uploadedFileName) setUploadedFileName(s.uploadedFileName)
+    } catch { /* ignore parse errors */ }
+  }, [hydrated]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Auto-save session whenever key results change ────────────────────────
+  useEffect(() => {
+    if (!hydrated) return
+    if (!generatedContent && !ideaText && !youtubeUrl && !uploadedFileName) return
+    try {
+      localStorage.setItem(UPLOAD_SESSION_KEY, JSON.stringify({
+        generatedContent,
+        fullResults,
+        savedTranscript,
+        videoThumbnail,
+        iterationNumber,
+        activeAgent,
+        ideaText,
+        ideaTone,
+        viralData,
+        youtubeUrl,
+        uploadedFileName,
+        savedAt: new Date().toISOString(),
+      }))
+    } catch { /* quota exceeded or private mode */ }
+  }, [hydrated, generatedContent, fullResults, savedTranscript, videoThumbnail, iterationNumber, activeAgent, ideaText, ideaTone, viralData, youtubeUrl, uploadedFileName]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Clear all upload state + localStorage ────────────────────────────────
+  const clearUploadSession = () => {
+    setSelectedFile(null)
+    setUploadedFileName(null)
+    setYoutubeUrl('')
+    setGeneratedContent(null)
+    setFullResults(null)
+    setSavedTranscript('')
+    setVideoThumbnail(null)
+    setIterationNumber(1)
+    setActiveAgent(null)
+    setIdeaText('')
+    setIdeaTone('energetic')
+    setViralData(null)
+    setUploadProgress(0)
+    setCurrentStageIndex(-1)
+    setError(null)
+    setDraftSaved(false)
+    localStorage.removeItem(UPLOAD_SESSION_KEY)
+  }
+
   const handleFileSelect = (file: File) => {
     setSelectedFile(file)
+    setUploadedFileName(file.name)
     setYoutubeUrl('')
     setUploadProgress(0)
     setError(null)
@@ -151,7 +260,7 @@ export default function UploadPage() {
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setYoutubeUrl(e.target.value)
-    if (e.target.value) setSelectedFile(null)
+    if (e.target.value) { setSelectedFile(null); setUploadedFileName(null) }
     setUploadProgress(0)
     setError(null)
     setGeneratedContent(null)
@@ -198,9 +307,20 @@ export default function UploadPage() {
       const progress: number = job.progress || 0
       const step: string = job.currentStep || ''
 
-      // Update UI with live progress
-      if (step) setProcessingStep(step)
-      if (progress > 0) setUploadProgress(Math.min(70 + Math.round(progress * 0.25), 94))
+      // Update UI with live progress — map backend step string → stage index
+      if (step) {
+        const s = step.toLowerCase()
+        if (s.includes('transcrib') || s.includes('speech') || s.includes('audio')) {
+          setCurrentStageIndex(1)
+        } else if (s.includes('domain') || s.includes('agent') || s.includes('niche')) {
+          setCurrentStageIndex(2)
+        } else if (s.includes('generat') || s.includes('content') || s.includes('platform')) {
+          setCurrentStageIndex(3)
+        } else if (s.includes('viral') || s.includes('scor') || s.includes('analyz')) {
+          setCurrentStageIndex(4)
+        }
+      }
+      if (progress > 0) setUploadProgress(Math.min(60 + Math.round(progress * 0.35), 94))
 
       if (status === 'completed') break
       if (status === 'failed') {
@@ -209,7 +329,7 @@ export default function UploadPage() {
     }
 
     if (Date.now() >= deadline) {
-      throw new Error('Generation timed out after 2 minutes. Try uploading a shorter video.')
+      throw new Error('Generation timed out after 5 minutes. Try uploading a shorter video.')
     }
 
     // Step 3: Fetch the results
@@ -229,15 +349,16 @@ export default function UploadPage() {
     setIsUploading(true)
     setError(null)
     setGeneratedContent(null)
-    setUploadProgress(10)
+    setCurrentStageIndex(0)
+    setUploadProgress(8)
     setActiveAgent(user?.domain || 'general')
 
     try {
-      setProcessingStep('Understanding your idea…')
-      setUploadProgress(25)
+      setCurrentStageIndex(1)
+      setUploadProgress(22)
 
-      setProcessingStep('Activating domain agent…')
-      setUploadProgress(45)
+      setCurrentStageIndex(2)
+      setUploadProgress(42)
 
       const res = await fetch(`${API_BASE_URL}/api/ideate`, {
         method: 'POST',
@@ -250,14 +371,15 @@ export default function UploadPage() {
         }),
       })
 
-      setUploadProgress(80)
-      setProcessingStep('Generating platform content…')
+      setUploadProgress(68)
+      setCurrentStageIndex(3)
 
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Ideation failed')
 
+      setCurrentStageIndex(4)
+      setUploadProgress(92)
       setUploadProgress(100)
-      setProcessingStep('Generated platform content')
 
       const platforms = data.results?.platforms || data.results || {}
       setGeneratedContent(platforms)
@@ -267,6 +389,7 @@ export default function UploadPage() {
     } finally {
       setIsUploading(false)
       setUploadProgress(0)
+      setCurrentStageIndex(-1)
     }
   }
 
@@ -279,14 +402,14 @@ export default function UploadPage() {
     setIsUploading(true)
     setError(null)
     setGeneratedContent(null)
-    setUploadProgress(10)
-    // Set active agent based on user domain
+    setCurrentStageIndex(0)
+    setUploadProgress(5)
     setActiveAgent(user?.domain || 'general')
 
     try {
       if (youtubeUrl) {
-        setProcessingStep('Fetching video metadata…')
-        setUploadProgress(30)
+        setCurrentStageIndex(0)
+        setUploadProgress(18)
         const response = await fetch(`${API_BASE_URL}/api/upload/youtube`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -294,8 +417,8 @@ export default function UploadPage() {
         })
         const data = await response.json()
         if (!response.ok) throw new Error(data.message || 'Failed to process URL')
-        setProcessingStep('Generating transcript…')
-        setUploadProgress(60)
+        setCurrentStageIndex(1)
+        setUploadProgress(38)
         const results = await processUploadToResults({
           fileId: data.fileId,
           fileName: data.metadata?.title || 'YouTube Video',
@@ -306,25 +429,22 @@ export default function UploadPage() {
         setGeneratedContent(results?.platforms || null)
         setIterationNumber(1)
         setDraftSaved(false)
-        setProcessingStep('Generated platform content')
-        setUploadProgress(90)
+        setCurrentStageIndex(4)
         setUploadProgress(100)
-        // Kick off viral analysis using any transcript text we have
         const transcript = results?.platforms?.analytics?.content || results?.platforms?.youtube?.content || youtubeUrl
         setSavedTranscript(transcript)
         fetchViralAnalysis(transcript)
       } else if (selectedFile) {
-        setProcessingStep('Uploading file…')
-        setUploadProgress(20)
-        
-        // Use the API client's upload.file method
+        setCurrentStageIndex(0)
+        setUploadProgress(8)
+
         try {
           const result = await api.upload.file(selectedFile, (progress) => {
-            setUploadProgress(20 + (progress * 0.5)) // 20% to 70%
+            setUploadProgress(8 + Math.round(progress * 0.42)) // 8% to 50%
           }, user?.id || 'demo_user')
-          
-          setProcessingStep('Generating platform content…')
-          setUploadProgress(70)
+
+          setCurrentStageIndex(1)
+          setUploadProgress(52)
           const results = await processUploadToResults({
             fileId: result.fileId,
             fileName: result.fileName,
@@ -335,9 +455,8 @@ export default function UploadPage() {
           setGeneratedContent(results?.platforms || null)
           setIterationNumber(1)
           setDraftSaved(false)
-          setProcessingStep('Generated platform content')
+          setCurrentStageIndex(4)
           setUploadProgress(100)
-          // Kick off viral analysis using transcript from generated content
           const transcript = results?.platforms?.analytics?.content || results?.platforms?.youtube?.content || selectedFile?.name || ''
           setSavedTranscript(transcript)
           fetchViralAnalysis(transcript)
@@ -351,7 +470,7 @@ export default function UploadPage() {
       setError(err.message || 'Upload failed. Please try again.')
       setIsUploading(false)
       setUploadProgress(0)
-      setProcessingStep('')
+      setCurrentStageIndex(-1)
     }
   }
 
@@ -604,6 +723,21 @@ export default function UploadPage() {
           <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-6 space-y-6">
             <FileUploader onFileSelect={handleFileSelect} selectedFile={selectedFile} />
 
+            {/* Show previously uploaded filename when returning after tab switch */}
+            {!selectedFile && uploadedFileName && !generatedContent && (
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.03] border border-brand-500/25 text-sm">
+                <span className="text-brand-400 text-base flex-shrink-0">📁</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 font-medium truncate">{uploadedFileName}</p>
+                  <p className="text-[11px] text-white/40 mt-0.5">Previously selected — re-select the file or paste a URL to process</p>
+                </div>
+                <button
+                  onClick={() => { setUploadedFileName(null); localStorage.removeItem(UPLOAD_SESSION_KEY) }}
+                  className="text-white/30 hover:text-white/60 transition-colors flex-shrink-0 text-xs px-2"
+                >✕</button>
+              </div>
+            )}
+
             {/* Divider */}
             <div className="flex items-center gap-4">
               <div className="flex-1 h-px bg-white/[0.07]" />
@@ -640,41 +774,103 @@ export default function UploadPage() {
           </div>
         )}
 
-        {/* Progress */}
+        {/* Progress pipeline */}
         {isUploading && (
-          <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6 space-y-4">
-            {/* Agent activated banner */}
+          <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-5 space-y-4">
+            {/* Agent banner */}
             {activeAgent && DOMAIN_AGENTS[activeAgent] && (
               <div className="flex items-center gap-3 bg-brand-500/8 border border-brand-500/20 rounded-xl px-4 py-3">
                 <span className="text-xl">{DOMAIN_AGENTS[activeAgent].emoji}</span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono font-bold text-brand-400 uppercase tracking-widest">Agent Activated</span>
+                    <span className="text-[10px] font-mono font-bold text-brand-400 uppercase tracking-widest">Agent Active</span>
                     <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
                   </div>
                   <p className="text-sm font-semibold text-white/90">{DOMAIN_AGENTS[activeAgent].name}</p>
-                  <p className="text-[11px] text-white/40 truncate">{DOMAIN_AGENTS[activeAgent].description}</p>
                 </div>
-                <div className="text-right shrink-0">
-                  <span className="text-[10px] font-mono text-cyan-400/70">{DOMAIN_AGENTS[activeAgent].model}</span>
-                  <p className="text-[9px] font-mono text-white/25 mt-0.5">Parallel mode</p>
-                </div>
+                <span className="text-[10px] font-mono text-cyan-400/70 shrink-0">{DOMAIN_AGENTS[activeAgent].model}</span>
               </div>
             )}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
-                <span className="text-sm text-white/60">{processingStep}</span>
+
+            {/* Step-by-step pipeline */}
+            <div className="space-y-1">
+              {UPLOAD_STAGES.map((stage, i) => {
+                const isDone    = i < currentStageIndex
+                const isActive  = i === currentStageIndex
+                const isPending = i > currentStageIndex
+
+                return (
+                  <div
+                    key={stage.id}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+                      isActive  ? 'bg-brand-500/10 border border-brand-500/25' :
+                      isDone    ? 'bg-white/[0.02] border border-white/[0.04]' :
+                                  'border border-transparent'
+                    }`}
+                  >
+                    {/* Status icon */}
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+                      isDone   ? 'bg-emerald-500/20 text-emerald-400' :
+                      isActive ? 'bg-brand-500/20 text-brand-300' :
+                                 'bg-white/[0.04] text-white/20'
+                    }`}>
+                      {isDone ? (
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                          <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      ) : isActive ? (
+                        <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse block" />
+                      ) : (
+                        <span className="text-sm opacity-40">{stage.icon}</span>
+                      )}
+                    </div>
+
+                    {/* Text */}
+                    <div className="flex-1 min-w-0">
+                      <div className={`text-sm font-semibold transition-colors duration-300 ${
+                        isDone   ? 'text-white/50 line-through decoration-white/20' :
+                        isActive ? 'text-white' :
+                                   'text-white/25'
+                      }`}>
+                        {stage.label}
+                      </div>
+                      {isActive && (
+                        <div className="text-[11px] text-brand-400/70 font-mono mt-0.5 animate-pulse">
+                          {stage.sub}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right badge */}
+                    <div className="flex-shrink-0 text-right">
+                      {isDone && (
+                        <span className="text-[10px] font-mono text-emerald-400/70 uppercase tracking-wide">Done</span>
+                      )}
+                      {isActive && (
+                        <span className="text-[10px] font-mono text-brand-400 uppercase tracking-wide animate-pulse">Running…</span>
+                      )}
+                      {isPending && (
+                        <span className="text-[10px] font-mono text-white/15 uppercase tracking-wide">Queued</span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Overall progress bar */}
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-white/30 font-mono">Overall progress</span>
+                <span className="text-sm font-mono font-bold text-brand-400">{uploadProgress}%</span>
               </div>
-              <span className="text-sm font-mono font-bold text-brand-400">{uploadProgress}%</span>
+              <div className="h-1.5 bg-white/[0.05] rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-brand-500 to-cyan-400 rounded-full transition-all duration-700 ease-out"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
             </div>
-            <div className="h-1.5 bg-white/[0.05] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-brand-500 to-cyan-400 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${uploadProgress}%` }}
-              />
-            </div>
-            <p className="text-xs text-white/30 font-mono">{isAiFirst ? 'Understanding idea → building script → generating platform variants…' : 'Analysing content → generating platform variants → scoring virality…'}</p>
           </div>
         )}
 
@@ -714,7 +910,7 @@ export default function UploadPage() {
                   Process {youtubeUrl ? 'Link' : 'Content'} →
                 </button>
                 <button
-                  onClick={() => { setSelectedFile(null); setYoutubeUrl('') }}
+                  onClick={clearUploadSession}
                   className="px-6 py-4 bg-white/[0.03] border border-white/[0.07] text-white/60 rounded-xl hover:border-white/[0.15] hover:text-white transition-all"
                 >
                   Clear

@@ -1,9 +1,11 @@
 import path from 'path';
+import fs from 'fs';
 import { processingPipeline } from './processing-pipeline.service';
 import { videoMetadataService } from './video-metadata.service';
 import { mockTranscriptService } from './mock-transcript.service';
 import { awsTranscribeService } from './aws-transcribe.service';
 import { awsRekognitionService, RekognitionLabelInsight } from './aws-rekognition.service';
+import { openAIWhisperService } from './openai-whisper.service';
 import { awsConfig, toS3Uri } from '../config/aws';
 import { PlatformContentGeneratorV2 } from './platform-content-generator-v2.service';
 import { ViralPredictorService } from './viral-predictor.service';
@@ -150,6 +152,31 @@ class ProcessingJobProcessorService {
       }
 
       if (!transcriptResult) {
+        // ── Fallback 1: OpenAI Whisper — reads the actual video/audio file ──────
+        // This is the real transcription path when AWS Transcribe is unavailable.
+        const localFilePath = metadata.localPath || path.join(process.cwd(), 'uploads', fileId);
+        const fileExists = localFilePath && fs.existsSync(localFilePath);
+
+        if (isMediaFile && fileExists && openAIWhisperService.isConfigured()) {
+          await processingPipeline.updateJob(jobId, {
+            currentStep: 'Transcribing audio with Whisper...',
+          });
+          try {
+            logger.info('Attempting Whisper transcription', { jobId, localFilePath });
+            const whisperResult = await openAIWhisperService.transcribeLocalFile(localFilePath, fileId);
+            transcriptResult = whisperResult;
+            logger.info('Whisper transcription succeeded', { jobId, wordCount: whisperResult.wordCount });
+          } catch (whisperError: any) {
+            logger.warn('Whisper transcription failed; falling back to mock', {
+              jobId,
+              error: whisperError?.message || String(whisperError),
+            });
+          }
+        }
+      }
+
+      if (!transcriptResult) {
+        // ── Fallback 2: read the file bytes (works for text / subtitle files) ───
         const textResult = mockTranscriptService.generateTranscriptFromLocalFile(
           metadata.localPath,
           fileId,
@@ -162,13 +189,12 @@ class ProcessingJobProcessorService {
         }
       }
 
-      // Final fallback for media files: generate a contextual transcript from filename.
-      // Always succeeds — picks a domain-matched template from the filename (e.g. "Goa_Memory_Lane" → travel).
+      // Final fallback for media files — warns clearly that we couldn't transcribe.
       if (!transcriptResult && isMediaFile) {
         await processingPipeline.updateJob(jobId, {
-          currentStep: 'Generating contextual transcript...',
+          currentStep: 'Using filename context (transcription unavailable)...',
         });
-        logger.info('Using contextual mock transcript fallback', { jobId, fileId });
+        logger.warn('All transcription methods failed; using filename-based mock', { jobId, fileId });
         transcriptResult = mockTranscriptService.generateTranscript(
           fileId,
           fileName || metadata.fileName,
@@ -261,9 +287,18 @@ class ProcessingJobProcessorService {
         improvements: [],
       };
 
+      // When the transcript is very short (e.g. a silent/instrumental video), enrich the
+      // analysis context with detected Rekognition labels so the viral predictor has
+      // meaningful signal to work with rather than just an empty string.
+      const transcriptWordCount = finalTranscript.transcript.trim().split(/\s+/).filter(Boolean).length;
+      const analysisContext =
+        transcriptWordCount < 15 && visualLabelInsights.length > 0
+          ? `[Visual content detected] ${visualLabelInsights.slice(0, 10).map((l) => l.label).join(', ')}. ${finalTranscript.transcript}`.trim()
+          : finalTranscript.transcript;
+
       try {
         const viralResult = await viralPredictor.predictViralScore({
-          transcript: finalTranscript.transcript,
+          transcript: analysisContext,
           metadata: {
             duration: metadata.duration,
             platform: 'multi-platform',

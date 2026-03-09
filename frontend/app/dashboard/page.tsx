@@ -218,25 +218,19 @@ export default function DashboardPage() {
   const domainLabel = user?.domain ? DOMAIN_LABELS[user.domain] : null
   const audienceLabel = user?.audienceType ? AUDIENCE_LABELS[user.audienceType] : null
 
-  const switchDomain = async (newDomain: string) => {
-    setSavingProfile(true)
+  const switchDomain = (newDomain: string) => {
     setShowDomainPicker(false)
-    await saveProfile({ domain: newDomain, audienceType: user?.audienceType })
-    setSavingProfile(false)
+    saveProfile({ domain: newDomain, audienceType: user?.audienceType })
   }
 
-  const switchAudience = async (newAudience: string) => {
-    setSavingProfile(true)
+  const switchAudience = (newAudience: string) => {
     setShowAudiencePicker(false)
-    await saveProfile({ domain: user?.domain, audienceType: newAudience })
-    setSavingProfile(false)
+    saveProfile({ domain: user?.domain, audienceType: newAudience })
   }
 
-  const switchMode = async (newMode: string) => {
-    setSavingProfile(true)
+  const switchMode = (newMode: string) => {
     setShowModePicker(false)
-    await saveProfile({ domain: user?.domain, audienceType: user?.audienceType, creatorMode: newMode })
-    setSavingProfile(false)
+    saveProfile({ domain: user?.domain, audienceType: user?.audienceType, creatorMode: newMode })
   }
 
   return (

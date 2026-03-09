@@ -272,93 +272,96 @@ export default function WorkspacePage() {
               <p className="text-white/30 text-sm">Select a draft from the left to start editing</p>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col overflow-hidden">
-              {/* Platform tabs */}
-              <div className="border-b border-white/[0.07]">
-                <div className="px-6 flex items-center gap-1 overflow-x-auto max-w-3xl mx-auto">
-                {PLATFORMS.map((platform) => {
-                  const key = platform.toLowerCase();
-                  const hasContent = !!(selectedDraft.platforms[key] || selectedDraft.platforms[platform]);
-                  return (
+            <div className="flex-1 flex flex-col overflow-hidden items-center">
+              {/* Centered wrapper for tabs and editor */}
+              <div className="flex-1 flex flex-col overflow-hidden max-w-3xl w-full">
+                {/* Platform tabs */}
+                <div className="border-b border-white/[0.07] w-full">
+                  <div className="px-6 flex items-center gap-1 overflow-x-auto">
+                  {PLATFORMS.map((platform) => {
+                    const key = platform.toLowerCase();
+                    const hasContent = !!(selectedDraft.platforms[key] || selectedDraft.platforms[platform]);
+                    return (
+                      <button
+                        key={platform}
+                        onClick={() => switchPlatform(platform)}
+                        className={`relative px-4 py-3 text-sm font-semibold whitespace-nowrap transition-all ${
+                          activePlatform === platform
+                            ? 'text-brand-400 border-b-2 border-brand-500'
+                            : hasContent
+                            ? 'text-white/60 hover:text-white'
+                            : 'text-white/25 hover:text-white/40'
+                        }`}
+                      >
+                        {platform}
+                        {hasContent && activePlatform !== platform && (
+                          <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-brand-500/60" />
+                        )}
+                      </button>
+                    );
+                  })}
+                  </div>
+                </div>
+
+                {/* Editor area */}
+                <div className="flex-1 flex flex-col overflow-hidden p-6 gap-4">
+                  <textarea
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    className="flex-1 w-full bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 text-white/90 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-500/40 focus:ring-1 focus:ring-brand-500/20 placeholder:text-white/20 font-mono transition-all"
+                    placeholder={`No ${activePlatform} content in this draft. You can write here or regenerate content from the upload page.`}
+                    spellCheck={false}
+                  />
+
+                  {/* Share/Export section */}
+                  <div className="flex flex-wrap items-center gap-3">
                     <button
-                      key={platform}
-                      onClick={() => switchPlatform(platform)}
-                      className={`relative px-4 py-3 text-sm font-semibold whitespace-nowrap transition-all ${
-                        activePlatform === platform
-                          ? 'text-brand-400 border-b-2 border-brand-500'
-                          : hasContent
-                          ? 'text-white/60 hover:text-white'
-                          : 'text-white/25 hover:text-white/40'
+                      onClick={handleCopy}
+                      className="flex items-center gap-2 px-4 py-2 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] rounded-xl text-sm text-white/70 hover:text-white transition-all"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      {copyStatus ? '✓ Copied!' : 'Copy'}
+                    </button>
+
+                    <button
+                      onClick={handleDownload}
+                      className="flex items-center gap-2 px-4 py-2 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] rounded-xl text-sm text-white/70 hover:text-white transition-all"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                      Download .txt
+                    </button>
+
+                    <button
+                      onClick={handlePublishToCommunity}
+                      disabled={isPublishing || !editedContent.trim()}
+                      className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                        publishStatus === 'success'
+                          ? 'bg-emerald-600 text-white'
+                          : publishStatus === 'error'
+                          ? 'bg-red-600 text-white'
+                          : 'bg-brand-600 hover:bg-brand-500 text-white'
                       }`}
                     >
-                      {platform}
-                      {hasContent && activePlatform !== platform && (
-                        <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-brand-500/60" />
-                      )}
-                    </button>
-                  );
-                })}
-                </div>
-              </div>
-
-              {/* Editor area */}
-              <div className="flex-1 flex flex-col overflow-hidden p-6 gap-4 max-w-3xl w-full mx-auto">
-                <textarea
-                  value={editedContent}
-                  onChange={(e) => setEditedContent(e.target.value)}
-                  className="flex-1 w-full bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 text-white/90 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-500/40 focus:ring-1 focus:ring-brand-500/20 placeholder:text-white/20 font-mono transition-all"
-                  placeholder={`No ${activePlatform} content in this draft. You can write here or regenerate content from the upload page.`}
-                  spellCheck={false}
-                />
-
-                {/* Share/Export section */}
-                <div className="flex flex-wrap items-center gap-3">
-                  <button
-                    onClick={handleCopy}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] rounded-xl text-sm text-white/70 hover:text-white transition-all"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                    {copyStatus ? '✓ Copied!' : 'Copy'}
-                  </button>
-
-                  <button
-                    onClick={handleDownload}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] rounded-xl text-sm text-white/70 hover:text-white transition-all"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Download .txt
-                  </button>
-
-                  <button
-                    onClick={handlePublishToCommunity}
-                    disabled={isPublishing || !editedContent.trim()}
-                    className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-                      publishStatus === 'success'
-                        ? 'bg-emerald-600 text-white'
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      {isPublishing
+                        ? 'Publishing…'
+                        : publishStatus === 'success'
+                        ? '✓ Posted to Community!'
                         : publishStatus === 'error'
-                        ? 'bg-red-600 text-white'
-                        : 'bg-brand-600 hover:bg-brand-500 text-white'
-                    }`}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    {isPublishing
-                      ? 'Publishing…'
-                      : publishStatus === 'success'
-                      ? '✓ Posted to Community!'
-                      : publishStatus === 'error'
-                      ? '✕ Failed — Retry'
-                      : 'Post to KLA Community'}
-                  </button>
+                        ? '✕ Failed — Retry'
+                        : 'Post to KLA Community'}
+                    </button>
 
-                  <span className="text-xs text-white/25 ml-auto">
-                    {editedContent.length} chars · {editedContent.trim().split(/\s+/).filter(Boolean).length} words
-                  </span>
+                    <span className="text-xs text-white/25 ml-auto">
+                      {editedContent.length} chars · {editedContent.trim().split(/\s+/).filter(Boolean).length} words
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

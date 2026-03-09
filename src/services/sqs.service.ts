@@ -83,7 +83,7 @@ class SQSService {
           QueueUrl: this.getQueueUrl(),
           MaxNumberOfMessages: 1,
           WaitTimeSeconds: 20,
-          VisibilityTimeout: 60,
+          VisibilityTimeout: 600, // 10 minutes — processing pipeline (Transcribe + Rekognition + Bedrock) can take several minutes for large files
         })
       );
 

@@ -414,3 +414,20 @@ html.light textarea:focus {
 
 /* ── Radial gradient page decorations → toned down ──────────────── */
 html.light [class*="bg-[radial-gradient"] { opacity: 0.4 !important; }
+
+/* ── Calendar page ────────────────────────────────────────────────── */
+/* Heatmap empty cells need a subtle dark tint in light mode (white tint is invisible on white bg) */
+html.light .heatmap-cell-empty { background-color: rgba(0,0,0,0.07) !important; }
+html.light .heatmap-cell-1 { background-color: rgba(99,102,241,0.25) !important; }
+html.light .heatmap-cell-2 { background-color: rgba(99,102,241,0.5) !important; }
+html.light .heatmap-legend-empty { background-color: rgba(0,0,0,0.07) !important; }
+/* Today ring on heatmap */
+html.light .heatmap-today { ring-color: rgba(0,0,0,0.3) !important; outline: 1px solid rgba(0,0,0,0.3); }
+/* SVG chart inner fill */
+html.light .chart-inner-fill { fill: #ffffff !important; }
+/* Streak bar divider */
+html.light .streak-divider { background-color: rgba(0,0,0,0.1) !important; }
+/* "Last 30 days" and legend labels */
+html.light .heatmap-label { color: #9ca3af !important; }
+/* Add-modal background */
+html.light .modal-bg { background-color: #ffffff !important; border-color: rgba(0,0,0,0.1) !important; }

@@ -29,6 +29,7 @@ export default function Navbar() {
     { name: 'Upload', path: '/upload', icon: '📤' },
     { name: 'Analytics', path: '/analytics', icon: '📈' },
     { name: 'Workspace', path: '/workspace', icon: '👥' },
+    { name: 'Calendar', path: '/calendar', icon: '📅' },
     { name: 'Marketplace', path: '/marketplace', icon: '🛒' },
     { name: 'Community', path: '/community', icon: '💬' },
   ]
@@ -64,18 +65,18 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-0.5">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 href={item.path}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                   isActive(item.path)
                     ? 'bg-brand-600/20 text-brand-300 border border-brand-500/20'
                     : 'text-white/50 hover:bg-white/[0.05] hover:text-white'
                 }`}
               >
-                <span className="mr-1.5">{item.icon}</span>
+                <span className="mr-1">{item.icon}</span>
                 {item.name}
               </Link>
             ))}

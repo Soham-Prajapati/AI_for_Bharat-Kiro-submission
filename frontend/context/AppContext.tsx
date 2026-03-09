@@ -15,6 +15,9 @@ export interface User {
   domain?: string;
   audienceType?: string;
   creatorMode?: string;
+  creatorType?: string;
+  contentTone?: string;
+  contentLanguages?: string[];
   onboardingComplete?: boolean;
   preferences: {
     emailNotifications: boolean;

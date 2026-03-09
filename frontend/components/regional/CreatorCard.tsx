@@ -2,9 +2,43 @@
 
 import { Creator } from '@/types/regional';
 
-interface CreatorCardProps {
+const PLATFORM_ICONS: Record<string, string> = {
+  youtube:   '📺',
+  instagram: '📸',
+  twitter:   '🐦',
+  linkedin:  '💼',
+  facebook:  '👥',
+  tiktok:    '🎵',
+};
+
+const PLATFORM_COLORS: Record<string, string> = {
+  youtube:   'text-red-400',
+  instagram: 'text-pink-400',
+  twitter:   'text-sky-400',
+  linkedin:  'text-blue-400',
+  facebook:  'text-indigo-400',
+  tiktok:    'text-purple-400',
+};
+
+const AUDIENCE_LABELS: Record<string, string> = {
+  beginners:    '🌱 Beginners',
+  intermediate: '🔥 Intermediate',
+  expert:       '🧠 Expert',
+  general:      '🌍 General',
+  youth:        '⚡ Youth',
+  professional: '💼 Pro',
+};
+
+function fmt(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
+  return n.toString();
+}
+
+interface Props {
   creator: Creator;
   onCollabRequest: (creator: Creator) => void;
+  onOpenChat: (creator: Creator) => void;
   showMatchInfo?: boolean;
   matchReasons?: string[];
 }
@@ -12,141 +46,110 @@ interface CreatorCardProps {
 export default function CreatorCard({
   creator,
   onCollabRequest,
+  onOpenChat,
   showMatchInfo = false,
   matchReasons = [],
-}: CreatorCardProps) {
-  const platformIcons: Record<string, string> = {
-    youtube: '📺',
-    instagram: '📸',
-    tiktok: '🎵',
-    twitter: '🐦',
-    linkedin: '💼',
-    facebook: '👥',
-  };
-
-  const languageNames: Record<string, string> = {
-    hindi: 'Hindi',
-    bengali: 'Bengali',
-    tamil: 'Tamil',
-    telugu: 'Telugu',
-    marathi: 'Marathi',
-    gujarati: 'Gujarati',
-    kannada: 'Kannada',
-    malayalam: 'Malayalam',
-    odia: 'Odia',
-  };
-
-  const formatAudience = (size: number): string => {
-    if (size >= 1000000) return `${(size / 1000000).toFixed(1)}M`;
-    if (size >= 1000) return `${(size / 1000).toFixed(1)}K`;
-    return size.toString();
-  };
+}: Props) {
+  const topPlatform = creator.platforms.reduce((best, p) =>
+    (creator.followersByPlatform?.[p] ?? 0) > (creator.followersByPlatform?.[best] ?? 0) ? p : best,
+    creator.platforms[0] ?? 'youtube'
+  );
 
   return (
-    <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-      <div className="flex items-start gap-4">
+    <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-4 hover:border-brand-500/30 hover:bg-white/[0.05] transition-all duration-200 group">
+      <div className="flex items-start gap-3">
         {/* Avatar */}
         <div className="relative flex-shrink-0">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-2xl font-bold text-white">
+          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${creator.avatarColor ?? 'from-brand-500 to-cyan-500'} flex items-center justify-center text-xl font-bold text-white shadow-lg`}>
             {creator.name.charAt(0)}
           </div>
           {creator.lookingForCollabs && (
-            <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-gray-900 flex items-center justify-center">
-              <span className="text-xs">✓</span>
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#030712] flex items-center justify-center">
+              <span className="text-[8px] text-white font-bold">✓</span>
             </div>
           )}
         </div>
 
-        {/* Info */}
+        {/* Main info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
-            <div>
-              <h3 className="text-white font-semibold text-lg truncate">
-                {creator.name}
-              </h3>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-purple-400 text-sm">{creator.niche}</span>
-                <span className="text-gray-500">•</span>
-                <span className="text-gray-400 text-sm capitalize">
-                  {creator.region} India
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => onOpenChat(creator)}
+                  className="font-bold text-white text-base truncate hover:text-brand-400 transition-colors text-left"
+                >
+                  {creator.name}
+                </button>
+                {creator.verified && <span className="text-blue-400 text-xs flex-shrink-0" title="Verified">✔</span>}
+              </div>
+              <div className="text-xs text-white/40 font-mono mt-0.5">{creator.handle}</div>
+            </div>
+            {/* Total audience badge */}
+            <div className="flex-shrink-0 text-right">
+              <div className="text-lg font-black text-white font-display">{fmt(creator.audienceSize)}</div>
+              <div className="text-[9px] font-mono text-white/30 uppercase tracking-widest">total</div>
+            </div>
+          </div>
+
+          {/* Niche + city + audience type */}
+          <div className="flex items-center flex-wrap gap-1.5 mt-2">
+            <span className="text-xs font-semibold text-brand-400">{creator.niche}</span>
+            <span className="text-white/20">·</span>
+            <span className="text-xs text-white/40">{creator.city}</span>
+            {creator.audienceType && (
+              <>
+                <span className="text-white/20">·</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-white/50">
+                  {AUDIENCE_LABELS[creator.audienceType] ?? creator.audienceType}
                 </span>
+              </>
+            )}
+          </div>
+
+          {/* Platform breakdown */}
+          <div className="flex items-center gap-3 mt-2.5">
+            {creator.platforms.slice(0, 4).map(p => (
+              <div key={p} className="flex items-center gap-1">
+                <span className={`text-[11px] ${PLATFORM_COLORS[p] ?? 'text-white/40'}`}>{PLATFORM_ICONS[p] ?? '📱'}</span>
+                <span className="text-[11px] text-white/40">{fmt(creator.followersByPlatform?.[p] ?? 0)}</span>
               </div>
-            </div>
-            
-            {/* Audience Size Badge */}
-            <div className="bg-purple-500/20 px-3 py-1 rounded-full border border-purple-500/30 flex-shrink-0">
-              <div className="text-purple-300 font-semibold text-sm">
-                {formatAudience(creator.audienceSize)}
-              </div>
-            </div>
+            ))}
           </div>
 
           {/* Bio */}
-          <p className="text-gray-400 text-sm mt-2 line-clamp-2">
-            {creator.bio}
-          </p>
+          <p className="text-xs text-white/40 mt-2 leading-relaxed line-clamp-2">{creator.bio}</p>
+        </div>
+      </div>
 
-          {/* Languages */}
-          <div className="flex flex-wrap gap-2 mt-3">
-            {creator.languages.map((lang) => (
-              <span
-                key={lang}
-                className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs border border-blue-500/30"
-              >
-                {languageNames[lang]}
-              </span>
-            ))}
-          </div>
+      {/* Match reasons */}
+      {showMatchInfo && matchReasons.length > 0 && (
+        <div className="mt-3 pt-3 border-t border-white/[0.05] flex flex-wrap gap-1.5">
+          {matchReasons.map((r, i) => (
+            <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">{r}</span>
+          ))}
+        </div>
+      )}
 
-          {/* Platforms */}
-          <div className="flex items-center gap-2 mt-3">
-            {creator.platforms.map((platform) => (
-              <span
-                key={platform}
-                className="text-lg"
-                title={platform}
-              >
-                {platformIcons[platform] || '🌐'}
-              </span>
-            ))}
-          </div>
-
-          {/* Match Reasons (if showing match info) */}
-          {showMatchInfo && matchReasons.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-purple-500/20">
-              <div className="text-xs text-gray-400 mb-2">Why this match:</div>
-              <ul className="space-y-1">
-                {matchReasons.slice(0, 3).map((reason, index) => (
-                  <li key={index} className="text-xs text-gray-300 flex items-start gap-2">
-                    <span className="text-green-400 flex-shrink-0">✓</span>
-                    <span>{reason}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Action Button */}
+      {/* Action row */}
+      <div className="mt-3 pt-3 border-t border-white/[0.05] flex items-center gap-2">
+        <button
+          onClick={() => onOpenChat(creator)}
+          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold transition-colors"
+        >
+          <span>💬</span> Message
+        </button>
+        {creator.lookingForCollabs && (
           <button
             onClick={() => onCollabRequest(creator)}
-            disabled={!creator.lookingForCollabs}
-            className={`mt-4 w-full py-2 px-4 rounded-lg font-semibold transition-all duration-300 ${
-              creator.lookingForCollabs
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50'
-                : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-            }`}
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.05] border border-white/[0.10] hover:bg-white/[0.08] hover:border-emerald-500/30 text-white/70 text-xs font-semibold transition-colors"
           >
-            {creator.lookingForCollabs ? (
-              <span className="flex items-center justify-center gap-2">
-                <span>🤝</span>
-                <span>Request Collaboration</span>
-              </span>
-            ) : (
-              'Not Available'
-            )}
+            <span>🤝</span> Collab
           </button>
-        </div>
+        )}
       </div>
     </div>
   );
 }
+
+

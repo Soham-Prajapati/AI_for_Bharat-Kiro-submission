@@ -3,6 +3,8 @@ import { asyncHandler } from '../middleware/asyncHandler.middleware';
 import { ValidationError, NotFoundError } from '../types/errors';
 import { processingPipeline } from '../services/processing-pipeline.service';
 import { sqsService } from '../services/sqs.service';
+import { processingJobProcessorService } from '../services/processing-job-processor.service';
+import { hasSQSConfig } from '../config/aws';
 import { Platform } from '../types/upload-to-results';
 
 const router = Router();
@@ -51,7 +53,7 @@ router.post('/process', asyncHandler(async (req: Request, res: Response) => {
 
   const job = await processingPipeline.createJob(fileId, userId);
 
-  await sqsService.sendProcessingJob({
+  const jobPayload = {
     jobId: job.jobId,
     fileId,
     fileName,
@@ -61,19 +63,32 @@ router.post('/process', asyncHandler(async (req: Request, res: Response) => {
     localPath,
     url,
     domain,
-  });
+  };
 
-  await processingPipeline.updateJob(job.jobId, {
-    status: 'pending',
-    progress: 5,
-    currentStep: 'Queued for asynchronous processing',
-  });
+  if (hasSQSConfig()) {
+    await sqsService.sendProcessingJob(jobPayload);
+    await processingPipeline.updateJob(job.jobId, {
+      status: 'pending',
+      progress: 5,
+      currentStep: 'Queued for asynchronous processing',
+    });
+  } else {
+    // Fallback: process inline when SQS is not configured (local/dev environment)
+    await processingPipeline.updateJob(job.jobId, {
+      status: 'pending',
+      progress: 5,
+      currentStep: 'Processing inline (SQS not configured)',
+    });
+    processingJobProcessorService.processJob(jobPayload).catch(() => {
+      // errors are persisted to the job record by processJob itself
+    });
+  }
 
   res.json({
     success: true,
     jobId: job.jobId,
     status: 'pending',
-    message: 'Job queued for asynchronous processing',
+    message: hasSQSConfig() ? 'Job queued for asynchronous processing' : 'Job processing inline',
   });
 }));
 

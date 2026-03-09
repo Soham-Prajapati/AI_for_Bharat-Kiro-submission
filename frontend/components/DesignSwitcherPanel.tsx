@@ -3,7 +3,10 @@
 import { useDesign } from '@/context/DesignContext'
 
 export default function DesignSwitcherPanel() {
-  const { isDark, toggleTheme } = useDesign()
+  const { isDark, toggleTheme, mounted } = useDesign()
+
+  // Don't render until client has mounted — prevents SSR/hydration className mismatch
+  if (!mounted) return null
 
   return (
     <button

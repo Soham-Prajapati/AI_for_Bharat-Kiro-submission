@@ -83,16 +83,26 @@ export function useAuth() {
     domain?: string;
     audienceType?: string;
     creatorMode?: string;
+    creatorType?: string;
+    contentTone?: string;
+    contentLanguages?: string[];
     name?: string;
   }) => {
     if (!state.user) return { success: false, error: 'Not authenticated' };
 
-    try {
-      actions.setLoading(true);
-      actions.clearError();
+    // Optimistic update — apply changes locally immediately so the UI
+    // responds instantly regardless of whether the backend call succeeds.
+    const updatedUser: User = {
+      ...state.user,
+      ...updates,
+      onboardingComplete: true,
+    };
+    actions.setUser(updatedUser);
 
-      // Call backend to persist profile
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/profile`, {
+    // Persist to backend in the background — don't block the UI on this
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      await fetch(`${apiBase}/api/auth/profile`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -100,22 +110,12 @@ export function useAuth() {
         },
         body: JSON.stringify(updates),
       });
-
-      const updatedUser: User = {
-        ...state.user,
-        ...updates,
-        onboardingComplete: true,
-      };
-      actions.setUser(updatedUser);
-
-      return { success: true };
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Update failed';
-      actions.setError(message);
-      return { success: false, error: message };
-    } finally {
-      actions.setLoading(false);
+    } catch {
+      // Backend unavailable — local state already updated, changes persist
+      // in-session. Non-fatal: don't surface an error to the user.
     }
+
+    return { success: true };
   }, [state.user, actions]);
 
   const resetDemo = useCallback(async () => {

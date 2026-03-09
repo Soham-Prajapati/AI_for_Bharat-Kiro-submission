@@ -73,6 +73,7 @@ interface DesignContextValue {
   setPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void
   isDark: boolean
   toggleTheme: () => void
+  mounted: boolean
 }
 
 const DesignContext = createContext<DesignContextValue | null>(null)
@@ -80,12 +81,16 @@ const DesignContext = createContext<DesignContextValue | null>(null)
 export function DesignProvider({ children }: { children: ReactNode }) {
   const [active, setActive] = useState<IterationId>('F')
   const [panelOpen, setPanelOpen] = useState(false)
-  // Initialise from localStorage so there's no flicker on reload
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false
+  // Always start as false (server-safe). Correct from localStorage after mount
+  // to avoid SSR/client hydration mismatch.
+  const [isDark, setIsDark] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
     const saved = localStorage.getItem('kla_theme')
-    return saved === 'dark'
-  })
+    if (saved === 'dark') setIsDark(true)
+    setMounted(true)
+  }, [])
 
   const toggleTheme = () => setIsDark(prev => {
     const next = !prev
@@ -100,7 +105,7 @@ export function DesignProvider({ children }: { children: ReactNode }) {
   }, [isDark])
 
   return (
-    <DesignContext.Provider value={{ active, setActive, panelOpen, setPanelOpen, isDark, toggleTheme }}>
+    <DesignContext.Provider value={{ active, setActive, panelOpen, setPanelOpen, isDark, toggleTheme, mounted }}>
       {children}
     </DesignContext.Provider>
   )

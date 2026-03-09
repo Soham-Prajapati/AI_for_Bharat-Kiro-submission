@@ -46,6 +46,7 @@ import youtubeOAuthRoute from './routes/youtube-oauth.route';
 import socialOAuthRoute from './routes/social-oauth.route';
 import contentRefineRouter from './routes/content-refine.route';
 import draftsRouter from './routes/drafts.route';
+import calendarRoute from './routes/calendar.route';
 import { sqsWorkerService } from './services/sqs-worker.service';
 import { workspaceWSServer } from './services/workspace-ws.service';
 import { createServer } from 'http';
@@ -143,6 +144,7 @@ app.use('/api/youtube-oauth', youtubeOAuthRoute);
 app.use('/api/social-oauth', socialOAuthRoute);
 app.use('/api/content', contentRefineRouter);
 app.use('/api/drafts', draftsRouter);
+app.use('/api/calendar', calendarRoute);
 
 // Health check
 app.get('/health', (req, res) => {

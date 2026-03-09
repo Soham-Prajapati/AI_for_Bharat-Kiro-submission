@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import apiClient from '@/services/api';
 import { Post, UserProfile, Group, Comment } from '@/types/api';
 import Image from 'next/image';
+import ProfileSwitcher from '@/components/ProfileSwitcher';
 
 interface KlaDraft {
   draftId: string;
@@ -359,15 +360,18 @@ export default function CommunityPage() {
                 {' — '}Share your content journey with <span className="text-brand-400 font-semibold">10,000+ Indian creators</span>. Posts here appear in the community feed visible to all KLA members — not on Instagram, YouTube, or other social platforms.
               </p>
             </div>
-            <button
-              onClick={dismissBanner}
-              className="shrink-0 text-white/40 hover:text-white transition-colors p-1 rounded"
-              aria-label="Dismiss banner"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-3 shrink-0">
+              <ProfileSwitcher />
+              <button
+                onClick={dismissBanner}
+                className="text-white/40 hover:text-white transition-colors p-1 rounded"
+                aria-label="Dismiss banner"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       )}
