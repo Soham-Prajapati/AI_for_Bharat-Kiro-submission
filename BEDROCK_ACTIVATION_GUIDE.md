@@ -113,9 +113,9 @@ client.send(new InvokeModelCommand({
 
 ## IAM Policy Check (If Still Failing After Activation)
 
-If activation succeeded but the API still fails with `AccessDeniedException`, the IAM user needs Bedrock invoke permissions. Add this inline policy to the IAM user (`AKIAU5E3B2UGE3LLFSE6`):
+If activation succeeded but the API still fails with `AccessDeniedException`, the IAM user needs Bedrock invoke permissions. Add this inline policy to your IAM user:
 
-1. AWS Console → **IAM** → **Users** → find the user with key ending `LFSE6`
+1. AWS Console → **IAM** → **Users** → find the IAM user used by the app
 2. **Permissions** tab → **Add inline policy**
 3. Switch to **JSON** and paste:
 
