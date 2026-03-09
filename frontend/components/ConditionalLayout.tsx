@@ -5,11 +5,10 @@ import ConditionalSidebar from './ConditionalSidebar'
 
 export default function ConditionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const isLanding = pathname === '/'
+  const noSidebar = ['/', '/login', '/register', '/onboarding'].includes(pathname ?? '')
 
-  if (isLanding) {
-    // Full-window layout for the landing page — no sidebar, no overflow container
-    // Window scroll is used so Lenis + GSAP ScrollTrigger work natively
+  if (noSidebar) {
+    // Full-window layout — no sidebar, no overflow container
     return <>{children}</>
   }
 

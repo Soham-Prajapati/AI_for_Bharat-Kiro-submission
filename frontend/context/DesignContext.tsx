@@ -80,7 +80,7 @@ const DesignContext = createContext<DesignContextValue | null>(null)
 export function DesignProvider({ children }: { children: ReactNode }) {
   const [active, setActive] = useState<IterationId>('F')
   const [panelOpen, setPanelOpen] = useState(false)
-  const [isDark, setIsDark] = useState(true)
+  const [isDark, setIsDark] = useState(false)
 
   const toggleTheme = () => setIsDark(prev => !prev)
 

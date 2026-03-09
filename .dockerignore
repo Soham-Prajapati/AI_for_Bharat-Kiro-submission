@@ -1,0 +1,62 @@
+# ---- Dependencies ----
+node_modules
+.venv
+
+# ---- Source (handled by multi-stage build) ----
+frontend/
+prototype/
+docs/
+img/
+load-tests/
+infrastructure/
+
+# ---- Build artifacts ----
+dist/
+out/
+.next/
+
+# ---- Version control & CI ----
+.git
+.github
+.gitignore
+
+# ---- Editor / IDE ----
+.vscode
+.idea
+*.swp
+*.swo
+
+# ---- AWS / Deploy configs ----
+.ebextensions
+.ebignore
+.elasticbeanstalk
+.platform
+Procfile
+
+# ---- Docs & planning ----
+*.md
+_bmad/
+_bmad-output/
+tasks.json
+skills-lock.json
+
+# ---- Tests ----
+__tests__/
+tests/
+jest.*.js
+*.test.ts
+*.spec.ts
+test-*.js
+test-*.sh
+
+# ---- Environment ----
+.env
+.env.*
+!.env.example
+
+# ---- Misc ----
+uploads/
+scripts/
+Dockerfile
+.dockerignore
+docker-compose*.yml
