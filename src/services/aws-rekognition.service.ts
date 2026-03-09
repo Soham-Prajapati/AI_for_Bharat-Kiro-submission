@@ -135,8 +135,8 @@ class AWSRekognitionService {
    */
   async waitForLabelDetection(
     jobId: string,
-    maxAttempts: number = 30,
-    pollIntervalMs: number = 5000
+    maxAttempts: number = 20,
+    pollIntervalMs: number = 3000
   ): Promise<RekognitionLabelInsight[]> {
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const status = await this.getLabelDetectionStatus(jobId);
@@ -149,7 +149,9 @@ class AWSRekognitionService {
         throw new AWSError('Rekognition label detection failed', 'Rekognition');
       }
 
-      await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
+      // Use adaptive backoff: start fast, slow down after first 5 attempts
+      const delay = attempt < 5 ? pollIntervalMs : Math.min(pollIntervalMs * 2, 8000);
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
 
     throw new AWSError('Timed out waiting for Rekognition label detection', 'Rekognition');

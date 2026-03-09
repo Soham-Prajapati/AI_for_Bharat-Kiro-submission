@@ -276,31 +276,48 @@ class MockTranscriptService {
    * Falls back to dynamic generation based on filename, then deterministic fileId hashing.
    */
   private selectTemplate(fileId: string, contextHint: string): typeof TRANSCRIPT_TEMPLATES[number] {
-    const normalized = (contextHint || '').toLowerCase();
+    // Strip generic phone/messenger filename patterns that carry zero semantic signal.
+    // E.g. "WhatsApp Video Mar 9 2026", "IMG_20260309_123456", "VID-20260309-WA0003"
+    const GENERIC_FILENAME_RE = /^(whatsapp\s*(video|image|audio)|img[_\s]\d|vid[_\s-]\d|dsc[_\s]\d|mov[_\s]\d|mvi[_\s]\d|dcim|video\s*\d|photo\s*\d)/i;
+    const stripped = (contextHint || '')
+      .replace(/\.(mp4|mov|avi|mp3|wav|m4a|webm|mkv|jpg|jpeg|png)$/i, '')
+      .replace(/[_\-\.]+/g, ' ')
+      .replace(/\d{6,}/g, '') // strip long date/timestamp strings
+      .trim();
+
+    const normalized = stripped.toLowerCase();
+
+    // If the remaining name looks like a generic device/messenger filename, skip keyword
+    // matching entirely and go straight to the dynamic or hash-based fallback.
+    const isGenericFilename = GENERIC_FILENAME_RE.test(normalized) || normalized.length < 4;
 
     const topicKeywords: Record<string, string[]> = {
-      productivity: ['productivity', 'workflow', 'focus', 'time', 'habit', 'routine', 'efficiency'],
-      technology: ['tech', 'technology', 'ai', 'software', 'coding', 'developer', 'app', 'saas', 'automation'],
-      health: ['health', 'fitness', 'wellness', 'diet', 'workout', 'nutrition', 'mental health'],
-      business: ['business', 'startup', 'sales', 'founder', 'entrepreneur', 'market', 'growth'],
-      creativity: ['creative', 'design', 'content', 'storytelling', 'writing', 'art', 'ideas'],
-      education: ['education', 'learning', 'study', 'course', 'teaching', 'student', 'tutorial'],
-      marketing: ['marketing', 'brand', 'social', 'audience', 'engagement', 'seo', 'campaign'],
-      travel: ['travel', 'trip', 'journey', 'destination', 'explore', 'adventure', 'vacation', 'holiday', 'goa', 'beach', 'mountain', 'city', 'tour', 'visit', 'flight', 'road trip'],
-      vlog: ['vlog', 'day in', 'daily', 'routine', 'behind the scenes', 'bts', 'my life', 'follow me', 'come with'],
-      memory: ['memory', 'memories', 'lane', 'throwback', 'remember', 'nostalgia', 'flashback', 'recap', 'moments', 'highlights'],
-      lifestyle: ['lifestyle', 'life', 'home', 'living', 'aesthetic', 'cozy', 'minimal', 'morning', 'evening', 'self care'],
+      productivity: ['productivity', 'workflow', 'focus', 'habit', 'routine', 'efficiency', 'task', 'time management'],
+      technology: ['tech', 'technology', 'artificial intelligence', 'software', 'coding', 'developer', 'saas', 'automation', 'machine learning', 'neural', 'chatgpt'],
+      health: ['health', 'fitness', 'wellness', 'diet', 'workout', 'nutrition', 'mental health', 'exercise', 'gym'],
+      business: ['business', 'startup', 'sales', 'founder', 'entrepreneur', 'revenue', 'growth hacking'],
+      creativity: ['creative', 'design', 'storytelling', 'writing', 'art', 'illustration'],
+      education: ['education', 'learning', 'study', 'course', 'teaching', 'student', 'tutorial', 'lecture'],
+      marketing: ['marketing', 'branding', 'audience', 'engagement', 'seo', 'campaign', 'digital marketing'],
+      travel: ['travel', 'trip', 'journey', 'destination', 'explore', 'adventure', 'vacation', 'holiday', 'tour'],
+      vlog: ['vlog', 'day in my life', 'daily routine', 'behind the scenes', 'my life', 'follow me'],
+      memory: ['memory', 'memories', 'throwback', 'nostalgia', 'moments', 'highlights', 'recap'],
+      lifestyle: ['lifestyle', 'aesthetic', 'cozy', 'minimal', 'morning routine', 'evening routine', 'self care'],
     };
 
-    for (const template of TRANSCRIPT_TEMPLATES) {
-      const keywords = topicKeywords[template.topic] || [];
-      if (keywords.some((keyword) => normalized.includes(keyword))) {
-        return template;
+    if (!isGenericFilename) {
+      for (const template of TRANSCRIPT_TEMPLATES) {
+        const keywords = topicKeywords[template.topic] || [];
+        // Use whole-word boundary matching to prevent partial matches like
+        // "whatsapp".includes("app") → technology, or "travel".includes("art") → creativity.
+        if (keywords.some((keyword) => new RegExp(`\\b${keyword.replace(/[-\s]/g, '[\\s_-]')}\\b`, 'i').test(normalized))) {
+          return template;
+        }
       }
     }
 
-    // No topic matched - generate dynamic content based on the filename
-    const dynamicTemplate = this.generateDynamicTemplate(contextHint);
+    // No topic matched (or generic filename) — generate dynamic content from the filename.
+    const dynamicTemplate = this.generateDynamicTemplate(isGenericFilename ? '' : contextHint);
     if (dynamicTemplate) {
       return dynamicTemplate;
     }
@@ -310,11 +327,12 @@ class MockTranscriptService {
   }
 
   /**
-   * Generate a dynamic transcript template based on filename/context
-   * Used when no predefined topic matches
+   * Generate a dynamic transcript template based on filename/context.
+   * Returns null when the context is empty or too short to be meaningful
+   * (e.g. a generic WhatsApp/device filename that was already stripped).
    */
   private generateDynamicTemplate(contextHint: string): typeof TRANSCRIPT_TEMPLATES[number] | null {
-    if (!contextHint || contextHint.trim().length < 3) {
+    if (!contextHint || contextHint.trim().length < 4) {
       return null;
     }
 
@@ -322,19 +340,21 @@ class MockTranscriptService {
     const cleanedContext = contextHint
       .replace(/\.(mp4|mov|avi|mp3|wav|m4a|webm|mkv)$/i, '')
       .replace(/[_\-\.]+/g, ' ')
-      .replace(/\d{10,}/g, '') // Remove timestamps
+      .replace(/\d{6,}/g, '') // Remove long date/timestamp strings
       .trim();
 
-    if (!cleanedContext || cleanedContext.length < 3) {
+    // If nothing meaningful remains after stripping, bail out
+    if (!cleanedContext || cleanedContext.replace(/\s/g, '').length < 4) {
       return null;
     }
 
     const title = cleanedContext
       .split(' ')
+      .filter(w => w.length > 0)
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
 
-    const transcript = `Welcome to "${title}" - a special piece of content that captures something truly unique. This video showcases the essence of ${cleanedContext.toLowerCase()}, bringing you an authentic and engaging experience. Whether you're discovering this for the first time or revisiting a favorite moment, there's something here for everyone. The story unfolds naturally, highlighting the key elements that make ${cleanedContext.toLowerCase()} so compelling. From the opening scene to the final frame, every detail has been crafted to resonate with viewers. We explore the themes, emotions, and visuals that define this content. The journey through ${cleanedContext.toLowerCase()} reveals insights and moments worth sharing. As we dive deeper, you'll notice the care and intention behind each segment. This isn't just content - it's an experience designed to connect, inspire, and leave a lasting impression. Thank you for being here and being part of this ${cleanedContext.toLowerCase()} journey.`;
+    const transcript = `Welcome to "${title}" - a special piece of content that captures something truly unique. This video showcases the essence of ${cleanedContext.toLowerCase()}, bringing you an authentic and engaging experience. Whether you're discovering this for the first time or revisiting a favourite moment, there's something here for everyone. The story unfolds naturally, highlighting the key elements that make ${cleanedContext.toLowerCase()} so compelling. From the opening scene to the final frame, every detail has been crafted to resonate with viewers. We explore the themes, emotions, and visuals that define this content. The journey through ${cleanedContext.toLowerCase()} reveals insights and moments worth sharing. As we dive deeper, you'll notice the care and intention behind each segment. This isn't just content - it's an experience designed to connect, inspire, and leave a lasting impression. Thank you for being here and being part of this ${cleanedContext.toLowerCase()} journey.`;
 
     const keyPoints = [
       `Discover the unique story of ${title}`,
@@ -353,37 +373,36 @@ class MockTranscriptService {
 
   /**
    * Build a contextual transcript that integrates the filename/context throughout.
-   * Makes template content feel connected to the actual uploaded file.
+   * Skips injection when the filename is a generic device/messenger pattern so
+   * we don't produce nonsensical intros like "Welcome to WhatsApp Video Mar 9 2026".
    */
   private buildContextualTranscript(baseTranscript: string, fileName?: string, contextHint?: string): string {
-    const cleanedFileName = (fileName || '')
+    const GENERIC_FILENAME_RE = /^(whatsapp\s*(video|image|audio)|img[_\s]\d|vid[_\s-]\d|dsc[_\s]\d|mov[_\s]\d|mvi[_\s]\d|dcim|video\s*\d|photo\s*\d)/i;
+
+    const clean = (s: string) => s
       .replace(/\.(mp4|mov|avi|mp3|wav|m4a|webm|mkv)$/i, '')
       .replace(/[_\-\.]+/g, ' ')
-      .replace(/\d{10,}/g, '')
+      .replace(/\d{6,}/g, '')
       .trim();
 
-    const cleanedContext = (contextHint || '')
-      .replace(/\.(mp4|mov|avi|mp3|wav|m4a|webm|mkv)$/i, '')
-      .replace(/[_\-\.]+/g, ' ')
-      .replace(/\d{10,}/g, '')
-      .trim();
+    const cleanedFileName = clean(fileName || '');
+    const cleanedContext  = clean(contextHint || '');
+    const contextLabel    = cleanedFileName || cleanedContext;
 
-    const contextLabel = cleanedFileName || cleanedContext;
-    if (!contextLabel || contextLabel.length < 2) {
+    // Skip injection for generic device/messenger filenames or when no meaningful label exists
+    if (!contextLabel || contextLabel.length < 4 || GENERIC_FILENAME_RE.test(contextLabel)) {
       return baseTranscript;
     }
 
-    // Create a title-cased version for proper display
     const titleCased = contextLabel
       .split(' ')
       .filter(w => w.length > 0)
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
 
-    // Build a more comprehensive contextual intro and outro
     const intro = `Welcome to "${titleCased}"! In this content, we're exploring what makes ${contextLabel.toLowerCase()} so special.`;
     const outro = `That's our deep dive into ${titleCased}. I hope you found this ${contextLabel.toLowerCase()} journey valuable and inspiring.`;
-    
+
     return `${intro}\n\n${baseTranscript}\n\n${outro}`;
   }
   

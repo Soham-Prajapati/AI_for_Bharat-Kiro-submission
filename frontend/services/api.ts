@@ -111,8 +111,9 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 const DEFAULT_TIMEOUT = 30000; // 30 seconds
 const UPLOAD_TIMEOUT = 300000; // 5 minutes
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 5;
 const RETRY_DELAY = 1000; // 1 second
+const RATE_LIMIT_RETRY_DELAY = 5000; // 5 seconds for 429s
 
 // ============================================================================
 // TYPES
@@ -245,8 +246,9 @@ class ApiClient {
   }
 
   private calculateRetryDelay(attempt: number, baseDelay: number, error?: ApiError): number {
-    if (error instanceof RateLimitError && error.retryAfter) {
-      return error.retryAfter * 1000;
+    if (error instanceof RateLimitError) {
+      // Use retryAfter header if provided, otherwise use fixed 5s delay
+      return error.retryAfter ? error.retryAfter * 1000 : RATE_LIMIT_RETRY_DELAY;
     }
     return baseDelay * Math.pow(2, attempt);
   }

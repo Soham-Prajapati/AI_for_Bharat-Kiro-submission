@@ -65,30 +65,28 @@ router.post('/process', asyncHandler(async (req: Request, res: Response) => {
     domain,
   };
 
+  // Always process inline — SQS was causing in-memory state desync in
+  // single-server setup: SQS worker sometimes runs before job is in cache,
+  // silently aborting all updateJob calls and leaving jobs stuck at 5%.
+  await processingPipeline.updateJob(job.jobId, {
+    status: 'pending',
+    progress: 5,
+    currentStep: 'Starting processing...',
+  });
+  processingJobProcessorService.processJob(jobPayload).catch(() => {
+    // errors are persisted to the job record by processJob itself
+  });
+
+  // Also send to SQS best-effort for any external workers (non-blocking)
   if (hasSQSConfig()) {
-    await sqsService.sendProcessingJob(jobPayload);
-    await processingPipeline.updateJob(job.jobId, {
-      status: 'pending',
-      progress: 5,
-      currentStep: 'Queued for asynchronous processing',
-    });
-  } else {
-    // Fallback: process inline when SQS is not configured (local/dev environment)
-    await processingPipeline.updateJob(job.jobId, {
-      status: 'pending',
-      progress: 5,
-      currentStep: 'Processing inline (SQS not configured)',
-    });
-    processingJobProcessorService.processJob(jobPayload).catch(() => {
-      // errors are persisted to the job record by processJob itself
-    });
+    sqsService.sendProcessingJob(jobPayload).catch(() => {});
   }
 
   res.json({
     success: true,
     jobId: job.jobId,
     status: 'pending',
-    message: hasSQSConfig() ? 'Job queued for asynchronous processing' : 'Job processing inline',
+    message: 'Job processing started',
   });
 }));
 

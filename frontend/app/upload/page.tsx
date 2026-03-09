@@ -31,7 +31,7 @@ const TARGET_PLATFORMS: Platform[] = [
 ]
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
-const PROCESS_TIMEOUT_MS = 300000 // 5 minutes - AI processing takes time (16MB+ files need AWS Transcribe + Rekognition + 8-platform generation)
+const PROCESS_TIMEOUT_MS = 600000 // 10 minutes — AWS Transcribe + Rekognition + 8-platform Bedrock generation
 const UPLOAD_SESSION_KEY = 'kla_upload_session'
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
@@ -294,7 +294,7 @@ export default function UploadPage() {
     const jobId: string = queueData.jobId
 
     // Step 2: Poll status until completed or failed
-    const POLL_INTERVAL = 3000
+    const POLL_INTERVAL = 2000
     while (Date.now() < deadline) {
       await new Promise(r => setTimeout(r, POLL_INTERVAL))
 
@@ -329,7 +329,7 @@ export default function UploadPage() {
     }
 
     if (Date.now() >= deadline) {
-      throw new Error('Generation timed out after 5 minutes. Try uploading a shorter video.')
+      throw new Error('Generation timed out after 10 minutes. Please try again.')
     }
 
     // Step 3: Fetch the results

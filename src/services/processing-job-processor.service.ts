@@ -195,9 +195,20 @@ class ProcessingJobProcessorService {
           currentStep: 'Using filename context (transcription unavailable)...',
         });
         logger.warn('All transcription methods failed; using filename-based mock', { jobId, fileId });
+
+        // Strip generic device/messenger filename patterns so we don't generate
+        // contextually wrong content (e.g. "WhatsApp Video Mar 9 2026" → technology template).
+        const GENERIC_FILENAME_RE = /^(whatsapp[\s_-]*(video|image|audio)|img[\s_]\d|vid[\s_-]\d|dsc[\s_]\d|mvi[\s_]\d|dcim|video\s*\d|photo\s*\d)/i;
+        const cleanedName = (fileName || metadata.fileName || '')
+          .replace(/\.(mp4|mov|avi|mp3|wav|m4a|webm|mkv)$/i, '')
+          .replace(/[_\-\.]+/g, ' ')
+          .replace(/\d{6,}/g, '')
+          .trim();
+        const nameForGeneration = GENERIC_FILENAME_RE.test(cleanedName) ? '' : (fileName || metadata.fileName);
+
         transcriptResult = mockTranscriptService.generateTranscript(
           fileId,
-          fileName || metadata.fileName,
+          nameForGeneration || undefined,
         );
       }
 

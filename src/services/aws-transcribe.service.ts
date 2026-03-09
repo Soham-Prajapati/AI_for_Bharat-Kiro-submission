@@ -69,7 +69,7 @@ class AWSTranscribeService {
   /**
    * Waits for AWS Transcribe completion and downloads transcript text.
    */
-  async transcribeFromS3(mediaUrl: string, maxAttempts: number = 30, pollIntervalMs: number = 5000): Promise<AWSCompletedTranscript> {
+  async transcribeFromS3(mediaUrl: string, maxAttempts: number = 20, pollIntervalMs: number = 3000): Promise<AWSCompletedTranscript> {
     const jobName = await this.startTranscriptionJob(mediaUrl);
     const client = getTranscribeClient();
 
