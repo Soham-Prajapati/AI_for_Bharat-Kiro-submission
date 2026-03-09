@@ -80,11 +80,20 @@ const DesignContext = createContext<DesignContextValue | null>(null)
 export function DesignProvider({ children }: { children: ReactNode }) {
   const [active, setActive] = useState<IterationId>('F')
   const [panelOpen, setPanelOpen] = useState(false)
-  const [isDark, setIsDark] = useState(false)
+  // Initialise from localStorage so there's no flicker on reload
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    const saved = localStorage.getItem('kla_theme')
+    return saved === 'dark'
+  })
 
-  const toggleTheme = () => setIsDark(prev => !prev)
+  const toggleTheme = () => setIsDark(prev => {
+    const next = !prev
+    localStorage.setItem('kla_theme', next ? 'dark' : 'light')
+    return next
+  })
 
-  // Sync dark class on <html> for global CSS
+  // Sync dark/light class on <html> for global CSS
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDark)
     document.documentElement.classList.toggle('light', !isDark)

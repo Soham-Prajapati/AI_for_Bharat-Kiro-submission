@@ -2,14 +2,15 @@
  * Bedrock Content Service
  *
  * Domain-aware parallel AI agents using Amazon Bedrock.
- * - Claude 3.5 Sonnet  → YouTube, LinkedIn, Blog, Podcast (quality-critical, long-form)
- * - Claude 3 Haiku     → Instagram, TikTok, Twitter (speed-critical, short-form)
+ * - Amazon Nova Lite  → YouTube, LinkedIn, Blog, Podcast (quality-critical, long-form)
+ * - Amazon Nova Micro → Instagram, TikTok, Twitter (speed-critical, short-form)
  *
+ * Uses the Bedrock Converse API (model-agnostic, no per-model body format).
  * Each platform runs as an independent agent in parallel via Promise.allSettled,
  * so failures are isolated and partial results are still returned.
  */
 
-import { InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
+import { ConverseCommand, ContentBlock } from '@aws-sdk/client-bedrock-runtime';
 import { getBedrockClient } from '../config/aws';
 import { BEDROCK_MODELS, PLATFORM_MODEL } from '../config/bedrock-models';
 import { Platform, PlatformContent, VideoMetadata } from '../types/upload-to-results';
@@ -38,11 +39,11 @@ export interface BedrockContentRequest {
 export class BedrockContentService {
   private isAvailable: boolean | null = null;
 
-  /** Quick availability check — attempts a tiny Bedrock call */
+  /** Quick availability check — attempts a tiny Bedrock Converse call */
   async checkAvailability(): Promise<boolean> {
     if (this.isAvailable !== null) return this.isAvailable;
     try {
-      await this.invokeClaude('Reply with the word OK.', BEDROCK_MODELS.HAIKU_3, 10);
+      await this.invokeModel('Reply with the word OK.', BEDROCK_MODELS.NOVA_MICRO, 10);
       this.isAvailable = true;
     } catch {
       this.isAvailable = false;
@@ -50,8 +51,8 @@ export class BedrockContentService {
     return this.isAvailable;
   }
 
-  /** Core Bedrock invocation — Claude models via Messages API */
-  private async invokeClaude(
+  /** Core Bedrock invocation via Converse API (model-agnostic) */
+  private async invokeModel(
     userPrompt: string,
     modelId: string,
     maxTokens: number = 1500,
@@ -59,23 +60,17 @@ export class BedrockContentService {
   ): Promise<string> {
     const client = getBedrockClient();
 
-    const body: Record<string, any> = {
-      anthropic_version: 'bedrock-2023-05-31',
-      max_tokens: maxTokens,
-      messages: [{ role: 'user', content: userPrompt }],
-    };
-    if (systemPrompt) body.system = systemPrompt;
-
-    const command = new InvokeModelCommand({
+    const command = new ConverseCommand({
       modelId,
-      contentType: 'application/json',
-      accept: 'application/json',
-      body: JSON.stringify(body),
+      ...(systemPrompt ? { system: [{ text: systemPrompt }] } : {}),
+      messages: [{ role: 'user', content: [{ text: userPrompt }] }],
+      inferenceConfig: { maxTokens, temperature: 0.7 },
     });
 
     const response = await client.send(command);
-    const result = JSON.parse(new TextDecoder().decode(response.body));
-    return result.content[0].text as string;
+    const block = response.output?.message?.content?.[0] as ContentBlock | undefined;
+    if (!block || !('text' in block)) throw new Error('Empty response from Bedrock Converse');
+    return block.text as string;
   }
 
   /** Extract the first complete JSON object from any string */
@@ -126,7 +121,7 @@ export class BedrockContentService {
     }
 
     const generated = Object.keys(result).filter(k => k !== 'analytics');
-    console.log(`Bedrock agents completed: ${generated.join(', ')} (${generated.length}/${targetPlatforms.length})`);
+    console.log(`Bedrock agents completed: ${generated.join(', ')} (${generated.length}/${targetPlatforms.length}) [Nova]`);
     return result;
   }
 
@@ -138,7 +133,7 @@ export class BedrockContentService {
     const modelId = PLATFORM_MODEL[platform] || BEDROCK_MODELS.HAIKU_3;
 
     const { prompt, maxTokens } = this.buildPrompt(platform, context);
-    const raw = await this.invokeClaude(prompt, modelId, maxTokens, systemPersona);
+    const raw = await this.invokeModel(prompt, modelId, maxTokens, systemPersona);
     const data = this.extractJSON(raw);
     return this.mapToContent(platform, data);
   }
