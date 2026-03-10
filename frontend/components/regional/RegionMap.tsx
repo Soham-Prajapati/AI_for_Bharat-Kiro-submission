@@ -1,7 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { RegionType } from '@/types/regional';
+
+// Deterministic pseudo-random based on seed so SSR and client produce the same values
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed + 1) * 10000;
+  return x - Math.floor(x);
+}
 
 interface RegionMapProps {
   selectedRegion: RegionType | null;
@@ -10,6 +16,15 @@ interface RegionMapProps {
 
 export default function RegionMap({ selectedRegion, onRegionSelect }: RegionMapProps) {
   const [hoveredRegion, setHoveredRegion] = useState<RegionType | null>(null);
+
+  // Deterministic particles — same on SSR and client (no Math.random() during render)
+  const particles = useMemo(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      left: `${seededRandom(i * 4) * 100}%`,
+      top: `${seededRandom(i * 4 + 1) * 100}%`,
+      animationDelay: `${seededRandom(i * 4 + 2) * 5}s`,
+      animationDuration: `${3 + seededRandom(i * 4 + 3) * 4}s`,
+    })), []);
 
   const regions = [
     {
@@ -139,15 +154,15 @@ export default function RegionMap({ selectedRegion, onRegionSelect }: RegionMapP
 
       {/* Animated particles */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((p, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-purple-400 rounded-full animate-float"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${3 + Math.random() * 4}s`,
+              left: p.left,
+              top: p.top,
+              animationDelay: p.animationDelay,
+              animationDuration: p.animationDuration,
             }}
           ></div>
         ))}
